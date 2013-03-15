@@ -70,6 +70,56 @@ void* checkExternalPointer(SEXP xp_, const char* valid_tag) {
 }
 
 
+Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event) {
+  MessageIterator msgIter(event);
+  while(msgIter.next()) {
+    Message msg = msgIter.message();
+    Element response = msg.asElement();
+    std::cout << "name: " << response.name() << std::endl;
+    std::cout << "response.datatype: " << response.datatype() << std::endl;
+    std::cout << "response.numValues:" << response.numValues() << std::endl;
+    std::cout << "response.numElements: " << response.numElements() << std::endl;
+    std::cout << "response.isArray: " << response.isArray() << std::endl;
+
+    Element securityData = response.getElement("securityData");
+    std::cout << "name: " << securityData.name() << std::endl;
+    std::cout << "securityData.datatype: " << securityData.datatype() << std::endl;
+    std::cout << "securityData.numValues:" << securityData.numValues() << std::endl;
+    std::cout << "securityData.numElements: " << securityData.numElements() << std::endl;
+    std::cout << "securityData.isArray: " << securityData.isArray() << std::endl;
+
+    Element fieldData = securityData.getElement("fieldData");
+    std::cout << "name: " << fieldData.name() << std::endl;
+    std::cout << "fieldData.datatype: " << fieldData.datatype() << std::endl;
+    std::cout << "fieldData.numValues:" << fieldData.numValues() << std::endl;
+    std::cout << "fieldData.numElements: " << fieldData.numElements() << std::endl;
+    std::cout << "fieldData.isArray: " << fieldData.isArray() << std::endl;
+
+    //Rcpp::DatetimeVector dts(fieldData.numValues());
+    Rcpp::StringVector dts(fieldData.numValues());
+    Rcpp::NumericVector values(fieldData.numValues());
+    for(size_t i = 0; i < fieldData.numValues(); i++) {
+      Element this_fld = fieldData.getValueAsElement(i);
+      //this_fld.getElement("date").getValueAsChar();
+      //dts[i] = this_fld.getElement("date").getValueAsFloat64();
+      dts[i] = this_fld.getElementAsString("date");
+      values[i] = this_fld.getElement("PX_LAST").getValueAsFloat64();
+    }
+    return Rcpp::DataFrame::create( Rcpp::Named("asofdate")= dts, Rcpp::Named("values") = values);
+    //Rcpp::DataFrame::create();
+  }
+
+
+  //msg.asElement().print(std::cout);
+  //response.print(std::cout);
+  //Element h_data = response.getElement("HistoricalDataResponse").print(std::cout);
+  //response.getElement("HistoricalDataResponse").print(std::cout);
+
+  //Element fieldData = securityData.getElement("fieldData");
+  //std::cout << "nrows:" << fieldData.numElements() << std::endl;
+  return Rcpp::DataFrame();
+}
+
 extern "C" SEXP bdp_connect(SEXP host_, SEXP port_, SEXP log_level_) {
   SEXP conn;
   std::string host(Rcpp::as<std::string>(host_));
@@ -122,20 +172,26 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
   std::cout << "Sending Request: " << request << std:: endl;
   session->sendRequest(request);
 
+  Rcpp::List ans;
+
   while (true) {
     Event event = session->nextEvent();
-    std::cout << event.eventType() << std::endl;
-    MessageIterator msgIter(event);
-    while (msgIter.next()) {
-      Message msg = msgIter.message();
-      msg.asElement().print(std::cout);
-      std::cout << std::endl;
-    }
-    if (event.eventType() == Event::RESPONSE) {
+    switch (event.eventType()) {
+    case Event::RESPONSE:
+    case Event::PARTIAL_RESPONSE:
+      ans.push_back(HistoricalDataResponseToDF(event));
       break;
+    default:
+      MessageIterator msgIter(event);
+      while (msgIter.next()) {
+        Message msg = msgIter.message();
+        msg.asElement().print(std::cout);
+        std::cout << std::endl;
+      }      
     }
+    if (event.eventType() == Event::RESPONSE) { break; }
   }
-  return R_NilValue;
+  return Rcpp::wrap(ans);
 }
 
 
