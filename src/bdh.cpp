@@ -129,14 +129,20 @@ extern "C" SEXP bdp_connect(SEXP host_, SEXP port_, SEXP log_level_) {
   Session* sp = new Session(sessionOptions);
 
   if (!sp->start()) {
-    std::cerr <<"Failed to start session." << std::endl;
+    std::cerr << "Failed to start session." << std::endl;
     return R_NilValue;
   }
   return createExternalPointer<blpapi::Session>(sp,sessionFinalizer,"blpapi::Session*");
 }
 
 extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_, SEXP end_date_, SEXP options_) {
-  blpapi::Session* session = reinterpret_cast<blpapi::Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
+  blpapi::Session* session;
+  try {
+    session = reinterpret_cast<blpapi::Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
+  } catch (std::exception& e) {
+    std::cerr << e.what() << std::endl;
+    return R_NilValue;
+  }
 
   Rcpp::CharacterVector securities(securities_);
   Rcpp::CharacterVector fields(fields_);
@@ -144,9 +150,10 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
   std::string end_date;
 
   if (!session->openService("//blp/refdata")) {
-    std::cerr <<"Failed to open //blp/refdata" << std::endl;
+    std::cerr << "Failed to open //blp/refdata" << std::endl;
     return R_NilValue;
   }
+
   Service refDataService = session->getService("//blp/refdata");
   Request request = refDataService.createRequest("HistoricalDataRequest");
 
