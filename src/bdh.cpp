@@ -19,6 +19,10 @@
 #include <iostream>
 #include <string>
 
+#include <boost/date_time/gregorian/gregorian_types.hpp>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/date_time/local_time/local_time_types.hpp>
+
 #include <blpapi_session.h>
 #include <blpapi_eventdispatcher.h>
 
@@ -72,52 +76,44 @@ void* checkExternalPointer(SEXP xp_, const char* valid_tag) {
 
 Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event) {
   MessageIterator msgIter(event);
-  while(msgIter.next()) {
-    Message msg = msgIter.message();
-    Element response = msg.asElement();
-    std::cout << "name: " << response.name() << std::endl;
-    std::cout << "response.datatype: " << response.datatype() << std::endl;
-    std::cout << "response.numValues:" << response.numValues() << std::endl;
-    std::cout << "response.numElements: " << response.numElements() << std::endl;
-    std::cout << "response.isArray: " << response.isArray() << std::endl;
-
-    Element securityData = response.getElement("securityData");
-    std::cout << "name: " << securityData.name() << std::endl;
-    std::cout << "securityData.datatype: " << securityData.datatype() << std::endl;
-    std::cout << "securityData.numValues:" << securityData.numValues() << std::endl;
-    std::cout << "securityData.numElements: " << securityData.numElements() << std::endl;
-    std::cout << "securityData.isArray: " << securityData.isArray() << std::endl;
-
-    Element fieldData = securityData.getElement("fieldData");
-    std::cout << "name: " << fieldData.name() << std::endl;
-    std::cout << "fieldData.datatype: " << fieldData.datatype() << std::endl;
-    std::cout << "fieldData.numValues:" << fieldData.numValues() << std::endl;
-    std::cout << "fieldData.numElements: " << fieldData.numElements() << std::endl;
-    std::cout << "fieldData.isArray: " << fieldData.isArray() << std::endl;
-
-    //Rcpp::DatetimeVector dts(fieldData.numValues());
-    Rcpp::StringVector dts(fieldData.numValues());
-    Rcpp::NumericVector values(fieldData.numValues());
-    for(size_t i = 0; i < fieldData.numValues(); i++) {
-      Element this_fld = fieldData.getValueAsElement(i);
-      //this_fld.getElement("date").getValueAsChar();
-      //dts[i] = this_fld.getElement("date").getValueAsFloat64();
-      dts[i] = this_fld.getElementAsString("date");
-      values[i] = this_fld.getElement("PX_LAST").getValueAsFloat64();
-    }
-    return Rcpp::DataFrame::create( Rcpp::Named("asofdate")= dts, Rcpp::Named("values") = values);
-    //Rcpp::DataFrame::create();
+  if(!msgIter.next()) {
+    throw std::logic_error("Not a valid HistoricalDataResponse.");
   }
 
+  Message msg = msgIter.message();
+  Element response = msg.asElement();
+  std::cout << "name: " << response.name() << std::endl;
+  std::cout << "response.datatype: " << response.datatype() << std::endl;
+  std::cout << "response.numValues:" << response.numValues() << std::endl;
+  std::cout << "response.numElements: " << response.numElements() << std::endl;
+  std::cout << "response.isArray: " << response.isArray() << std::endl;
 
-  //msg.asElement().print(std::cout);
-  //response.print(std::cout);
-  //Element h_data = response.getElement("HistoricalDataResponse").print(std::cout);
-  //response.getElement("HistoricalDataResponse").print(std::cout);
+  Element securityData = response.getElement("securityData");
+  std::cout << "name: " << securityData.name() << std::endl;
+  std::cout << "securityData.datatype: " << securityData.datatype() << std::endl;
+  std::cout << "securityData.numValues:" << securityData.numValues() << std::endl;
+  std::cout << "securityData.numElements: " << securityData.numElements() << std::endl;
+  std::cout << "securityData.isArray: " << securityData.isArray() << std::endl;
 
-  //Element fieldData = securityData.getElement("fieldData");
-  //std::cout << "nrows:" << fieldData.numElements() << std::endl;
-  return Rcpp::DataFrame();
+  Element fieldData = securityData.getElement("fieldData");
+  std::cout << "name: " << fieldData.name() << std::endl;
+  std::cout << "fieldData.datatype: " << fieldData.datatype() << std::endl;
+  std::cout << "fieldData.numValues:" << fieldData.numValues() << std::endl;
+  std::cout << "fieldData.numElements: " << fieldData.numElements() << std::endl;
+  std::cout << "fieldData.isArray: " << fieldData.isArray() << std::endl;
+
+  Rcpp::DatetimeVector dts(fieldData.numValues());
+  Rcpp::NumericVector values(fieldData.numValues());
+  for(size_t i = 0; i < fieldData.numValues(); i++) {
+    Element this_fld = fieldData.getValueAsElement(i);
+    blpapi::Datetime bbg_date =  this_fld.getElementAsDatetime("date");
+    //std::cout << bbg_date.year() << "-" << bbg_date.month() << "-" << bbg_date.day() << std::endl;
+    boost::gregorian::date bbg_boost_date(bbg_date.year(),bbg_date.month(),bbg_date.day());
+    struct tm tm_time = to_tm(bbg_boost_date);
+    dts[i] = static_cast<double>(mktime(&tm_time));
+    values[i] = this_fld.getElement("PX_LAST").getValueAsFloat64();
+  }
+  return Rcpp::DataFrame::create( Rcpp::Named("asofdate")= dts, Rcpp::Named("values") = values);
 }
 
 extern "C" SEXP bdp_connect(SEXP host_, SEXP port_, SEXP log_level_) {
