@@ -1,0 +1,6 @@
+useDynLib(bdp)
+
+export(
+blpConnect,
+bdh
+)

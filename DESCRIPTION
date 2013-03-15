@@ -1,0 +1,9 @@
+Package: bdp
+Title: R interface to BBG
+Version: 0.0.1
+Maintainer: Whit Armstrong <armstrong.whit@gmail.com>
+Author: Whit Armstrong <armstrong.whit@gmail.com>
+Depends: Rcpp
+LinkingTo: Rcpp
+Description: R interface to BBG
+License: GPL-3
