@@ -43,6 +43,8 @@
 
 using namespace BloombergLP;
 using namespace blpapi;
+using std::cout;
+using std::endl;
 
 static void sessionFinalizer(SEXP session_) {
   blpapi::Session* session = reinterpret_cast<blpapi::Session*>(R_ExternalPtrAddr(session_));
@@ -110,6 +112,84 @@ std::string getSecurity(blpapi::Event& event) {
 
   Element securityData = response.getElement("securityData");
   std::string ans(securityData.getElementAsString("security"));
+  return ans;
+}
+
+Rcpp::List refDataElementToList(blpapi::Element e) {
+  Rcpp::List ans;
+  Element field_data = e.getElement("fieldData");
+  std::cout << "field_data.numElements()" << field_data.numElements() << std::endl;
+  field_data.print(std::cout);
+
+  for(size_t i = 0; i < field_data.numElements(); ++i) {
+    Element this_e = field_data.getElement(i);
+    std::string field_name(this_e.name().string());
+
+    switch(this_e.datatype()) {
+    case BLPAPI_DATATYPE_BOOL:
+      ans.push_back(this_e.getValueAsBool(),field_name); break;
+    case BLPAPI_DATATYPE_CHAR:
+      ans.push_back(this_e.getValueAsString(),field_name); break;
+    case BLPAPI_DATATYPE_BYTE:
+      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
+      break;
+    case BLPAPI_DATATYPE_INT32:
+      ans.push_back(this_e.getValueAsInt32(),field_name); break;
+    case BLPAPI_DATATYPE_INT64:
+      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_INT64.");
+      break;
+    case BLPAPI_DATATYPE_FLOAT32:
+      ans.push_back(this_e.getValueAsFloat32(),field_name); break;
+    case BLPAPI_DATATYPE_FLOAT64:
+      ans.push_back(this_e.getValueAsFloat64(),field_name); break;
+    case BLPAPI_DATATYPE_STRING:
+      ans.push_back(this_e.getValueAsString(),field_name); break;
+    case BLPAPI_DATATYPE_BYTEARRAY:
+      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
+    case BLPAPI_DATATYPE_DATE:      
+    case BLPAPI_DATATYPE_TIME:
+      //FIXME: separate out time later
+      ans.push_back(bbgDateToPOSIX(this_e.getValueAsDatetime()),field_name); break;
+    case BLPAPI_DATATYPE_DECIMAL:
+      ans.push_back(this_e.getValueAsFloat64(),field_name); break;
+    case BLPAPI_DATATYPE_DATETIME:
+      ans.push_back(bbgDateToPOSIX(this_e.getValueAsDatetime()),field_name); break;
+    case BLPAPI_DATATYPE_ENUMERATION:
+      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
+    case BLPAPI_DATATYPE_SEQUENCE:
+      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
+    case BLPAPI_DATATYPE_CHOICE:
+      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_CHOICE.");
+    case BLPAPI_DATATYPE_CORRELATION_ID:
+      ans.push_back(this_e.getValueAsInt32(),field_name); break;
+    default:
+      throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
+    }
+  }
+  return ans;
+}
+
+
+Rcpp::List responseToList(blpapi::Event& event, const std::vector<std::string>& fields) {
+  Rcpp::List ans;
+  MessageIterator msgIter(event);
+  if(!msgIter.next()) {
+    throw std::logic_error("Not a valid MessageIterator.");
+  }
+  Message msg = msgIter.message();
+  Element response = msg.asElement();
+    if(std::strcmp(response.name().string(),"ReferenceDataResponse")) {
+    throw std::logic_error("Not a valid ReferenceDataResponse.");
+  }
+  Element securityData = response.getElement("securityData");
+  std::cout << "securityData.isArray: " << securityData.isArray() << std::endl;
+  std::cout << "securityData.numValues: " << securityData.numValues() << std::endl;
+  for(size_t i = 0; i < securityData.numValues(); ++i) {
+    std::cout << i << std::endl;
+    Element this_security = securityData.getValueAsElement(i);
+    std::cout << this_security.getElementAsString("security") << std::endl;
+    ans.push_back(refDataElementToList(this_security),this_security.getElementAsString("security"));
+  }
   return ans;
 }
 
@@ -232,6 +312,65 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
     case Event::RESPONSE:
     case Event::PARTIAL_RESPONSE:
       ans[ getSecurity(event) ] = HistoricalDataResponseToDF(event,fields_vec);
+      break;
+    default:
+      MessageIterator msgIter(event);
+      while (msgIter.next()) {
+        Message msg = msgIter.message();
+        msg.asElement().print(blplog);
+      }
+    }
+    if (event.eventType() == Event::RESPONSE) { break; }
+  }
+  ans.attr("blplog") = Rcpp::wrap(blplog.str());
+  return Rcpp::wrap(ans);
+}
+
+
+extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_) {
+  Rcpp::List ans;
+  std::ostringstream blplog;
+  blpapi::Session* session;
+  std::vector<std::string> fields_vec;
+
+  try {
+    session = reinterpret_cast<blpapi::Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
+  } catch (std::exception& e) {
+    REprintf(e.what());
+    return R_NilValue;
+  }
+
+  Rcpp::CharacterVector securities(securities_);
+  Rcpp::CharacterVector fields(fields_);
+
+  if (!session->openService("//blp/refdata")) {
+    REprintf("Failed to open //blp/refdata\n");
+    return R_NilValue;
+  }
+
+  Service refDataService = session->getService("//blp/refdata");
+  Request request = refDataService.createRequest("ReferenceDataRequest");
+
+  for(R_len_t i = 0; i < securities.length(); i++) {
+    request.getElement("securities").appendValue(static_cast<std::string>(securities[i]).c_str());
+  }
+  
+  for(R_len_t i = 0; i < fields.length(); i++) {
+    request.getElement("fields").appendValue(static_cast<std::string>(fields[i]).c_str());
+    fields_vec.push_back(static_cast<std::string>(fields[i]));
+  }
+
+  if(options_ != R_NilValue) { appendOptionsToRequest(request,options_); }
+
+  session->sendRequest(request);
+
+  while (true) {
+    std::string security_name;
+    Event event = session->nextEvent();
+    switch (event.eventType()) {
+    case Event::RESPONSE:
+    case Event::PARTIAL_RESPONSE:
+      ans = responseToList(event,fields_vec);
       break;
     default:
       MessageIterator msgIter(event);
