@@ -74,6 +74,19 @@ void* checkExternalPointer(SEXP xp_, const char* valid_tag) {
   return R_ExternalPtrAddr(xp_);
 }
 
+// caller guarantees options_ not null
+void appendOptionsToRequest(blpapi::Request& request, SEXP options_) {
+  Rcpp::CharacterVector options(options_);
+  Rcpp::CharacterVector options_names(options.attr("names"));
+
+  if(options.length() && options_names.length()==0) {
+    throw std::logic_error("Request options must be named.");
+  }
+
+  for(R_len_t i = 0; i < options.length(); i++) {
+    request.set(static_cast<std::string>(options_names[i]).c_str(), static_cast<std::string>(options[i]).c_str());
+  }
+}
 
 std::string getSecurity(blpapi::Event& event) {
   MessageIterator msgIter(event);
@@ -158,6 +171,7 @@ extern "C" SEXP bdp_connect(SEXP host_, SEXP port_, SEXP log_level_) {
 
 extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_, SEXP end_date_, SEXP options_) {
   blpapi::Session* session;
+
   try {
     session = reinterpret_cast<blpapi::Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
   } catch (std::exception& e) {
@@ -186,8 +200,8 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
     request.getElement("fields").appendValue(static_cast<std::string>(fields[i]).c_str());
   }
 
-  //request.set("periodicityAdjustment", "ACTUAL");
-  //request.set("periodicitySelection", "MONTHLY");
+  if(options_ != R_NilValue) { appendOptionsToRequest(request,options_); }
+
   request.set("startDate", start_date.c_str());
   if(end_date_ != R_NilValue) {
     request.set("endDate", Rcpp::as<std::string>(end_date_).c_str());
