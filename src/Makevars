@@ -1,2 +1,2 @@
 PKG_LIBS = `Rscript -e "Rcpp:::LdFlags()"` $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) -lboost_date_time -lblpapi
-PKG_CXXFLAGS = -I. -I/usr/include/blpapi
+PKG_CXXFLAGS = -I. -I/opt/vendor/bloomberg/blpapi/include
