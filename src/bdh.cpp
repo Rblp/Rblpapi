@@ -18,6 +18,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <string>
+#include <cstring>
 
 #include <boost/date_time/gregorian/gregorian_types.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
@@ -77,11 +78,14 @@ void* checkExternalPointer(SEXP xp_, const char* valid_tag) {
 Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event) {
   MessageIterator msgIter(event);
   if(!msgIter.next()) {
-    throw std::logic_error("Not a valid HistoricalDataResponse.");
+    throw std::logic_error("Not a valid MessageIterator.");
   }
 
   Message msg = msgIter.message();
   Element response = msg.asElement();
+  if(std::strcmp(response.name().string(),"HistoricalDataResponse")) {
+    throw std::logic_error("Not a valid HistoricalDataResponse.");
+  }
   std::cout << "name: " << response.name() << std::endl;
   std::cout << "response.datatype: " << response.datatype() << std::endl;
   std::cout << "response.numValues:" << response.numValues() << std::endl;
@@ -183,7 +187,7 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
     case Event::RESPONSE:
     case Event::PARTIAL_RESPONSE:
       ans.push_back(HistoricalDataResponseToDF(event));
-      break;
+      //break;
     default:
       MessageIterator msgIter(event);
       while (msgIter.next()) {
