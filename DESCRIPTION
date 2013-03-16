@@ -1,4 +1,4 @@
-Package: bdp
+Package: Rblpapi
 Title: R interface to BBG
 Version: 0.0.1
 Maintainer: Whit Armstrong <armstrong.whit@gmail.com>

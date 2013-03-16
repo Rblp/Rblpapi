@@ -1,4 +1,4 @@
-useDynLib(bdp)
+useDynLib(Rblpapi)
 
 export(
 blpConnect,

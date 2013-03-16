@@ -1,5 +1,5 @@
 blpConnect <- function(host = NULL, port = NULL, log.level = "warning") {
-    .Call("bdp_connect", host, port, log.level, PACKAGE="bdp")
+    .Call("bdp_connect", host, port, log.level, PACKAGE="Rblpapi")
 }
 
 bdh <- function(conn, securities, fields, start.date, end.date=NULL, include.non.trading.days=FALSE, options=NULL) {
@@ -13,9 +13,9 @@ bdh <- function(conn, securities, fields, start.date, end.date=NULL, include.non
         options <- c(options,structure(c("ALL_CALENDAR_DAYS", "NIL_VALUE"),names=c("nonTradingDayFillOption", "nonTradingDayFillMethod")))
     }
 
-    .Call("bdh", conn, securities, fields, start.date, end.date, options, PACKAGE="bdp")
+    .Call("bdh", conn, securities, fields, start.date, end.date, options, PACKAGE="Rblpapi")
 }
 
 ## bdp <- function(conn, securities, fields, options=NULL) {
-##     .Call("blp", securities, fields, PACKAGE="bdp")
+##     .Call("blp", securities, fields, PACKAGE="Rblpapi")
 ## }
