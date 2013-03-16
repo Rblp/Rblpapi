@@ -19,6 +19,8 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <sstream>
+#include <vector>
 
 #include <boost/date_time/gregorian/gregorian_types.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
@@ -74,6 +76,12 @@ void* checkExternalPointer(SEXP xp_, const char* valid_tag) {
   return R_ExternalPtrAddr(xp_);
 }
 
+const double bbgDateToPOSIX(const blpapi::Datetime& bbg_date) {
+  boost::gregorian::date bbg_boost_date(bbg_date.year(),bbg_date.month(),bbg_date.day());
+  struct tm tm_time(to_tm(bbg_boost_date));
+  return static_cast<double>(mktime(&tm_time));
+}
+
 // caller guarantees options_ not null
 void appendOptionsToRequest(blpapi::Request& request, SEXP options_) {
   Rcpp::CharacterVector options(options_);
@@ -105,7 +113,9 @@ std::string getSecurity(blpapi::Event& event) {
   return ans;
 }
 
-Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event) {
+Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event, const std::vector<std::string>& fields) {
+  std::vector<Rcpp::NumericVector*> nvps;
+
   MessageIterator msgIter(event);
   if(!msgIter.next()) {
     throw std::logic_error("Not a valid MessageIterator.");
@@ -136,18 +146,55 @@ Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event) {
   std::cout << "fieldData.numElements: " << fieldData.numElements() << std::endl;
   std::cout << "fieldData.isArray: " << fieldData.isArray() << std::endl;
 
+  // we always have dates
   Rcpp::DatetimeVector dts(fieldData.numValues());
-  Rcpp::NumericVector values(fieldData.numValues());
+
+  // must build rownames as chars...
+  Rcpp::CharacterVector rownames(fieldData.numValues());
+  for(R_len_t i = 0; i < fieldData.numValues(); ++i) {
+    std::ostringstream convert; convert << (i+1); rownames[i] = convert.str();
+  }
+
+  // create scratch space for output arrays
+  for(size_t i = 0; i < fields.size(); ++i) {
+    // Rcpp::NumericVector& nvp = new Rcpp::NumericVector(fieldData.numValues());
+    // for(R_len_t j = 0; i < fieldData.numValues(); ++j) { nvp(j) = NA_REAL; }
+    // nvps.push_back(&nvp);
+    nvps.push_back(new Rcpp::NumericVector(fieldData.numValues()));
+  }  
+
   for(size_t i = 0; i < fieldData.numValues(); i++) {
     Element this_fld = fieldData.getValueAsElement(i);
     blpapi::Datetime bbg_date =  this_fld.getElementAsDatetime("date");
-    //std::cout << bbg_date.year() << "-" << bbg_date.month() << "-" << bbg_date.day() << std::endl;
-    boost::gregorian::date bbg_boost_date(bbg_date.year(),bbg_date.month(),bbg_date.day());
-    struct tm tm_time = to_tm(bbg_boost_date);
-    dts[i] = static_cast<double>(mktime(&tm_time));
-    values[i] = this_fld.getElement("PX_LAST").getValueAsFloat64();
+    dts[i] = bbgDateToPOSIX(bbg_date);
+    // walk through fields and test whether this tuple contains the field
+    for(size_t j = 0; j < fields.size(); ++j) {
+      //values[i] = this_fld.getElement("PX_LAST").getValueAsFloat64();
+      //nvps[i]->operator[](j) = this_fld.hasElement(fields[j].c_str()) ? this_fld.getElement(fields[j].c_str()).getValueAsFloat64() : NA_REAL;
+      //if (this_fld.hasElement(fields[j].c_str())) { std::cout << this_fld.getElement(fields[j].c_str()).getValueAsFloat64() << std::endl; }
+      if(this_fld.hasElement(fields[j].c_str())) {
+        Rcpp::NumericVector& nvp = *nvps[j];
+        nvp[i] = this_fld.getElement(fields[j].c_str()).getValueAsFloat64();
+      }
+    }
   }
-  return Rcpp::DataFrame::create( Rcpp::Named("asofdate")= dts, Rcpp::Named("values") = values);
+  //return Rcpp::DataFrame::create( Rcpp::Named("asofdate")= dts, Rcpp::Named("values") = values);
+  Rcpp::DataFrame ans;
+  ans.push_back(dts,"asofdate");
+  for(R_len_t i = 0; i < fields.size(); ++i) {
+    //ans[fields[i]] = *nvps[i];
+    ans.push_back(*nvps[i],fields[i]);
+  }
+
+  // Rcpp::List ans(fields.size() + 1);
+  // ans[0] = dts;
+  // for(R_len_t i = 0; i < fields.size(); ++i) {
+  //   ans[i + 1] = *nvps[i];
+  // }
+
+  ans.attr("class") = "data.frame";
+  ans.attr("row.names") = rownames;
+  return ans;
 }
 
 extern "C" SEXP bdp_connect(SEXP host_, SEXP port_, SEXP log_level_) {
@@ -171,7 +218,7 @@ extern "C" SEXP bdp_connect(SEXP host_, SEXP port_, SEXP log_level_) {
 
 extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_, SEXP end_date_, SEXP options_) {
   blpapi::Session* session;
-
+  std::vector<std::string> fields_vec;
   try {
     session = reinterpret_cast<blpapi::Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
   } catch (std::exception& e) {
@@ -198,6 +245,7 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
   
   for(R_len_t i = 0; i < fields.length(); i++) {
     request.getElement("fields").appendValue(static_cast<std::string>(fields[i]).c_str());
+    fields_vec.push_back(static_cast<std::string>(fields[i]));
   }
 
   if(options_ != R_NilValue) { appendOptionsToRequest(request,options_); }
@@ -218,7 +266,7 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
     switch (event.eventType()) {
     case Event::RESPONSE:
     case Event::PARTIAL_RESPONSE:
-      ans[ getSecurity(event) ] = HistoricalDataResponseToDF(event);
+      ans[ getSecurity(event) ] = HistoricalDataResponseToDF(event,fields_vec);
       //break;
     default:
       MessageIterator msgIter(event);
