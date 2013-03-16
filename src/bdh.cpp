@@ -75,6 +75,23 @@ void* checkExternalPointer(SEXP xp_, const char* valid_tag) {
 }
 
 
+std::string getSecurity(blpapi::Event& event) {
+  MessageIterator msgIter(event);
+  if(!msgIter.next()) {
+    throw std::logic_error("Not a valid MessageIterator.");
+  }
+
+  Message msg = msgIter.message();
+  Element response = msg.asElement();
+  if(std::strcmp(response.name().string(),"HistoricalDataResponse")) {
+    throw std::logic_error("Not a valid HistoricalDataResponse.");
+  }
+
+  Element securityData = response.getElement("securityData");
+  std::string ans(securityData.getElementAsString("security"));
+  return ans;
+}
+
 Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event) {
   MessageIterator msgIter(event);
   if(!msgIter.next()) {
@@ -182,11 +199,12 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
   Rcpp::List ans;
 
   while (true) {
+    std::string security_name;
     Event event = session->nextEvent();
     switch (event.eventType()) {
     case Event::RESPONSE:
     case Event::PARTIAL_RESPONSE:
-      ans.push_back(HistoricalDataResponseToDF(event));
+      ans[ getSecurity(event) ] = HistoricalDataResponseToDF(event);
       //break;
     default:
       MessageIterator msgIter(event);
@@ -194,12 +212,9 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
         Message msg = msgIter.message();
         msg.asElement().print(std::cout);
         std::cout << std::endl;
-      }      
+      }
     }
     if (event.eventType() == Event::RESPONSE) { break; }
   }
   return Rcpp::wrap(ans);
 }
-
-
-
