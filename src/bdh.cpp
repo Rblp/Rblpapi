@@ -157,11 +157,8 @@ Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event, const std::vect
 
   // create scratch space for output arrays
   for(size_t i = 0; i < fields.size(); ++i) {
-    // Rcpp::NumericVector& nvp = new Rcpp::NumericVector(fieldData.numValues());
-    // for(R_len_t j = 0; i < fieldData.numValues(); ++j) { nvp(j) = NA_REAL; }
-    // nvps.push_back(&nvp);
     nvps.push_back(new Rcpp::NumericVector(fieldData.numValues()));
-  }  
+  }
 
   for(size_t i = 0; i < fieldData.numValues(); i++) {
     Element this_fld = fieldData.getValueAsElement(i);
@@ -169,16 +166,10 @@ Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event, const std::vect
     dts[i] = bbgDateToPOSIX(bbg_date);
     // walk through fields and test whether this tuple contains the field
     for(size_t j = 0; j < fields.size(); ++j) {
-      //values[i] = this_fld.getElement("PX_LAST").getValueAsFloat64();
-      //nvps[i]->operator[](j) = this_fld.hasElement(fields[j].c_str()) ? this_fld.getElement(fields[j].c_str()).getValueAsFloat64() : NA_REAL;
-      //if (this_fld.hasElement(fields[j].c_str())) { std::cout << this_fld.getElement(fields[j].c_str()).getValueAsFloat64() << std::endl; }
-      if(this_fld.hasElement(fields[j].c_str())) {
-        Rcpp::NumericVector& nvp = *nvps[j];
-        nvp[i] = this_fld.getElement(fields[j].c_str()).getValueAsFloat64();
-      }
+      nvps[j]->operator[](i) = this_fld.hasElement(fields[j].c_str()) ? this_fld.getElement(fields[j].c_str()).getValueAsFloat64() : NA_REAL;
     }
   }
-  //return Rcpp::DataFrame::create( Rcpp::Named("asofdate")= dts, Rcpp::Named("values") = values);
+
   Rcpp::DataFrame ans;
   ans.push_back(dts,"asofdate");
   for(R_len_t i = 0; i < fields.size(); ++i) {
