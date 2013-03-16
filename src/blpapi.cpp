@@ -118,8 +118,6 @@ std::string getSecurity(blpapi::Event& event) {
 Rcpp::List refDataElementToList(blpapi::Element e) {
   Rcpp::List ans;
   Element field_data = e.getElement("fieldData");
-  std::cout << "field_data.numElements()" << field_data.numElements() << std::endl;
-  field_data.print(std::cout);
 
   for(size_t i = 0; i < field_data.numElements(); ++i) {
     Element this_e = field_data.getElement(i);
@@ -182,12 +180,8 @@ Rcpp::List responseToList(blpapi::Event& event, const std::vector<std::string>& 
     throw std::logic_error("Not a valid ReferenceDataResponse.");
   }
   Element securityData = response.getElement("securityData");
-  std::cout << "securityData.isArray: " << securityData.isArray() << std::endl;
-  std::cout << "securityData.numValues: " << securityData.numValues() << std::endl;
   for(size_t i = 0; i < securityData.numValues(); ++i) {
-    std::cout << i << std::endl;
     Element this_security = securityData.getValueAsElement(i);
-    std::cout << this_security.getElementAsString("security") << std::endl;
     ans.push_back(refDataElementToList(this_security),this_security.getElementAsString("security"));
   }
   return ans;

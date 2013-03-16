@@ -2,5 +2,6 @@ useDynLib(Rblpapi)
 
 export(
 blpConnect,
-bdh
+bdh,
+bdp
 )

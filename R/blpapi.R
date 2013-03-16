@@ -16,6 +16,6 @@ bdh <- function(conn, securities, fields, start.date, end.date=NULL, include.non
     .Call("bdh", conn, securities, fields, start.date, end.date, options, PACKAGE="Rblpapi")
 }
 
-## bdp <- function(conn, securities, fields, options=NULL) {
-##     .Call("blp", securities, fields, PACKAGE="Rblpapi")
-## }
+bdp <- function(conn, securities, fields, options=NULL) {
+    .Call("bdp", conn, securities, fields, options, PACKAGE="Rblpapi")
+}
