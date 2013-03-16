@@ -126,25 +126,8 @@ Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event, const std::vect
   if(std::strcmp(response.name().string(),"HistoricalDataResponse")) {
     throw std::logic_error("Not a valid HistoricalDataResponse.");
   }
-  std::cout << "name: " << response.name() << std::endl;
-  std::cout << "response.datatype: " << response.datatype() << std::endl;
-  std::cout << "response.numValues:" << response.numValues() << std::endl;
-  std::cout << "response.numElements: " << response.numElements() << std::endl;
-  std::cout << "response.isArray: " << response.isArray() << std::endl;
-
   Element securityData = response.getElement("securityData");
-  std::cout << "name: " << securityData.name() << std::endl;
-  std::cout << "securityData.datatype: " << securityData.datatype() << std::endl;
-  std::cout << "securityData.numValues:" << securityData.numValues() << std::endl;
-  std::cout << "securityData.numElements: " << securityData.numElements() << std::endl;
-  std::cout << "securityData.isArray: " << securityData.isArray() << std::endl;
-
   Element fieldData = securityData.getElement("fieldData");
-  std::cout << "name: " << fieldData.name() << std::endl;
-  std::cout << "fieldData.datatype: " << fieldData.datatype() << std::endl;
-  std::cout << "fieldData.numValues:" << fieldData.numValues() << std::endl;
-  std::cout << "fieldData.numElements: " << fieldData.numElements() << std::endl;
-  std::cout << "fieldData.isArray: " << fieldData.isArray() << std::endl;
 
   // we always have dates
   Rcpp::DatetimeVector dts(fieldData.numValues());
@@ -173,15 +156,8 @@ Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event, const std::vect
   Rcpp::DataFrame ans;
   ans.push_back(dts,"asofdate");
   for(R_len_t i = 0; i < fields.size(); ++i) {
-    //ans[fields[i]] = *nvps[i];
     ans.push_back(*nvps[i],fields[i]);
   }
-
-  // Rcpp::List ans(fields.size() + 1);
-  // ans[0] = dts;
-  // for(R_len_t i = 0; i < fields.size(); ++i) {
-  //   ans[i + 1] = *nvps[i];
-  // }
 
   ans.attr("class") = "data.frame";
   ans.attr("row.names") = rownames;
@@ -196,24 +172,25 @@ extern "C" SEXP bdp_connect(SEXP host_, SEXP port_, SEXP log_level_) {
   SessionOptions sessionOptions;
   sessionOptions.setServerHost(host.c_str());
   sessionOptions.setServerPort(port);
-
-  std::cout << "Connecting to " <<  host << ":" << port << std::endl;
   Session* sp = new Session(sessionOptions);
 
   if (!sp->start()) {
-    std::cerr << "Failed to start session." << std::endl;
+    REprintf("Failed to start session.\n");
     return R_NilValue;
   }
   return createExternalPointer<blpapi::Session>(sp,sessionFinalizer,"blpapi::Session*");
 }
 
 extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_, SEXP end_date_, SEXP options_) {
+  Rcpp::List ans;
+  std::ostringstream blplog;
   blpapi::Session* session;
   std::vector<std::string> fields_vec;
+
   try {
     session = reinterpret_cast<blpapi::Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
   } catch (std::exception& e) {
-    std::cerr << e.what() << std::endl;
+    REprintf(e.what());
     return R_NilValue;
   }
 
@@ -223,7 +200,7 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
   std::string end_date;
 
   if (!session->openService("//blp/refdata")) {
-    std::cerr << "Failed to open //blp/refdata" << std::endl;
+    REprintf("Failed to open //blp/refdata\n");
     return R_NilValue;
   }
 
@@ -246,10 +223,7 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
     request.set("endDate", Rcpp::as<std::string>(end_date_).c_str());
   }
 
-  std::cout << "Sending Request: " << request << std:: endl;
   session->sendRequest(request);
-
-  Rcpp::List ans;
 
   while (true) {
     std::string security_name;
@@ -258,16 +232,16 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
     case Event::RESPONSE:
     case Event::PARTIAL_RESPONSE:
       ans[ getSecurity(event) ] = HistoricalDataResponseToDF(event,fields_vec);
-      //break;
+      break;
     default:
       MessageIterator msgIter(event);
       while (msgIter.next()) {
         Message msg = msgIter.message();
-        msg.asElement().print(std::cout);
-        std::cout << std::endl;
+        msg.asElement().print(blplog);
       }
     }
     if (event.eventType() == Event::RESPONSE) { break; }
   }
+  ans.attr("blplog") = Rcpp::wrap(blplog.str());
   return Rcpp::wrap(ans);
 }
