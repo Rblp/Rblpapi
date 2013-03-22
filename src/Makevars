@@ -1,2 +1,11 @@
-PKG_LIBS = `Rscript -e "Rcpp:::LdFlags()"` $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) -lboost_date_time -lblpapi
-PKG_CXXFLAGS = -I. -I/opt/vendor/bloomberg/blpapi/include
+## -*- mode: makefile; -*-
+
+PKG_CPPFLAGS += -I../inst/include/ -I.
+RCPP_LIBS=`Rscript -e "Rcpp:::LdFlags()"`
+ARCH=$(shell uname -m)
+
+ifeq ($(ARCH),x86_64)
+  PKG_LIBS=$(RCPP_LIBS) -lboost_date_time -lblpapi3_64
+else
+  PKG_LIBS=$(RCPP_LIBS) -lboost_date_time -lblpapi3_32
+endif
