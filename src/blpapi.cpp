@@ -238,7 +238,7 @@ Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event, const std::vect
   return ans;
 }
 
-extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_) {
+extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_, SEXP append_log_) {
   blpapi::Session* session;
   Rcpp::LogicalVector ans(1);
   ans[0] = false;
@@ -256,6 +256,7 @@ extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_) {
   }
   std::string uuid = Rcpp::as<std::string>(uuid_);
   std::string ip_address = Rcpp::as<std::string>(ip_address_);
+  bool append_log = Rcpp::as<bool>(append_log_);
 
   if(!session->openService("//blp/apiauth")) {
     REprintf("Failed to open //blp/apiauth\n");
@@ -289,11 +290,13 @@ extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_) {
     }
     if (event.eventType() == Event::RESPONSE) { break; }
   }
-  ans.attr("blplog") = Rcpp::wrap(blplog.str());
+  if(append_log) {
+    ans.attr("blplog") = Rcpp::wrap(blplog.str());
+  }
   return Rcpp::wrap(ans);
 }
 
-extern "C" SEXP bdp_connect(SEXP host_, SEXP port_, SEXP log_level_) {
+extern "C" SEXP bdp_connect(SEXP host_, SEXP port_) {
   SEXP conn;
   std::string host(Rcpp::as<std::string>(host_));
   int port(Rcpp::as<int>(port_));
@@ -310,7 +313,7 @@ extern "C" SEXP bdp_connect(SEXP host_, SEXP port_, SEXP log_level_) {
   return createExternalPointer<blpapi::Session>(sp,sessionFinalizer,"blpapi::Session*");
 }
 
-extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_, SEXP end_date_, SEXP options_) {
+extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_, SEXP end_date_, SEXP options_, SEXP append_log_) {
   Rcpp::List ans;
   std::ostringstream blplog;
   blpapi::Session* session;
@@ -352,6 +355,8 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
     request.set("endDate", Rcpp::as<std::string>(end_date_).c_str());
   }
 
+  bool append_log = Rcpp::as<bool>(append_log_);
+
   session->sendRequest(request);
 
   while (true) {
@@ -363,20 +368,25 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
       ans[ getSecurity(event) ] = HistoricalDataResponseToDF(event,fields_vec);
       break;
     default:
-      MessageIterator msgIter(event);
-      while (msgIter.next()) {
-        Message msg = msgIter.message();
-        msg.asElement().print(blplog);
+      if(append_log) {
+        MessageIterator msgIter(event);
+        while (msgIter.next()) {
+          Message msg = msgIter.message();
+          msg.asElement().print(blplog);
+        }
       }
     }
     if (event.eventType() == Event::RESPONSE) { break; }
   }
-  ans.attr("blplog") = Rcpp::wrap(blplog.str());
+
+  if(append_log) {
+    ans.attr("blplog") = Rcpp::wrap(blplog.str());
+  }
   return Rcpp::wrap(ans);
 }
 
 
-extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_) {
+extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, SEXP append_log_) {
   Rcpp::List ans;
   std::ostringstream blplog;
   blpapi::Session* session;
@@ -411,6 +421,8 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_) {
 
   if(options_ != R_NilValue) { appendOptionsToRequest(request,options_); }
 
+  bool append_log = Rcpp::as<bool>(append_log_);
+
   session->sendRequest(request);
 
   while (true) {
@@ -422,14 +434,18 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_) {
       ans = responseToList(event,fields_vec);
       break;
     default:
-      MessageIterator msgIter(event);
-      while (msgIter.next()) {
-        Message msg = msgIter.message();
-        msg.asElement().print(blplog);
+      if(append_log) {
+        MessageIterator msgIter(event);
+        while (msgIter.next()) {
+          Message msg = msgIter.message();
+          msg.asElement().print(blplog);
+        }
       }
     }
     if (event.eventType() == Event::RESPONSE) { break; }
   }
-  ans.attr("blplog") = Rcpp::wrap(blplog.str());
+  if(append_log) {
+    ans.attr("blplog") = Rcpp::wrap(blplog.str());
+  }
   return Rcpp::wrap(ans);
 }
