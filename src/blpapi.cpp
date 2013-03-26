@@ -69,7 +69,7 @@ void* checkExternalPointer(SEXP xp_, const char* valid_tag) {
   if(!xp_tag) {
     throw std::logic_error("External pointer tag is blank.");
   }
-  if(strcmp(xp_tag,valid_tag) != 0) {
+  if(std::strcmp(xp_tag,valid_tag) != 0) {
     throw std::logic_error("External pointer tag does not match.");
   }
   if(R_ExternalPtrAddr(xp_)==NULL) {
@@ -236,6 +236,61 @@ Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event, const std::vect
   ans.attr("class") = "data.frame";
   ans.attr("row.names") = rownames;
   return ans;
+}
+
+extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_) {
+  blpapi::Session* session;
+  Rcpp::LogicalVector ans(1);
+  ans[0] = false;
+  std::ostringstream blplog;
+  try {
+    session = reinterpret_cast<blpapi::Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
+  } catch (std::exception& e) {
+    REprintf(e.what());
+    return R_NilValue;
+  }
+
+  if(uuid_ == R_NilValue || ip_address_ == R_NilValue) {
+    REprintf("uuid or ip_address was null.");
+    return R_NilValue;
+  }
+  std::string uuid = Rcpp::as<std::string>(uuid_);
+  std::string ip_address = Rcpp::as<std::string>(ip_address_);
+
+  if(!session->openService("//blp/apiauth")) {
+    REprintf("Failed to open //blp/apiauth\n");
+    return R_NilValue;
+  }
+
+  Service apiAuthSvc = session->getService("//blp/apiauth");
+  Request authorizationRequest = apiAuthSvc.createAuthorizationRequest();
+  authorizationRequest.set("uuid", uuid.c_str());
+  authorizationRequest.set("ipAddress", ip_address.c_str());
+  Identity identity = session->createIdentity();
+  CorrelationId authRequestID(10);
+  session->sendAuthorizationRequest(authorizationRequest, &identity, authRequestID);
+
+  while (true) {
+    Event event = session->nextEvent();
+    MessageIterator msgIter(event);
+
+    switch (event.eventType()) {
+    case Event::RESPONSE:
+    case Event::PARTIAL_RESPONSE:
+      msgIter.next();
+      if(std::strcmp(msgIter.message().asElement().name().string(),"AuthorizationSuccess")==0) {
+        ans[0] = true;
+      }
+    default:
+      while (msgIter.next()) {
+        Message msg = msgIter.message();
+        msg.asElement().print(blplog);
+      }
+    }
+    if (event.eventType() == Event::RESPONSE) { break; }
+  }
+  ans.attr("blplog") = Rcpp::wrap(blplog.str());
+  return Rcpp::wrap(ans);
 }
 
 extern "C" SEXP bdp_connect(SEXP host_, SEXP port_, SEXP log_level_) {

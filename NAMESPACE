@@ -2,6 +2,7 @@ useDynLib(Rblpapi)
 
 export(
 blpConnect,
+blpAuthenticate,
 bdh,
 bdp
 )
