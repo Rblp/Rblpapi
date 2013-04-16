@@ -46,6 +46,14 @@ using namespace blpapi;
 using std::cout;
 using std::endl;
 
+static void identityFinalizer(SEXP identity_) {
+  blpapi::Identity* identity = reinterpret_cast<blpapi::Identity*>(R_ExternalPtrAddr(identity_));
+  if(identity) {
+    delete identity;
+    R_ClearExternalPtr(identity_);
+  }
+}
+
 static void sessionFinalizer(SEXP session_) {
   blpapi::Session* session = reinterpret_cast<blpapi::Session*>(R_ExternalPtrAddr(session_));
   if(session) {
@@ -240,8 +248,6 @@ Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event, const std::vect
 
 extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_, SEXP append_log_) {
   blpapi::Session* session;
-  Rcpp::LogicalVector ans(1);
-  ans[0] = false;
   std::ostringstream blplog;
   try {
     session = reinterpret_cast<blpapi::Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
@@ -267,9 +273,8 @@ extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_, SEXP 
   Request authorizationRequest = apiAuthSvc.createAuthorizationRequest();
   authorizationRequest.set("uuid", uuid.c_str());
   authorizationRequest.set("ipAddress", ip_address.c_str());
-  Identity identity = session->createIdentity();
-  CorrelationId authRequestID(10);
-  session->sendAuthorizationRequest(authorizationRequest, &identity, authRequestID);
+  Identity* identity_p = new Identity(session->createIdentity());
+  session->sendAuthorizationRequest(authorizationRequest, identity_p);
 
   while (true) {
     Event event = session->nextEvent();
@@ -279,8 +284,9 @@ extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_, SEXP 
     case Event::RESPONSE:
     case Event::PARTIAL_RESPONSE:
       msgIter.next();
-      if(std::strcmp(msgIter.message().asElement().name().string(),"AuthorizationSuccess")==0) {
-        ans[0] = true;
+      if(std::strcmp(msgIter.message().asElement().name().string(),"AuthorizationSuccess")!=0) {
+        REprintf("Authorization request failed.");
+        return R_NilValue;
       }
     default:
       while (msgIter.next()) {
@@ -290,10 +296,7 @@ extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_, SEXP 
     }
     if (event.eventType() == Event::RESPONSE) { break; }
   }
-  if(append_log) {
-    ans.attr("blplog") = Rcpp::wrap(blplog.str());
-  }
-  return Rcpp::wrap(ans);
+  return createExternalPointer<blpapi::Identity>(identity_p,identityFinalizer,"blpapi::Identity*");
 }
 
 extern "C" SEXP bdp_connect(SEXP host_, SEXP port_) {
@@ -313,10 +316,11 @@ extern "C" SEXP bdp_connect(SEXP host_, SEXP port_) {
   return createExternalPointer<blpapi::Session>(sp,sessionFinalizer,"blpapi::Session*");
 }
 
-extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_, SEXP end_date_, SEXP options_, SEXP append_log_) {
+extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_, SEXP end_date_, SEXP options_, SEXP identity_, SEXP append_log_) {
   Rcpp::List ans;
   std::ostringstream blplog;
   blpapi::Session* session;
+  blpapi::Identity* ip;
   std::vector<std::string> fields_vec;
 
   try {
@@ -357,7 +361,17 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
 
   bool append_log = Rcpp::as<bool>(append_log_);
 
-  session->sendRequest(request);
+  if(identity_ != R_NilValue) {
+    try {
+      ip = reinterpret_cast<blpapi::Identity*>(checkExternalPointer(identity_,"blpapi::Identity*"));
+    } catch (std::exception& e) {
+      REprintf(e.what());
+      return R_NilValue;
+    }
+    session->sendRequest(request,*ip);
+  } else {
+    session->sendRequest(request);
+  }
 
   while (true) {
     std::string security_name;
@@ -386,10 +400,11 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
 }
 
 
-extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, SEXP append_log_) {
+extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, SEXP identity_, SEXP append_log_) {
   Rcpp::List ans;
   std::ostringstream blplog;
   blpapi::Session* session;
+  blpapi::Identity* ip;
   std::vector<std::string> fields_vec;
 
   try {
@@ -423,7 +438,17 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
 
   bool append_log = Rcpp::as<bool>(append_log_);
 
-  session->sendRequest(request);
+  if(identity_ != R_NilValue) {
+    try {
+      ip = reinterpret_cast<blpapi::Identity*>(checkExternalPointer(identity_,"blpapi::Identity*"));
+    } catch (std::exception& e) {
+      REprintf(e.what());
+      return R_NilValue;
+    }
+    session->sendRequest(request,*ip);
+  } else {
+    session->sendRequest(request);
+  }
 
   while (true) {
     std::string security_name;

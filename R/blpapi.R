@@ -12,7 +12,7 @@ blpAuthenticate <- function(conn,uuid,host="localhost",ip.address, append.log=FA
     .Call("bdp_authenticate", conn, uuid, ip.address, append.log, PACKAGE="Rblpapi")
 }
 
-bdh <- function(conn, securities, fields, start.date, end.date=NULL, include.non.trading.days=FALSE, options=NULL, append.log=FALSE) {
+bdh <- function(conn, securities, fields, start.date, end.date=NULL, include.non.trading.days=FALSE, options=NULL, identity=NULL, append.log=FALSE) {
     stopifnot(!is.na(append.log) || is.logical(append.log))
 
     start.date = format(start.date, format="%Y%m%d")
@@ -24,10 +24,10 @@ bdh <- function(conn, securities, fields, start.date, end.date=NULL, include.non
         options <- c(options,structure(c("ALL_CALENDAR_DAYS", "NIL_VALUE"),names=c("nonTradingDayFillOption", "nonTradingDayFillMethod")))
     }
 
-    .Call("bdh", conn, securities, fields, start.date, end.date, options, append.log, PACKAGE="Rblpapi")
+    .Call("bdh", conn, securities, fields, start.date, end.date, options, identity, append.log, PACKAGE="Rblpapi")
 }
 
-bdp <- function(conn, securities, fields, options=NULL, append.log=FALSE) {
+bdp <- function(conn, securities, fields, options=NULL, identity=NULL, append.log=FALSE) {
     stopifnot(!is.na(append.log) || is.logical(append.log))
-    .Call("bdp", conn, securities, fields, options, append.log, PACKAGE="Rblpapi")
+    .Call("bdp", conn, securities, fields, options, identity, append.log, PACKAGE="Rblpapi")
 }
