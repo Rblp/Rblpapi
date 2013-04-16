@@ -17,6 +17,7 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <cstring>
 #include <sstream>
@@ -45,6 +46,9 @@ using namespace BloombergLP;
 using namespace blpapi;
 using std::cout;
 using std::endl;
+
+// global logger
+static std::ofstream logger;
 
 static void identityFinalizer(SEXP identity_) {
   blpapi::Identity* identity = reinterpret_cast<blpapi::Identity*>(R_ExternalPtrAddr(identity_));
@@ -246,9 +250,8 @@ Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event, const std::vect
   return ans;
 }
 
-extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_, SEXP append_log_) {
+extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_) {
   blpapi::Session* session;
-  std::ostringstream blplog;
   try {
     session = reinterpret_cast<blpapi::Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
   } catch (std::exception& e) {
@@ -262,7 +265,6 @@ extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_, SEXP 
   }
   std::string uuid = Rcpp::as<std::string>(uuid_);
   std::string ip_address = Rcpp::as<std::string>(ip_address_);
-  bool append_log = Rcpp::as<bool>(append_log_);
 
   if(!session->openService("//blp/apiauth")) {
     REprintf("Failed to open //blp/apiauth\n");
@@ -291,15 +293,16 @@ extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_, SEXP 
     default:
       while (msgIter.next()) {
         Message msg = msgIter.message();
-        msg.asElement().print(blplog);
+        if(logger.is_open()) { msg.asElement().print(logger); }
       }
     }
     if (event.eventType() == Event::RESPONSE) { break; }
   }
+  if(logger.is_open()) { logger.flush(); }
   return createExternalPointer<blpapi::Identity>(identity_p,identityFinalizer,"blpapi::Identity*");
 }
 
-extern "C" SEXP bdp_connect(SEXP host_, SEXP port_) {
+extern "C" SEXP bdp_connect(SEXP host_, SEXP port_, SEXP logfile_) {
   SEXP conn;
   std::string host(Rcpp::as<std::string>(host_));
   int port(Rcpp::as<int>(port_));
@@ -313,12 +316,15 @@ extern "C" SEXP bdp_connect(SEXP host_, SEXP port_) {
     REprintf("Failed to start session.\n");
     return R_NilValue;
   }
+
+  if(logfile_ != R_NilValue && TYPEOF(logfile_)==STRSXP && CHAR(STRING_ELT(logfile_,0))) {
+    logger.open(CHAR(STRING_ELT(logfile_,0)));
+  }
   return createExternalPointer<blpapi::Session>(sp,sessionFinalizer,"blpapi::Session*");
 }
 
-extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_, SEXP end_date_, SEXP options_, SEXP identity_, SEXP append_log_) {
+extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_, SEXP end_date_, SEXP options_, SEXP identity_) {
   Rcpp::List ans;
-  std::ostringstream blplog;
   blpapi::Session* session;
   blpapi::Identity* ip;
   std::vector<std::string> fields_vec;
@@ -359,7 +365,6 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
     request.set("endDate", Rcpp::as<std::string>(end_date_).c_str());
   }
 
-  bool append_log = Rcpp::as<bool>(append_log_);
 
   if(identity_ != R_NilValue) {
     try {
@@ -382,27 +387,22 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
       ans[ getSecurity(event) ] = HistoricalDataResponseToDF(event,fields_vec);
       break;
     default:
-      if(append_log) {
-        MessageIterator msgIter(event);
-        while (msgIter.next()) {
-          Message msg = msgIter.message();
-          msg.asElement().print(blplog);
-        }
+
+      MessageIterator msgIter(event);
+      while (msgIter.next()) {
+        Message msg = msgIter.message();
+        if(logger.is_open()) { msg.asElement().print(logger); }
       }
     }
     if (event.eventType() == Event::RESPONSE) { break; }
   }
-
-  if(append_log) {
-    ans.attr("blplog") = Rcpp::wrap(blplog.str());
-  }
+  if(logger.is_open()) { logger.flush(); }
   return Rcpp::wrap(ans);
 }
 
 
-extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, SEXP identity_, SEXP append_log_) {
+extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, SEXP identity_) {
   Rcpp::List ans;
-  std::ostringstream blplog;
   blpapi::Session* session;
   blpapi::Identity* ip;
   std::vector<std::string> fields_vec;
@@ -436,8 +436,6 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
 
   if(options_ != R_NilValue) { appendOptionsToRequest(request,options_); }
 
-  bool append_log = Rcpp::as<bool>(append_log_);
-
   if(identity_ != R_NilValue) {
     try {
       ip = reinterpret_cast<blpapi::Identity*>(checkExternalPointer(identity_,"blpapi::Identity*"));
@@ -459,18 +457,14 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
       ans = responseToList(event,fields_vec);
       break;
     default:
-      if(append_log) {
-        MessageIterator msgIter(event);
-        while (msgIter.next()) {
-          Message msg = msgIter.message();
-          msg.asElement().print(blplog);
-        }
+      MessageIterator msgIter(event);
+      while (msgIter.next()) {
+        Message msg = msgIter.message();
+        if(logger.is_open()) { msg.asElement().print(logger); }
       }
     }
     if (event.eventType() == Event::RESPONSE) { break; }
   }
-  if(append_log) {
-    ans.attr("blplog") = Rcpp::wrap(blplog.str());
-  }
+  if(logger.is_open()) { logger.flush(); }
   return Rcpp::wrap(ans);
 }
