@@ -260,7 +260,7 @@ extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_) {
   }
 
   if(uuid_ == R_NilValue || ip_address_ == R_NilValue) {
-    REprintf("uuid or ip_address was null.");
+    REprintf("uuid or ip_address was null.\n");
     return R_NilValue;
   }
   std::string uuid = Rcpp::as<std::string>(uuid_);
@@ -287,7 +287,7 @@ extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_) {
     case Event::PARTIAL_RESPONSE:
       msgIter.next();
       if(std::strcmp(msgIter.message().asElement().name().string(),"AuthorizationSuccess")!=0) {
-        REprintf("Authorization request failed.");
+        REprintf("Authorization request failed.\n");
         return R_NilValue;
       }
     default:
