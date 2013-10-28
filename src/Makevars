@@ -1,6 +1,6 @@
 ## -*- mode: makefile; -*-
 
-PKG_CPPFLAGS += -I../inst/include/ -I. -std=c++0x
+PKG_CPPFLAGS += -I../inst/include/ -I.
 RCPP_LIBS=`Rscript -e "Rcpp:::LdFlags()"`
 ARCH=$(shell uname -m)
 

@@ -132,15 +132,11 @@ void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_le
 
   for(size_t i = 0; i < field_data.numElements(); ++i) {
     Element this_e = field_data.getElement(i);
-    std::cout << "this_e.name().string(): " << this_e.name().string() << std::endl;
     std::map<std::string,R_len_t>::iterator iter = fields_map.find(this_e.name().string());
     if(iter == fields_map.end()) {
       throw std::logic_error(std::string("Unexpected field encountered in response:") + this_e.name().string());
     }
     R_len_t col_index = iter->second;
-    std::cout << "setting (i,j):" << row_index << " " << col_index << std::endl;
-    std::cout << "TYPEOF(ans[j]): " << TYPEOF(ans[col_index]) << std::endl;
-    std::cout << "this_e.datatype(): " << this_e.datatype() << std::endl;
     switch(this_e.datatype()) {
     case BLPAPI_DATATYPE_BOOL:
       INTEGER(ans[col_index])[row_index] = this_e.getValueAsBool(); break;
@@ -159,7 +155,6 @@ void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_le
     case BLPAPI_DATATYPE_FLOAT64:
       REAL(ans[col_index])[row_index] = this_e.getValueAsFloat64(); break;
     case BLPAPI_DATATYPE_STRING:
-      std::cout << "****  " << this_e.getValueAsString() << std::endl;
       SET_STRING_ELT(ans[col_index],row_index,Rf_mkChar(this_e.getValueAsString())); break;
     case BLPAPI_DATATYPE_BYTEARRAY:
       throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
@@ -267,8 +262,6 @@ Rcpp::List buildDataFrame(std::vector<std::string>& rownames,
   if(colnames.size() != fieldTypes.size()) {
     throw std::logic_error("buildDataFrame: Colnames not the same length as fieldTypes.");
   }
-
-  //for(auto hat : colnames) { std::cout << hat << std::endl; }
 
   Rcpp::List ans(colnames.size());
   for(R_len_t i = 0; i < fieldTypes.size(); ++i) {
