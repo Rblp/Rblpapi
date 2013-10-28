@@ -156,7 +156,7 @@ Rcpp::List refDataElementToList(blpapi::Element e) {
       ans.push_back(this_e.getValueAsString(),field_name); break;
     case BLPAPI_DATATYPE_BYTEARRAY:
       throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
-    case BLPAPI_DATATYPE_DATE:      
+    case BLPAPI_DATATYPE_DATE:
     case BLPAPI_DATATYPE_TIME:
       //FIXME: separate out time later
       ans.push_back(bbgDateToPOSIX(this_e.getValueAsDatetime()),field_name); break;
@@ -180,7 +180,7 @@ Rcpp::List refDataElementToList(blpapi::Element e) {
 }
 
 
-Rcpp::List responseToList(blpapi::Event& event, const std::vector<std::string>& fields) {
+Rcpp::List responseToList(blpapi::Event& event) {
   Rcpp::List ans;
   MessageIterator msgIter(event);
   if(!msgIter.next()) {
@@ -243,6 +243,30 @@ Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event, const std::vect
   ans.push_back(dts,"asofdate");
   for(R_len_t i = 0; i < fields.size(); ++i) {
     ans.push_back(*nvps[i],fields[i]);
+  }
+
+  ans.attr("class") = "data.frame";
+  ans.attr("row.names") = rownames;
+  return ans;
+}
+
+Rcpp::List buildDataFrame(std::vector<std::string>& rownames,
+                               std::vector<std::string>& colnames,
+                               std::vector<std::string> fieldTypes) {
+
+  if(colnames.size() != fieldTypes.size()) {
+    throw std::logic_error("buildDataFrame: Colnames not the same length as fieldTypes.");
+  }
+
+  Rcpp::List ans(colnames.size());
+  for(R_len_t i = 0; i < fieldTypes.size(); ++i) {
+    if(fieldTypes[i] == "Double") {
+      ans[i] = Rcpp::NumericVector(rownames.size()),colnames[i];
+    } else if(fieldTypes[i] == "String") {
+      ans[i] = Rcpp::CharacterVector(rownames.size()),colnames[i];
+    } else {
+      throw std::logic_error(std::string("buildDataFrame: unexpected type encountered: ") + fieldTypes[i]); 
+    }
   }
 
   ans.attr("class") = "data.frame";
@@ -352,7 +376,7 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
   for(R_len_t i = 0; i < securities.length(); i++) {
     request.getElement("securities").appendValue(static_cast<std::string>(securities[i]).c_str());
   }
-  
+
   for(R_len_t i = 0; i < fields.length(); i++) {
     request.getElement("fields").appendValue(static_cast<std::string>(fields[i]).c_str());
     fields_vec.push_back(static_cast<std::string>(fields[i]));
@@ -379,7 +403,6 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
   }
 
   while (true) {
-    std::string security_name;
     Event event = session->nextEvent();
     switch (event.eventType()) {
     case Event::RESPONSE:
@@ -400,12 +423,132 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
   return Rcpp::wrap(ans);
 }
 
+void getFieldTypes(std::vector<std::string>& ans, blpapi::Session* session, std::vector<std::string>& fields) {
+  const std::string APIFLDS_SVC("//blp/apiflds");
+  if (!session->openService(APIFLDS_SVC.c_str())) {
+    throw std::logic_error(std::string("Failed to open " + APIFLDS_SVC));
+  }
+  Service fieldInfoService = session->getService(APIFLDS_SVC.c_str());
+  Request request = fieldInfoService.createRequest("FieldInfoRequest");
+  for(R_len_t i = 0; i < fields.size(); i++) {
+    request.append("id", fields[i].c_str());
+  }
+  request.set("returnFieldDocumentation", false);
+
+  session->sendRequest(request);
+  while (true) {
+    Event event = session->nextEvent();
+    if (event.eventType() != Event::RESPONSE &&
+        event.eventType() != Event::PARTIAL_RESPONSE) {
+      continue;
+    }
+
+    MessageIterator msgIter(event);
+    while (msgIter.next()) {
+      Message msg = msgIter.message();
+      //msg.asElement().print(std::cout);
+      Element fields = msg.getElement("fieldData");
+      int numElements = fields.numValues();
+
+      for (int i=0; i < numElements; i++) {
+        Element field = fields.getValueAsElement(i);
+        if(field.hasElement("fieldError")) {
+          std::ostringstream err;
+          err << "Bad field: " << field.getElementAsString("id") << std::endl;
+          throw std::logic_error(err.str());
+        }
+        if(!field.hasElement("fieldInfo") || !field.getElement("fieldInfo").hasElement("datatype")) {
+          throw std::logic_error("Did not find datatype in fieldInfo request.");
+        }
+        std::string field_type(field.getElement("fieldInfo").getElementAsString("datatype"));
+        ans.push_back(field_type);
+      }
+    }
+    if (event.eventType() == Event::RESPONSE) {
+      break;
+    }
+  }
+}
 
 extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, SEXP identity_) {
   Rcpp::List ans;
   blpapi::Session* session;
   blpapi::Identity* ip;
-  std::vector<std::string> fields_vec;
+
+  std::vector<std::string> securities(Rcpp::as<std::vector<std::string> >(securities_));
+  std::vector<std::string> fields(Rcpp::as<std::vector<std::string> >(fields_));
+  std::vector<std::string> field_types;
+
+  try {
+    session = reinterpret_cast<blpapi::Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
+  } catch (std::exception& e) {
+    REprintf(e.what());
+    return R_NilValue;
+  }
+
+  try {
+    getFieldTypes(field_types, session, fields);
+  } catch (std::exception& e) {
+    REprintf(e.what());
+    return R_NilValue;
+  }
+
+  if(!session->openService("//blp/refdata")) {
+    REprintf("Failed to open //blp/refdata\n");
+    return R_NilValue;
+  }
+
+  Service refDataService = session->getService("//blp/refdata");
+  Request request = refDataService.createRequest("ReferenceDataRequest");
+
+  for(R_len_t i = 0; i < securities.size(); i++) {
+    request.getElement("securities").appendValue(securities[i].c_str());
+  }
+  
+  for(R_len_t i = 0; i < fields.size(); i++) {
+    request.getElement("fields").appendValue(fields[i].c_str());
+  }
+
+  if(options_ != R_NilValue) { appendOptionsToRequest(request,options_); }
+
+  if(identity_ != R_NilValue) {
+    try {
+      ip = reinterpret_cast<blpapi::Identity*>(checkExternalPointer(identity_,"blpapi::Identity*"));
+    } catch (std::exception& e) {
+      REprintf(e.what());
+      return R_NilValue;
+    }
+    session->sendRequest(request,*ip);
+  } else {
+    session->sendRequest(request);
+  }
+
+  while (true) {
+    Event event = session->nextEvent();
+    switch (event.eventType()) {
+    case Event::RESPONSE:
+    case Event::PARTIAL_RESPONSE:
+      ans = responseToList(event);
+      break;
+    default:
+      MessageIterator msgIter(event);
+      while (msgIter.next()) {
+        Message msg = msgIter.message();
+        if(logger.is_open()) { msg.asElement().print(logger); }
+      }
+    }
+    if (event.eventType() == Event::RESPONSE) { break; }
+  }
+  if(logger.is_open()) { logger.flush(); }
+  return Rcpp::wrap(ans);
+}
+
+/*
+extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, SEXP identity_) {
+  Rcpp::List ans;
+  blpapi::Session* session;
+  blpapi::Identity* ip;
+  std::vector<std::string> fields_vec, field_types;
 
   try {
     session = reinterpret_cast<blpapi::Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
@@ -417,7 +560,17 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
   Rcpp::CharacterVector securities(securities_);
   Rcpp::CharacterVector fields(fields_);
 
-  if (!session->openService("//blp/refdata")) {
+  try {
+    getFieldTypes(field_types, session, fields);
+  } catch (std::exception& e) {
+    REprintf(e.what());
+    return R_NilValue;
+  }
+
+  // build answer size and types from the field types
+  for(int i = 0; i < field_types.size(); i++) { std::cout << field_types[i] << std::endl; }
+
+  if(!session->openService("//blp/refdata")) {
     REprintf("Failed to open //blp/refdata\n");
     return R_NilValue;
   }
@@ -449,7 +602,6 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
   }
 
   while (true) {
-    std::string security_name;
     Event event = session->nextEvent();
     switch (event.eventType()) {
     case Event::RESPONSE:
@@ -468,3 +620,4 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
   if(logger.is_open()) { logger.flush(); }
   return Rcpp::wrap(ans);
 }
+*/
