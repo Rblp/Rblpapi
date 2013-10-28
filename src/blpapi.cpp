@@ -127,43 +127,50 @@ std::string getSecurity(blpapi::Event& event) {
   return ans;
 }
 
-Rcpp::List refDataElementToList(blpapi::Element e) {
-  Rcpp::List ans;
+void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_len_t>& fields_map, blpapi::Element& e) {
   Element field_data = e.getElement("fieldData");
 
   for(size_t i = 0; i < field_data.numElements(); ++i) {
     Element this_e = field_data.getElement(i);
-    std::string field_name(this_e.name().string());
-
+    std::cout << "this_e.name().string(): " << this_e.name().string() << std::endl;
+    std::map<std::string,R_len_t>::iterator iter = fields_map.find(this_e.name().string());
+    if(iter == fields_map.end()) {
+      throw std::logic_error(std::string("Unexpected field encountered in response:") + this_e.name().string());
+    }
+    R_len_t col_index = iter->second;
+    std::cout << "setting (i,j):" << row_index << " " << col_index << std::endl;
+    std::cout << "TYPEOF(ans[j]): " << TYPEOF(ans[col_index]) << std::endl;
+    std::cout << "this_e.datatype(): " << this_e.datatype() << std::endl;
     switch(this_e.datatype()) {
     case BLPAPI_DATATYPE_BOOL:
-      ans.push_back(this_e.getValueAsBool(),field_name); break;
+      INTEGER(ans[col_index])[row_index] = this_e.getValueAsBool(); break;
     case BLPAPI_DATATYPE_CHAR:
-      ans.push_back(this_e.getValueAsString(),field_name); break;
+      SET_STRING_ELT(ans[col_index],row_index,Rf_mkChar(this_e.getValueAsString())); break;
     case BLPAPI_DATATYPE_BYTE:
       throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
       break;
     case BLPAPI_DATATYPE_INT32:
-      ans.push_back(this_e.getValueAsInt32(),field_name); break;
+      INTEGER(ans[col_index])[row_index] = this_e.getValueAsInt32(); break;
     case BLPAPI_DATATYPE_INT64:
       throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_INT64.");
       break;
     case BLPAPI_DATATYPE_FLOAT32:
-      ans.push_back(this_e.getValueAsFloat32(),field_name); break;
+      REAL(ans[col_index])[row_index] = this_e.getValueAsFloat32(); break;
     case BLPAPI_DATATYPE_FLOAT64:
-      ans.push_back(this_e.getValueAsFloat64(),field_name); break;
+      REAL(ans[col_index])[row_index] = this_e.getValueAsFloat64(); break;
     case BLPAPI_DATATYPE_STRING:
-      ans.push_back(this_e.getValueAsString(),field_name); break;
+      std::cout << "****  " << this_e.getValueAsString() << std::endl;
+      SET_STRING_ELT(ans[col_index],row_index,Rf_mkChar(this_e.getValueAsString())); break;
     case BLPAPI_DATATYPE_BYTEARRAY:
       throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
     case BLPAPI_DATATYPE_DATE:
     case BLPAPI_DATATYPE_TIME:
       //FIXME: separate out time later
-      ans.push_back(bbgDateToPOSIX(this_e.getValueAsDatetime()),field_name); break;
+      REAL(ans[col_index])[row_index] = bbgDateToPOSIX(this_e.getValueAsDatetime()); break;
     case BLPAPI_DATATYPE_DECIMAL:
-      ans.push_back(this_e.getValueAsFloat64(),field_name); break;
+      REAL(ans[col_index])[row_index] = this_e.getValueAsFloat64(); break;
     case BLPAPI_DATATYPE_DATETIME:
-      ans.push_back(bbgDateToPOSIX(this_e.getValueAsDatetime()),field_name); break;
+      REAL(ans[col_index])[row_index] = bbgDateToPOSIX(this_e.getValueAsDatetime()); break;
     case BLPAPI_DATATYPE_ENUMERATION:
       throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
     case BLPAPI_DATATYPE_SEQUENCE:
@@ -171,17 +178,20 @@ Rcpp::List refDataElementToList(blpapi::Element e) {
     case BLPAPI_DATATYPE_CHOICE:
       throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_CHOICE.");
     case BLPAPI_DATATYPE_CORRELATION_ID:
-      ans.push_back(this_e.getValueAsInt32(),field_name); break;
+      INTEGER(ans[col_index])[row_index] = this_e.getValueAsInt32(); break;
     default:
       throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
     }
   }
-  return ans;
 }
 
 
-Rcpp::List responseToList(blpapi::Event& event) {
-  Rcpp::List ans;
+void populateDF(Rcpp::List& ans, blpapi::Event& event) {
+  std::vector<std::string> rownames = Rcpp::as<std::vector<std::string> > (ans.attr("row.names"));
+  std::vector<std::string> colnames = Rcpp::as<std::vector<std::string> > (ans.attr("names"));
+  std::map<std::string, R_len_t> rownames_map; for(R_len_t i = 0; i < rownames.size(); ++i) { rownames_map[rownames[i]] = i; }
+  std::map<std::string, R_len_t> colnames_map; for(R_len_t i = 0; i < colnames.size(); ++i) { colnames_map[colnames[i]] = i; }
+
   MessageIterator msgIter(event);
   if(!msgIter.next()) {
     throw std::logic_error("Not a valid MessageIterator.");
@@ -194,9 +204,9 @@ Rcpp::List responseToList(blpapi::Event& event) {
   Element securityData = response.getElement("securityData");
   for(size_t i = 0; i < securityData.numValues(); ++i) {
     Element this_security = securityData.getValueAsElement(i);
-    ans.push_back(refDataElementToList(this_security),this_security.getElementAsString("security"));
+    std::string this_security_name(this_security.getElementAsString("security"));
+    populateDfRow(ans, rownames_map[this_security_name], colnames_map, this_security);
   }
-  return ans;
 }
 
 Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event, const std::vector<std::string>& fields) {
@@ -251,26 +261,29 @@ Rcpp::DataFrame HistoricalDataResponseToDF(blpapi::Event& event, const std::vect
 }
 
 Rcpp::List buildDataFrame(std::vector<std::string>& rownames,
-                               std::vector<std::string>& colnames,
-                               std::vector<std::string> fieldTypes) {
+                          std::vector<std::string>& colnames,
+                          std::vector<std::string> fieldTypes) {
 
   if(colnames.size() != fieldTypes.size()) {
     throw std::logic_error("buildDataFrame: Colnames not the same length as fieldTypes.");
   }
 
+  //for(auto hat : colnames) { std::cout << hat << std::endl; }
+
   Rcpp::List ans(colnames.size());
   for(R_len_t i = 0; i < fieldTypes.size(); ++i) {
     if(fieldTypes[i] == "Double") {
-      ans[i] = Rcpp::NumericVector(rownames.size()),colnames[i];
+      ans[i] = Rcpp::NumericVector(rownames.size(),NA_REAL);
     } else if(fieldTypes[i] == "String") {
-      ans[i] = Rcpp::CharacterVector(rownames.size()),colnames[i];
+      ans[i] = Rcpp::CharacterVector(rownames.size());
     } else {
       throw std::logic_error(std::string("buildDataFrame: unexpected type encountered: ") + fieldTypes[i]); 
     }
   }
 
   ans.attr("class") = "data.frame";
-  ans.attr("row.names") = rownames;
+  ans.attr("names") = colnames;
+  ans.attr("row.names") = rownames; 
   return ans;
 }
 
@@ -423,18 +436,10 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
   return Rcpp::wrap(ans);
 }
 
-void getFieldTypes(std::vector<std::string>& ans, blpapi::Session* session, std::vector<std::string>& fields) {
-  const std::string APIFLDS_SVC("//blp/apiflds");
-  if (!session->openService(APIFLDS_SVC.c_str())) {
-    throw std::logic_error(std::string("Failed to open " + APIFLDS_SVC));
-  }
-  Service fieldInfoService = session->getService(APIFLDS_SVC.c_str());
+std::string getFieldType(blpapi::Session* session, blpapi::Service fieldInfoService, const std::string& field) {
   Request request = fieldInfoService.createRequest("FieldInfoRequest");
-  for(R_len_t i = 0; i < fields.size(); i++) {
-    request.append("id", fields[i].c_str());
-  }
+  request.append("id", field.c_str());
   request.set("returnFieldDocumentation", false);
-
   session->sendRequest(request);
   while (true) {
     Event event = session->nextEvent();
@@ -448,21 +453,19 @@ void getFieldTypes(std::vector<std::string>& ans, blpapi::Session* session, std:
       Message msg = msgIter.message();
       //msg.asElement().print(std::cout);
       Element fields = msg.getElement("fieldData");
-      int numElements = fields.numValues();
-
-      for (int i=0; i < numElements; i++) {
-        Element field = fields.getValueAsElement(i);
-        if(field.hasElement("fieldError")) {
-          std::ostringstream err;
-          err << "Bad field: " << field.getElementAsString("id") << std::endl;
-          throw std::logic_error(err.str());
-        }
-        if(!field.hasElement("fieldInfo") || !field.getElement("fieldInfo").hasElement("datatype")) {
-          throw std::logic_error("Did not find datatype in fieldInfo request.");
-        }
-        std::string field_type(field.getElement("fieldInfo").getElementAsString("datatype"));
-        ans.push_back(field_type);
+      if(fields.numValues() > 1) {
+        throw std::logic_error("Only one field requested.");
       }
+      Element field = fields.getValueAsElement(0);
+      if(field.hasElement("fieldError")) {
+        std::ostringstream err;
+        err << "Bad field: " << field.getElementAsString("id") << std::endl;
+        throw std::logic_error(err.str());
+      }
+      if(!field.hasElement("fieldInfo") || !field.getElement("fieldInfo").hasElement("datatype")) {
+        throw std::logic_error("Did not find datatype in fieldInfo request.");
+      }
+      return field.getElement("fieldInfo").getElementAsString("datatype");
     }
     if (event.eventType() == Event::RESPONSE) {
       break;
@@ -470,8 +473,18 @@ void getFieldTypes(std::vector<std::string>& ans, blpapi::Session* session, std:
   }
 }
 
+void getFieldTypes(std::vector<std::string>& ans, blpapi::Session* session, std::vector<std::string>& fields) {
+  const std::string APIFLDS_SVC("//blp/apiflds");
+  if (!session->openService(APIFLDS_SVC.c_str())) {
+    throw std::logic_error(std::string("Failed to open " + APIFLDS_SVC));
+  }
+  Service fieldInfoService = session->getService(APIFLDS_SVC.c_str());
+  for(R_len_t i = 0; i < fields.size(); i++) {
+    ans.push_back(getFieldType(session,fieldInfoService,fields[i]));
+  }
+}
+
 extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, SEXP identity_) {
-  Rcpp::List ans;
   blpapi::Session* session;
   blpapi::Identity* ip;
 
@@ -523,12 +536,14 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
     session->sendRequest(request);
   }
 
+  Rcpp::List ans = buildDataFrame(securities,fields,field_types);
+
   while (true) {
     Event event = session->nextEvent();
     switch (event.eventType()) {
     case Event::RESPONSE:
     case Event::PARTIAL_RESPONSE:
-      ans = responseToList(event);
+      populateDF(ans,event);
       break;
     default:
       MessageIterator msgIter(event);
@@ -540,84 +555,6 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
     if (event.eventType() == Event::RESPONSE) { break; }
   }
   if(logger.is_open()) { logger.flush(); }
+
   return Rcpp::wrap(ans);
 }
-
-/*
-extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, SEXP identity_) {
-  Rcpp::List ans;
-  blpapi::Session* session;
-  blpapi::Identity* ip;
-  std::vector<std::string> fields_vec, field_types;
-
-  try {
-    session = reinterpret_cast<blpapi::Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
-  } catch (std::exception& e) {
-    REprintf(e.what());
-    return R_NilValue;
-  }
-
-  Rcpp::CharacterVector securities(securities_);
-  Rcpp::CharacterVector fields(fields_);
-
-  try {
-    getFieldTypes(field_types, session, fields);
-  } catch (std::exception& e) {
-    REprintf(e.what());
-    return R_NilValue;
-  }
-
-  // build answer size and types from the field types
-  for(int i = 0; i < field_types.size(); i++) { std::cout << field_types[i] << std::endl; }
-
-  if(!session->openService("//blp/refdata")) {
-    REprintf("Failed to open //blp/refdata\n");
-    return R_NilValue;
-  }
-
-  Service refDataService = session->getService("//blp/refdata");
-  Request request = refDataService.createRequest("ReferenceDataRequest");
-
-  for(R_len_t i = 0; i < securities.length(); i++) {
-    request.getElement("securities").appendValue(static_cast<std::string>(securities[i]).c_str());
-  }
-  
-  for(R_len_t i = 0; i < fields.length(); i++) {
-    request.getElement("fields").appendValue(static_cast<std::string>(fields[i]).c_str());
-    fields_vec.push_back(static_cast<std::string>(fields[i]));
-  }
-
-  if(options_ != R_NilValue) { appendOptionsToRequest(request,options_); }
-
-  if(identity_ != R_NilValue) {
-    try {
-      ip = reinterpret_cast<blpapi::Identity*>(checkExternalPointer(identity_,"blpapi::Identity*"));
-    } catch (std::exception& e) {
-      REprintf(e.what());
-      return R_NilValue;
-    }
-    session->sendRequest(request,*ip);
-  } else {
-    session->sendRequest(request);
-  }
-
-  while (true) {
-    Event event = session->nextEvent();
-    switch (event.eventType()) {
-    case Event::RESPONSE:
-    case Event::PARTIAL_RESPONSE:
-      ans = responseToList(event,fields_vec);
-      break;
-    default:
-      MessageIterator msgIter(event);
-      while (msgIter.next()) {
-        Message msg = msgIter.message();
-        if(logger.is_open()) { msg.asElement().print(logger); }
-      }
-    }
-    if (event.eventType() == Event::RESPONSE) { break; }
-  }
-  if(logger.is_open()) { logger.flush(); }
-  return Rcpp::wrap(ans);
-}
-*/
