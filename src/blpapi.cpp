@@ -269,6 +269,8 @@ Rcpp::List buildDataFrame(std::vector<std::string>& rownames,
       ans[i] = Rcpp::NumericVector(rownames.size(),NA_REAL);
     } else if(fieldTypes[i] == "String") {
       ans[i] = Rcpp::CharacterVector(rownames.size());
+    } else if(fieldTypes[i] == "Datetime") {
+      ans[i] = Rcpp::DatetimeVector(rownames.size());
     } else {
       throw std::logic_error(std::string("buildDataFrame: unexpected type encountered: ") + fieldTypes[i]); 
     }
