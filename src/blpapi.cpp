@@ -41,74 +41,12 @@
 
 #include <Rcpp.h>
 #include <finalizers.h>
+#include <blpapi.utils.h>
 
 using namespace BloombergLP;
 using namespace blpapi;
 using std::cout;
 using std::endl;
-
-// global logger
-static std::ofstream logger;
-
-static void identityFinalizer(SEXP identity_) {
-  blpapi::Identity* identity = reinterpret_cast<blpapi::Identity*>(R_ExternalPtrAddr(identity_));
-  if(identity) {
-    delete identity;
-    R_ClearExternalPtr(identity_);
-  }
-}
-
-static void sessionFinalizer(SEXP session_) {
-  blpapi::Session* session = reinterpret_cast<blpapi::Session*>(R_ExternalPtrAddr(session_));
-  if(session) {
-    delete session;
-    R_ClearExternalPtr(session_);
-  }
-}
-
-void* checkExternalPointer(SEXP xp_, const char* valid_tag) {
-  if(xp_ == R_NilValue) {
-    throw std::logic_error("External pointer is NULL.");
-  }
-  if(TYPEOF(xp_) != EXTPTRSXP) {
-    throw std::logic_error("Not an external pointer.");
-  }
-
-  if(R_ExternalPtrTag(xp_)==R_NilValue) {
-    throw std::logic_error("External pointer tag is NULL.");
-  }
-  const char* xp_tag = CHAR(PRINTNAME(R_ExternalPtrTag(xp_)));
-  if(!xp_tag) {
-    throw std::logic_error("External pointer tag is blank.");
-  }
-  if(std::strcmp(xp_tag,valid_tag) != 0) {
-    throw std::logic_error("External pointer tag does not match.");
-  }
-  if(R_ExternalPtrAddr(xp_)==NULL) {
-    throw std::logic_error("External pointer address is null.");
-  }
-  return R_ExternalPtrAddr(xp_);
-}
-
-const double bbgDateToPOSIX(const blpapi::Datetime& bbg_date) {
-  boost::gregorian::date bbg_boost_date(bbg_date.year(),bbg_date.month(),bbg_date.day());
-  struct tm tm_time(to_tm(bbg_boost_date));
-  return static_cast<double>(mktime(&tm_time));
-}
-
-// caller guarantees options_ not null
-void appendOptionsToRequest(blpapi::Request& request, SEXP options_) {
-  Rcpp::CharacterVector options(options_);
-  Rcpp::CharacterVector options_names(options.attr("names"));
-
-  if(options.length() && options_names.length()==0) {
-    throw std::logic_error("Request options must be named.");
-  }
-
-  for(R_len_t i = 0; i < options.length(); i++) {
-    request.set(static_cast<std::string>(options_names[i]).c_str(), static_cast<std::string>(options[i]).c_str());
-  }
-}
 
 std::string getSecurity(blpapi::Event& event) {
   MessageIterator msgIter(event);
@@ -282,79 +220,6 @@ Rcpp::List buildDataFrame(std::vector<std::string>& rownames,
   return ans;
 }
 
-extern "C" SEXP bdp_authenticate(SEXP conn_, SEXP uuid_, SEXP ip_address_) {
-  blpapi::Session* session;
-  try {
-    session = reinterpret_cast<blpapi::Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
-  } catch (std::exception& e) {
-    REprintf(e.what());
-    return R_NilValue;
-  }
-
-  if(uuid_ == R_NilValue || ip_address_ == R_NilValue) {
-    REprintf("uuid or ip_address was null.\n");
-    return R_NilValue;
-  }
-  std::string uuid = Rcpp::as<std::string>(uuid_);
-  std::string ip_address = Rcpp::as<std::string>(ip_address_);
-
-  if(!session->openService("//blp/apiauth")) {
-    REprintf("Failed to open //blp/apiauth\n");
-    return R_NilValue;
-  }
-
-  Service apiAuthSvc = session->getService("//blp/apiauth");
-  Request authorizationRequest = apiAuthSvc.createAuthorizationRequest();
-  authorizationRequest.set("uuid", uuid.c_str());
-  authorizationRequest.set("ipAddress", ip_address.c_str());
-  Identity* identity_p = new Identity(session->createIdentity());
-  session->sendAuthorizationRequest(authorizationRequest, identity_p);
-
-  while (true) {
-    Event event = session->nextEvent();
-    MessageIterator msgIter(event);
-
-    switch (event.eventType()) {
-    case Event::RESPONSE:
-    case Event::PARTIAL_RESPONSE:
-      msgIter.next();
-      if(std::strcmp(msgIter.message().asElement().name().string(),"AuthorizationSuccess")!=0) {
-        REprintf("Authorization request failed.\n");
-        return R_NilValue;
-      }
-    default:
-      while (msgIter.next()) {
-        Message msg = msgIter.message();
-        if(logger.is_open()) { msg.asElement().print(logger); }
-      }
-    }
-    if (event.eventType() == Event::RESPONSE) { break; }
-  }
-  if(logger.is_open()) { logger.flush(); }
-  return createExternalPointer<blpapi::Identity>(identity_p,identityFinalizer,"blpapi::Identity*");
-}
-
-extern "C" SEXP bdp_connect(SEXP host_, SEXP port_, SEXP logfile_) {
-  SEXP conn;
-  std::string host(Rcpp::as<std::string>(host_));
-  int port(Rcpp::as<int>(port_));
-
-  SessionOptions sessionOptions;
-  sessionOptions.setServerHost(host.c_str());
-  sessionOptions.setServerPort(port);
-  Session* sp = new Session(sessionOptions);
-
-  if (!sp->start()) {
-    REprintf("Failed to start session.\n");
-    return R_NilValue;
-  }
-
-  if(logfile_ != R_NilValue && TYPEOF(logfile_)==STRSXP && CHAR(STRING_ELT(logfile_,0))) {
-    logger.open(CHAR(STRING_ELT(logfile_,0)));
-  }
-  return createExternalPointer<blpapi::Session>(sp,sessionFinalizer,"blpapi::Session*");
-}
-
 extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_, SEXP end_date_, SEXP options_, SEXP identity_) {
   Rcpp::List ans;
   blpapi::Session* session;
@@ -418,16 +283,14 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
       ans[ getSecurity(event) ] = HistoricalDataResponseToDF(event,fields_vec);
       break;
     default:
-
       MessageIterator msgIter(event);
       while (msgIter.next()) {
         Message msg = msgIter.message();
-        if(logger.is_open()) { msg.asElement().print(logger); }
+        // FIXME:: capture msg here for logging
       }
     }
     if (event.eventType() == Event::RESPONSE) { break; }
   }
-  if(logger.is_open()) { logger.flush(); }
   return Rcpp::wrap(ans);
 }
 
@@ -544,12 +407,10 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
       MessageIterator msgIter(event);
       while (msgIter.next()) {
         Message msg = msgIter.message();
-        if(logger.is_open()) { msg.asElement().print(logger); }
+        //FIXME:: capture messages here for debugging
       }
     }
     if (event.eventType() == Event::RESPONSE) { break; }
   }
-  if(logger.is_open()) { logger.flush(); }
-
   return Rcpp::wrap(ans);
 }
