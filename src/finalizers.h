@@ -19,8 +19,6 @@
 #ifndef FINALIZERS_H
 #define FINALIZERS_H
 
-//#include <Rcpp.h>
-
 typedef void(*finalizerT)(SEXP);
 
 template<typename T>

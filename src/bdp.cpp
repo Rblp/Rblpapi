@@ -36,60 +36,6 @@ using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 
-void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_len_t>& fields_map, Element& e) {
-  Element field_data = e.getElement("fieldData");
-
-  for(size_t i = 0; i < field_data.numElements(); ++i) {
-    Element this_e = field_data.getElement(i);
-    std::map<std::string,R_len_t>::iterator iter = fields_map.find(this_e.name().string());
-    if(iter == fields_map.end()) {
-      throw std::logic_error(std::string("Unexpected field encountered in response:") + this_e.name().string());
-    }
-    R_len_t col_index = iter->second;
-    switch(this_e.datatype()) {
-    case BLPAPI_DATATYPE_BOOL:
-      INTEGER(ans[col_index])[row_index] = this_e.getValueAsBool(); break;
-    case BLPAPI_DATATYPE_CHAR:
-      SET_STRING_ELT(ans[col_index],row_index,Rf_mkChar(this_e.getValueAsString())); break;
-    case BLPAPI_DATATYPE_BYTE:
-      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
-      break;
-    case BLPAPI_DATATYPE_INT32:
-      INTEGER(ans[col_index])[row_index] = this_e.getValueAsInt32(); break;
-    case BLPAPI_DATATYPE_INT64:
-      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_INT64.");
-      break;
-    case BLPAPI_DATATYPE_FLOAT32:
-      REAL(ans[col_index])[row_index] = this_e.getValueAsFloat32(); break;
-    case BLPAPI_DATATYPE_FLOAT64:
-      REAL(ans[col_index])[row_index] = this_e.getValueAsFloat64(); break;
-    case BLPAPI_DATATYPE_STRING:
-      SET_STRING_ELT(ans[col_index],row_index,Rf_mkChar(this_e.getValueAsString())); break;
-    case BLPAPI_DATATYPE_BYTEARRAY:
-      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
-    case BLPAPI_DATATYPE_DATE:
-    case BLPAPI_DATATYPE_TIME:
-      //FIXME: separate out time later
-      REAL(ans[col_index])[row_index] = bbgDateToPOSIX(this_e.getValueAsDatetime()); break;
-    case BLPAPI_DATATYPE_DECIMAL:
-      REAL(ans[col_index])[row_index] = this_e.getValueAsFloat64(); break;
-    case BLPAPI_DATATYPE_DATETIME:
-      REAL(ans[col_index])[row_index] = bbgDateToPOSIX(this_e.getValueAsDatetime()); break;
-    case BLPAPI_DATATYPE_ENUMERATION:
-      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
-    case BLPAPI_DATATYPE_SEQUENCE:
-      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
-    case BLPAPI_DATATYPE_CHOICE:
-      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_CHOICE.");
-    case BLPAPI_DATATYPE_CORRELATION_ID:
-      INTEGER(ans[col_index])[row_index] = this_e.getValueAsInt32(); break;
-    default:
-      throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
-    }
-  }
-}
-
-
 void populateDF(Rcpp::List& ans, Event& event) {
   std::vector<std::string> rownames = Rcpp::as<std::vector<std::string> > (ans.attr("row.names"));
   std::vector<std::string> colnames = Rcpp::as<std::vector<std::string> > (ans.attr("names"));
@@ -111,34 +57,6 @@ void populateDF(Rcpp::List& ans, Event& event) {
     std::string this_security_name(this_security.getElementAsString("security"));
     populateDfRow(ans, rownames_map[this_security_name], colnames_map, this_security);
   }
-}
-
-
-Rcpp::List buildDataFrame(std::vector<std::string>& rownames,
-                          std::vector<std::string>& colnames,
-                          std::vector<std::string> fieldTypes) {
-
-  if(colnames.size() != fieldTypes.size()) {
-    throw std::logic_error("buildDataFrame: Colnames not the same length as fieldTypes.");
-  }
-
-  Rcpp::List ans(colnames.size());
-  for(R_len_t i = 0; i < fieldTypes.size(); ++i) {
-    if(fieldTypes[i] == "Double") {
-      ans[i] = Rcpp::NumericVector(rownames.size(),NA_REAL);
-    } else if(fieldTypes[i] == "String") {
-      ans[i] = Rcpp::CharacterVector(rownames.size());
-    } else if(fieldTypes[i] == "Datetime") {
-      ans[i] = Rcpp::DatetimeVector(rownames.size());
-    } else {
-      throw std::logic_error(std::string("buildDataFrame: unexpected type encountered: ") + fieldTypes[i]); 
-    }
-  }
-
-  ans.attr("class") = "data.frame";
-  ans.attr("names") = colnames;
-  ans.attr("row.names") = rownames; 
-  return ans;
 }
 
 extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, SEXP identity_) {

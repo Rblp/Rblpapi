@@ -15,8 +15,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>. //
 ///////////////////////////////////////////////////////////////////////////
 
-#include <R.h>
+#ifndef BLPAPI_UTILS_H
+#define BLPAPI_UTILS_H
+
+#include <string>
+#include <vector>
+#include <Rcpp.h>
 
 void* checkExternalPointer(SEXP xp_, const char* valid_tag);
 const double bbgDateToPOSIX(const BloombergLP::blpapi::Datetime& bbg_date);
 void appendOptionsToRequest(BloombergLP::blpapi::Request& request, SEXP options_);
+void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_len_t>& fields_map, BloombergLP::blpapi::Element& e);
+Rcpp::List buildDataFrame(std::vector<std::string>& rownames,std::vector<std::string>& colnames,std::vector<std::string> fieldTypes);
+
+#endif // BLPAPI_UTILS_H

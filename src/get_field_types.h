@@ -15,6 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>. //
 ///////////////////////////////////////////////////////////////////////////
 
+#ifndef GET_FIELD_TYPES_H
+#define GET_FIELD_TYPES_H
+
 #include <string>
 #include <vector>
 #include <blpapi_session.h>
@@ -22,3 +25,5 @@
 
 std::string getFieldType(BloombergLP::blpapi::Session* session, BloombergLP::blpapi::Service fieldInfoService, const std::string& field);
 void getFieldTypes(std::vector<std::string>& ans, BloombergLP::blpapi::Session* session, std::vector<std::string>& fields);
+
+#endif // GET_FIELD_TYPES_H
