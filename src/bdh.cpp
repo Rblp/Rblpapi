@@ -24,7 +24,7 @@
 #include <blpapi_message.h>
 #include <blpapi_element.h>
 #include <Rcpp.h>
-#include <blpapi.utils.h>
+#include <blpapi_utils.h>
 
 using BloombergLP::blpapi::Session;
 using BloombergLP::blpapi::Service;

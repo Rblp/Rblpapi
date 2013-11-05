@@ -21,7 +21,7 @@
 #include <blpapi_message.h>
 #include <Rcpp.h>
 #include <finalizers.h>
-#include <blpapi.utils.h>
+#include <blpapi_utils.h>
 
 using BloombergLP::blpapi::Session;
 using BloombergLP::blpapi::Identity;

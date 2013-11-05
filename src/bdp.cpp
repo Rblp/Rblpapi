@@ -24,8 +24,8 @@
 #include <blpapi_message.h>
 #include <blpapi_element.h>
 #include <Rcpp.h>
-#include <blpapi.utils.h>
-#include <get.field.types.h>
+#include <blpapi_utils.h>
+#include <get_field_types.h>
 
 using BloombergLP::blpapi::Session;
 using BloombergLP::blpapi::Service;
