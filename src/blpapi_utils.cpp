@@ -60,20 +60,6 @@ const double bbgDateToPOSIX(const Datetime& bbg_date) {
   return static_cast<double>(mktime(&tm_time));
 }
 
-// caller guarantees options_ not null
-void appendOptionsToRequest(Request& request, SEXP options_) {
-  Rcpp::CharacterVector options(options_);
-  Rcpp::CharacterVector options_names(options.attr("names"));
-
-  if(options.length() && options_names.length()==0) {
-    throw std::logic_error("Request options must be named.");
-  }
-
-  for(R_len_t i = 0; i < options.length(); i++) {
-    request.set(static_cast<std::string>(options_names[i]).c_str(), static_cast<std::string>(options[i]).c_str());
-  }
-}
-
 void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_len_t>& fields_map, Element& field_data) {
 
   for(size_t i = 0; i < field_data.numElements(); ++i) {
@@ -163,4 +149,34 @@ std::vector<std::string> generateRownames(size_t n) {
     ans[i] = convert.str();
   }
   return ans;
+}
+
+// caller guarantees options_ not null
+void appendOptionsToRequest(Request& request, SEXP options_) {
+  Rcpp::CharacterVector options(options_);
+  Rcpp::CharacterVector options_names(options.attr("names"));
+
+  if(options.length() && options_names.length()==0) {
+    throw std::logic_error("Request options must be named.");
+  }
+
+  for(R_len_t i = 0; i < options.length(); i++) {
+    request.set(static_cast<std::string>(options_names[i]).c_str(), static_cast<std::string>(options[i]).c_str());
+  }
+}
+
+void createStandardRequest(Request& request,
+                           const std::vector<std::string>& securities,
+                           const std::vector<std::string>& fields,
+                           SEXP options_) {
+
+  for(R_len_t i = 0; i < securities.size(); i++) {
+    request.getElement("securities").appendValue(securities[i].c_str());
+  }
+
+  for(R_len_t i = 0; i < fields.size(); i++) {
+    request.getElement("fields").appendValue(fields[i].c_str());
+  }
+
+  if(options_ != R_NilValue) { appendOptionsToRequest(request,options_); }
 }

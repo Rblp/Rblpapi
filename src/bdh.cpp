@@ -112,16 +112,7 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
 
   Service refDataService = session->getService("//blp/refdata");
   Request request = refDataService.createRequest("HistoricalDataRequest");
-
-  for(R_len_t i = 0; i < securities.size(); i++) {
-    request.getElement("securities").appendValue(securities[i].c_str());
-  }
-
-  for(R_len_t i = 0; i < fields.size(); i++) {
-    request.getElement("fields").appendValue(fields[i].c_str());
-  }
-
-  if(options_ != R_NilValue) { appendOptionsToRequest(request,options_); }
+  createStandardRequest(request, securities, fields, options_);
 
   request.set("startDate", start_date.c_str());
   if(end_date_ != R_NilValue) {
