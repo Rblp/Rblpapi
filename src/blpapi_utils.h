@@ -28,4 +28,7 @@ void appendOptionsToRequest(BloombergLP::blpapi::Request& request, SEXP options_
 void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_len_t>& fields_map, BloombergLP::blpapi::Element& e);
 Rcpp::List buildDataFrame(const std::vector<std::string>& rownames,const std::vector<std::string>& colnames,const std::vector<std::string>& fieldTypes);
 std::vector<std::string> generateRownames(size_t n);
+void createStandardRequest(BloombergLP::blpapi::Request& request,const std::vector<std::string>& securities,const std::vector<std::string>& fields,SEXP options_);
+void sendRequestWithIdentity(BloombergLP::blpapi::Session* session, BloombergLP::blpapi::Request& request, SEXP identity_);
+
 #endif // BLPAPI_UTILS_H

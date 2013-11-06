@@ -22,12 +22,15 @@
 #include <boost/date_time/gregorian/gregorian_types.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/local_time/local_time_types.hpp>
+#include <blpapi_session.h>
 #include <blpapi_request.h>
 #include <blpapi_datetime.h>
 #include <Rcpp.h>
 
-using BloombergLP::blpapi::Datetime;
+using BloombergLP::blpapi::Session;
 using BloombergLP::blpapi::Request;
+using BloombergLP::blpapi::Identity;
+using BloombergLP::blpapi::Datetime;
 using BloombergLP::blpapi::Element;
 
 void* checkExternalPointer(SEXP xp_, const char* valid_tag) {
@@ -179,4 +182,14 @@ void createStandardRequest(Request& request,
   }
 
   if(options_ != R_NilValue) { appendOptionsToRequest(request,options_); }
+}
+
+void sendRequestWithIdentity(Session* session, Request& request, SEXP identity_) {
+  Identity* ip;
+  if(identity_ != R_NilValue) {
+    ip = reinterpret_cast<Identity*>(checkExternalPointer(identity_,"blpapi::Identity*"));
+    session->sendRequest(request,*ip);
+  } else {
+    session->sendRequest(request);
+  }
 }

@@ -29,7 +29,6 @@
 
 using BloombergLP::blpapi::Session;
 using BloombergLP::blpapi::Service;
-using BloombergLP::blpapi::Identity;
 using BloombergLP::blpapi::Request;
 using BloombergLP::blpapi::Event;
 using BloombergLP::blpapi::Element;
@@ -84,7 +83,6 @@ Rcpp::List HistoricalDataResponseToDF(Event& event,
 
 extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_, SEXP end_date_, SEXP options_, SEXP identity_) {
   Session* session;
-  Identity* ip;
 
   std::vector<std::string> securities(Rcpp::as<std::vector<std::string> >(securities_));
   std::vector<std::string> fields(Rcpp::as<std::vector<std::string> >(fields_));
@@ -119,16 +117,11 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
     request.set("endDate", Rcpp::as<std::string>(end_date_).c_str());
   }
 
-  if(identity_ != R_NilValue) {
-    try {
-      ip = reinterpret_cast<Identity*>(checkExternalPointer(identity_,"blpapi::Identity*"));
-    } catch (std::exception& e) {
-      REprintf(e.what());
-      return R_NilValue;
-    }
-    session->sendRequest(request,*ip);
-  } else {
-    session->sendRequest(request);
+  try {
+    sendRequestWithIdentity(session, request, identity_);
+  } catch (std::exception& e) {
+    REprintf(e.what());
+    return R_NilValue;
   }
 
   // historical request will always have dates, so prepend to types expected

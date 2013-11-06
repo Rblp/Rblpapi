@@ -29,7 +29,6 @@
 
 using BloombergLP::blpapi::Session;
 using BloombergLP::blpapi::Service;
-using BloombergLP::blpapi::Identity;
 using BloombergLP::blpapi::Request;
 using BloombergLP::blpapi::Event;
 using BloombergLP::blpapi::Element;
@@ -62,7 +61,6 @@ void populateDF(Rcpp::List& ans, Event& event) {
 
 extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, SEXP identity_) {
   Session* session;
-  Identity* ip;
 
   std::vector<std::string> securities(Rcpp::as<std::vector<std::string> >(securities_));
   std::vector<std::string> fields(Rcpp::as<std::vector<std::string> >(fields_));
@@ -91,16 +89,11 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
   Request request = refDataService.createRequest("ReferenceDataRequest");
   createStandardRequest(request, securities, fields, options_);
 
-  if(identity_ != R_NilValue) {
-    try {
-      ip = reinterpret_cast<Identity*>(checkExternalPointer(identity_,"blpapi::Identity*"));
-    } catch (std::exception& e) {
-      REprintf(e.what());
-      return R_NilValue;
-    }
-    session->sendRequest(request,*ip);
-  } else {
-    session->sendRequest(request);
+  try {
+    sendRequestWithIdentity(session, request, identity_);
+  } catch (std::exception& e) {
+    REprintf(e.what());
+    return R_NilValue;
   }
 
   Rcpp::List ans = buildDataFrame(securities,fields,field_types);
