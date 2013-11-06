@@ -26,6 +26,6 @@ void* checkExternalPointer(SEXP xp_, const char* valid_tag);
 const double bbgDateToPOSIX(const BloombergLP::blpapi::Datetime& bbg_date);
 void appendOptionsToRequest(BloombergLP::blpapi::Request& request, SEXP options_);
 void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_len_t>& fields_map, BloombergLP::blpapi::Element& e);
-Rcpp::List buildDataFrame(std::vector<std::string>& rownames,std::vector<std::string>& colnames,std::vector<std::string> fieldTypes);
-
+Rcpp::List buildDataFrame(const std::vector<std::string>& rownames,const std::vector<std::string>& colnames,const std::vector<std::string>& fieldTypes);
+std::vector<std::string> generateRownames(size_t n);
 #endif // BLPAPI_UTILS_H

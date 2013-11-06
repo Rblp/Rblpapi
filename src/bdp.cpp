@@ -55,7 +55,8 @@ void populateDF(Rcpp::List& ans, Event& event) {
   for(size_t i = 0; i < securityData.numValues(); ++i) {
     Element this_security = securityData.getValueAsElement(i);
     std::string this_security_name(this_security.getElementAsString("security"));
-    populateDfRow(ans, rownames_map[this_security_name], colnames_map, this_security);
+    Element fieldData = this_security.getElement("fieldData");
+    populateDfRow(ans, rownames_map[this_security_name], colnames_map, fieldData);
   }
 }
 

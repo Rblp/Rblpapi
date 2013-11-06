@@ -25,6 +25,7 @@
 #include <blpapi_element.h>
 #include <Rcpp.h>
 #include <blpapi_utils.h>
+#include <get_field_types.h>
 
 using BloombergLP::blpapi::Session;
 using BloombergLP::blpapi::Service;
@@ -52,9 +53,9 @@ std::string getSecurity(Event& event) {
   return ans;
 }
 
-Rcpp::DataFrame HistoricalDataResponseToDF(Event& event, const std::vector<std::string>& fields) {
-  std::vector<Rcpp::NumericVector*> nvps;
-
+Rcpp::List HistoricalDataResponseToDF(Event& event,
+                                      const std::vector<std::string>& fields,
+                                      const std::vector<std::string>& field_types) {
   MessageIterator msgIter(event);
   if(!msgIter.next()) {
     throw std::logic_error("Not a valid MessageIterator.");
@@ -68,45 +69,27 @@ Rcpp::DataFrame HistoricalDataResponseToDF(Event& event, const std::vector<std::
   Element securityData = response.getElement("securityData");
   Element fieldData = securityData.getElement("fieldData");
 
-  // we always have dates
-  Rcpp::DatetimeVector dts(fieldData.numValues());
-
   // must build rownames as chars...
-  Rcpp::CharacterVector rownames(fieldData.numValues());
-  for(R_len_t i = 0; i < fieldData.numValues(); ++i) {
-    std::ostringstream convert; convert << (i+1); rownames[i] = convert.str();
-  }
-
-  // create scratch space for output arrays
-  for(size_t i = 0; i < fields.size(); ++i) {
-    nvps.push_back(new Rcpp::NumericVector(fieldData.numValues()));
-  }
+  std::vector<std::string> rownames(generateRownames(fieldData.numValues()));
+  Rcpp::List ans = buildDataFrame(rownames,fields,field_types);
+  std::map<std::string, R_len_t> fields_map;
+  for(R_len_t i = 0; i < fields.size(); ++i) { fields_map[fields[i]] = i; }
 
   for(size_t i = 0; i < fieldData.numValues(); i++) {
-    Element this_fld = fieldData.getValueAsElement(i);
-    dts[i] = bbgDateToPOSIX(this_fld.getElementAsDatetime("date"));
-    // walk through fields and test whether this tuple contains the field
-    for(size_t j = 0; j < fields.size(); ++j) {
-      nvps[j]->operator[](i) = this_fld.hasElement(fields[j].c_str()) ? this_fld.getElement(fields[j].c_str()).getValueAsFloat64() : NA_REAL;
-    }
+    Element row_element = fieldData.getValueAsElement(i);
+    populateDfRow(ans, i, fields_map, row_element);
   }
-
-  Rcpp::DataFrame ans;
-  ans.push_back(dts,"asofdate");
-  for(R_len_t i = 0; i < fields.size(); ++i) {
-    ans.push_back(*nvps[i],fields[i]);
-  }
-
-  ans.attr("class") = "data.frame";
-  ans.attr("row.names") = rownames;
   return ans;
 }
 
 extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_, SEXP end_date_, SEXP options_, SEXP identity_) {
-  Rcpp::List ans;
   Session* session;
   Identity* ip;
-  std::vector<std::string> fields_vec;
+
+  std::vector<std::string> securities(Rcpp::as<std::vector<std::string> >(securities_));
+  std::vector<std::string> fields(Rcpp::as<std::vector<std::string> >(fields_));
+  std::vector<std::string> field_types;
+  std::string start_date(Rcpp::as<std::string>(start_date_));
 
   try {
     session = reinterpret_cast<Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
@@ -115,11 +98,14 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
     return R_NilValue;
   }
 
-  Rcpp::CharacterVector securities(securities_);
-  Rcpp::CharacterVector fields(fields_);
-  std::string start_date(Rcpp::as<std::string>(start_date_));
+  try {
+    getFieldTypes(field_types, session, fields);
+  } catch (std::exception& e) {
+    REprintf(e.what());
+    return R_NilValue;
+  }
 
-  if (!session->openService("//blp/refdata")) {
+  if(!session->openService("//blp/refdata")) {
     REprintf("Failed to open //blp/refdata\n");
     return R_NilValue;
   }
@@ -127,13 +113,12 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
   Service refDataService = session->getService("//blp/refdata");
   Request request = refDataService.createRequest("HistoricalDataRequest");
 
-  for(R_len_t i = 0; i < securities.length(); i++) {
-    request.getElement("securities").appendValue(static_cast<std::string>(securities[i]).c_str());
+  for(R_len_t i = 0; i < securities.size(); i++) {
+    request.getElement("securities").appendValue(securities[i].c_str());
   }
 
-  for(R_len_t i = 0; i < fields.length(); i++) {
-    request.getElement("fields").appendValue(static_cast<std::string>(fields[i]).c_str());
-    fields_vec.push_back(static_cast<std::string>(fields[i]));
+  for(R_len_t i = 0; i < fields.size(); i++) {
+    request.getElement("fields").appendValue(fields[i].c_str());
   }
 
   if(options_ != R_NilValue) { appendOptionsToRequest(request,options_); }
@@ -142,7 +127,6 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
   if(end_date_ != R_NilValue) {
     request.set("endDate", Rcpp::as<std::string>(end_date_).c_str());
   }
-
 
   if(identity_ != R_NilValue) {
     try {
@@ -156,12 +140,17 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
     session->sendRequest(request);
   }
 
+  // historical request will always have dates, so prepend to types expected
+  fields.insert(fields.begin(),"date");
+  field_types.insert(field_types.begin(),"Datetime");
+
+  Rcpp::List ans;
   while (true) {
     Event event = session->nextEvent();
     switch (event.eventType()) {
     case Event::RESPONSE:
     case Event::PARTIAL_RESPONSE:
-      ans[ getSecurity(event) ] = HistoricalDataResponseToDF(event,fields_vec);
+      ans[ getSecurity(event) ] = HistoricalDataResponseToDF(event,fields,field_types);
       break;
     default:
       MessageIterator msgIter(event);

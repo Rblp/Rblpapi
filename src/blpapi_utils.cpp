@@ -17,6 +17,8 @@
 
 #include <stdexcept>
 #include <string>
+#include <sstream>
+#include <iostream>
 #include <boost/date_time/gregorian/gregorian_types.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/local_time/local_time_types.hpp>
@@ -72,16 +74,17 @@ void appendOptionsToRequest(Request& request, SEXP options_) {
   }
 }
 
-void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_len_t>& fields_map, Element& e) {
-  Element field_data = e.getElement("fieldData");
+void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_len_t>& fields_map, Element& field_data) {
 
   for(size_t i = 0; i < field_data.numElements(); ++i) {
     Element this_e = field_data.getElement(i);
+
     std::map<std::string,R_len_t>::iterator iter = fields_map.find(this_e.name().string());
     if(iter == fields_map.end()) {
       throw std::logic_error(std::string("Unexpected field encountered in response:") + this_e.name().string());
     }
     R_len_t col_index = iter->second;
+
     switch(this_e.datatype()) {
     case BLPAPI_DATATYPE_BOOL:
       INTEGER(ans[col_index])[row_index] = this_e.getValueAsBool(); break;
@@ -125,9 +128,9 @@ void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_le
   }
 }
 
-Rcpp::List buildDataFrame(std::vector<std::string>& rownames,
-                          std::vector<std::string>& colnames,
-                          std::vector<std::string> fieldTypes) {
+Rcpp::List buildDataFrame(const std::vector<std::string>& rownames,
+                          const std::vector<std::string>& colnames,
+                          const std::vector<std::string>& fieldTypes) {
 
   if(colnames.size() != fieldTypes.size()) {
     throw std::logic_error("buildDataFrame: Colnames not the same length as fieldTypes.");
@@ -149,5 +152,15 @@ Rcpp::List buildDataFrame(std::vector<std::string>& rownames,
   ans.attr("class") = "data.frame";
   ans.attr("names") = colnames;
   ans.attr("row.names") = rownames;
+  return ans;
+}
+
+std::vector<std::string> generateRownames(size_t n) {
+  std::vector<std::string> ans(n);
+  for(size_t i = 0; i < n; ++i) {
+    std::ostringstream convert;
+    convert << (i+1);
+    ans[i] = convert.str();
+  }
   return ans;
 }
