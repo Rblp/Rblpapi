@@ -36,7 +36,7 @@ using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 
-std::string getSecurity(Event& event) {
+std::string getSecurityName(Event& event) {
   MessageIterator msgIter(event);
   if(!msgIter.next()) {
     throw std::logic_error("Not a valid MessageIterator.");
@@ -144,13 +144,19 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
   fields.insert(fields.begin(),"date");
   field_types.insert(field_types.begin(),"Datetime");
 
-  Rcpp::List ans;
+  Rcpp::List ans(securities.size());
+  R_len_t i = 0;
+
+  // capture names in case they come back out of order
+  std::vector<std::string> ans_names;
+
   while (true) {
     Event event = session->nextEvent();
     switch (event.eventType()) {
     case Event::RESPONSE:
     case Event::PARTIAL_RESPONSE:
-      ans[ getSecurity(event) ] = HistoricalDataResponseToDF(event,fields,field_types);
+      ans_names.push_back(getSecurityName(event));
+      ans[i++] = HistoricalDataResponseToDF(event,fields,field_types);
       break;
     default:
       MessageIterator msgIter(event);
@@ -161,5 +167,7 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
     }
     if (event.eventType() == Event::RESPONSE) { break; }
   }
+
+  ans.attr("names") = ans_names;
   return Rcpp::wrap(ans);
 }
