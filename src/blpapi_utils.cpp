@@ -154,8 +154,8 @@ std::vector<std::string> generateRownames(size_t n) {
   return ans;
 }
 
-// caller guarantees options_ not null
 void appendOptionsToRequest(Request& request, SEXP options_) {
+  if(options_== R_NilValue) { return; }
   Rcpp::CharacterVector options(options_);
   Rcpp::CharacterVector options_names(options.attr("names"));
 
