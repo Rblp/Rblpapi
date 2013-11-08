@@ -33,5 +33,7 @@ Rcpp::List buildDataFrame(const std::vector<std::string>& rownames,const std::ve
 std::vector<std::string> generateRownames(size_t n);
 void createStandardRequest(BloombergLP::blpapi::Request& request,const std::vector<std::string>& securities,const std::vector<std::string>& fields,SEXP options_);
 void sendRequestWithIdentity(BloombergLP::blpapi::Session* session, BloombergLP::blpapi::Request& request, SEXP identity_);
+std::vector<std::string> getNamesFromRow(const BloombergLP::blpapi::Element& row);
+Rcpp::List buildDataFrameFromRow(const BloombergLP::blpapi::Element& row, size_t n);
 
 #endif // BLPAPI_UTILS_H

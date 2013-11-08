@@ -123,7 +123,8 @@ void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_le
       //REAL(ans[col_index])[row_index] = bbgDateToPOSIX(this_e.getValueAsDatetime()); break;
       REAL(ans[col_index])[row_index] = bbgDatetimeToPOSIX(this_e.getValueAsDatetime()); break;
     case BLPAPI_DATATYPE_ENUMERATION:
-      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
+      //throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
+      SET_STRING_ELT(ans[col_index],row_index,Rf_mkChar(this_e.getValueAsString())); break;
     case BLPAPI_DATATYPE_SEQUENCE:
       throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
     case BLPAPI_DATATYPE_CHOICE:
@@ -170,7 +171,8 @@ Rcpp::List buildDataFrame(const std::vector<int>& fieldTypes, size_t n) {
     case BLPAPI_DATATYPE_DATETIME:
       ans[i] = Rcpp::DatetimeVector(n); break;
     case BLPAPI_DATATYPE_ENUMERATION:
-      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
+      //throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
+      ans[i] = Rcpp::CharacterVector(n); break;
     case BLPAPI_DATATYPE_SEQUENCE:
       throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
     case BLPAPI_DATATYPE_CHOICE:
@@ -280,4 +282,27 @@ void sendRequestWithIdentity(Session* session, Request& request, SEXP identity_)
   } else {
     session->sendRequest(request);
   }
+}
+
+std::vector<std::string> getNamesFromRow(const Element& row) {
+  size_t NC(row.numElements());
+  std::vector<std::string> ans(NC);
+  for(size_t i = 0; i < NC; ++i) {
+    ans[i] = row.getElement(i).name().string();
+  }
+  return ans;
+}
+
+Rcpp::List buildDataFrameFromRow(const Element& row, size_t n) {
+  size_t NC(row.numElements());
+  std::vector<int> fieldTypes(NC);
+  std::vector<std::string> colnames(NC);
+
+  for(size_t i = 0; i < NC; ++i) {
+    Element this_row(row.getElement(i));
+    fieldTypes[i] = this_row.datatype();
+    colnames[i] = this_row.name().string();
+  }
+  std::vector<std::string> rownames(generateRownames(n));
+  return buildDataFrame(rownames,colnames,fieldTypes);
 }

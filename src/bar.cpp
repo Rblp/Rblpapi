@@ -25,7 +25,6 @@
 #include <blpapi_element.h>
 #include <Rcpp.h>
 #include <blpapi_utils.h>
-#include <get_field_types.h>
 
 using BloombergLP::blpapi::Session;
 using BloombergLP::blpapi::Service;
@@ -35,31 +34,7 @@ using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 
-
-std::vector<std::string> getNamesFromRow(const Element& row) {
-  size_t NC(row.numElements());
-  std::vector<std::string> ans(NC);
-  for(size_t i = 0; i < NC; ++i) {
-    ans[i] = row.getElement(i).name().string();
-  }
-  return ans;
-}
-
-Rcpp::List buildDataFrameFromRow(const Element& row, size_t n) {
-  size_t NC(row.numElements());
-  std::vector<int> fieldTypes(NC);
-  std::vector<std::string> colnames(NC);
-
-  for(size_t i = 0; i < NC; ++i) {
-    Element this_row(row.getElement(i));
-    fieldTypes[i] = this_row.datatype();
-    colnames[i] = this_row.name().string();
-  }
-  std::vector<std::string> rownames(generateRownames(n));
-  return buildDataFrame(rownames,colnames,fieldTypes);
-}
-
-Rcpp::List intradayDataToDF(Event& event) {
+Rcpp::List intradayBarDataToDF(Event& event) {
   MessageIterator msgIter(event);
   if(!msgIter.next()) {
     throw std::logic_error("Not a valid MessageIterator.");
@@ -141,7 +116,7 @@ extern "C" SEXP bar(SEXP conn_, SEXP security_, SEXP event_type_, SEXP interval_
     case Event::RESPONSE:
     case Event::PARTIAL_RESPONSE:
       try {
-        ans = intradayDataToDF(event);
+        ans = intradayBarDataToDF(event);
       } catch (std::exception& e) {
         REprintf(e.what());
       }
