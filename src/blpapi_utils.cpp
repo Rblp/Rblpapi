@@ -63,6 +63,19 @@ const double bbgDateToPOSIX(const Datetime& bbg_date) {
   return static_cast<double>(mktime(&tm_time));
 }
 
+const double bbgDatetimeToPOSIX(const Datetime& dt) {
+  boost::gregorian::date bbg_boost_date(dt.year(),dt.month(),dt.day());
+  boost::posix_time::time_duration td =
+    boost::posix_time::hours(dt.hours()) +
+    boost::posix_time::minutes(dt.minutes()) +
+    boost::posix_time::seconds(dt.seconds()) +
+    boost::posix_time::milliseconds(dt.milliseconds());
+
+  boost::posix_time::ptime bbg_ptime(bbg_boost_date,td);
+  struct tm tm_time(to_tm(bbg_ptime));
+  return static_cast<double>(mktime(&tm_time));
+}
+
 void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_len_t>& fields_map, Element& field_data) {
 
   for(size_t i = 0; i < field_data.numElements(); ++i) {
@@ -76,7 +89,7 @@ void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_le
 
     switch(this_e.datatype()) {
     case BLPAPI_DATATYPE_BOOL:
-      INTEGER(ans[col_index])[row_index] = this_e.getValueAsBool(); break;
+      LOGICAL(ans[col_index])[row_index] = this_e.getValueAsBool(); break;
     case BLPAPI_DATATYPE_CHAR:
       SET_STRING_ELT(ans[col_index],row_index,Rf_mkChar(this_e.getValueAsString())); break;
     case BLPAPI_DATATYPE_BYTE:
@@ -85,7 +98,12 @@ void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_le
     case BLPAPI_DATATYPE_INT32:
       INTEGER(ans[col_index])[row_index] = this_e.getValueAsInt32(); break;
     case BLPAPI_DATATYPE_INT64:
-      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_INT64.");
+      if(static_cast<double>(this_e.getValueAsInt64()) > static_cast<double>(std::numeric_limits<int>::max())) {
+        REprintf("BLPAPI_DATATYPE_INT64 exceeds max int value on this system (assigning std::numeric_limits<int>::max()).");
+        INTEGER(ans[col_index])[row_index] = std::numeric_limits<int>::max();
+      } else {
+        INTEGER(ans[col_index])[row_index] = static_cast<int>(this_e.getValueAsInt64()); break;
+      }
       break;
     case BLPAPI_DATATYPE_FLOAT32:
       REAL(ans[col_index])[row_index] = this_e.getValueAsFloat32(); break;
@@ -102,7 +120,8 @@ void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_le
     case BLPAPI_DATATYPE_DECIMAL:
       REAL(ans[col_index])[row_index] = this_e.getValueAsFloat64(); break;
     case BLPAPI_DATATYPE_DATETIME:
-      REAL(ans[col_index])[row_index] = bbgDateToPOSIX(this_e.getValueAsDatetime()); break;
+      //REAL(ans[col_index])[row_index] = bbgDateToPOSIX(this_e.getValueAsDatetime()); break;
+      REAL(ans[col_index])[row_index] = bbgDatetimeToPOSIX(this_e.getValueAsDatetime()); break;
     case BLPAPI_DATATYPE_ENUMERATION:
       throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
     case BLPAPI_DATATYPE_SEQUENCE:
@@ -117,6 +136,72 @@ void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_le
   }
 }
 
+Rcpp::List buildDataFrame(const std::vector<int>& fieldTypes, size_t n) {
+  Rcpp::List ans(fieldTypes.size());
+
+  for(R_len_t i = 0; i < fieldTypes.size(); ++i) {
+    switch(fieldTypes[i]) {
+    case BLPAPI_DATATYPE_BOOL:
+      ans[i] = Rcpp::LogicalVector(n); break;
+    case BLPAPI_DATATYPE_CHAR:
+      ans[i] = Rcpp::CharacterVector(n); break;
+    case BLPAPI_DATATYPE_BYTE:
+      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
+      break;
+    case BLPAPI_DATATYPE_INT32:
+      ans[i] = Rcpp::IntegerVector(n); break;
+    case BLPAPI_DATATYPE_INT64:
+      ans[i] = Rcpp::IntegerVector(n); break;
+      break;
+    case BLPAPI_DATATYPE_FLOAT32:
+      ans[i] = Rcpp::NumericVector(n,NA_REAL); break;
+    case BLPAPI_DATATYPE_FLOAT64:
+      ans[i] = Rcpp::NumericVector(n,NA_REAL); break;
+    case BLPAPI_DATATYPE_STRING:
+      ans[i] = Rcpp::CharacterVector(n); break;
+    case BLPAPI_DATATYPE_BYTEARRAY:
+      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
+    case BLPAPI_DATATYPE_DATE:
+    case BLPAPI_DATATYPE_TIME:
+      //FIXME: separate out time later
+      ans[i] = Rcpp::DatetimeVector(n); break;
+    case BLPAPI_DATATYPE_DECIMAL:
+      ans[i] = Rcpp::NumericVector(n,NA_REAL); break;
+    case BLPAPI_DATATYPE_DATETIME:
+      ans[i] = Rcpp::DatetimeVector(n); break;
+    case BLPAPI_DATATYPE_ENUMERATION:
+      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
+    case BLPAPI_DATATYPE_SEQUENCE:
+      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
+    case BLPAPI_DATATYPE_CHOICE:
+      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_CHOICE.");
+    case BLPAPI_DATATYPE_CORRELATION_ID:
+      ans[i] = Rcpp::IntegerVector(n); break;
+    default:
+      throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
+    }
+  }
+  return ans;
+}
+
+Rcpp::List buildDataFrame(const std::vector<std::string>& fieldTypes, size_t n) {
+  Rcpp::List ans(fieldTypes.size());
+  for(R_len_t i = 0; i < fieldTypes.size(); ++i) {
+    if(fieldTypes[i] == "Double") {
+      ans[i] = Rcpp::NumericVector(n,NA_REAL);
+    } else if(fieldTypes[i] == "String") {
+      ans[i] = Rcpp::CharacterVector(n);
+    } else if(fieldTypes[i] == "Datetime") {
+      ans[i] = Rcpp::DatetimeVector(n);
+    } else if(fieldTypes[i] == "Integer") {
+      ans[i] = Rcpp::IntegerVector(n);
+    } else {
+      throw std::logic_error(std::string("buildDataFrame: unexpected type encountered: ") + fieldTypes[i]); 
+    }
+  }
+  return ans;
+}
+
 Rcpp::List buildDataFrame(const std::vector<std::string>& rownames,
                           const std::vector<std::string>& colnames,
                           const std::vector<std::string>& fieldTypes) {
@@ -125,19 +210,22 @@ Rcpp::List buildDataFrame(const std::vector<std::string>& rownames,
     throw std::logic_error("buildDataFrame: Colnames not the same length as fieldTypes.");
   }
 
-  Rcpp::List ans(colnames.size());
-  for(R_len_t i = 0; i < fieldTypes.size(); ++i) {
-    if(fieldTypes[i] == "Double") {
-      ans[i] = Rcpp::NumericVector(rownames.size(),NA_REAL);
-    } else if(fieldTypes[i] == "String") {
-      ans[i] = Rcpp::CharacterVector(rownames.size());
-    } else if(fieldTypes[i] == "Datetime") {
-      ans[i] = Rcpp::DatetimeVector(rownames.size());
-    } else {
-      throw std::logic_error(std::string("buildDataFrame: unexpected type encountered: ") + fieldTypes[i]); 
-    }
+  Rcpp::List ans(buildDataFrame(fieldTypes,rownames.size()));
+  ans.attr("class") = "data.frame";
+  ans.attr("names") = colnames;
+  ans.attr("row.names") = rownames;
+  return ans;
+}
+
+Rcpp::List buildDataFrame(const std::vector<std::string>& rownames,
+                          const std::vector<std::string>& colnames,
+                          const std::vector<int>& fieldTypes) {
+
+  if(colnames.size() != fieldTypes.size()) {
+    throw std::logic_error("buildDataFrame: Colnames not the same length as fieldTypes.");
   }
 
+  Rcpp::List ans(buildDataFrame(fieldTypes,rownames.size()));
   ans.attr("class") = "data.frame";
   ans.attr("names") = colnames;
   ans.attr("row.names") = rownames;

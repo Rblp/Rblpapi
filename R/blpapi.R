@@ -31,3 +31,7 @@ bdh <- function(conn, securities, fields, start.date, end.date=NULL, include.non
 bdp <- function(conn, securities, fields, options=NULL, identity=NULL) {
     .Call("bdp", conn, securities, fields, options, identity, PACKAGE="Rblpapi")
 }
+
+bar <- function(conn, security, event.type, interval, start.datetime, end.datetime, options=NULL, identity=NULL) {
+    .Call("bar", conn, security, event.type, interval, start.datetime, end.datetime, options, identity, PACKAGE="Rblpapi")
+}
