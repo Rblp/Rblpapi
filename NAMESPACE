@@ -5,5 +5,6 @@ blpConnect,
 blpAuthenticate,
 bdh,
 bdp,
-bar
+bar,
+tick
 )

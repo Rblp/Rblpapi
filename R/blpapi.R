@@ -35,3 +35,7 @@ bdp <- function(conn, securities, fields, options=NULL, identity=NULL) {
 bar <- function(conn, security, event.type, interval, start.datetime, end.datetime, options=NULL, identity=NULL) {
     .Call("bar", conn, security, event.type, interval, start.datetime, end.datetime, options, identity, PACKAGE="Rblpapi")
 }
+
+tick <- function(conn, security, event.types, start.datetime, end.datetime, include.condition.codes=TRUE, options=NULL, identity=NULL) {
+    .Call("tick", conn, security, event.types, start.datetime, end.datetime, include.condition.codes, options, identity, PACKAGE="Rblpapi")
+}
