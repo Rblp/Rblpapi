@@ -38,7 +38,7 @@ using BloombergLP::blpapi::MessageIterator;
 const char* cnames[] = { "time", "type", "value", "size", "conditionCodes" };
 const int ctypes[] = { BLPAPI_DATATYPE_DATETIME, BLPAPI_DATATYPE_ENUMERATION, BLPAPI_DATATYPE_FLOAT64, BLPAPI_DATATYPE_INT32, BLPAPI_DATATYPE_ENUMERATION };
 
-Rcpp::List intradayTickDataToDF(Event& event) {
+Rcpp::List intradayTickDataToDF(Event& event, const bool include_condition_codes) {
   MessageIterator msgIter(event);
   if(!msgIter.next()) {
     throw std::logic_error("Not a valid MessageIterator.");
@@ -60,8 +60,9 @@ Rcpp::List intradayTickDataToDF(Event& event) {
   Element tickDataArray = tickData.getElement("tickData");
 
   //FIXME: only append conditionCodes if it was a requested option
-  std::vector<int> fieldTypes(ctypes, ctypes+5);
-  std::vector<std::string> fields(cnames,cnames+5);
+  int ans_size = include_condition_codes ? 5 : 4;
+  std::vector<int> fieldTypes(ctypes, ctypes + ans_size);
+  std::vector<std::string> fields(cnames, cnames + ans_size);
   std::vector<std::string> rownames(generateRownames(tickDataArray.numValues()));
   Rcpp::List ans(buildDataFrame(rownames,fields,fieldTypes));
 
@@ -107,7 +108,7 @@ extern "C" SEXP tick(SEXP conn_, SEXP security_, SEXP event_types_, SEXP start_d
   }
   request.set("startDateTime", start_datetime.c_str());
   request.set("endDateTime", end_datetime.c_str());
-  request.set("includeConditionCodes",include_condition_codes);
+  if(include_condition_codes) { request.set("includeConditionCodes",include_condition_codes); }
   appendOptionsToRequest(request, options_);
 
   try {
@@ -125,7 +126,7 @@ extern "C" SEXP tick(SEXP conn_, SEXP security_, SEXP event_types_, SEXP start_d
     case Event::RESPONSE:
     case Event::PARTIAL_RESPONSE:
       try {
-        ans = intradayTickDataToDF(event);
+        ans = intradayTickDataToDF(event,include_condition_codes);
       } catch (std::exception& e) {
         REprintf(e.what());
       }
