@@ -35,8 +35,9 @@ using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 
 // to abide non c++11
-const char* cnames[] = { "time", "type", "value", "size", "conditionCodes" };
-const int ctypes[] = { BLPAPI_DATATYPE_DATETIME, BLPAPI_DATATYPE_ENUMERATION, BLPAPI_DATATYPE_FLOAT64, BLPAPI_DATATYPE_INT32, BLPAPI_DATATYPE_ENUMERATION };
+const char* cnames[] = { "time", "type", "value", "size" };
+const int ctypes[] = { BLPAPI_DATATYPE_DATETIME, BLPAPI_DATATYPE_ENUMERATION, BLPAPI_DATATYPE_FLOAT64, BLPAPI_DATATYPE_INT32 };
+static int standard_cnames_size = 4;
 
 Rcpp::List intradayTickDataToDF(Event& event, const bool include_condition_codes) {
   MessageIterator msgIter(event);
@@ -60,9 +61,14 @@ Rcpp::List intradayTickDataToDF(Event& event, const bool include_condition_codes
   Element tickDataArray = tickData.getElement("tickData");
 
   //FIXME: only append conditionCodes if it was a requested option
-  int ans_size = include_condition_codes ? 5 : 4;
-  std::vector<int> fieldTypes(ctypes, ctypes + ans_size);
-  std::vector<std::string> fields(cnames, cnames + ans_size);
+  std::vector<int> fieldTypes(ctypes, ctypes + standard_cnames_size);
+  std::vector<std::string> fields(cnames, cnames + standard_cnames_size);
+
+  if(include_condition_codes) {
+    fields.push_back("conditionCodes");
+    fieldTypes.push_back(BLPAPI_DATATYPE_ENUMERATION);
+  }
+
   std::vector<std::string> rownames(generateRownames(tickDataArray.numValues()));
   Rcpp::List ans(buildDataFrame(rownames,fields,fieldTypes));
 
@@ -73,6 +79,25 @@ Rcpp::List intradayTickDataToDF(Event& event, const bool include_condition_codes
   for(size_t i = 0; i < tickDataArray.numValues(); ++i) {
     Element row_element = tickDataArray.getValueAsElement(i);
     populateDfRow(ans, i, fields_map, row_element);
+    /*
+    // ALTERNATE IMPLEMENTATION
+    // time
+    REAL(ans[0])[i] = bbgDatetimeToPOSIX(row_element.getElementAsDatetime("time"));
+
+    // type
+    SET_STRING_ELT(ans[1],i,Rf_mkChar(row_element.getElementAsString("type")));
+
+    // value
+    REAL(ans[2])[i] = row_element.getElementAsFloat64("value");
+
+    // size
+    INTEGER(ans[3])[i] = row_element.getElementAsInt32("size");
+
+    // conditionCodes
+    if(include_condition_codes && row_element.hasElement("conditionCodes")) {
+      SET_STRING_ELT(ans[4],i,Rf_mkChar(row_element.getElementAsString("conditionCodes")));
+    }
+    */
   }
   return ans;
 }
