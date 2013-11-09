@@ -81,58 +81,60 @@ void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_le
   for(size_t i = 0; i < field_data.numElements(); ++i) {
     Element this_e = field_data.getElement(i);
 
-    std::map<std::string,R_len_t>::iterator iter = fields_map.find(this_e.name().string());
-    if(iter == fields_map.end()) {
-      throw std::logic_error(std::string("Unexpected field encountered in response:") + this_e.name().string());
-    }
-    R_len_t col_index = iter->second;
-
-    switch(this_e.datatype()) {
-    case BLPAPI_DATATYPE_BOOL:
-      LOGICAL(ans[col_index])[row_index] = this_e.getValueAsBool(); break;
-    case BLPAPI_DATATYPE_CHAR:
-      SET_STRING_ELT(ans[col_index],row_index,Rf_mkChar(this_e.getValueAsString())); break;
-    case BLPAPI_DATATYPE_BYTE:
-      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
-      break;
-    case BLPAPI_DATATYPE_INT32:
-      INTEGER(ans[col_index])[row_index] = this_e.getValueAsInt32(); break;
-    case BLPAPI_DATATYPE_INT64:
-      if(static_cast<double>(this_e.getValueAsInt64()) > static_cast<double>(std::numeric_limits<int>::max())) {
-        REprintf("BLPAPI_DATATYPE_INT64 exceeds max int value on this system (assigning std::numeric_limits<int>::max()).");
-        INTEGER(ans[col_index])[row_index] = std::numeric_limits<int>::max();
-      } else {
-        INTEGER(ans[col_index])[row_index] = static_cast<int>(this_e.getValueAsInt64()); break;
+    if(!this_e.isNull()) {
+      std::map<std::string,R_len_t>::iterator iter = fields_map.find(this_e.name().string());
+      if(iter == fields_map.end()) {
+        throw std::logic_error(std::string("Unexpected field encountered in response:") + this_e.name().string());
       }
-      break;
-    case BLPAPI_DATATYPE_FLOAT32:
-      REAL(ans[col_index])[row_index] = this_e.getValueAsFloat32(); break;
-    case BLPAPI_DATATYPE_FLOAT64:
-      REAL(ans[col_index])[row_index] = this_e.getValueAsFloat64(); break;
-    case BLPAPI_DATATYPE_STRING:
-      SET_STRING_ELT(ans[col_index],row_index,Rf_mkChar(this_e.getValueAsString())); break;
-    case BLPAPI_DATATYPE_BYTEARRAY:
-      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
-    case BLPAPI_DATATYPE_DATE:
-    case BLPAPI_DATATYPE_TIME:
-      //FIXME: separate out time later
-      REAL(ans[col_index])[row_index] = bbgDateToPOSIX(this_e.getValueAsDatetime()); break;
-    case BLPAPI_DATATYPE_DECIMAL:
-      REAL(ans[col_index])[row_index] = this_e.getValueAsFloat64(); break;
-    case BLPAPI_DATATYPE_DATETIME:
-      //REAL(ans[col_index])[row_index] = bbgDateToPOSIX(this_e.getValueAsDatetime()); break;
-      REAL(ans[col_index])[row_index] = bbgDatetimeToPOSIX(this_e.getValueAsDatetime()); break;
-    case BLPAPI_DATATYPE_ENUMERATION:
-      //throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
-      SET_STRING_ELT(ans[col_index],row_index,Rf_mkChar(this_e.getValueAsString())); break;
-    case BLPAPI_DATATYPE_SEQUENCE:
-      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
-    case BLPAPI_DATATYPE_CHOICE:
-      throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_CHOICE.");
-    case BLPAPI_DATATYPE_CORRELATION_ID:
-      INTEGER(ans[col_index])[row_index] = this_e.getValueAsInt32(); break;
-    default:
-      throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
+      R_len_t col_index = iter->second;
+
+      switch(this_e.datatype()) {
+      case BLPAPI_DATATYPE_BOOL:
+        LOGICAL(ans[col_index])[row_index] = this_e.getValueAsBool(); break;
+      case BLPAPI_DATATYPE_CHAR:
+        SET_STRING_ELT(ans[col_index],row_index,Rf_mkChar(this_e.getValueAsString())); break;
+      case BLPAPI_DATATYPE_BYTE:
+        throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
+        break;
+      case BLPAPI_DATATYPE_INT32:
+        INTEGER(ans[col_index])[row_index] = this_e.getValueAsInt32(); break;
+      case BLPAPI_DATATYPE_INT64:
+        if(static_cast<double>(this_e.getValueAsInt64()) > static_cast<double>(std::numeric_limits<int>::max())) {
+          REprintf("BLPAPI_DATATYPE_INT64 exceeds max int value on this system (assigning std::numeric_limits<int>::max()).");
+          INTEGER(ans[col_index])[row_index] = std::numeric_limits<int>::max();
+        } else {
+          INTEGER(ans[col_index])[row_index] = static_cast<int>(this_e.getValueAsInt64()); break;
+        }
+        break;
+      case BLPAPI_DATATYPE_FLOAT32:
+        REAL(ans[col_index])[row_index] = this_e.getValueAsFloat32(); break;
+      case BLPAPI_DATATYPE_FLOAT64:
+        REAL(ans[col_index])[row_index] = this_e.getValueAsFloat64(); break;
+      case BLPAPI_DATATYPE_STRING:
+        SET_STRING_ELT(ans[col_index],row_index,Rf_mkChar(this_e.getValueAsString())); break;
+      case BLPAPI_DATATYPE_BYTEARRAY:
+        throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
+      case BLPAPI_DATATYPE_DATE:
+      case BLPAPI_DATATYPE_TIME:
+        //FIXME: separate out time later
+        REAL(ans[col_index])[row_index] = bbgDateToPOSIX(this_e.getValueAsDatetime()); break;
+      case BLPAPI_DATATYPE_DECIMAL:
+        REAL(ans[col_index])[row_index] = this_e.getValueAsFloat64(); break;
+      case BLPAPI_DATATYPE_DATETIME:
+        //REAL(ans[col_index])[row_index] = bbgDateToPOSIX(this_e.getValueAsDatetime()); break;
+        REAL(ans[col_index])[row_index] = bbgDatetimeToPOSIX(this_e.getValueAsDatetime()); break;
+      case BLPAPI_DATATYPE_ENUMERATION:
+        //throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
+        SET_STRING_ELT(ans[col_index],row_index,Rf_mkChar(this_e.getValueAsString())); break;
+      case BLPAPI_DATATYPE_SEQUENCE:
+        throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
+      case BLPAPI_DATATYPE_CHOICE:
+        throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_CHOICE.");
+      case BLPAPI_DATATYPE_CORRELATION_ID:
+        INTEGER(ans[col_index])[row_index] = this_e.getValueAsInt32(); break;
+      default:
+        throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
+      }
     }
   }
 }
