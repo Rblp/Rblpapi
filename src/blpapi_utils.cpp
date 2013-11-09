@@ -19,6 +19,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 #include <boost/date_time/gregorian/gregorian_types.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/local_time/local_time_types.hpp>
@@ -167,11 +168,15 @@ Rcpp::List buildDataFrame(const std::vector<int>& fieldTypes, size_t n) {
     case BLPAPI_DATATYPE_DATE:
     case BLPAPI_DATATYPE_TIME:
       //FIXME: separate out time later
-      ans[i] = Rcpp::DatetimeVector(n); break;
+      ans[i] = Rcpp::DatetimeVector(n);
+      std::fill(REAL(ans[i]),REAL(ans[i])+n,NA_REAL);
+      break;
     case BLPAPI_DATATYPE_DECIMAL:
       ans[i] = Rcpp::NumericVector(n,NA_REAL); break;
     case BLPAPI_DATATYPE_DATETIME:
-      ans[i] = Rcpp::DatetimeVector(n); break;
+      ans[i] = Rcpp::DatetimeVector(n);
+      std::fill(REAL(ans[i]),REAL(ans[i])+n,NA_REAL);
+      break;
     case BLPAPI_DATATYPE_ENUMERATION:
       //throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
       ans[i] = Rcpp::CharacterVector(n); break;
