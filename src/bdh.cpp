@@ -110,7 +110,12 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
 
   Service refDataService = session->getService("//blp/refdata");
   Request request = refDataService.createRequest("HistoricalDataRequest");
-  createStandardRequest(request, securities, fields, options_);
+  try {
+    createStandardRequest(request, securities, fields, options_);
+  } catch (std::exception& e) {
+    REprintf(e.what());
+    return R_NilValue;
+  }
 
   request.set("startDate", start_date.c_str());
   if(end_date_ != R_NilValue) {

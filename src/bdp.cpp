@@ -87,7 +87,12 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
 
   Service refDataService = session->getService("//blp/refdata");
   Request request = refDataService.createRequest("ReferenceDataRequest");
-  createStandardRequest(request, securities, fields, options_);
+  try {
+    createStandardRequest(request, securities, fields, options_);
+  } catch (std::exception& e) {
+    REprintf(e.what());
+    return R_NilValue;
+  }
 
   try {
     sendRequestWithIdentity(session, request, identity_);

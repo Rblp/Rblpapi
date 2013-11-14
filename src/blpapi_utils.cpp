@@ -254,10 +254,19 @@ std::vector<std::string> generateRownames(size_t n) {
 void appendOptionsToRequest(Request& request, SEXP options_) {
   if(options_== R_NilValue) { return; }
   Rcpp::CharacterVector options(options_);
+
+  if(!options.hasAttribute("names")) {
+    throw std::logic_error("Request options must be named.");
+  }
+
+  if(options.attr("names") == R_NilValue) {
+    throw std::logic_error("Request optionnames must not be null.");
+  }
+
   Rcpp::CharacterVector options_names(options.attr("names"));
 
   if(options.length() && options_names.length()==0) {
-    throw std::logic_error("Request options must be named.");
+    throw std::logic_error("Request options must be non empty and named.");
   }
 
   for(R_len_t i = 0; i < options.length(); i++) {
