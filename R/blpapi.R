@@ -8,7 +8,7 @@ blpAuthenticate <- function(conn,uuid,host="localhost",ip.address) {
         cmd.res <- system(paste("host",host),intern=TRUE,ignore.stdout=FALSE,ignore.stderr=FALSE,wait=TRUE)
         ip.address <- strsplit(cmd.res,"address ")[[1]][2]
     }
-    .Call("bdp_authenticate", conn, uuid, ip.address, PACKAGE="Rblpapi")
+    .Call("bdp_authenticate", conn, as.character(uuid), ip.address, PACKAGE="Rblpapi")
 }
 
 bdh <- function(conn, securities, fields, start.date, end.date=NULL, include.non.trading.days=FALSE, options=NULL, identity=NULL) {
