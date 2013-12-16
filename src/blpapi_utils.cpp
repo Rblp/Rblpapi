@@ -202,7 +202,7 @@ Rcpp::List buildDataFrame(const std::vector<std::string>& fieldTypes, size_t n) 
       ans[i] = Rcpp::CharacterVector(n);
     } else if(fieldTypes[i] == "Datetime") {
       ans[i] = Rcpp::DatetimeVector(n);
-    } else if(fieldTypes[i] == "Integer") {
+    } else if(fieldTypes[i] == "Integer" || fieldTypes[i] == "Int32") {
       ans[i] = Rcpp::IntegerVector(n);
     } else {
       throw std::logic_error(std::string("buildDataFrame: unexpected type encountered: ") + fieldTypes[i]); 
