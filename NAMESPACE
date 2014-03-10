@@ -1,5 +1,7 @@
 useDynLib(Rblpapi)
 
+import(Rcpp)
+
 export(
 blpConnect,
 blpAuthenticate,

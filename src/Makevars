@@ -1,11 +1,12 @@
 ## -*- mode: makefile; -*-
 
 PKG_CPPFLAGS += -I../inst/include/ -I.
-RCPP_LIBS=`Rscript -e "Rcpp:::LdFlags()"`
 ARCH=$(shell uname -m)
 
 ifeq ($(ARCH),x86_64)
-  PKG_LIBS=$(RCPP_LIBS) -lboost_date_time -lblpapi3_64
+  BBG_LIB=blpapi3_64
 else
-  PKG_LIBS=$(RCPP_LIBS) -lboost_date_time -lblpapi3_32
+  BBG_LIB=blpapi3_32
 endif
+
+PKG_LIBS = -lboost_date_time -l$(BBG_LIB)
