@@ -76,12 +76,13 @@ Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field) {
     Element this_security = securityData.getValueAsElement(i);
     ans_names[i] = this_security.getElementAsString("security");
     Element fieldData = this_security.getElement("fieldData");
-    if(!fieldData.hasElement(requested_field.c_str())) {
-      throw std::logic_error("Requested field not found.");
+    if(fieldData.hasElement(requested_field.c_str())) {
+      Element this_field = fieldData.getElement(requested_field.c_str());
+      //ans[i] = bulkArrayToDf(this_field,requested_field);
+      ans[i] = bulkArrayToDf(this_field);
+    } else {
+      ans[i] = R_NilValue;
     }
-    Element this_field = fieldData.getElement(requested_field.c_str());
-    //ans[i] = bulkArrayToDf(this_field,requested_field);
-    ans[i] = bulkArrayToDf(this_field);
   }
  
   ans.attr("names") = ans_names;
