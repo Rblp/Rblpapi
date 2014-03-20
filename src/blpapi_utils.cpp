@@ -20,6 +20,7 @@
 #include <sstream>
 #include <iostream>
 #include <algorithm>
+#include <map>
 #include <boost/date_time/gregorian/gregorian_types.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/local_time/local_time_types.hpp>
@@ -58,6 +59,13 @@ void* checkExternalPointer(SEXP xp_, const char* valid_tag) {
   return R_ExternalPtrAddr(xp_);
 }
 
+const double bbgDateToJulianDate(const Datetime& bbg_date) {
+  const boost::gregorian::date r_epoch(1970,1,1);
+  boost::gregorian::date bbg_boost_date(bbg_date.year(),bbg_date.month(),bbg_date.day());
+  boost::gregorian::date_period dp(r_epoch,bbg_boost_date);
+  return static_cast<double>(dp.length().days());
+}
+
 const double bbgDateToPOSIX(const Datetime& bbg_date) {
   boost::gregorian::date bbg_boost_date(bbg_date.year(),bbg_date.month(),bbg_date.day());
   struct tm tm_time(to_tm(bbg_boost_date));
@@ -78,7 +86,6 @@ const double bbgDatetimeToPOSIX(const Datetime& dt) {
 }
 
 void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_len_t>& fields_map, Element& field_data) {
-
   for(size_t i = 0; i < field_data.numElements(); ++i) {
     Element this_e = field_data.getElement(i);
 
@@ -88,7 +95,6 @@ void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_le
         throw std::logic_error(std::string("Unexpected field encountered in response:") + this_e.name().string());
       }
       R_len_t col_index = iter->second;
-
       switch(this_e.datatype()) {
       case BLPAPI_DATATYPE_BOOL:
         LOGICAL(ans[col_index])[row_index] = this_e.getValueAsBool(); break;
@@ -114,8 +120,9 @@ void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_le
       case BLPAPI_DATATYPE_STRING:
         SET_STRING_ELT(ans[col_index],row_index,Rf_mkChar(this_e.getValueAsString())); break;
       case BLPAPI_DATATYPE_BYTEARRAY:
-        throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
+        throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY."); break;
       case BLPAPI_DATATYPE_DATE:
+        REAL(ans[col_index])[row_index] = bbgDateToJulianDate(this_e.getValueAsDatetime()); break;
       case BLPAPI_DATATYPE_TIME:
         //FIXME: separate out time later
         REAL(ans[col_index])[row_index] = bbgDateToPOSIX(this_e.getValueAsDatetime()); break;
@@ -166,6 +173,9 @@ Rcpp::List buildDataFrame(const std::vector<int>& fieldTypes, size_t n) {
     case BLPAPI_DATATYPE_BYTEARRAY:
       throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
     case BLPAPI_DATATYPE_DATE:
+      ans[i] = Rcpp::DateVector(n);
+      std::fill(REAL(ans[i]),REAL(ans[i])+n,NA_REAL);
+      break;
     case BLPAPI_DATATYPE_TIME:
       //FIXME: separate out time later
       ans[i] = Rcpp::DatetimeVector(n);
@@ -190,39 +200,6 @@ Rcpp::List buildDataFrame(const std::vector<int>& fieldTypes, size_t n) {
       throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
     }
   }
-  return ans;
-}
-
-Rcpp::List buildDataFrame(const std::vector<std::string>& fieldTypes, size_t n) {
-  Rcpp::List ans(fieldTypes.size());
-  for(R_len_t i = 0; i < fieldTypes.size(); ++i) {
-    if(fieldTypes[i] == "Double") {
-      ans[i] = Rcpp::NumericVector(n,NA_REAL);
-    } else if(fieldTypes[i] == "String") {
-      ans[i] = Rcpp::CharacterVector(n);
-    } else if(fieldTypes[i] == "Datetime") {
-      ans[i] = Rcpp::DatetimeVector(n);
-    } else if(fieldTypes[i] == "Integer" || fieldTypes[i] == "Int32") {
-      ans[i] = Rcpp::IntegerVector(n);
-    } else {
-      throw std::logic_error(std::string("buildDataFrame: unexpected type encountered: ") + fieldTypes[i]); 
-    }
-  }
-  return ans;
-}
-
-Rcpp::List buildDataFrame(const std::vector<std::string>& rownames,
-                          const std::vector<std::string>& colnames,
-                          const std::vector<std::string>& fieldTypes) {
-
-  if(colnames.size() != fieldTypes.size()) {
-    throw std::logic_error("buildDataFrame: Colnames not the same length as fieldTypes.");
-  }
-
-  Rcpp::List ans(buildDataFrame(fieldTypes,rownames.size()));
-  ans.attr("class") = "data.frame";
-  ans.attr("names") = colnames;
-  ans.attr("row.names") = rownames;
   return ans;
 }
 
