@@ -59,11 +59,11 @@ void* checkExternalPointer(SEXP xp_, const char* valid_tag) {
   return R_ExternalPtrAddr(xp_);
 }
 
-const double bbgDateToJulianDate(const Datetime& bbg_date) {
+const int bbgDateToJulianDate(const Datetime& bbg_date) {
   const boost::gregorian::date r_epoch(1970,1,1);
   boost::gregorian::date bbg_boost_date(bbg_date.year(),bbg_date.month(),bbg_date.day());
   boost::gregorian::date_period dp(r_epoch,bbg_boost_date);
-  return static_cast<double>(dp.length().days());
+  return static_cast<int>(dp.length().days());
 }
 
 const double bbgDateToPOSIX(const Datetime& bbg_date) {
@@ -83,6 +83,15 @@ const double bbgDatetimeToPOSIX(const Datetime& dt) {
   boost::posix_time::ptime bbg_ptime(bbg_boost_date,td);
   struct tm tm_time(to_tm(bbg_ptime));
   return static_cast<double>(mktime(&tm_time));
+}
+
+void addDateClass(SEXP x) {
+  // create and add dates class to dates object
+  SEXP r_dates_class;
+  PROTECT(r_dates_class = Rf_allocVector(STRSXP, 1));
+  SET_STRING_ELT(r_dates_class, 0, Rf_mkChar("Date"));
+  Rf_classgets(x, r_dates_class);
+  UNPROTECT(1); //r_dates_class
 }
 
 void populateDfRow(SEXP ans, R_len_t row_index, Element& e) {
@@ -113,7 +122,7 @@ void populateDfRow(SEXP ans, R_len_t row_index, Element& e) {
   case BLPAPI_DATATYPE_BYTEARRAY:
     throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY."); break;
   case BLPAPI_DATATYPE_DATE:
-    REAL(ans)[row_index] = bbgDateToJulianDate(e.getValueAsDatetime()); break;
+    INTEGER(ans)[row_index] = bbgDateToJulianDate(e.getValueAsDatetime()); break;
   case BLPAPI_DATATYPE_TIME:
     //FIXME: separate out time later
     REAL(ans)[row_index] = bbgDateToPOSIX(e.getValueAsDatetime()); break;
@@ -161,8 +170,9 @@ SEXP allocateDataFrameColumn(int fieldT, size_t n) {
   case BLPAPI_DATATYPE_BYTEARRAY:
     throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
   case BLPAPI_DATATYPE_DATE:
-    ans = Rcpp::DateVector(n);
-    std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
+    ans = Rcpp::IntegerVector(n);
+    addDateClass(ans);
+    std::fill(INTEGER(ans),INTEGER(ans)+n,NA_INTEGER);
     break;
   case BLPAPI_DATATYPE_TIME:
     //FIXME: separate out time later
