@@ -23,18 +23,17 @@
 #include <Rcpp.h>
 
 void* checkExternalPointer(SEXP xp_, const char* valid_tag);
+const double bbgDateToJulianDate(const BloombergLP::blpapi::Datetime& bbg_date);
 const double bbgDateToPOSIX(const BloombergLP::blpapi::Datetime& bbg_date);
 const double bbgDatetimeToPOSIX(const BloombergLP::blpapi::Datetime& dt);
 void appendOptionsToRequest(BloombergLP::blpapi::Request& request, SEXP options_);
-void populateDfRow(Rcpp::List& ans, R_len_t row_index, std::map<std::string,R_len_t>& fields_map, BloombergLP::blpapi::Element& e);
-Rcpp::List buildDataFrame(const std::vector<int>& fieldTypes, size_t n);
-Rcpp::List buildDataFrame(const std::vector<std::string>& fieldTypes, size_t n);
-Rcpp::List buildDataFrame(const std::vector<std::string>& rownames,const std::vector<std::string>& colnames,const std::vector<std::string>& fieldTypes);
-Rcpp::List buildDataFrame(const std::vector<std::string>& rownames,const std::vector<std::string>& colnames,const std::vector<int>& fieldTypes);
-std::vector<std::string> generateRownames(size_t n);
 void createStandardRequest(BloombergLP::blpapi::Request& request,const std::vector<std::string>& securities,const std::vector<std::string>& fields,SEXP options_);
 void sendRequestWithIdentity(BloombergLP::blpapi::Session* session, BloombergLP::blpapi::Request& request, SEXP identity_);
-std::vector<std::string> getNamesFromRow(const BloombergLP::blpapi::Element& row);
-Rcpp::List buildDataFrameFromRow(const BloombergLP::blpapi::Element& row, size_t n);
+
+void populateDfRow(SEXP ans, R_len_t row_index, BloombergLP::blpapi::Element& e);
+SEXP allocateDataFrameColumn(int fieldT, size_t n);
+//Rcpp::List buildDataFrame(std::map<std::string,SEXP>& m);
+SEXP buildDataFrame(std::vector<std::string>& rownames, std::map<std::string,SEXP>& m);
+
 
 #endif // BLPAPI_UTILS_H

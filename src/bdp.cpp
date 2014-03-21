@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>. //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <iostream>
 #include <vector>
 #include <string>
 #include <blpapi_session.h>
@@ -25,7 +26,6 @@
 #include <blpapi_element.h>
 #include <Rcpp.h>
 #include <blpapi_utils.h>
-#include <get_field_types.h>
 
 using BloombergLP::blpapi::Session;
 using BloombergLP::blpapi::Service;
@@ -35,12 +35,9 @@ using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 
-void populateDF(Rcpp::List& ans, Event& event) {
-  std::vector<std::string> rownames = Rcpp::as<std::vector<std::string> > (ans.attr("row.names"));
-  std::vector<std::string> colnames = Rcpp::as<std::vector<std::string> > (ans.attr("names"));
-  std::map<std::string, R_len_t> rownames_map; for(R_len_t i = 0; i < rownames.size(); ++i) { rownames_map[rownames[i]] = i; }
-  std::map<std::string, R_len_t> colnames_map; for(R_len_t i = 0; i < colnames.size(); ++i) { colnames_map[colnames[i]] = i; }
-
+SEXP getBDPResult(Event& event) {
+  std::map<std::string,SEXP> lazy_frame;
+  std::vector<std::string> rownames;
   MessageIterator msgIter(event);
   if(!msgIter.next()) {
     throw std::logic_error("Not a valid MessageIterator.");
@@ -51,12 +48,27 @@ void populateDF(Rcpp::List& ans, Event& event) {
     throw std::logic_error("Not a valid ReferenceDataResponse.");
   }
   Element securityData = response.getElement("securityData");
+
+  // i is the row index
+  //REprintf("securityData.numValues(): %d\n",securityData.numValues());
   for(size_t i = 0; i < securityData.numValues(); ++i) {
+    //REprintf("i %d\n",i);
     Element this_security = securityData.getValueAsElement(i);
-    std::string this_security_name(this_security.getElementAsString("security"));
+    rownames.push_back(this_security.getElementAsString("security"));
     Element fieldData = this_security.getElement("fieldData");
-    populateDfRow(ans, rownames_map[this_security_name], colnames_map, fieldData);
+    //REprintf("fieldData.numElements(): %d\n",fieldData.numElements());
+    for(size_t j = 0; j < fieldData.numElements(); ++j) {
+      //REprintf("j %d\n",j);
+      Element e = fieldData.getElement(j);
+      std::map<std::string,SEXP>::iterator iter = lazy_frame.find(e.name().string());
+      // insert only if not present
+      if(iter == lazy_frame.end()) {
+        iter = lazy_frame.insert(lazy_frame.begin(),std::pair<std::string,SEXP>(e.name().string(),PROTECT(allocateDataFrameColumn(e.datatype(), securityData.numValues()))));
+      }
+      populateDfRow(iter->second,i,e);
+    }
   }
+  return buildDataFrame(rownames,lazy_frame);
 }
 
 extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, SEXP identity_) {
@@ -68,13 +80,6 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
 
   try {
     session = reinterpret_cast<Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
-  } catch (std::exception& e) {
-    REprintf(e.what());
-    return R_NilValue;
-  }
-
-  try {
-    getFieldTypes(field_types, session, fields);
   } catch (std::exception& e) {
     REprintf(e.what());
     return R_NilValue;
@@ -101,14 +106,15 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
     return R_NilValue;
   }
 
-  Rcpp::List ans = buildDataFrame(securities,fields,field_types);
+  SEXP ans= R_NilValue;
 
   while (true) {
     Event event = session->nextEvent();
+    //REprintf("%d\n",event.eventType());
     switch (event.eventType()) {
     case Event::RESPONSE:
     case Event::PARTIAL_RESPONSE:
-      populateDF(ans,event);
+      ans = getBDPResult(event);
       break;
     default:
       MessageIterator msgIter(event);
@@ -119,5 +125,5 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
     }
     if (event.eventType() == Event::RESPONSE) { break; }
   }
-  return Rcpp::wrap(ans);
+  return ans;
 }
