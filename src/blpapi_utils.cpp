@@ -18,9 +18,8 @@
 #include <stdexcept>
 #include <string>
 #include <sstream>
-#include <iostream>
+//#include <iostream>
 #include <algorithm>
-#include <map>
 #include <boost/date_time/gregorian/gregorian_types.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/local_time/local_time_types.hpp>
@@ -28,6 +27,7 @@
 #include <blpapi_request.h>
 #include <blpapi_datetime.h>
 #include <Rcpp.h>
+#include <blpapi_utils.h>
 
 using BloombergLP::blpapi::Session;
 using BloombergLP::blpapi::Request;
@@ -218,7 +218,7 @@ Rcpp::List buildDataFrame(std::map<std::string,SEXP>& m) {
 }
 */
 
-SEXP buildDataFrame(std::vector<std::string>& rownames, std::map<std::string,SEXP>& m) {
+SEXP buildDataFrame(std::vector<std::string>& rownames, LazyFrameT& m) {
   if(m.empty()) { return R_NilValue; }
   SEXP ans = PROTECT(Rf_allocVector(VECSXP, m.size()));
 

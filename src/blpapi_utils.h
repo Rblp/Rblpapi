@@ -20,10 +20,13 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include <Rcpp.h>
 
+typedef std::map<std::string,SEXP> LazyFrameT;
+
 void* checkExternalPointer(SEXP xp_, const char* valid_tag);
-const double bbgDateToJulianDate(const BloombergLP::blpapi::Datetime& bbg_date);
+const int bbgDateToJulianDate(const BloombergLP::blpapi::Datetime& bbg_date);
 const double bbgDateToPOSIX(const BloombergLP::blpapi::Datetime& bbg_date);
 const double bbgDatetimeToPOSIX(const BloombergLP::blpapi::Datetime& dt);
 void appendOptionsToRequest(BloombergLP::blpapi::Request& request, SEXP options_);
@@ -32,8 +35,8 @@ void sendRequestWithIdentity(BloombergLP::blpapi::Session* session, BloombergLP:
 
 void populateDfRow(SEXP ans, R_len_t row_index, BloombergLP::blpapi::Element& e);
 SEXP allocateDataFrameColumn(int fieldT, size_t n);
-//Rcpp::List buildDataFrame(std::map<std::string,SEXP>& m);
-SEXP buildDataFrame(std::vector<std::string>& rownames, std::map<std::string,SEXP>& m);
+//Rcpp::List buildDataFrame(LazyFrameT& m);
+SEXP buildDataFrame(std::vector<std::string>& rownames, LazyFrameT& m);
 
 
 #endif // BLPAPI_UTILS_H

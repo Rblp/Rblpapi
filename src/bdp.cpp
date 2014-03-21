@@ -36,7 +36,7 @@ using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 
 SEXP getBDPResult(Event& event) {
-  std::map<std::string,SEXP> lazy_frame;
+  LazyFrameT lazy_frame;
   std::vector<std::string> rownames;
   MessageIterator msgIter(event);
   if(!msgIter.next()) {
