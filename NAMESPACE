@@ -5,9 +5,5 @@ import(Rcpp)
 export(
 blpConnect,
 blpAuthenticate,
-bdh,
-bdp,
-bds,
-bar,
-tick
+bdp
 )

@@ -35,9 +35,7 @@ using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 
-SEXP getBDPResult(Event& event) {
-  LazyFrameT lazy_frame;
-  std::vector<std::string> rownames;
+void getBDPResult(Event& event, LazyFrameT& lazy_frame, std::vector<std::string>& securities) {
   MessageIterator msgIter(event);
   if(!msgIter.next()) {
     throw std::logic_error("Not a valid MessageIterator.");
@@ -54,21 +52,28 @@ SEXP getBDPResult(Event& event) {
   for(size_t i = 0; i < securityData.numValues(); ++i) {
     //REprintf("i %d\n",i);
     Element this_security = securityData.getValueAsElement(i);
-    rownames.push_back(this_security.getElementAsString("security"));
+    // row index is position in securities vector
+    auto row_iter = std::find(securities.begin(), securities.end(), this_security.getElementAsString("security"));
+    if(row_iter == securities.end()) {
+      throw std::logic_error(std::string("this security is not expected: ")+this_security.getElementAsString("security"));
+    }
+    size_t row_index = std::distance(securities.begin(),row_iter);
     Element fieldData = this_security.getElement("fieldData");
     //REprintf("fieldData.numElements(): %d\n",fieldData.numElements());
     for(size_t j = 0; j < fieldData.numElements(); ++j) {
       //REprintf("j %d\n",j);
       Element e = fieldData.getElement(j);
       std::map<std::string,SEXP>::iterator iter = lazy_frame.find(e.name().string());
-      // insert only if not present
+      // insert only if not present, but use size of securities b/c this could be a partial response
       if(iter == lazy_frame.end()) {
-        iter = lazy_frame.insert(lazy_frame.begin(),std::pair<std::string,SEXP>(e.name().string(),PROTECT(allocateDataFrameColumn(e.datatype(), securityData.numValues()))));
+        iter = lazy_frame.insert(lazy_frame.begin(),
+                                 std::pair<std::string,SEXP>(e.name().string(),
+                                                             PROTECT(allocateDataFrameColumn(e.datatype(), 
+                                                                                             securities.size()))));
       }
-      populateDfRow(iter->second,i,e);
+      populateDfRow(iter->second,row_index,e);
     }
   }
-  return buildDataFrame(rownames,lazy_frame);
 }
 
 extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, SEXP identity_) {
@@ -76,7 +81,6 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
 
   std::vector<std::string> securities(Rcpp::as<std::vector<std::string> >(securities_));
   std::vector<std::string> fields(Rcpp::as<std::vector<std::string> >(fields_));
-  std::vector<std::string> field_types;
 
   try {
     session = reinterpret_cast<Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
@@ -106,7 +110,7 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
     return R_NilValue;
   }
 
-  SEXP ans= R_NilValue;
+  LazyFrameT lazy_frame;
 
   while (true) {
     Event event = session->nextEvent();
@@ -114,7 +118,7 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
     switch (event.eventType()) {
     case Event::RESPONSE:
     case Event::PARTIAL_RESPONSE:
-      ans = getBDPResult(event);
+      getBDPResult(event,lazy_frame,securities);
       break;
     default:
       MessageIterator msgIter(event);
@@ -125,5 +129,5 @@ extern "C" SEXP bdp(SEXP conn_, SEXP securities_, SEXP fields_, SEXP options_, S
     }
     if (event.eventType() == Event::RESPONSE) { break; }
   }
-  return ans;
+  return buildDataFrame(securities,lazy_frame);
 }
