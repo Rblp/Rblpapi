@@ -201,24 +201,13 @@ SEXP allocateDataFrameColumn(int fieldT, size_t n) {
 }
 
 SEXP fakeRownames(size_t n) {
-  SEXP ans = Rcpp::IntegerVector(n);
+  SEXP ans = PROTECT(Rf_allocVector(INTSXP,n));
   for(size_t i = 0; i < n; ++i) INTEGER(ans)[i] = i+1;
+  UNPROTECT(1);
   return ans;
 }
-/*
-Rcpp::List buildDataFrame(std::map<std::string,SEXP>& m) {
-  Rcpp::List ans(m.size());
-  ans.attr("class") = "data.frame";
-  std::vector<std::string> colnames;
-  int i(0);
-  for (const auto &v : m) { colnames.push_back(v.first); ans[i++] = v.second; }
-  ans.attr("names") = colnames;
-  ans.attr("row.names") = fakeRownames(Rf_length(m.begin()->second));
-  return ans;
-}
-*/
 
-SEXP buildDataFrame(std::vector<std::string>& rownames, LazyFrameT& m) {
+SEXP buildDataFrame(std::map<std::string,SEXP>& m, bool add_fake_rownames) {
   if(m.empty()) { return R_NilValue; }
   SEXP ans = PROTECT(Rf_allocVector(VECSXP, m.size()));
 
@@ -234,14 +223,23 @@ SEXP buildDataFrame(std::vector<std::string>& rownames, LazyFrameT& m) {
     ++i;
   }
   Rf_setAttrib(ans, R_NamesSymbol, colnames); UNPROTECT(1);
+  // all columns are now safe
+  UNPROTECT(m.size());
 
+  if(add_fake_rownames) {
+    Rf_setAttrib(ans,Rf_install("row.names"),fakeRownames(Rf_length(m.begin()->second)));
+  }
+  UNPROTECT(1);
+  return ans;
+}
+
+SEXP buildDataFrame(std::vector<std::string>& rownames, LazyFrameT& m) {
+  SEXP ans = PROTECT(buildDataFrame(m));
   SEXP rownames_ = PROTECT(Rf_allocVector(STRSXP, rownames.size()));
   int j(0);
   for(const auto &v : rownames) { SET_STRING_ELT(rownames_,j++,Rf_mkChar(v.c_str())); }
   Rf_setAttrib(ans, Rf_install("row.names"), rownames_); UNPROTECT(1);
 
-  // all columns are now safe
-  UNPROTECT(m.size());
   UNPROTECT(1);
   return ans;
 }

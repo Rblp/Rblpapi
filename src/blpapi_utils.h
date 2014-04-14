@@ -35,7 +35,7 @@ void sendRequestWithIdentity(BloombergLP::blpapi::Session* session, BloombergLP:
 
 void populateDfRow(SEXP ans, R_len_t row_index, BloombergLP::blpapi::Element& e);
 SEXP allocateDataFrameColumn(int fieldT, size_t n);
-//Rcpp::List buildDataFrame(LazyFrameT& m);
+SEXP buildDataFrame(std::map<std::string,SEXP>& m,bool add_fake_rownames = false);
 SEXP buildDataFrame(std::vector<std::string>& rownames, LazyFrameT& m);
 
 
