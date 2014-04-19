@@ -6,5 +6,6 @@ export(
 blpConnect,
 blpAuthenticate,
 bdp,
-bdh
+bdh,
+bds
 )
