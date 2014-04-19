@@ -51,7 +51,7 @@ SEXP bulkArrayToDf(Element& fieldData) {
   return buildDataFrame(lazy_frame,true);
 }
 
-Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field) {
+SEXP BulkDataResponseToDF(Event& event, std::string& requested_field) {
   MessageIterator msgIter(event);
   if(!msgIter.next()) {
     throw std::logic_error("Not a valid MessageIterator.");
@@ -65,7 +65,7 @@ Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field) {
   }
   Element securityData = response.getElement("securityData");
 
-  Rcpp::List ans(securityData.numValues());
+  SEXP ans = PROTECT(Rf_allocVector(VECSXP, securityData.numValues()));
   std::vector<std::string> ans_names(securityData.numValues());
 
   for(size_t i = 0; i < securityData.numValues(); ++i) {
@@ -73,14 +73,15 @@ Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field) {
     ans_names[i] = this_security.getElementAsString("security");
     Element fieldData = this_security.getElement("fieldData");
     if(!fieldData.hasElement(requested_field.c_str())) {
-      ans[i] = R_NilValue;
+      SET_VECTOR_ELT(ans,i,R_NilValue);
     } else {
       Element this_field = fieldData.getElement(requested_field.c_str());
-      ans[i] = bulkArrayToDf(this_field);
+      SET_VECTOR_ELT(ans,i,bulkArrayToDf(this_field));
     }
   }
  
-  ans.attr("names") = ans_names;
+  //FIXME: setListNames(ans,ans_names);
+  UNPROTECT(1);
   return ans;
 }
 
@@ -121,7 +122,7 @@ extern "C" SEXP bds(SEXP conn_, SEXP securities_, SEXP field_, SEXP options_, SE
     return R_NilValue;
   }
 
-  Rcpp::List ans;
+  SEXP ans;
 
   while (true) {
     Event event = session->nextEvent();
@@ -140,5 +141,5 @@ extern "C" SEXP bds(SEXP conn_, SEXP securities_, SEXP field_, SEXP options_, SE
     if (event.eventType() == Event::RESPONSE) { break; }
   }
 
-  return Rcpp::wrap(ans);
+  return ans;
 }
