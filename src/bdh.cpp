@@ -71,14 +71,7 @@ SEXP HistoricalDataResponseToDF(Event& event) {
     Element row = fieldData.getValueAsElement(i);
     for(size_t j = 0; j < row.numElements(); ++j) {
       Element e = row.getElement(j);
-      std::map<std::string,SEXP>::iterator iter = lazy_frame.find(e.name().string());
-      // insert only if not present
-      if(iter == lazy_frame.end()) {
-        iter = lazy_frame.insert(lazy_frame.begin(),
-                                 std::pair<std::string,SEXP>(e.name().string(),
-                                                             PROTECT(allocateDataFrameColumn(e.datatype(), 
-                                                                                             fieldData.numValues()))));
-      }
+      std::map<std::string,SEXP>::iterator iter = assertColumnDefined(lazy_frame,e,fieldData.numValues());
       populateDfRow(iter->second,i,e);
     }
   }

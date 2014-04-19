@@ -292,3 +292,15 @@ void sendRequestWithIdentity(Session* session, Request& request, SEXP identity_)
     session->sendRequest(request);
   }
 }
+
+std::map<std::string,SEXP>::iterator assertColumnDefined(LazyFrameT& lazy_frame, BloombergLP::blpapi::Element& e, size_t n) {
+  std::map<std::string,SEXP>::iterator iter = lazy_frame.find(e.name().string());
+
+  // insert only if not present
+  if(iter == lazy_frame.end()) {
+    SEXP new_column = PROTECT(allocateDataFrameColumn(e.datatype(), n));
+    iter = lazy_frame.insert(lazy_frame.begin(),std::pair<std::string,SEXP>(e.name().string(),new_column));
+  }
+
+  return iter;
+}

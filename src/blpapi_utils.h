@@ -37,6 +37,6 @@ void populateDfRow(SEXP ans, R_len_t row_index, BloombergLP::blpapi::Element& e)
 SEXP allocateDataFrameColumn(int fieldT, size_t n);
 SEXP buildDataFrame(std::map<std::string,SEXP>& m,bool add_fake_rownames = false);
 SEXP buildDataFrame(std::vector<std::string>& rownames, LazyFrameT& m);
-
+std::map<std::string,SEXP>::iterator assertColumnDefined(LazyFrameT& lazy_frame, BloombergLP::blpapi::Element& e, size_t n);
 
 #endif // BLPAPI_UTILS_H

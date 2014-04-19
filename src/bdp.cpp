@@ -61,16 +61,8 @@ void getBDPResult(Event& event, LazyFrameT& lazy_frame, std::vector<std::string>
     Element fieldData = this_security.getElement("fieldData");
     //REprintf("fieldData.numElements(): %d\n",fieldData.numElements());
     for(size_t j = 0; j < fieldData.numElements(); ++j) {
-      //REprintf("j %d\n",j);
       Element e = fieldData.getElement(j);
-      std::map<std::string,SEXP>::iterator iter = lazy_frame.find(e.name().string());
-      // insert only if not present, but use size of securities b/c this could be a partial response
-      if(iter == lazy_frame.end()) {
-        iter = lazy_frame.insert(lazy_frame.begin(),
-                                 std::pair<std::string,SEXP>(e.name().string(),
-                                                             PROTECT(allocateDataFrameColumn(e.datatype(), 
-                                                                                             securities.size()))));
-      }
+      std::map<std::string,SEXP>::iterator iter = assertColumnDefined(lazy_frame,e,securities.size());
       populateDfRow(iter->second,row_index,e);
     }
   }
