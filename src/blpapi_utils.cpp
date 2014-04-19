@@ -95,6 +95,8 @@ void addDateClass(SEXP x) {
 }
 
 void populateDfRow(SEXP ans, R_len_t row_index, Element& e) {
+  if(e.isNull()) { return; }
+
   switch(e.datatype()) {
   case BLPAPI_DATATYPE_BOOL:
     LOGICAL(ans)[row_index] = e.getValueAsBool(); break;
