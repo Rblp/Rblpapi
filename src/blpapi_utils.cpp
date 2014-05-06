@@ -162,25 +162,30 @@ SEXP allocateDataFrameColumn(int fieldT, size_t n) {
 
   switch(fieldT) {
   case BLPAPI_DATATYPE_BOOL:
-    ans = PROTECT(Rf_allocVector(LGLSXP,n)); break;
+    ans = PROTECT(Rf_allocVector(LGLSXP,n));
+    std::fill(LOGICAL(ans),LOGICAL(ans)+n,NA_LOGICAL);
+    break;
   case BLPAPI_DATATYPE_CHAR:
-    ans = PROTECT(Rf_allocVector(STRSXP,n)); break;
+    ans = PROTECT(Rf_allocVector(STRSXP,n));
+    break;
   case BLPAPI_DATATYPE_BYTE:
     throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
     break;
   case BLPAPI_DATATYPE_INT32:
-    ans = PROTECT(Rf_allocVector(INTSXP, n)); break;
   case BLPAPI_DATATYPE_INT64:
-    ans = PROTECT(Rf_allocVector(INTSXP, n)); break;
+    ans = PROTECT(Rf_allocVector(INTSXP, n));
+    std::fill(INTEGER(ans),INTEGER(ans)+n,NA_INTEGER);
     break;
   case BLPAPI_DATATYPE_FLOAT32:
-    ans = PROTECT(Rf_allocVector(REALSXP,n)); break;
   case BLPAPI_DATATYPE_FLOAT64:
-    ans = PROTECT(Rf_allocVector(REALSXP,n)); break;
+    ans = PROTECT(Rf_allocVector(REALSXP,n));
+    std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
+    break;
   case BLPAPI_DATATYPE_STRING:
     ans = PROTECT(Rf_allocVector(STRSXP,n)); break;
   case BLPAPI_DATATYPE_BYTEARRAY:
     throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
+    break;
   case BLPAPI_DATATYPE_DATE:
     ans = PROTECT(Rf_allocVector(INTSXP, n));
     addDateClass(ans);
@@ -193,20 +198,26 @@ SEXP allocateDataFrameColumn(int fieldT, size_t n) {
     std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
     break;
   case BLPAPI_DATATYPE_DECIMAL:
-    ans = PROTECT(Rf_allocVector(REALSXP,n)); break;
+    ans = PROTECT(Rf_allocVector(REALSXP,n));
+    std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
+    break;
   case BLPAPI_DATATYPE_DATETIME:
     ans = PROTECT(Rf_allocVector(REALSXP,n));
     addPosixClass(ans);
     std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
     break;
   case BLPAPI_DATATYPE_ENUMERATION:
-    ans = PROTECT(Rf_allocVector(STRSXP,n)); break;
+    ans = PROTECT(Rf_allocVector(STRSXP,n));
+    break;
   case BLPAPI_DATATYPE_SEQUENCE:
     throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
+    break;
   case BLPAPI_DATATYPE_CHOICE:
     throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_CHOICE.");
+    break;
   case BLPAPI_DATATYPE_CORRELATION_ID:
-    ans = PROTECT(Rf_allocVector(INTSXP, n)); break;
+    ans = PROTECT(Rf_allocVector(INTSXP, n));
+    break;
   default:
     throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
   }
