@@ -38,5 +38,8 @@ SEXP allocateDataFrameColumn(int fieldT, size_t n);
 SEXP buildDataFrame(std::map<std::string,SEXP>& m,bool add_fake_rownames = false);
 SEXP buildDataFrame(std::vector<std::string>& rownames, LazyFrameT& m);
 std::map<std::string,SEXP>::iterator assertColumnDefined(LazyFrameT& lazy_frame, BloombergLP::blpapi::Element& e, size_t n);
-
+void addDateClass(SEXP x);
+void addPosixClass(SEXP x);
+void setNames(SEXP x, std::vector<std::string>& names);
+void addFakeRownames(SEXP x, R_len_t n);
 #endif // BLPAPI_UTILS_H

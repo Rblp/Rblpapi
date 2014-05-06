@@ -94,6 +94,16 @@ void addDateClass(SEXP x) {
   UNPROTECT(1); //r_dates_class
 }
 
+void addPosixClass(SEXP x) {
+  // create and add dates class to dates object
+  SEXP r_posix_class;
+  PROTECT(r_posix_class = Rf_allocVector(STRSXP, 2));
+  SET_STRING_ELT(r_posix_class, 0, Rf_mkChar("POSIXct"));
+  SET_STRING_ELT(r_posix_class, 1, Rf_mkChar("POSIXt"));
+  Rf_classgets(x, r_posix_class);
+  UNPROTECT(1); //r_posix_class
+}
+
 void populateDfRow(SEXP ans, R_len_t row_index, Element& e) {
   if(e.isNull()) { return; }
 
@@ -152,70 +162,75 @@ SEXP allocateDataFrameColumn(int fieldT, size_t n) {
 
   switch(fieldT) {
   case BLPAPI_DATATYPE_BOOL:
-    ans = Rcpp::LogicalVector(n); break;
+    ans = PROTECT(Rf_allocVector(LGLSXP,n)); break;
   case BLPAPI_DATATYPE_CHAR:
-    ans = Rcpp::CharacterVector(n); break;
+    ans = PROTECT(Rf_allocVector(STRSXP,n)); break;
   case BLPAPI_DATATYPE_BYTE:
     throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
     break;
   case BLPAPI_DATATYPE_INT32:
-    ans = Rcpp::IntegerVector(n); break;
+    ans = PROTECT(Rf_allocVector(INTSXP, n)); break;
   case BLPAPI_DATATYPE_INT64:
-    ans = Rcpp::IntegerVector(n); break;
+    ans = PROTECT(Rf_allocVector(INTSXP, n)); break;
     break;
   case BLPAPI_DATATYPE_FLOAT32:
-    ans = Rcpp::NumericVector(n,NA_REAL); break;
+    ans = PROTECT(Rf_allocVector(REALSXP,n)); break;
   case BLPAPI_DATATYPE_FLOAT64:
-    ans = Rcpp::NumericVector(n,NA_REAL); break;
+    ans = PROTECT(Rf_allocVector(REALSXP,n)); break;
   case BLPAPI_DATATYPE_STRING:
-    ans = Rcpp::CharacterVector(n); break;
+    ans = PROTECT(Rf_allocVector(STRSXP,n)); break;
   case BLPAPI_DATATYPE_BYTEARRAY:
     throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
   case BLPAPI_DATATYPE_DATE:
-    ans = Rcpp::IntegerVector(n);
+    ans = PROTECT(Rf_allocVector(INTSXP, n));
     addDateClass(ans);
     std::fill(INTEGER(ans),INTEGER(ans)+n,NA_INTEGER);
     break;
   case BLPAPI_DATATYPE_TIME:
     //FIXME: separate out time later
-    ans = Rcpp::DatetimeVector(n);
+    ans = PROTECT(Rf_allocVector(REALSXP,n));
+    addPosixClass(ans);
     std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
     break;
   case BLPAPI_DATATYPE_DECIMAL:
-    ans = Rcpp::NumericVector(n,NA_REAL); break;
+    ans = PROTECT(Rf_allocVector(REALSXP,n)); break;
   case BLPAPI_DATATYPE_DATETIME:
-    ans = Rcpp::DatetimeVector(n);
+    ans = PROTECT(Rf_allocVector(REALSXP,n));
+    addPosixClass(ans);
     std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
     break;
   case BLPAPI_DATATYPE_ENUMERATION:
-    //throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
-    ans = Rcpp::CharacterVector(n); break;
+    ans = PROTECT(Rf_allocVector(STRSXP,n)); break;
   case BLPAPI_DATATYPE_SEQUENCE:
     throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
   case BLPAPI_DATATYPE_CHOICE:
     throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_CHOICE.");
   case BLPAPI_DATATYPE_CORRELATION_ID:
-    ans = Rcpp::IntegerVector(n); break;
+    ans = PROTECT(Rf_allocVector(INTSXP, n)); break;
   default:
     throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
   }
   return ans;
 }
 
-SEXP fakeRownames(size_t n) {
-  SEXP ans = PROTECT(Rf_allocVector(INTSXP,n));
-  for(size_t i = 0; i < n; ++i) INTEGER(ans)[i] = i+1;
-  UNPROTECT(1);
-  return ans;
+void addFakeRownames(SEXP x, R_len_t n) {
+  SEXP rownames = PROTECT(Rf_allocVector(INTSXP,n));
+  for(R_len_t i = 0; i < n; ++i) INTEGER(rownames)[i] = i+1;
+  Rf_setAttrib(x,Rf_install("row.names"),rownames);
+  UNPROTECT(1); // rownames
 }
 
-SEXP buildDataFrame(std::map<std::string,SEXP>& m, bool add_fake_rownames) {
+SEXP buildDataFrame(LazyFrameT& m, bool add_fake_rownames) {
   if(m.empty()) { return R_NilValue; }
   SEXP ans = PROTECT(Rf_allocVector(VECSXP, m.size()));
 
   SEXP klass = PROTECT(Rf_allocVector(STRSXP, 1));
   SET_STRING_ELT(klass, 0, Rf_mkChar("data.frame"));
-  Rf_classgets(ans,klass); UNPROTECT(1);
+  Rf_classgets(ans,klass); UNPROTECT(1); // klass
+
+  if(add_fake_rownames) {
+    addFakeRownames(ans,Rf_length(m.begin()->second));
+  }
 
   SEXP colnames = PROTECT(Rf_allocVector(STRSXP, m.size()));
   int i(0);
@@ -224,25 +239,23 @@ SEXP buildDataFrame(std::map<std::string,SEXP>& m, bool add_fake_rownames) {
     SET_VECTOR_ELT(ans,i,v.second);
     ++i;
   }
-  Rf_setAttrib(ans, R_NamesSymbol, colnames); UNPROTECT(1);
+  Rf_setAttrib(ans, R_NamesSymbol, colnames); UNPROTECT(1); // colnames
+
   // all columns are now safe
   UNPROTECT(m.size());
 
-  if(add_fake_rownames) {
-    Rf_setAttrib(ans,Rf_install("row.names"),fakeRownames(Rf_length(m.begin()->second)));
-  }
-  UNPROTECT(1);
+  UNPROTECT(1); // ans
   return ans;
 }
 
 SEXP buildDataFrame(std::vector<std::string>& rownames, LazyFrameT& m) {
-  SEXP ans = PROTECT(buildDataFrame(m));
+  SEXP ans = PROTECT(buildDataFrame(m,false));
   SEXP rownames_ = PROTECT(Rf_allocVector(STRSXP, rownames.size()));
   int j(0);
   for(const auto &v : rownames) { SET_STRING_ELT(rownames_,j++,Rf_mkChar(v.c_str())); }
-  Rf_setAttrib(ans, Rf_install("row.names"), rownames_); UNPROTECT(1);
+  Rf_setAttrib(ans, Rf_install("row.names"), rownames_); UNPROTECT(1); // rownames_
 
-  UNPROTECT(1);
+  UNPROTECT(1); // ans
   return ans;
 }
 
@@ -300,9 +313,18 @@ std::map<std::string,SEXP>::iterator assertColumnDefined(LazyFrameT& lazy_frame,
 
   // insert only if not present
   if(iter == lazy_frame.end()) {
-    SEXP new_column = PROTECT(allocateDataFrameColumn(e.datatype(), n));
-    iter = lazy_frame.insert(lazy_frame.begin(),std::pair<std::string,SEXP>(e.name().string(),new_column));
+    // allocateDataFrameColumn calls PROTECT when SEXP is allocated
+    SEXP column = allocateDataFrameColumn(e.datatype(), n);
+    iter = lazy_frame.insert(lazy_frame.begin(),std::pair<std::string,SEXP>(e.name().string(),column));
   }
 
   return iter;
+}
+
+void setNames(SEXP x, std::vector<std::string>& names) {
+  SEXP names_ = PROTECT(Rf_allocVector(STRSXP, names.size()));
+  for(size_t i = 0; i < names.size(); ++i) {
+    SET_STRING_ELT(names_,i,Rf_mkChar(names[i].c_str()));
+  }
+  Rf_setAttrib(x, R_NamesSymbol, names_); UNPROTECT(1);
 }
