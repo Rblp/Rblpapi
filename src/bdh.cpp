@@ -118,7 +118,7 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
     return R_NilValue;
   }
 
-  Rcpp::List ans(securities.size());
+  SEXP ans = PROTECT(Rf_allocVector(VECSXP, securities.size()));
   R_len_t i = 0;
 
   // capture names in case they come back out of order
@@ -130,7 +130,7 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
     case Event::RESPONSE:
     case Event::PARTIAL_RESPONSE:
       ans_names.push_back(getSecurityName(event));
-      ans[i++] = HistoricalDataResponseToDF(event);
+      SET_VECTOR_ELT(ans,i++,HistoricalDataResponseToDF(event));
       break;
     default:
       MessageIterator msgIter(event);
@@ -142,6 +142,7 @@ extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_
     if (event.eventType() == Event::RESPONSE) { break; }
   }
 
-  ans.attr("names") = ans_names;
-  return Rcpp::wrap(ans);
+  setNames(ans,ans_names);
+  UNPROTECT(1);
+  return ans;
 }
