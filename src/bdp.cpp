@@ -62,7 +62,7 @@ void getBDPResult(Event& event, LazyFrameT& lazy_frame, std::vector<std::string>
     //REprintf("fieldData.numElements(): %d\n",fieldData.numElements());
     for(size_t j = 0; j < fieldData.numElements(); ++j) {
       Element e = fieldData.getElement(j);
-      std::map<std::string,SEXP>::iterator iter = assertColumnDefined(lazy_frame,e,securities.size());
+      LazyFrameIteratorT iter = assertColumnDefined(lazy_frame,e,securities.size());
       populateDfRow(iter->second,row_index,e);
     }
   }

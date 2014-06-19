@@ -24,6 +24,7 @@
 #include <Rcpp.h>
 
 typedef std::map<std::string,SEXP> LazyFrameT;
+typedef std::map<std::string,SEXP>::iterator LazyFrameIteratorT;
 
 void* checkExternalPointer(SEXP xp_, const char* valid_tag);
 const int bbgDateToJulianDate(const BloombergLP::blpapi::Datetime& bbg_date);
@@ -37,7 +38,7 @@ void populateDfRow(SEXP ans, R_len_t row_index, BloombergLP::blpapi::Element& e)
 SEXP allocateDataFrameColumn(int fieldT, size_t n);
 SEXP buildDataFrame(std::map<std::string,SEXP>& m,bool add_fake_rownames = false);
 SEXP buildDataFrame(std::vector<std::string>& rownames, LazyFrameT& m);
-std::map<std::string,SEXP>::iterator assertColumnDefined(LazyFrameT& lazy_frame, BloombergLP::blpapi::Element& e, size_t n);
+LazyFrameIteratorT assertColumnDefined(LazyFrameT& lazy_frame, BloombergLP::blpapi::Element& e, size_t n);
 void addDateClass(SEXP x);
 void addPosixClass(SEXP x);
 void setNames(SEXP x, std::vector<std::string>& names);

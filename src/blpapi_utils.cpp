@@ -319,8 +319,8 @@ void sendRequestWithIdentity(Session* session, Request& request, SEXP identity_)
   }
 }
 
-std::map<std::string,SEXP>::iterator assertColumnDefined(LazyFrameT& lazy_frame, BloombergLP::blpapi::Element& e, size_t n) {
-  std::map<std::string,SEXP>::iterator iter = lazy_frame.find(e.name().string());
+LazyFrameIteratorT assertColumnDefined(LazyFrameT& lazy_frame, BloombergLP::blpapi::Element& e, size_t n) {
+  LazyFrameIteratorT iter = lazy_frame.find(e.name().string());
 
   // insert only if not present
   if(iter == lazy_frame.end()) {
