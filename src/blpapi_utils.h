@@ -36,7 +36,7 @@ void sendRequestWithIdentity(BloombergLP::blpapi::Session* session, BloombergLP:
 
 void populateDfRow(SEXP ans, R_len_t row_index, BloombergLP::blpapi::Element& e);
 SEXP allocateDataFrameColumn(int fieldT, size_t n);
-SEXP buildDataFrame(std::map<std::string,SEXP>& m,bool add_fake_rownames = false);
+SEXP buildDataFrame(LazyFrameT& m, bool add_fake_rownames = false, bool date_column_first = false);
 SEXP buildDataFrame(std::vector<std::string>& rownames, LazyFrameT& m);
 LazyFrameIteratorT assertColumnDefined(LazyFrameT& lazy_frame, BloombergLP::blpapi::Element& e, size_t n);
 void addDateClass(SEXP x);

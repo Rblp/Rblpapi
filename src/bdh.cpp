@@ -75,7 +75,7 @@ SEXP HistoricalDataResponseToDF(Event& event) {
       populateDfRow(iter->second,i,e);
     }
   }
-  return buildDataFrame(lazy_frame,true);
+  return buildDataFrame(lazy_frame,true,true);
 }
 
 extern "C" SEXP bdh(SEXP conn_, SEXP securities_, SEXP fields_, SEXP start_date_, SEXP end_date_, SEXP options_, SEXP identity_) {

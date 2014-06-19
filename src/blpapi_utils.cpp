@@ -231,7 +231,7 @@ void addFakeRownames(SEXP x, R_len_t n) {
   UNPROTECT(1); // rownames
 }
 
-SEXP buildDataFrame(LazyFrameT& m, bool add_fake_rownames) {
+SEXP buildDataFrame(LazyFrameT& m, bool add_fake_rownames, bool date_column_first) {
   if(m.empty()) { return R_NilValue; }
   SEXP ans = PROTECT(Rf_allocVector(VECSXP, m.size()));
 
@@ -244,11 +244,32 @@ SEXP buildDataFrame(LazyFrameT& m, bool add_fake_rownames) {
   }
 
   SEXP colnames = PROTECT(Rf_allocVector(STRSXP, m.size()));
+
+  // reset date_column_first to false if 'date' column not present
+  if(date_column_first && m.find(std::string("date"))==m.end()) {
+    date_column_first = false;
+  }
+
   int i(0);
-  for (const auto &v : m) {
-    SET_STRING_ELT(colnames,i,Rf_mkChar(v.first.c_str()));
-    SET_VECTOR_ELT(ans,i,v.second);
+  if(date_column_first) {
+    SET_STRING_ELT(colnames,i,Rf_mkChar("date"));
+    SET_VECTOR_ELT(ans,i,m["date"]);
     ++i;
+
+    for (const auto &v : m) {
+      if(v.first != "date") {
+        SET_STRING_ELT(colnames,i,Rf_mkChar(v.first.c_str()));
+        SET_VECTOR_ELT(ans,i,v.second);
+        ++i;
+      }
+    }
+
+  } else {
+    for (const auto &v : m) {
+      SET_STRING_ELT(colnames,i,Rf_mkChar(v.first.c_str()));
+      SET_VECTOR_ELT(ans,i,v.second);
+      ++i;
+    }
   }
   Rf_setAttrib(ans, R_NamesSymbol, colnames); UNPROTECT(1); // colnames
 
