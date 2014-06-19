@@ -271,6 +271,8 @@ class EventHandler {
     // receive callbacks when an Event is available.
 
   public:
+    virtual ~EventHandler() = 0;
+
     virtual bool processEvent(
             const Event& event,
             Session *session) = 0;
@@ -746,9 +748,18 @@ class SubscriptionIterator {
 //                      INLINE FUNCTION DEFINITIONS
 // ============================================================================
 
-                            // -------------
-                            // class Session
-                            // -------------
+                             // ------------------
+                             // class EventHandler
+                             // ------------------
+
+inline
+EventHandler::~EventHandler()
+{
+}
+
+                               // -------------
+                               // class Session
+                               // -------------
 
 inline
 Session::Session(const SessionOptions& parameters,
