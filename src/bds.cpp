@@ -86,7 +86,7 @@ SEXP BulkDataResponseToDF(Event& event, std::string& requested_field) {
 }
 
 // only allow one field for bds in contrast to bdp
-extern "C" SEXP bds(SEXP conn_, SEXP securities_, SEXP field_, SEXP options_, SEXP identity_) {
+extern "C" SEXP bds(SEXP conn_, SEXP securities_, SEXP field_, SEXP options_, SEXP overrides_, SEXP identity_) {
   Session* session;
 
   std::vector<std::string> securities(Rcpp::as<std::vector<std::string> >(securities_));
@@ -114,6 +114,7 @@ extern "C" SEXP bds(SEXP conn_, SEXP securities_, SEXP field_, SEXP options_, SE
   }
   request.getElement("fields").appendValue(field.c_str());
   appendOptionsToRequest(request,options_);
+  appendOverridesToRequest(request,overrides_);
 
   try {
     sendRequestWithIdentity(session, request, identity_);

@@ -314,6 +314,28 @@ void appendOptionsToRequest(Request& request, SEXP options_) {
   }
 }
 
+void appendOverridesToRequest(Request& request, SEXP overrides_) {
+  if(overrides_ == R_NilValue) { return; }
+  Rcpp::CharacterVector overrides(overrides_);
+
+  if(!overrides.hasAttribute("names") || overrides.attr("names") == R_NilValue) {
+    throw std::logic_error("Request overrides must be named.");
+  }
+
+  Rcpp::CharacterVector overrides_names(overrides.attr("names"));
+
+  if(overrides.length() && overrides_names.length()==0) {
+    throw std::logic_error("Request overrides must be non empty and named.");
+  }
+
+  Element request_overrides = request.getElement("overrides");
+  for(R_len_t i = 0; i < overrides.length(); i++) {
+    Element this_override = request_overrides.appendElement();
+    this_override.setElement("fieldId", static_cast<std::string>(overrides_names[i]).c_str());
+    this_override.setElement("value", static_cast<std::string>(overrides[i]).c_str());
+  }
+}
+
 void createStandardRequest(Request& request,
                            const std::vector<std::string>& securities,
                            const std::vector<std::string>& fields,

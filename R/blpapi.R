@@ -1,5 +1,6 @@
 blpConnect <- function(host="localhost", port=8194L, logfile=paste("/tmp/","blpapi_",format(Sys.time(),"%Y%m%d_%H%M%S"),"_",Sys.getpid(),".log",sep="")) {
-    stopifnot(storage.mode(hat)!="character" || storage.mode(port) != "integer")
+    stopifnot(storage.mode(host)=="character")
+    stopifnot(storage.mode(port)=="integer")
     .Call("bdp_connect", host, port, logfile, PACKAGE="Rblpapi")
 }
 
@@ -33,7 +34,7 @@ bdh <- function(conn, securities, fields, start.date, end.date=NULL, include.non
     res
 }
 
-bds <- function(conn, securities, fields, options=NULL, identity=NULL) {
+bds <- function(conn, securities, fields, options=NULL, overrides=NULL, identity=NULL) {
     if(any(duplicated(securities))) stop("duplicated securities submitted.")
-    .Call("bds", conn, securities, fields, options, identity, PACKAGE="Rblpapi")
+    .Call("bds", conn, securities, fields, options, overrides, identity, PACKAGE="Rblpapi")
 }
