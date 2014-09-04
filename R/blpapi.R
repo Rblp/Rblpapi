@@ -47,5 +47,9 @@ bdh <- function(conn, securities, fields, start.date, end.date=NULL, include.non
 
 bds <- function(conn, securities, fields, options=NULL, overrides=NULL, identity=NULL) {
     if(any(duplicated(securities))) stop("duplicated securities submitted.")
-    .Call("bds", conn, securities, fields, options, overrides, identity, PACKAGE="Rblpapi")
+    res <- .Call("bds", conn, securities, fields, options, overrides, identity, PACKAGE="Rblpapi")
+    if(typeof(res)=="list" && length(res)==1) {
+        res <- res[[1]]
+    }
+    res
 }
