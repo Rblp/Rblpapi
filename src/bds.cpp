@@ -109,7 +109,7 @@ extern "C" SEXP bds(SEXP conn_, SEXP securities_, SEXP field_, SEXP options_, SE
 
   Service refDataService = session->getService("//blp/refdata");
   Request request = refDataService.createRequest("ReferenceDataRequest");
-  for(R_len_t i = 0; i < securities.size(); i++) {
+  for(size_t i = 0; i < securities.size(); i++) {
     request.getElement("securities").appendValue(securities[i].c_str());
   }
   request.getElement("fields").appendValue(field.c_str());
