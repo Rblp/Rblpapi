@@ -341,11 +341,11 @@ void createStandardRequest(Request& request,
                            const std::vector<std::string>& fields,
                            SEXP options_) {
 
-  for(R_len_t i = 0; i < securities.size(); i++) {
+  for(size_t i = 0; i < securities.size(); i++) {
     request.getElement("securities").appendValue(securities[i].c_str());
   }
 
-  for(R_len_t i = 0; i < fields.size(); i++) {
+  for(size_t i = 0; i < fields.size(); i++) {
     request.getElement("fields").appendValue(fields[i].c_str());
   }
 
