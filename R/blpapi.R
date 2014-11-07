@@ -1,7 +1,18 @@
-blpConnect <- function(host="localhost", port=8194L, logfile=paste("/tmp/","blpapi_",format(Sys.time(),"%Y%m%d_%H%M%S"),"_",Sys.getpid(),".log",sep="")) {
+blpConnect <- function(host=getOption("blpHost", "localhost"),
+                       port=getOption("blpPort", 8194L),
+                       logfile) {
+    if (missing(logfile)) {
+        logfile <- file.path("/tmp/",
+                             paste0("blpapi_",format(Sys.time(),"%Y%m%d_%H%M%S"),"_",Sys.getpid(),".log"))
+    }
     stopifnot(storage.mode(host)=="character")
     stopifnot(storage.mode(port)=="integer")
     .Call("bdp_connect", host, port, logfile, PACKAGE="Rblpapi")
+}
+
+blpDisconnect <- function(conn) {
+    # do nothing, just return a simple test
+    invisible(object.size(conn) < 1000)
 }
 
 blpAuthenticate <- function(conn,uuid,host="localhost",ip.address) {

@@ -4,6 +4,7 @@ import(Rcpp)
 
 export(
 blpConnect,
+blpDisconnect,
 blpAuthenticate,
 bdp,
 bdh,
