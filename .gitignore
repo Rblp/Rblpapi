@@ -5,4 +5,4 @@
 *.o
 *.so
 .Rproj.user
-^local/
+local/
