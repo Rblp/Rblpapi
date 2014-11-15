@@ -4,3 +4,5 @@
 *.rc
 *.o
 *.so
+.Rproj.user
+^local/
