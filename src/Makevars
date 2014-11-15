@@ -1,6 +1,6 @@
 ## -*- mode: makefile; -*-
 
-CXX_STD = C++11
+CXX_STD = CXX11
 PKG_CPPFLAGS += -I../inst/include/ -I.
 ARCH=$(shell uname -m)
 
