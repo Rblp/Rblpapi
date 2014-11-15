@@ -8,5 +8,6 @@ blpDisconnect,
 blpAuthenticate,
 bdp,
 bdh,
-bds
+bds,
+fieldSearch
 )
