@@ -23,3 +23,29 @@ fieldSearch <- function(con, searchterm, excludeterm = "Static") {
     .Call('Rblpapi_fieldSearch', PACKAGE = 'Rblpapi', con, searchterm, excludeterm)
 }
 
+#' This function searches for matching Bloomberg data fields given a search term.
+#'
+#' @title Search for matching data fields
+#'
+#' @param con A connection object as return by a \code{blpConnect} call
+#' @param searchterm A string with the term to search for
+#' @param excludeterm A string with an expression for matches to excludes, defaults to \dQuote{Static}
+#'
+#' @return A \code{data.frame} with three columns of the id, mnenemonic and description of each match.
+#'
+#' @author Dirk Eddelbuettel
+#'
+#' @examples
+#' \dontrun{
+#'   con <- blpConnect()
+#'   res <- fieldSearch(con, "vwap")
+#' }
+#'
+fieldSearch <- function(con, searchterm, excludeterm = "Static") {
+    .Call('Rblpapi_fieldSearch', PACKAGE = 'Rblpapi', con, searchterm, excludeterm)
+}
+
+getBars_Impl <- function(con, security, eventType, barInterval, startDateTime, endDateTime, gapFillInitialBar) {
+    .Call('Rblpapi_getBars_Impl', PACKAGE = 'Rblpapi', con, security, eventType, barInterval, startDateTime, endDateTime, gapFillInitialBar)
+}
+

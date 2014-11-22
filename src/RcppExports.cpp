@@ -22,3 +22,41 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// fieldSearch
+Rcpp::DataFrame fieldSearch(SEXP con, std::string searchterm, std::string excludeterm = "Static");
+RcppExport SEXP Rblpapi_fieldSearch(SEXP conSEXP, SEXP searchtermSEXP, SEXP excludetermSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< SEXP >::type con(conSEXP );
+        Rcpp::traits::input_parameter< std::string >::type searchterm(searchtermSEXP );
+        Rcpp::traits::input_parameter< std::string >::type excludeterm(excludetermSEXP );
+        Rcpp::DataFrame __result = fieldSearch(con, searchterm, excludeterm);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// getBars_Impl
+Rcpp::DataFrame getBars_Impl(SEXP con, std::string security, std::string eventType, int barInterval, std::string startDateTime, std::string endDateTime, bool gapFillInitialBar);
+RcppExport SEXP Rblpapi_getBars_Impl(SEXP conSEXP, SEXP securitySEXP, SEXP eventTypeSEXP, SEXP barIntervalSEXP, SEXP startDateTimeSEXP, SEXP endDateTimeSEXP, SEXP gapFillInitialBarSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< SEXP >::type con(conSEXP );
+        Rcpp::traits::input_parameter< std::string >::type security(securitySEXP );
+        Rcpp::traits::input_parameter< std::string >::type eventType(eventTypeSEXP );
+        Rcpp::traits::input_parameter< int >::type barInterval(barIntervalSEXP );
+        Rcpp::traits::input_parameter< std::string >::type startDateTime(startDateTimeSEXP );
+        Rcpp::traits::input_parameter< std::string >::type endDateTime(endDateTimeSEXP );
+        Rcpp::traits::input_parameter< bool >::type gapFillInitialBar(gapFillInitialBarSEXP );
+        Rcpp::DataFrame __result = getBars_Impl(con, security, eventType, barInterval, startDateTime, endDateTime, gapFillInitialBar);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
