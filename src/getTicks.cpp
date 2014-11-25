@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 //
-//  getBars.cpp -- a simple intraday bar retriever
+//  getTicks.cpp -- a simple intraday tick retriever
 //
 //  Copyright (C) 2013  Whit Armstrong
 //  Copyright (C) 2014  Whit Armstrong and Dirk Eddelbuettel
@@ -20,7 +20,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
-//  Derived from IntradayBarExample.cpp in the blpapi examples.
+//  Derived from IntradayTickExample.cpp in the blpapi examples.
 //  It contained the following header
 
 /* Copyright 2012. Bloomberg Finance L.P.
@@ -53,6 +53,7 @@
 #include <blpapi_request.h>
 #include <blpapi_subscriptionlist.h>
 #include <blpapi_defs.h>
+
 #include <time.h>
 #include <sstream>
 #include <iomanip>
@@ -66,77 +67,53 @@
 namespace bbg = BloombergLP::blpapi;	// shortcut to not globally import both namespace
 
 namespace {
-    const bbg::Name BAR_DATA("barData");
-    const bbg::Name BAR_TICK_DATA("barTickData");
-    const bbg::Name OPEN("open");
-    const bbg::Name HIGH("high");
-    const bbg::Name LOW("low");
-    const bbg::Name CLOSE("close");
-    const bbg::Name VOLUME("volume");
-    const bbg::Name NUM_EVENTS("numEvents");
+    const bbg::Name TICK_DATA("tickData");
+    const bbg::Name COND_CODE("conditionCodes");
+    const bbg::Name TICK_SIZE("size");
     const bbg::Name TIME("time");
+    const bbg::Name TYPE("type");
+    const bbg::Name VALUE("value");
     const bbg::Name RESPONSE_ERROR("responseError");
-    const bbg::Name SESSION_TERMINATED("SessionTerminated");
     const bbg::Name CATEGORY("category");
     //const bbg::Name MESSAGE("message"); // for some reason this does not compile
+    const bbg::Name SESSION_TERMINATED("SessionTerminated");
 }
 
-struct Bars {
+struct Ticks {
     std::vector<double> time;     // to be converted to POSIXct later
-    //std::vector<std::string> pt;
-    std::vector<double> open;
-    std::vector<double> high;
-    std::vector<double> low;
-    std::vector<double> close;
-    std::vector<int> numEvents;
-    std::vector<double> volume;   // instread of long long
+    std::vector<double> value;
+    std::vector<double> size;
 };
 
-void processMessage(bbg::Message &msg, Bars &bars, const bool verbose) {
-    bbg::Element data = msg.getElement(BAR_DATA).getElement(BAR_TICK_DATA);
-    int numBars = data.numValues();
+void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
+    bbg::Element data = msg.getElement(TICK_DATA).getElement(TICK_DATA);
+    int numItems = data.numValues();
     if (verbose) {
-        Rcpp::Rcout <<"Response contains " << numBars << " bars" << std::endl;
-        Rcpp::Rcout <<"Datetime\t\tOpen\t\tHigh\t\tLow\t\tClose" <<
-            "\t\tNumEvents\tVolume" << std::endl;
+        Rcpp::Rcout <<"Response contains " << numItems << " items" << std::endl;
+        Rcpp::Rcout <<"Time\t\tType\t\tValue\t\tSize" << std::endl;
     }
-    for (int i = 0; i < numBars; ++i) {
-        bbg::Element bar = data.getValueAsElement(i);
-        bbg::Datetime time = bar.getElementAsDatetime(TIME);
-        assert(time.hasParts(DatetimeParts::DATE
-                             | DatetimeParts::HOURS
-                             | DatetimeParts::MINUTES));
-        double open = bar.getElementAsFloat64(OPEN);
-        double high = bar.getElementAsFloat64(HIGH);
-        double low = bar.getElementAsFloat64(LOW);
-        double close = bar.getElementAsFloat64(CLOSE);
-        int numEvents = bar.getElementAsInt32(NUM_EVENTS);
-        long long volume = bar.getElementAsInt64(VOLUME);
-
+    for (int i = 0; i < numItems; ++i) {
+        bbg::Element item = data.getValueAsElement(i);
+        bbg::Datetime time = item.getElementAsDatetime(TIME);
+        std::string type = item.getElementAsString(TYPE);
+        double value = item.getElementAsFloat64(VALUE);
+        int size = item.getElementAsInt32(TICK_SIZE);
         if (verbose) {
             Rcpp::Rcout.setf(std::ios::fixed, std::ios::floatfield);
             Rcpp::Rcout << time.month() << '/' << time.day() << '/' << time.year()
                         << " " << time.hours() << ":" << time.minutes()
                         <<  "\t\t" << std::showpoint
-                        << std::setprecision(3) << open << "\t\t"
-                        << high << "\t\t"
-                        << low <<  "\t\t"
-                        << close <<  "\t\t"
-                        << numEvents <<  "\t\t"
-                        << std::noshowpoint
-                        << volume << std::endl;
+                        << type << "\t\t"
+                        << value << "\t\t"
+                        << size << std::endl;
         }
-        bars.time.push_back(bbgDatetimeToUTC(time));
-        bars.open.push_back(open);
-        bars.high.push_back(high);
-        bars.low.push_back(low);
-        bars.close.push_back(close);
-        bars.numEvents.push_back(numEvents);
-        bars.volume.push_back(volume);
+        ticks.time.push_back(bbgDatetimeToUTC(time));
+        ticks.value.push_back(value);
+        ticks.size.push_back(size);
     }
 }
 
-void processResponseEvent(bbg::Event &event, Bars &bars, const bool verbose) {
+void processResponseEvent(bbg::Event &event, Ticks &ticks, const bool verbose) {
     bbg::MessageIterator msgIter(event);
     while (msgIter.next()) {
         bbg::Message msg = msgIter.message();
@@ -144,18 +121,16 @@ void processResponseEvent(bbg::Event &event, Bars &bars, const bool verbose) {
             Rcpp::Rcerr << "REQUEST FAILED: " << msg.getElement(RESPONSE_ERROR) << std::endl;
             continue;
         }
-        processMessage(msg, bars, verbose);
+        processMessage(msg, ticks, verbose);
     }
 }
 
 // [[Rcpp::export]]
-Rcpp::DataFrame getBars_Impl(SEXP con,
+Rcpp::DataFrame getTicks_Impl(SEXP con,
                              std::string security,
                              std::string eventType,
-                             int barInterval,
                              std::string startDateTime,
                              std::string endDateTime,
-                             bool gapFillInitialBar=false,
                              bool verbose=false) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
@@ -167,36 +142,21 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
     }
 
     bbg::Service refDataService = session->getService("//blp/refdata");
-    bbg::Request request = refDataService.createRequest("IntradayBarRequest");
+    bbg::Request request = refDataService.createRequest("IntradayTickRequest");
 
     // only one security/eventType per request
     request.set("security", security.c_str());
-    request.set("eventType", eventType.c_str());
-    request.set("interval", barInterval);
 
-#if 0
-    if (d_startDateTime.empty() || d_endDateTime.empty()) {
-        Datetime startDateTime, endDateTime;
-        if (0 == getTradingDateRange(&startDateTime, &endDateTime)) {
-            request.set("startDateTime", startDateTime);
-            request.set("endDateTime", endDateTime);
-        }
-    }
-    else {
-        if (!d_startDateTime.empty() && !d_endDateTime.empty()) {
-            request.set("startDateTime", d_startDateTime.c_str());
-            request.set("endDateTime", d_endDateTime.c_str());
-        }
-    }
-#endif
+    bbg::Element eventTypes = request.getElement("eventTypes");
+    eventTypes.appendValue(eventType.c_str());   // could generalize to vector of even
+
     request.set("startDateTime", startDateTime.c_str());
     request.set("endDateTime", endDateTime.c_str());
-    request.set("gapFillInitialBar", gapFillInitialBar);
 
     if (verbose) Rcpp::Rcout <<"Sending Request: " << request << std::endl;
     session->sendRequest(request);
 
-    Bars bars;
+    Ticks ticks;
 
     // eventLoop
     bool done = false;
@@ -204,10 +164,10 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
         bbg::Event event = session->nextEvent();
         if (event.eventType() == bbg::Event::PARTIAL_RESPONSE) {
             if (verbose) Rcpp::Rcout << "Processing Partial Response" << std::endl;
-            processResponseEvent(event, bars, verbose);
+            processResponseEvent(event, ticks, verbose);
         } else if (event.eventType() == bbg::Event::RESPONSE) {
             if (verbose) Rcpp::Rcout << "Processing Response" << std::endl;
-            processResponseEvent(event, bars, verbose);
+            processResponseEvent(event, ticks, verbose);
             done = true;
         } else {
             bbg::MessageIterator msgIter(event);
@@ -222,17 +182,11 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
         }
     }
 
-    Rcpp::NumericVector pt(bars.time.begin(), bars.time.end());
+    Rcpp::NumericVector pt(ticks.time.begin(), ticks.time.end());
 
-    return Rcpp::DataFrame::create(Rcpp::Named("times")     = Rcpp::DatetimeVector(pt),
-                                   Rcpp::Named("open")      = bars.open,
-                                   Rcpp::Named("high")      = bars.high,
-                                   Rcpp::Named("low")       = bars.low,
-                                   Rcpp::Named("close")     = bars.close,
-                                   Rcpp::Named("numEvents") = bars.numEvents,
-                                   Rcpp::Named("volume")    = bars.volume);
+    return Rcpp::DataFrame::create(Rcpp::Named("times") = Rcpp::DatetimeVector(pt),
+                                   Rcpp::Named("value") = ticks.value,
+                                   Rcpp::Named("size")  = ticks.size);
 
 }
-
-
 
