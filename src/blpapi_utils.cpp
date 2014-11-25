@@ -85,6 +85,26 @@ const double bbgDatetimeToPOSIX(const Datetime& dt) {
   return static_cast<double>(mktime(&tm_time));
 }
 
+// In case data already comes in localtime (cf TZDF<GO>) 
+// we need to adjust back to UTC 
+const double bbgDatetimeToUTC(const BloombergLP::blpapi::Datetime& dt) {
+  boost::gregorian::date bbg_boost_date(dt.year(),dt.month(),dt.day());
+  boost::posix_time::time_duration td =
+    boost::posix_time::hours(dt.hours()) +
+    boost::posix_time::minutes(dt.minutes()) +
+    boost::posix_time::seconds(dt.seconds()) +
+    boost::posix_time::milliseconds(dt.milliseconds());
+
+  boost::posix_time::ptime bbg_ptime(bbg_boost_date,td);
+  struct tm tm_time(to_tm(bbg_ptime));
+  const time_t tt = mktime(&tm_time);
+  struct tm utc = *gmtime(&tt);
+  struct tm lt = *localtime(&tt);
+  double ptutc = static_cast<double>(mktime(&utc));
+  double ptlt = static_cast<double>(mktime(&lt));
+  return ptlt - (ptutc - ptlt) +  dt.milliseconds()/1e3;
+}
+
 void addDateClass(SEXP x) {
   // create and add dates class to dates object
   SEXP r_dates_class;

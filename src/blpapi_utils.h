@@ -30,6 +30,7 @@ void* checkExternalPointer(SEXP xp_, const char* valid_tag);
 const int bbgDateToJulianDate(const BloombergLP::blpapi::Datetime& bbg_date);
 const double bbgDateToPOSIX(const BloombergLP::blpapi::Datetime& bbg_date);
 const double bbgDatetimeToPOSIX(const BloombergLP::blpapi::Datetime& dt);
+const double bbgDatetimeToUTC(const BloombergLP::blpapi::Datetime& dt);
 void appendOptionsToRequest(BloombergLP::blpapi::Request& request, SEXP options_);
 void appendOverridesToRequest(BloombergLP::blpapi::Request& request, SEXP overrides_);
 void createStandardRequest(BloombergLP::blpapi::Request& request,const std::vector<std::string>& securities,const std::vector<std::string>& fields,SEXP options_);
