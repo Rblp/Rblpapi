@@ -92,7 +92,8 @@ struct Bars {
     std::vector<double> volume;   // instread of long long
 };
 
-void processMessage(bbg::Message &msg, Bars &bars, const bool verbose) {
+void processMessage(bbg::Message &msg, Bars &bars, 
+                    const int barInterval, const bool verbose) {
     bbg::Element data = msg.getElement(BAR_DATA).getElement(BAR_TICK_DATA);
     int numBars = data.numValues();
     if (verbose) {
@@ -126,7 +127,9 @@ void processMessage(bbg::Message &msg, Bars &bars, const bool verbose) {
                         << std::noshowpoint
                         << volume << std::endl;
         }
-        bars.time.push_back(bbgDatetimeToUTC(time));
+        // we add 'barInterval' seconds to the time as Bbg reports the time of
+        // the _beginning_ of the bar, not the end 
+        bars.time.push_back(bbgDatetimeToUTC(time) + barInterval*60);
         bars.open.push_back(open);
         bars.high.push_back(high);
         bars.low.push_back(low);
@@ -136,7 +139,8 @@ void processMessage(bbg::Message &msg, Bars &bars, const bool verbose) {
     }
 }
 
-void processResponseEvent(bbg::Event &event, Bars &bars, const bool verbose) {
+void processResponseEvent(bbg::Event &event, Bars &bars, 
+                          const int barInterval, const bool verbose) {
     bbg::MessageIterator msgIter(event);
     while (msgIter.next()) {
         bbg::Message msg = msgIter.message();
@@ -144,7 +148,7 @@ void processResponseEvent(bbg::Event &event, Bars &bars, const bool verbose) {
             Rcpp::Rcerr << "REQUEST FAILED: " << msg.getElement(RESPONSE_ERROR) << std::endl;
             continue;
         }
-        processMessage(msg, bars, verbose);
+        processMessage(msg, bars, barInterval, verbose);
     }
 }
 
@@ -174,21 +178,6 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
     request.set("eventType", eventType.c_str());
     request.set("interval", barInterval);
 
-#if 0
-    if (d_startDateTime.empty() || d_endDateTime.empty()) {
-        Datetime startDateTime, endDateTime;
-        if (0 == getTradingDateRange(&startDateTime, &endDateTime)) {
-            request.set("startDateTime", startDateTime);
-            request.set("endDateTime", endDateTime);
-        }
-    }
-    else {
-        if (!d_startDateTime.empty() && !d_endDateTime.empty()) {
-            request.set("startDateTime", d_startDateTime.c_str());
-            request.set("endDateTime", d_endDateTime.c_str());
-        }
-    }
-#endif
     request.set("startDateTime", startDateTime.c_str());
     request.set("endDateTime", endDateTime.c_str());
     request.set("gapFillInitialBar", gapFillInitialBar);
@@ -204,10 +193,10 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
         bbg::Event event = session->nextEvent();
         if (event.eventType() == bbg::Event::PARTIAL_RESPONSE) {
             if (verbose) Rcpp::Rcout << "Processing Partial Response" << std::endl;
-            processResponseEvent(event, bars, verbose);
+            processResponseEvent(event, bars, barInterval, verbose);
         } else if (event.eventType() == bbg::Event::RESPONSE) {
             if (verbose) Rcpp::Rcout << "Processing Response" << std::endl;
-            processResponseEvent(event, bars, verbose);
+            processResponseEvent(event, bars, barInterval, verbose);
             done = true;
         } else {
             bbg::MessageIterator msgIter(event);
