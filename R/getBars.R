@@ -20,7 +20,12 @@
 ##' \sQuote{open}, \sQuote{high}, \sQuote{low}, \sQuote{close},
 ##' \sQuote{numEvents}, \sQuote{volume}.  If \code{asXts} was set to
 ##' \sQuote{TRUE}, an \code{xts} object using the \sQuote{time} column
-##' as index.
+##' as index. Note that the \s{Quote} value is adjusted: Bloomberg
+##' returns the \em{opening} time of the bar interval, whereas
+##' financial studies typically refer to the most recent
+##' timestamp. For this reason we add the length of the bar interval
+##' to time value from Bloomberg to obtain the time at the end of the
+##' interval.
 ##' @author Dirk Eddelbuettel
 getBars <- function(con,
                     security,
