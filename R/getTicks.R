@@ -12,12 +12,12 @@
 ##' to current time
 ##' @param verbose A boolean indicating whether verbose operation is
 ##' desired, defaults to \sQuote{FALSE}
-##' @param asXts A boolean indicating whether an \code{xts} object
-##' should be returned, defaults to \sQuote{TRUE}.
+##' @param returnAs A character variable describing the type of return
+##' object; currently supported are \sQuote{matrix} (also the default),
+##' \sQuote{xts} and \sQuote{zoo}  
 ##' @return A numeric matrix with elements \sQuote{time},
-##' \sQuote{values} and \sQuote{sizes}.  If \code{asXts} was set to
-##' \sQuote{TRUE}, an \code{xts} object using the \sQuote{time} column
-##' as index.
+##' \sQuote{values} and \sQuote{sizes}, or an object of type selected
+##' in \code{returnAs}.
 ##' @author Dirk Eddelbuettel
 getTicks <- function(con,
                      security,
@@ -25,16 +25,17 @@ getTicks <- function(con,
                      startTime = Sys.time()-60*60,
                      endTime = Sys.time(),
                      verbose = FALSE,
-                     asXts = TRUE) {
+                     returnAs = getOption("blpType", "matrix")) {
 
     fmt <- "%Y-%m-%dT%H:%M:%S"
     startUTC <- format(startTime, fmt, tz="UTC")
     endUTC <- format(endTime, fmt, tz="UTC")
     res <- getTicks_Impl(con, security, eventType, startUTC, endUTC, verbose)
-    if (asXts) {
-        require(xts)
-        res <- xts::xts(res[,-1], order.by=res[,1])
-    }
-
+    res <- switch(returnAs,
+                  matrix = res,                # default is matrix
+                  fts    = fts::fts(res[,1], res[,-1]),
+                  xts    = xts::xts(res[,-1], order.by=res[,1]),
+                  zoo    = zoo::zoo(res[,-1], order.by=res[,1]),
+                  res)                         # fallback is also matrix
     return(res)   # to return visibly
 }

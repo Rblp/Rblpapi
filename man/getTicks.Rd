@@ -4,7 +4,8 @@
 \title{Get Ticks from Bloomberg}
 \usage{
 getTicks(con, security, eventType = "TRADE", startTime = Sys.time() - 60 *
-  60, endTime = Sys.time(), verbose = FALSE, asXts = TRUE)
+  60, endTime = Sys.time(), verbose = FALSE,
+  returnAs = getOption("blpType", "matrix"))
 }
 \arguments{
 \item{con}{A connection object as return by a \code{blpConnect} call}
@@ -23,14 +24,14 @@ to current time}
 \item{verbose}{A boolean indicating whether verbose operation is
 desired, defaults to \sQuote{FALSE}}
 
-\item{asXts}{A boolean indicating whether an \code{xts} object
-should be returned, defaults to \sQuote{TRUE}.}
+\item{returnAs}{A character variable describing the type of return
+object; currently supported are \sQuote{matrix} (also the default),
+\sQuote{xts} and \sQuote{zoo}}
 }
 \value{
 A numeric matrix with elements \sQuote{time},
-\sQuote{values} and \sQuote{sizes}.  If \code{asXts} was set to
-\sQuote{TRUE}, an \code{xts} object using the \sQuote{time} column
-as index.
+\sQuote{values} and \sQuote{sizes}, or an object of type selected
+in \code{returnAs}.
 }
 \description{
 This function uses the Bloomberg API to retrieve ticks for the requested security.
