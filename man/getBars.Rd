@@ -36,7 +36,12 @@ A numeric matrix with elements \sQuote{time},
 \sQuote{open}, \sQuote{high}, \sQuote{low}, \sQuote{close},
 \sQuote{numEvents}, \sQuote{volume}.  If \code{asXts} was set to
 \sQuote{TRUE}, an \code{xts} object using the \sQuote{time} column
-as index.
+as index. Note that the \sQuote{time} value is adjusted: Bloomberg
+returns the \emph{opening} time of the bar interval, whereas
+financial studies typically refer to the most recent
+timestamp. For this reason we add the length of the bar interval
+to time value from Bloomberg to obtain the time at the end of the
+interval.
 }
 \description{
 This function uses the Bloomberg API to retrieve bars for the requested security.
