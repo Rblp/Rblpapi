@@ -23,3 +23,11 @@ fieldSearch <- function(con, searchterm, excludeterm = "Static") {
     .Call('Rblpapi_fieldSearch', PACKAGE = 'Rblpapi', con, searchterm, excludeterm)
 }
 
+getBars_Impl <- function(con, security, eventType, barInterval, startDateTime, endDateTime, gapFillInitialBar = FALSE, verbose = FALSE) {
+    .Call('Rblpapi_getBars_Impl', PACKAGE = 'Rblpapi', con, security, eventType, barInterval, startDateTime, endDateTime, gapFillInitialBar, verbose)
+}
+
+getTicks_Impl <- function(con, security, eventType, startDateTime, endDateTime, verbose = FALSE) {
+    .Call('Rblpapi_getTicks_Impl', PACKAGE = 'Rblpapi', con, security, eventType, startDateTime, endDateTime, verbose)
+}
+

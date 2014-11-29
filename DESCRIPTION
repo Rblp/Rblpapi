@@ -1,9 +1,10 @@
 Package: Rblpapi
-Title: R interface to BBG
-Version: 0.2.1
+Title: R Interface to BBG
+Version: 0.2.1.3
 Maintainer: Whit Armstrong <armstrong.whit@gmail.com>
 Author: Whit Armstrong <armstrong.whit@gmail.com>
 Imports: Rcpp (>= 0.11.0)
+Suggests: fts, xts, zoo
 LazyLoad: yes
 LinkingTo: Rcpp
 Description: R interface to BBG

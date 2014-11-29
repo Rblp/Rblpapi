@@ -22,3 +22,45 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// getBars_Impl
+Rcpp::DataFrame getBars_Impl(SEXP con, std::string security, std::string eventType, int barInterval, std::string startDateTime, std::string endDateTime, bool gapFillInitialBar = false, bool verbose = false);
+RcppExport SEXP Rblpapi_getBars_Impl(SEXP conSEXP, SEXP securitySEXP, SEXP eventTypeSEXP, SEXP barIntervalSEXP, SEXP startDateTimeSEXP, SEXP endDateTimeSEXP, SEXP gapFillInitialBarSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< SEXP >::type con(conSEXP );
+        Rcpp::traits::input_parameter< std::string >::type security(securitySEXP );
+        Rcpp::traits::input_parameter< std::string >::type eventType(eventTypeSEXP );
+        Rcpp::traits::input_parameter< int >::type barInterval(barIntervalSEXP );
+        Rcpp::traits::input_parameter< std::string >::type startDateTime(startDateTimeSEXP );
+        Rcpp::traits::input_parameter< std::string >::type endDateTime(endDateTimeSEXP );
+        Rcpp::traits::input_parameter< bool >::type gapFillInitialBar(gapFillInitialBarSEXP );
+        Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP );
+        Rcpp::DataFrame __result = getBars_Impl(con, security, eventType, barInterval, startDateTime, endDateTime, gapFillInitialBar, verbose);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// getTicks_Impl
+Rcpp::DataFrame getTicks_Impl(SEXP con, std::string security, std::string eventType, std::string startDateTime, std::string endDateTime, bool verbose = false);
+RcppExport SEXP Rblpapi_getTicks_Impl(SEXP conSEXP, SEXP securitySEXP, SEXP eventTypeSEXP, SEXP startDateTimeSEXP, SEXP endDateTimeSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< SEXP >::type con(conSEXP );
+        Rcpp::traits::input_parameter< std::string >::type security(securitySEXP );
+        Rcpp::traits::input_parameter< std::string >::type eventType(eventTypeSEXP );
+        Rcpp::traits::input_parameter< std::string >::type startDateTime(startDateTimeSEXP );
+        Rcpp::traits::input_parameter< std::string >::type endDateTime(endDateTimeSEXP );
+        Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP );
+        Rcpp::DataFrame __result = getTicks_Impl(con, security, eventType, startDateTime, endDateTime, verbose);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
