@@ -5,7 +5,8 @@
 \usage{
 getBars(con, security, eventType = "TRADE", barInterval = 60,
   startTime = Sys.time() - 60 * 60 * 6, endTime = Sys.time(),
-  gapFillInitialBar = FALSE, verbose = FALSE, asXts = TRUE)
+  gapFillInitialBar = FALSE, verbose = FALSE,
+  returnAs = getOption("blpType", "matrix"))
 }
 \arguments{
 \item{con}{A connection object as return by a \code{blpConnect} call}
@@ -28,20 +29,20 @@ to current time}
 \item{verbose}{A boolean indicating whether verbose operation is
 desired, defaults to \sQuote{FALSE}}
 
-\item{asXts}{A boolean indicating whether an \code{xts} object
-should be returned, defaults to \sQuote{TRUE}.}
+\item{returnAs}{A character variable describing the type of return
+object; currently supported are \sQuote{matrix} (also the default),
+\sQuote{fts}, \sQuote{xts} and \sQuote{zoo}}
 }
 \value{
 A numeric matrix with elements \sQuote{time},
 \sQuote{open}, \sQuote{high}, \sQuote{low}, \sQuote{close},
-\sQuote{numEvents}, \sQuote{volume}.  If \code{asXts} was set to
-\sQuote{TRUE}, an \code{xts} object using the \sQuote{time} column
-as index. Note that the \sQuote{time} value is adjusted: Bloomberg
-returns the \emph{opening} time of the bar interval, whereas
-financial studies typically refer to the most recent
-timestamp. For this reason we add the length of the bar interval
-to time value from Bloomberg to obtain the time at the end of the
-interval.
+\sQuote{numEvents}, \sQuote{volume}, or an object of the type
+selected in \code{returnAs}. Note that the \sQuote{time} value is
+adjusted: Bloomberg returns the \emph{opening} time of the bar
+interval, whereas financial studies typically refer to the most
+recent timestamp. For this reason we add the length of the bar
+interval to time value from Bloomberg to obtain the time at the
+end of the interval.
 }
 \description{
 This function uses the Bloomberg API to retrieve bars for the requested security.

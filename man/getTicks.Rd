@@ -26,12 +26,12 @@ desired, defaults to \sQuote{FALSE}}
 
 \item{returnAs}{A character variable describing the type of return
 object; currently supported are \sQuote{matrix} (also the default),
-\sQuote{xts} and \sQuote{zoo}}
+\sQuote{fts}, \sQuote{xts} and \sQuote{zoo}}
 }
 \value{
 A numeric matrix with elements \sQuote{time},
-\sQuote{values} and \sQuote{sizes}, or an object of type selected
-in \code{returnAs}.
+\sQuote{values} and \sQuote{sizes}, or an object of the type
+selected in \code{returnAs}.
 }
 \description{
 This function uses the Bloomberg API to retrieve ticks for the requested security.

@@ -14,18 +14,18 @@
 ##' @param gapFillInitialBar A boolean indicating whether the initial bar is to be filled, defaults to \sQuote{FALSE}
 ##' @param verbose A boolean indicating whether verbose operation is
 ##' desired, defaults to \sQuote{FALSE}
-##' @param asXts A boolean indicating whether an \code{xts} object
-##' should be returned, defaults to \sQuote{TRUE}.
+##' @param returnAs A character variable describing the type of return
+##' object; currently supported are \sQuote{matrix} (also the default),
+##' \sQuote{fts}, \sQuote{xts} and \sQuote{zoo}  
 ##' @return A numeric matrix with elements \sQuote{time},
 ##' \sQuote{open}, \sQuote{high}, \sQuote{low}, \sQuote{close},
-##' \sQuote{numEvents}, \sQuote{volume}.  If \code{asXts} was set to
-##' \sQuote{TRUE}, an \code{xts} object using the \sQuote{time} column
-##' as index. Note that the \sQuote{time} value is adjusted: Bloomberg
-##' returns the \emph{opening} time of the bar interval, whereas
-##' financial studies typically refer to the most recent
-##' timestamp. For this reason we add the length of the bar interval
-##' to time value from Bloomberg to obtain the time at the end of the
-##' interval.
+##' \sQuote{numEvents}, \sQuote{volume}, or an object of the type
+##' selected in \code{returnAs}. Note that the \sQuote{time} value is
+##' adjusted: Bloomberg returns the \emph{opening} time of the bar
+##' interval, whereas financial studies typically refer to the most
+##' recent timestamp. For this reason we add the length of the bar
+##' interval to time value from Bloomberg to obtain the time at the
+##' end of the interval.
 ##' @author Dirk Eddelbuettel
 getBars <- function(con,
                     security,
@@ -35,17 +35,18 @@ getBars <- function(con,
                     endTime = Sys.time(),
                     gapFillInitialBar = FALSE,
                     verbose = FALSE,
-                    asXts = TRUE) {
+                    returnAs = getOption("blpType", "matrix")) {
 
     fmt <- "%Y-%m-%dT%H:%M:%S"
     startUTC <- format(startTime, fmt, tz="UTC")
     endUTC <- format(endTime, fmt, tz="UTC")
     res <- getBars_Impl(con, security, eventType, barInterval,
                         startUTC, endUTC, gapFillInitialBar, verbose)
-    if (asXts) {
-        require(xts)
-        res <- xts::xts(res[,-1], order.by=res[,1])
-    }
-
+    res <- switch(returnAs,
+                  matrix = res,                # default is matrix
+                  fts    = fts::fts(res[,1], res[,-1]),
+                  xts    = xts::xts(res[,-1], order.by=res[,1]),
+                  zoo    = zoo::zoo(res[,-1], order.by=res[,1]),
+                  res)                         # fallback is also matrix
     return(res)   # to return visibly
 }

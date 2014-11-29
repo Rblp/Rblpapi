@@ -14,10 +14,10 @@
 ##' desired, defaults to \sQuote{FALSE}
 ##' @param returnAs A character variable describing the type of return
 ##' object; currently supported are \sQuote{matrix} (also the default),
-##' \sQuote{xts} and \sQuote{zoo}  
+##' \sQuote{fts}, \sQuote{xts} and \sQuote{zoo}  
 ##' @return A numeric matrix with elements \sQuote{time},
-##' \sQuote{values} and \sQuote{sizes}, or an object of type selected
-##' in \code{returnAs}.
+##' \sQuote{values} and \sQuote{sizes}, or an object of the type
+##' selected in \code{returnAs}.
 ##' @author Dirk Eddelbuettel
 getTicks <- function(con,
                      security,
