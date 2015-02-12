@@ -1,0 +1,42 @@
+---
+title: "Rblpapi"
+author: "Whit Armstrong and Dirk Eddelbuettel and John Laing"
+date: "May 29-30, 2015\\newline R/Finance 2015"
+output:
+  beamer_presentation:
+    includes:
+      in_header: header.tex
+    keep_tex: yes
+    theme: Warsaw
+fontsize: 12pt
+subtitle: An interface to the shall-not-be-named service
+classoption: compress
+---
+
+# History
+
+## R[Name redacted], findata.org, Rblpapi
+
+From C to Java to C++
+
+APIs now first-class citizens, multiple languages, multiple OSs
+
+Show screenshot of \url{http://www.bloomberglabs.com/api/documentation/}
+
+# Third Time Lucky
+
+## Rewrite
+
+Removing Java
+
+Lighter, simpler, leveraging Rcpp
+
+# Examples
+
+TBD
+
+# Open Issues
+
+DataFrame class caused trouble
+
+Fixed-dimension retrieval very easy
