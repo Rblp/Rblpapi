@@ -15,28 +15,44 @@ classoption: compress
 
 # History
 
-## R[Name redacted], findata.org, Rblpapi
+\framesubtitle{R[Name redacted], findata.org, Rblpapi}
 
-From C to Java to C++
+Over multiple slides:
 
-APIs now first-class citizens, multiple languages, multiple OSs
+- Screenshot / title of 2004 talk 
 
-Show screenshot of \url{http://www.bloomberglabs.com/api/documentation/}
+- Screenshot / title of findata.org
+
+- Screenshot of \url{http://www.bloomberglabs.com/api} and/or \texttt{.../documentation/}
+
+- Mention passage C to Java to C++
+
+- APIs now 1st-class citizens, multiple languages + OSs
+
+- Mention (ambitious) plans by Bbg to have the API to be ``generic'' for
+multiple backends, publishing
+
 
 # Third Time Lucky
 
-## Rewrite
+Rewrite with
 
-Removing Java
+- Removing Java
 
-Lighter, simpler, leveraging Rcpp
+- Lighter, simpler, leveraging Rcpp
+
+- Easy (??) to add simple data getters
 
 # Examples
 
-TBD
+## TBD
 
 # Open Issues
 
-DataFrame class caused trouble
+- DataFrame class caused trouble
 
-Fixed-dimension retrieval very easy
+- Fixed-dimension retrieval very easy
+
+- Builds on ``that other OS''
+
+- Distribution?  Need library stub or \texttt{dlopen} tricks to be buildable
