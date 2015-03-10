@@ -2,8 +2,8 @@
 //
 //  getTicks.cpp -- a simple intraday tick retriever
 //
-//  Copyright (C) 2013  Whit Armstrong
-//  Copyright (C) 2014  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2013         Whit Armstrong
+//  Copyright (C) 2014 - 2015  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -107,7 +107,7 @@ void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
                         << value << "\t\t"
                         << size << std::endl;
         }
-        ticks.time.push_back(bbgDatetimeToUTC(time));
+        ticks.time.push_back(bbgDatetimeToPOSIX(time));
         ticks.value.push_back(value);
         ticks.size.push_back(size);
     }
