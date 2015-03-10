@@ -2,8 +2,8 @@
 //
 //  getBars.cpp -- a simple intraday bar retriever
 //
-//  Copyright (C) 2013  Whit Armstrong
-//  Copyright (C) 2014  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2013         Whit Armstrong
+//  Copyright (C) 2014 - 2015  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -129,7 +129,7 @@ void processMessage(bbg::Message &msg, Bars &bars,
         }
         // we add 'barInterval' seconds to the time as Bbg reports the time of
         // the _beginning_ of the bar, not the end 
-        bars.time.push_back(bbgDatetimeToUTC(time) + barInterval*60);
+        bars.time.push_back(bbgDatetimeToPOSIX(time) + barInterval*60);
         bars.open.push_back(open);
         bars.high.push_back(high);
         bars.low.push_back(low);
