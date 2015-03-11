@@ -94,15 +94,12 @@ const double bbgDatetimeToUTC(const BloombergLP::blpapi::Datetime& dt) {
     boost::posix_time::minutes(dt.minutes()) +
     boost::posix_time::seconds(dt.seconds()) +
     boost::posix_time::milliseconds(dt.milliseconds());
-
   boost::posix_time::ptime bbg_ptime(bbg_boost_date,td);
-  struct tm tm_time(to_tm(bbg_ptime));
-  const time_t tt = mktime(&tm_time);
-  struct tm utc = *gmtime(&tt);
-  struct tm lt = *localtime(&tt);
-  double ptutc = static_cast<double>(mktime(&utc));
-  double ptlt = static_cast<double>(mktime(&lt));
-  return ptlt - (ptutc - ptlt) +  dt.milliseconds()/1e3;
+
+  // cf http://stackoverflow.com/a/4462309/143305
+  boost::posix_time::ptime epoch(boost::gregorian::date(1970,1,1));
+  boost::posix_time::time_duration::sec_type x = (bbg_ptime - epoch).total_seconds();
+  return x;
 }
 
 void addDateClass(SEXP x) {
