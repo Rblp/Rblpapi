@@ -23,7 +23,6 @@
 #include <boost/date_time/gregorian/gregorian_types.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/local_time/local_time_types.hpp>
-#include <boost/date_time/local_time/local_time.hpp>
 #include <blpapi_session.h>
 #include <blpapi_request.h>
 #include <blpapi_datetime.h>
