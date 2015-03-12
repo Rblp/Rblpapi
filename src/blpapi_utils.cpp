@@ -94,6 +94,7 @@ const double bbgDatetimeToUTC(const BloombergLP::blpapi::Datetime& dt) {
     boost::posix_time::minutes(dt.minutes()) +
     boost::posix_time::seconds(dt.seconds()) +
     boost::posix_time::milliseconds(dt.milliseconds());
+  boost::posix_time::ptime bbg_ptime(bbg_boost_date,td);
 
   // cf http://stackoverflow.com/a/4462309/143305
   boost::posix_time::ptime epoch(boost::gregorian::date(1970,1,1));
