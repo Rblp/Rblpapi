@@ -1,0 +1,24 @@
+#!/bin/bash
+# Emacs please make this -*- mode: shell-mode; -*-
+
+uname=$(type -P uname)
+if [ "${uname}" = "" ]; then
+    echo "You do not have uname so this is unlikely to be a Unix system. Exiting."
+    exit -1
+fi
+
+## should also test for BBG header and library
+
+arch=$(uname -m)
+if [ "${arch}" = "x86_64" ]; then
+    echo "Setting up compilation for 64-bit system"
+    sed -e's/@config@/blpapi3_64/' src/Makevars.in > src/Makevars
+elif [ "${arch}" = "i686" ]; then
+    echo "Setting up compilation for 32-bit system"
+    sed -e's/@config@/blpapi3_32/' src/Makevars.in > src/Makevars
+else 
+    echo "Unknown architecture: ${arch}. Exiting."
+    exit -1
+fi
+
+exit 0
