@@ -83,7 +83,6 @@ namespace {
 
 struct Bars {
     std::vector<double> time;     // to be converted to POSIXct later
-    //std::vector<std::string> pt;
     std::vector<double> open;
     std::vector<double> high;
     std::vector<double> low;
@@ -127,9 +126,7 @@ void processMessage(bbg::Message &msg, Bars &bars,
                         << std::noshowpoint
                         << volume << std::endl;
         }
-        // we add 'barInterval' seconds to the time as Bbg reports the time of
-        // the _beginning_ of the bar, not the end 
-        bars.time.push_back(bbgDatetimeToPOSIX(time) + barInterval*60);
+        bars.time.push_back(bbgDatetimeToUTC(time)); 
         bars.open.push_back(open);
         bars.high.push_back(high);
         bars.low.push_back(low);
@@ -211,9 +208,7 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
         }
     }
 
-    Rcpp::NumericVector pt(bars.time.begin(), bars.time.end());
-
-    return Rcpp::DataFrame::create(Rcpp::Named("times")     = Rcpp::DatetimeVector(pt),
+    return Rcpp::DataFrame::create(Rcpp::Named("times")     = createPOSIXtVector(bars.time),
                                    Rcpp::Named("open")      = bars.open,
                                    Rcpp::Named("high")      = bars.high,
                                    Rcpp::Named("low")       = bars.low,

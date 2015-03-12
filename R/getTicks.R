@@ -15,9 +15,12 @@
 ##' @param returnAs A character variable describing the type of return
 ##' object; currently supported are \sQuote{matrix} (also the default),
 ##' \sQuote{fts}, \sQuote{xts} and \sQuote{zoo}  
-##' @return A numeric matrix with elements \sQuote{time},
-##' \sQuote{values} and \sQuote{sizes}, or an object of the type
-##' selected in \code{returnAs}.
+##' @param tz A character variable with the desired local timezone,
+##' defaulting to the value \sQuote{TZ} environment variable, and
+##' \sQuote{UTC} if unset
+##' @return A numeric matrix with elements \sQuote{time}, (as a
+##' \sQuoute{POSIXct} object), \sQuote{values} and \sQuote{sizes}, or
+##' an object of the type selected in \code{returnAs}.
 ##' @author Dirk Eddelbuettel
 getTicks <- function(con,
                      security,
@@ -25,12 +28,16 @@ getTicks <- function(con,
                      startTime = Sys.time()-60*60,
                      endTime = Sys.time(),
                      verbose = FALSE,
-                     returnAs = getOption("blpType", "matrix")) {
+                     returnAs = getOption("blpType", "matrix"),
+                     tz = Sys.getenv("TZ", unset="UTC")) {
 
     fmt <- "%Y-%m-%dT%H:%M:%S"
     startUTC <- format(startTime, fmt, tz="UTC")
     endUTC <- format(endTime, fmt, tz="UTC")
     res <- getTicks_Impl(con, security, eventType, startUTC, endUTC, verbose)
+
+    attr(res[,1], "tzone") <- tz
+    
     res <- switch(returnAs,
                   matrix = res,                # default is matrix
                   fts    = fts::fts(res[,1], res[,-1]),

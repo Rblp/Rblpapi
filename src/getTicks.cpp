@@ -107,7 +107,7 @@ void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
                         << value << "\t\t"
                         << size << std::endl;
         }
-        ticks.time.push_back(bbgDatetimeToPOSIX(time));
+        ticks.time.push_back(bbgDatetimeToUTC(time));
         ticks.value.push_back(value);
         ticks.size.push_back(size);
     }
@@ -182,9 +182,7 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
         }
     }
 
-    Rcpp::NumericVector pt(ticks.time.begin(), ticks.time.end());
-
-    return Rcpp::DataFrame::create(Rcpp::Named("times") = Rcpp::DatetimeVector(pt),
+    return Rcpp::DataFrame::create(Rcpp::Named("times") = createPOSIXtVector(ticks.time),
                                    Rcpp::Named("value") = ticks.value,
                                    Rcpp::Named("size")  = ticks.size);
 
