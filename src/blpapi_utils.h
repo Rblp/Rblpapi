@@ -45,4 +45,6 @@ void addDateClass(SEXP x);
 void addPosixClass(SEXP x);
 void setNames(SEXP x, std::vector<std::string>& names);
 void addFakeRownames(SEXP x, R_len_t n);
+
+Rcpp::NumericVector createPOSIXtVector(const std::vector<double> & ticks, const std::string tz="UTC");
 #endif // BLPAPI_UTILS_H
