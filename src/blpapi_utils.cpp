@@ -399,3 +399,12 @@ void setNames(SEXP x, std::vector<std::string>& names) {
   }
   Rf_setAttrib(x, R_NamesSymbol, names_); UNPROTECT(1);
 }
+
+Rcpp::NumericVector createPOSIXtVector(const std::vector<double> & ticks, 
+                                       const std::string tz) {
+    Rcpp::NumericVector pt(ticks.begin(), ticks.end());
+    pt.attr("class") = Rcpp::CharacterVector::create("POSIXct", "POSIXt");
+    pt.attr("tzone") = tz;
+    return pt;
+}
+
