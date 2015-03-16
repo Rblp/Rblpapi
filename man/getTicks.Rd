@@ -36,7 +36,7 @@ defaulting to the value \sQuote{TZ} environment variable, and
 }
 \value{
 A numeric matrix with elements \sQuote{time}, (as a
-\sQuoute{POSIXct} object), \sQuote{values} and \sQuote{sizes}, or
+\sQuote{POSIXct} object), \sQuote{values} and \sQuote{sizes}, or
 an object of the type selected in \code{returnAs}.
 }
 \description{
