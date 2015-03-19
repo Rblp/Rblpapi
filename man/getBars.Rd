@@ -41,7 +41,7 @@ defaulting to the value \sQuote{TZ} environment variable, and
 }
 \value{
 A numeric matrix with elements \sQuote{time} (as a
-\sQuoute{POSIXct} object), \sQuote{open}, \sQuote{high},
+\sQuote{POSIXct} object), \sQuote{open}, \sQuote{high},
 \sQuote{low}, \sQuote{close}, \sQuote{numEvents}, \sQuote{volume},
 or an object of the type selected in \code{returnAs}. Note that
 the \sQuote{time} value is adjusted: Bloomberg returns the
