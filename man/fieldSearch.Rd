@@ -7,7 +7,7 @@
 fieldSearch(con, searchterm, excludeterm = "Static")
 }
 \arguments{
-\item{con}{A connection object as return by a \code{blpConnect} call}
+\item{con}{A connection object as returned by a \code{blpConnect} call}
 
 \item{searchterm}{A string with the term to search for}
 

@@ -2,7 +2,7 @@
 ##' This function uses the Bloomberg API to retrieve bars for the requested security.
 ##'
 ##' @title Get Open/High/Low/Close/Volume Bars from Bloomberg
-##' @param con A connection object as return by a \code{blpConnect} call
+##' @param con A connection object as returned by a \code{blpConnect} call
 ##' @param security A character variable describing a valid security ticker
 ##' @param eventType A character variable describing an event type;
 ##' default is \sQuote{TRADE}

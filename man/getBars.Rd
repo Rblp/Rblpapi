@@ -11,7 +11,7 @@ getBars(con, security, eventType = "TRADE", barInterval = 60,
   "UTC"))
 }
 \arguments{
-\item{con}{A connection object as return by a \code{blpConnect} call}
+\item{con}{A connection object as returned by a \code{blpConnect} call}
 
 \item{security}{A character variable describing a valid security ticker}
 
