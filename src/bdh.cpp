@@ -104,7 +104,7 @@ SEXP bdh(SEXP conn_,
     Request request = refDataService.createRequest("HistoricalDataRequest");
     createStandardRequest(request, securities, fields, options_);
 
-    request.set("startDate", start_date.c_str());
+    request.set("startDate", start_date_.c_str());
     if (end_date_ != R_NilValue) {
         request.set("endDate", Rcpp::as<std::string>(end_date_).c_str());
     }
