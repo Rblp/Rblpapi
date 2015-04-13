@@ -82,8 +82,8 @@ void getBDPResult(Event& event, LazyFrameT& lazy_frame, std::vector<std::string>
 // Simpler interface with std::vector<std::string> thanks to Rcpp::Attributes
 //
 // [[Rcpp::export]]
-SEXP bdp(SEXP conn_, std::vector<std::string> securities, std::vector<std::string> fields, 
-         SEXP options_, SEXP identity_) {
+SEXP bdp_Impl(SEXP conn_, std::vector<std::string> securities, std::vector<std::string> fields, 
+              SEXP options_, SEXP identity_) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     Session* session = 

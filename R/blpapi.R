@@ -35,8 +35,8 @@ bdh <- function(conn, securities, fields, start.date, end.date=NULL, include.non
         options <- c(options,structure(c("ALL_CALENDAR_DAYS", "NIL_VALUE"),names=c("nonTradingDayFillOption", "nonTradingDayFillMethod")))
     }
 
-    res <- .Call("bdh", conn, securities, fields, start.date, end.date, options, identity, PACKAGE="Rblpapi")
-    if(typeof(res)=="list" && length(res)==1) {
+    res <- bdh_Impl(conn, securities, fields, start.date, end.date, options, identity)
+    if (typeof(res)=="list" && length(res)==1) {
         res <- res[[1]]
     }
     res

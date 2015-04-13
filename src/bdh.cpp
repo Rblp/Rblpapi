@@ -86,11 +86,11 @@ SEXP HistoricalDataResponseToDF(Event& event) {
 
 // Simpler interface with std::vector<std::string> thanks to Rcpp::Attributes
 // [[Rcpp::export]]
-SEXP bdh(SEXP conn_, 
-         std::vector<std::string> securities, 
-         std::vector<std::string> fields,
-         std::string start_date_, SEXP end_date_, 
-         SEXP options_, SEXP identity_) {
+SEXP bdh_Impl(SEXP conn_, 
+              std::vector<std::string> securities, 
+              std::vector<std::string> fields,
+              std::string start_date_, SEXP end_date_, 
+              SEXP options_, SEXP identity_) {
 
     Session* session = 
         reinterpret_cast<Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
