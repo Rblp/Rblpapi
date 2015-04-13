@@ -3,8 +3,10 @@ blpConnect <- function(host=getOption("blpHost", "localhost"),
                        logfile) {
     if (missing(logfile)) {
         logfile <- file.path("/tmp/",
-                             paste0("blpapi_",format(Sys.time(),"%Y%m%d_%H%M%S"),"_",Sys.getpid(),".log"))
+                             paste0("blpapi_", format(Sys.time(), "%Y%m%d_%H%M%S"),
+                                    "_", Sys.getpid(), ".log"))
     }
+    if (storage.mode(port) != "integer") port <- as.integer(port)
     stopifnot(storage.mode(host)=="character")
     stopifnot(storage.mode(port)=="integer")
     .Call("bdp_connect", host, port, logfile, PACKAGE="Rblpapi")
@@ -23,11 +25,6 @@ blpAuthenticate <- function(conn,uuid,host="localhost",ip.address) {
     .Call("bdp_authenticate", conn, as.character(uuid), ip.address, PACKAGE="Rblpapi")
 }
 
-bdp <- function(conn, securities, fields, options=NULL, identity=NULL) {
-    if(any(duplicated(securities))) stop("duplicated securities submitted.")
-    .Call("bdp", conn, securities, fields, options, identity, PACKAGE="Rblpapi")
-}
-
 bdh <- function(conn, securities, fields, start.date, end.date=NULL, include.non.trading.days=FALSE, options=NULL, identity=NULL) {
     start.date = format(start.date, format="%Y%m%d")
     if (!is.null(end.date)) {
@@ -38,8 +35,8 @@ bdh <- function(conn, securities, fields, start.date, end.date=NULL, include.non
         options <- c(options,structure(c("ALL_CALENDAR_DAYS", "NIL_VALUE"),names=c("nonTradingDayFillOption", "nonTradingDayFillMethod")))
     }
 
-    res <- .Call("bdh", conn, securities, fields, start.date, end.date, options, identity, PACKAGE="Rblpapi")
-    if(typeof(res)=="list" && length(res)==1) {
+    res <- bdh_Impl(conn, securities, fields, start.date, end.date, options, identity)
+    if (typeof(res)=="list" && length(res)==1) {
         res <- res[[1]]
     }
     res

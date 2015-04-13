@@ -63,7 +63,7 @@ namespace {
 //'
 //' @title Search for matching data fields
 //'
-//' @param con A connection object as return by a \code{blpConnect} call
+//' @param con A connection object as returned by a \code{blpConnect} call
 //' @param searchterm A string with the term to search for
 //' @param excludeterm A string with an expression for matches to excludes, defaults to \dQuote{Static}
 //'
