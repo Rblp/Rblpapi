@@ -1,13 +1,13 @@
 Package: Rblpapi
 Title: R Interface to BBG
-Version: 0.2.1.9
-Date: 2015-04-12
+Version: 0.2.1.10
+Date: 2015-04-14
 Maintainer: Whit Armstrong <armstrong.whit@gmail.com>
 Author: Whit Armstrong and Dirk Eddelbuettel
 Imports: Rcpp (>= 0.11.0)
 Suggests: fts, xts, zoo
 LazyLoad: yes
 LinkingTo: Rcpp, BH
-Description: R interface to BBG
+Description: An R Interface to the BBG service is provided by the Blp API.
 SystemRequirements: BBG API headers and library
 License: GPL-3

@@ -25,23 +25,6 @@ blpAuthenticate <- function(conn,uuid,host="localhost",ip.address) {
     .Call("bdp_authenticate", conn, as.character(uuid), ip.address, PACKAGE="Rblpapi")
 }
 
-bdh <- function(conn, securities, fields, start.date, end.date=NULL, include.non.trading.days=FALSE, options=NULL, identity=NULL) {
-    start.date = format(start.date, format="%Y%m%d")
-    if (!is.null(end.date)) {
-        end.date = format(end.date, format="%Y%m%d")
-    }
-
-    if (include.non.trading.days) {
-        options <- c(options,structure(c("ALL_CALENDAR_DAYS", "NIL_VALUE"),names=c("nonTradingDayFillOption", "nonTradingDayFillMethod")))
-    }
-
-    res <- bdh_Impl(conn, securities, fields, start.date, end.date, options, identity)
-    if (typeof(res)=="list" && length(res)==1) {
-        res <- res[[1]]
-    }
-    res
-}
-
 bds <- function(conn, securities, fields, options=NULL, overrides=NULL, identity=NULL) {
     if(any(duplicated(securities))) stop("duplicated securities submitted.")
     res <- .Call("bds", conn, securities, fields, options, overrides, identity, PACKAGE="Rblpapi")

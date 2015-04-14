@@ -4,19 +4,21 @@
 \alias{bdp}
 \title{Run 'Bloomberg Data Point' Queries}
 \usage{
-bdp(conn, securities, fields, options = NULL, identity = NULL)
+bdp(con, securities, fields, options = NULL, identity = NULL)
 }
 \arguments{
-\item{fields}{A character vector with Bloomberg query fields.}
-
-\item{options}{An optional named character vector with option values. Each field must have both a name (designating the option being set) as well as a value.}
-
-\item{identity}{An optional idendity object.}
-
 \item{con}{A connection object as returned by a \code{blpConnect} call}
 
-\item{security}{A character vector with security symbol in
+\item{securities}{A character vector with security symbols in
 Bloomberg notation.}
+
+\item{fields}{A character vector with Bloomberg query fields.}
+
+\item{options}{An optional named character vector with option
+values. Each field must have both a name (designating the option
+being set) as well as a value.}
+
+\item{identity}{An optional idendity object.}
 }
 \value{
 A data frame with as a many rows as entries in

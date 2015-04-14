@@ -4,10 +4,12 @@
 ##'
 ##' @title Run 'Bloomberg Data Point' Queries
 ##' @param con A connection object as returned by a \code{blpConnect} call
-##' @param security A character vector with security symbol in
+##' @param securities A character vector with security symbols in
 ##' Bloomberg notation.
 ##' @param fields A character vector with Bloomberg query fields.
-##' @param options An optional named character vector with option values. Each field must have both a name (designating the option being set) as well as a value.
+##' @param options An optional named character vector with option
+##' values. Each field must have both a name (designating the option
+##' being set) as well as a value.
 ##' @param identity An optional idendity object.
 ##' @return A data frame with as a many rows as entries in
 ##' \code{securities} and columns as entries in \code{fields}.
@@ -17,8 +19,8 @@
 ##'   con <- blpConnect()   # adjust as needed
 ##'   bdp(con, c("ESA Comdty", "SPY US Equity"), c("PX_LAST", "VOLUME"))
 ##' }
-bdp <- function(conn, securities, fields, options=NULL, identity=NULL) {
+bdp <- function(con, securities, fields, options=NULL, identity=NULL) {
     if (any(duplicated(securities))) stop("duplicated securities submitted.")
-    bdp_Impl(conn, securities, fields, options, identity)
+    bdp_Impl(con, securities, fields, options, identity)
 }
 
