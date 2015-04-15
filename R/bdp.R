@@ -20,7 +20,7 @@
 ##'   bdp(con, c("ESA Index", "SPY US Equity"), c("PX_LAST", "VOLUME"))
 ##' }
 bdp <- function(con, securities, fields, options=NULL, identity=NULL) {
-    if (any(duplicated(securities))) stop("duplicated securities submitted.")
+    if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
     bdp_Impl(con, securities, fields, options, identity)
 }
 

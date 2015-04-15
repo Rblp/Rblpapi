@@ -2,7 +2,7 @@
 % Please edit documentation in R/bds.R
 \name{bds}
 \alias{bds}
-\title{Run 'Bloomberg Data Point' Queries}
+\title{Run 'Bloomberg Data Set' Queries}
 \usage{
 bds(con, securities, fields, options = NULL, overrides = NULL,
   identity = NULL)
@@ -31,13 +31,13 @@ per observations and as many columns as entries in
 a single data frame.
 }
 \description{
-This function uses the Bloomberg API to retrieve 'bdp' (Bloomberg
-Data Point) queries
+This function uses the Bloomberg API to retrieve 'bds' (Bloomberg
+Data Set) queries
 }
 \examples{
 \dontrun{
   con <- blpConnect()   # adjust as needed
-  bdp(con, c("ESA Index", "SPY US Equity"), c("PX_LAST", "VOLUME"))
+  bds(con, c("GOOG US Equity", "TOP_20_HOLDERS_PUBLIC_FILINGS"))
 }
 }
 \author{
