@@ -9,6 +9,10 @@ bdp_Impl <- function(conn_, securities, fields, options_, identity_) {
     .Call('Rblpapi_bdp_Impl', PACKAGE = 'Rblpapi', conn_, securities, fields, options_, identity_)
 }
 
+bds_Impl <- function(conn_, securities, field, options_, overrides_, identity_) {
+    .Call('Rblpapi_bds_Impl', PACKAGE = 'Rblpapi', conn_, securities, field, options_, overrides_, identity_)
+}
+
 #' This function searches for matching Bloomberg data fields given a search term.
 #'
 #' @title Search for matching data fields
