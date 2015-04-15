@@ -37,6 +37,22 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// bds_Impl
+SEXP bds_Impl(SEXP conn_, std::vector<std::string> securities, std::string field, SEXP options_, SEXP overrides_, SEXP identity_);
+RcppExport SEXP Rblpapi_bds_Impl(SEXP conn_SEXP, SEXP securitiesSEXP, SEXP fieldSEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP identity_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type conn_(conn_SEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type securities(securitiesSEXP);
+    Rcpp::traits::input_parameter< std::string >::type field(fieldSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type options_(options_SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type overrides_(overrides_SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type identity_(identity_SEXP);
+    __result = Rcpp::wrap(bds_Impl(conn_, securities, field, options_, overrides_, identity_));
+    return __result;
+END_RCPP
+}
 // fieldSearch
 Rcpp::DataFrame fieldSearch(SEXP con, std::string searchterm, std::string excludeterm);
 RcppExport SEXP Rblpapi_fieldSearch(SEXP conSEXP, SEXP searchtermSEXP, SEXP excludetermSEXP) {

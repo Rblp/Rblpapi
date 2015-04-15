@@ -25,11 +25,4 @@ blpAuthenticate <- function(conn,uuid,host="localhost",ip.address) {
     .Call("bdp_authenticate", conn, as.character(uuid), ip.address, PACKAGE="Rblpapi")
 }
 
-bds <- function(conn, securities, fields, options=NULL, overrides=NULL, identity=NULL) {
-    if(any(duplicated(securities))) stop("duplicated securities submitted.")
-    res <- .Call("bds", conn, securities, fields, options, overrides, identity, PACKAGE="Rblpapi")
-    if(typeof(res)=="list" && length(res)==1) {
-        res <- res[[1]]
-    }
-    res
-}
+
