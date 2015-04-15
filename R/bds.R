@@ -21,7 +21,7 @@
 ##' @examples
 ##' \dontrun{
 ##'   con <- blpConnect()   # adjust as needed
-##'   bds(con, c("GOOG US Equity", "TOP_20_HOLDERS_PUBLIC_FILINGS"))
+##'   bds(con, "GOOG US Equity", "TOP_20_HOLDERS_PUBLIC_FILINGS")
 ##' }
 bds <- function(con, securities, fields, options=NULL, overrides=NULL, identity=NULL) {
     if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
