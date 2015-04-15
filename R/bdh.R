@@ -16,7 +16,7 @@
 ##' values. Each field must have both a name (designating the option
 ##' being set) as well as a value.
 ##' @param identity An optional idendity object.
-##' @return A list frame with as a entries as there are entries in
+##' @return A list with as a entries as there are entries in
 ##' \code{securities}; each list contains a data.frame with one row
 ##' per observations and as many columns as entries in
 ##' \code{fields}. If the list is of length one, it is collapsed into

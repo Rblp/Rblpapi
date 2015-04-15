@@ -30,7 +30,7 @@ being set) as well as a value.}
 \item{identity}{An optional idendity object.}
 }
 \value{
-A list frame with as a entries as there are entries in
+A list with as a entries as there are entries in
 \code{securities}; each list contains a data.frame with one row
 per observations and as many columns as entries in
 \code{fields}. If the list is of length one, it is collapsed into
