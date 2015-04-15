@@ -29,6 +29,7 @@
 ##' }
 bdh <- function(con, securities, fields, start.date, end.date=NULL,
                 include.non.trading.days=FALSE, options=NULL, identity=NULL) {
+    if (!class(start.date) == "Date") stop("start.date must be a Date object", call.=FALSE)
     start.date <- format(start.date, format="%Y%m%d")
     if (!is.null(end.date)) {
         end.date <- format(end.date, format="%Y%m%d")

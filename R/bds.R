@@ -1,8 +1,8 @@
 
-##' This function uses the Bloomberg API to retrieve 'bdp' (Bloomberg
-##' Data Point) queries
+##' This function uses the Bloomberg API to retrieve 'bds' (Bloomberg
+##' Data Set) queries
 ##'
-##' @title Run 'Bloomberg Data Point' Queries
+##' @title Run 'Bloomberg Data Set' Queries
 ##' @param con A connection object as returned by a \code{blpConnect} call
 ##' @param securities A character vector with security symbols in
 ##' Bloomberg notation.
@@ -21,10 +21,10 @@
 ##' @examples
 ##' \dontrun{
 ##'   con <- blpConnect()   # adjust as needed
-##'   bdp(con, c("ESA Index", "SPY US Equity"), c("PX_LAST", "VOLUME"))
+##'   bds(con, "GOOG US Equity", "TOP_20_HOLDERS_PUBLIC_FILINGS")
 ##' }
 bds <- function(con, securities, fields, options=NULL, overrides=NULL, identity=NULL) {
-    if (any(duplicated(securities))) stop("duplicated securities submitted.")
+    if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
     res <- bds_Impl(con, securities, fields, options, overrides, identity)
     if (typeof(res)=="list" && length(res)==1) {
         res <- res[[1]]

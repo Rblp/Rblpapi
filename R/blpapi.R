@@ -7,8 +7,7 @@ blpConnect <- function(host=getOption("blpHost", "localhost"),
                                     "_", Sys.getpid(), ".log"))
     }
     if (storage.mode(port) != "integer") port <- as.integer(port)
-    stopifnot(storage.mode(host)=="character")
-    stopifnot(storage.mode(port)=="integer")
+    if (storage.mode(host) != "character") stop("Host argument must be character.", call.=FALSE)
     .Call("bdp_connect", host, port, logfile, PACKAGE="Rblpapi")
 }
 
