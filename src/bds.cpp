@@ -116,7 +116,7 @@ SEXP bds_Impl(SEXP conn_, std::vector<std::string> securities,
     
     sendRequestWithIdentity(session, request, identity_);
 
-    SEXP ans;
+    SEXP ans = R_NilValue;      // to keep -pedantic happy
     while (true) {
         Event event = session->nextEvent();
         switch (event.eventType()) {
