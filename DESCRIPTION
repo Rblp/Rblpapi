@@ -1,7 +1,7 @@
 Package: Rblpapi
 Title: R Interface to BBG
-Version: 0.2.1.11
-Date: 2015-04-15
+Version: 0.2.1.12
+Date: 2015-04-20
 Maintainer: Whit Armstrong <armstrong.whit@gmail.com>
 Author: Whit Armstrong and Dirk Eddelbuettel
 Imports: Rcpp (>= 0.11.0)
