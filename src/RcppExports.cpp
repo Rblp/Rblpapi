@@ -53,6 +53,18 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// blpConnect_Impl
+SEXP blpConnect_Impl(const std::string host, const int port);
+RcppExport SEXP Rblpapi_blpConnect_Impl(SEXP hostSEXP, SEXP portSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const std::string >::type host(hostSEXP);
+    Rcpp::traits::input_parameter< const int >::type port(portSEXP);
+    __result = Rcpp::wrap(blpConnect_Impl(host, port));
+    return __result;
+END_RCPP
+}
 // fieldSearch
 Rcpp::DataFrame fieldSearch(SEXP con, std::string searchterm, std::string excludeterm);
 RcppExport SEXP Rblpapi_fieldSearch(SEXP conSEXP, SEXP searchtermSEXP, SEXP excludetermSEXP) {
