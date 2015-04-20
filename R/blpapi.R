@@ -1,8 +1,4 @@
 
-blpDisconnect <- function(conn) {
-    # do nothing, just return a simple test
-    invisible(object.size(conn) < 1000)
-}
 
 blpAuthenticate <- function(conn,uuid,host="localhost",ip.address) {
     if(missing(ip.address)) {
