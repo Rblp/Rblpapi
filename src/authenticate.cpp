@@ -56,6 +56,7 @@ SEXP authenticate_Impl(SEXP conn_, SEXP uuid_, SEXP ip_address_) {
 
     if (uuid_ == R_NilValue || ip_address_ == R_NilValue) {
         Rcpp::stop("Either uuid or ip_address was null.");
+    }
 
     std::string uuid = Rcpp::as<std::string>(uuid_);
     std::string ip_address = Rcpp::as<std::string>(ip_address_);
