@@ -356,7 +356,8 @@ void appendOverridesToRequest(Request& request, SEXP overrides_) {
 void createStandardRequest(Request& request,
                            const std::vector<std::string>& securities,
                            const std::vector<std::string>& fields,
-                           SEXP options_) {
+                           SEXP options_,
+                           SEXP overrides_) {
 
   for(size_t i = 0; i < securities.size(); i++) {
     request.getElement("securities").appendValue(securities[i].c_str());
@@ -367,6 +368,7 @@ void createStandardRequest(Request& request,
   }
 
   if(options_ != R_NilValue) { appendOptionsToRequest(request,options_); }
+  if(overrides_ != R_NilValue) { appendOverridesToRequest(request,overrides_); }
 }
 
 void sendRequestWithIdentity(Session* session, Request& request, SEXP identity_) {

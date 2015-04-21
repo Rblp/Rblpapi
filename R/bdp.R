@@ -10,6 +10,9 @@
 ##' @param options An optional named character vector with option
 ##' values. Each field must have both a name (designating the option
 ##' being set) as well as a value.
+##' @param overrides An optional named character vector with override
+##' values. Each field must have both a name (designating the override
+##' being set) as well as a value.
 ##' @param identity An optional idendity object.
 ##' @return A data frame with as a many rows as entries in
 ##' \code{securities} and columns as entries in \code{fields}.
@@ -19,8 +22,8 @@
 ##'   con <- blpConnect()   # adjust as needed
 ##'   bdp(con, c("ESA Index", "SPY US Equity"), c("PX_LAST", "VOLUME"))
 ##' }
-bdp <- function(con, securities, fields, options=NULL, identity=NULL) {
+bdp <- function(con, securities, fields, options=NULL, overrides=NULL, identity=NULL) {
     if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
-    bdp_Impl(con, securities, fields, options, identity)
+    bdp_Impl(con, securities, fields, options, overrides, identity)
 }
 

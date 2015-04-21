@@ -83,7 +83,7 @@ void getBDPResult(Event& event, LazyFrameT& lazy_frame, std::vector<std::string>
 //
 // [[Rcpp::export]]
 SEXP bdp_Impl(SEXP conn_, std::vector<std::string> securities, std::vector<std::string> fields, 
-              SEXP options_, SEXP identity_) {
+              SEXP options_, SEXP overrides_, SEXP identity_) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     Session* session = 
@@ -96,7 +96,7 @@ SEXP bdp_Impl(SEXP conn_, std::vector<std::string> securities, std::vector<std::
     
     Service refDataService = session->getService(rdsrv.c_str());
     Request request = refDataService.createRequest("ReferenceDataRequest");
-    createStandardRequest(request, securities, fields, options_);
+    createStandardRequest(request, securities, fields, options_, overrides_);
     sendRequestWithIdentity(session, request, identity_);
 
     LazyFrameT lazy_frame;

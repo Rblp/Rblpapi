@@ -90,7 +90,7 @@ SEXP bdh_Impl(SEXP conn_,
               std::vector<std::string> securities, 
               std::vector<std::string> fields,
               std::string start_date_, SEXP end_date_, 
-              SEXP options_, SEXP identity_) {
+              SEXP options_, SEXP overrides_, SEXP identity_) {
 
     Session* session = 
         reinterpret_cast<Session*>(checkExternalPointer(conn_,"blpapi::Session*"));
@@ -102,7 +102,7 @@ SEXP bdh_Impl(SEXP conn_,
 
     Service refDataService = session->getService(rdsrv.c_str());
     Request request = refDataService.createRequest("HistoricalDataRequest");
-    createStandardRequest(request, securities, fields, options_);
+    createStandardRequest(request, securities, fields, options_, overrides_);
 
     request.set("startDate", start_date_.c_str());
     if (end_date_ != R_NilValue) {
