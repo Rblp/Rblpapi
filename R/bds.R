@@ -10,7 +10,9 @@
 ##' @param options An optional named character vector with option
 ##' values. Each field must have both a name (designating the option
 ##' being set) as well as a value.
-##' @param overrides An optional override vector.
+##' @param overrides An optional named character vector with override
+##' values. Each field must have both a name (designating the override
+##' being set) as well as a value.
 ##' @param identity An optional idendity object.
 ##' @return A list with as a entries as there are entries in
 ##' \code{securities}; each list contains a data.frame with one row

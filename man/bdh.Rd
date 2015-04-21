@@ -5,7 +5,8 @@
 \title{Run 'Bloomberg Data History' Queries}
 \usage{
 bdh(con, securities, fields, start.date, end.date = NULL,
-  include.non.trading.days = FALSE, options = NULL, identity = NULL)
+  include.non.trading.days = FALSE, options = NULL, overrides = NULL,
+  identity = NULL)
 }
 \arguments{
 \item{con}{A connection object as returned by a \code{blpConnect} call}
@@ -25,6 +26,10 @@ indicating whether non-trading days should be included.}
 
 \item{options}{An optional named character vector with option
 values. Each field must have both a name (designating the option
+being set) as well as a value.}
+
+\item{overrides}{An optional named character vector with override
+values. Each field must have both a name (designating the override
 being set) as well as a value.}
 
 \item{identity}{An optional idendity object.}

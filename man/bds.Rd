@@ -19,7 +19,9 @@ Bloomberg notation.}
 values. Each field must have both a name (designating the option
 being set) as well as a value.}
 
-\item{overrides}{An optional override vector.}
+\item{overrides}{An optional named character vector with override
+values. Each field must have both a name (designating the override
+being set) as well as a value.}
 
 \item{identity}{An optional idendity object.}
 }
