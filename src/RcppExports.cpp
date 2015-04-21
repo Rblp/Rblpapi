@@ -5,6 +5,19 @@
 
 using namespace Rcpp;
 
+// authenticate_Impl
+SEXP authenticate_Impl(SEXP conn_, SEXP uuid_, SEXP ip_address_);
+RcppExport SEXP Rblpapi_authenticate_Impl(SEXP conn_SEXP, SEXP uuid_SEXP, SEXP ip_address_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type conn_(conn_SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type uuid_(uuid_SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type ip_address_(ip_address_SEXP);
+    __result = Rcpp::wrap(authenticate_Impl(conn_, uuid_, ip_address_));
+    return __result;
+END_RCPP
+}
 // bdh_Impl
 SEXP bdh_Impl(SEXP conn_, std::vector<std::string> securities, std::vector<std::string> fields, std::string start_date_, SEXP end_date_, SEXP options_, SEXP identity_);
 RcppExport SEXP Rblpapi_bdh_Impl(SEXP conn_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP start_date_SEXP, SEXP end_date_SEXP, SEXP options_SEXP, SEXP identity_SEXP) {
