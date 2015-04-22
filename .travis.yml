@@ -28,7 +28,7 @@ install:
 
 script:
   # run configure to fetch libblpapi3_*.so
-  - ./configure
+  - sudo ./configure
   - ./travis-tool.sh run_tests
 
 notifications:
