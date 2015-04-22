@@ -27,8 +27,8 @@ install:
   - ./travis-tool.sh install_r BH
 
 script:
-  # run configure to fetch libblpapi3_*.so
-  - sudo ./configure
+  # fetch libblpapi3_*.so
+  - sudo inst/scripts/getBloombergAPI.sh
   - ./travis-tool.sh run_tests
 
 notifications:
