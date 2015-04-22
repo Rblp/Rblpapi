@@ -15,8 +15,12 @@
 ##'   con <- blpConnect()   # adjust as needed
 ##' }
 blpConnect <- function(host=getOption("blpHost", "localhost"),
-                       port=getOption("blpPort", 8194L)) {
+                       port=getOption("blpPort", 8194L),
+                       name="default") {
     if (storage.mode(port) != "integer") port <- as.integer(port)
     if (storage.mode(host) != "character") stop("Host argument must be character.", call.=FALSE)
-    blpConnect_Impl(host, port)
+    con <- blpConnect_Impl(host, port)
+
+    if (!is.null(name)) setCon(con, name)
+    invisible(con)
 }

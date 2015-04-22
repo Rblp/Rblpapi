@@ -10,7 +10,7 @@
 ##' session authenticated.
 ##' @author Whit Armstrong and Dirk Eddelbuettel
 
-blpAuthenticate <- function(con, uuid, host="localhost", ip.address) {
+blpAuthenticate <- function(uuid, host="localhost", ip.address, con=getCon()) {
     if (missing(ip.address)) {
         ## Linux only ?
         cmd.res <- system(paste("host",host), intern=TRUE,

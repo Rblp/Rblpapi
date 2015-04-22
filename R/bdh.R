@@ -30,8 +30,8 @@
 ##'   con <- blpConnect()   # adjust as needed
 ##'   bdh(con, "SPY US Equity", c("PX_LAST", "VOLUME"), start.date=Sys.Date()-31)
 ##' }
-bdh <- function(con, securities, fields, start.date, end.date=NULL,
-                include.non.trading.days=FALSE, options=NULL, overrides=NULL, identity=NULL) {
+bdh <- function(securities, fields, start.date, end.date=NULL,
+                include.non.trading.days=FALSE, options=NULL, overrides=NULL, identity=NULL, con=getCon()) {
     if (!class(start.date) == "Date") stop("start.date must be a Date object", call.=FALSE)
     start.date <- format(start.date, format="%Y%m%d")
     if (!is.null(end.date)) {

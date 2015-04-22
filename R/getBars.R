@@ -30,8 +30,7 @@
 ##' add the length of the bar interval to time value from Bloomberg to
 ##' obtain the time at the end of the interval.
 ##' @author Dirk Eddelbuettel
-getBars <- function(con,
-                    security,
+getBars <- function(security,
                     eventType = "TRADE",
                     barInterval=60,     		# in minutes
                     startTime = Sys.time()-60*60*6,
@@ -39,7 +38,8 @@ getBars <- function(con,
                     gapFillInitialBar = FALSE,
                     verbose = FALSE,
                     returnAs = getOption("blpType", "matrix"),
-                    tz = Sys.getenv("TZ", unset="UTC")) {
+                    tz = Sys.getenv("TZ", unset="UTC"),
+                    con = getCon()) {
 
     fmt <- "%Y-%m-%dT%H:%M:%S"
     startUTC <- format(startTime, fmt, tz="UTC")

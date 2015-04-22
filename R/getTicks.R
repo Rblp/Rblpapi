@@ -22,14 +22,14 @@
 ##' \sQuote{POSIXct} object), \sQuote{values} and \sQuote{sizes}, or
 ##' an object of the type selected in \code{returnAs}.
 ##' @author Dirk Eddelbuettel
-getTicks <- function(con,
-                     security,
+getTicks <- function(security,
                      eventType = "TRADE",
                      startTime = Sys.time()-60*60,
                      endTime = Sys.time(),
                      verbose = FALSE,
                      returnAs = getOption("blpType", "matrix"),
-                     tz = Sys.getenv("TZ", unset="UTC")) {
+                     tz = Sys.getenv("TZ", unset="UTC"),
+                     con = getCon()) {
 
     fmt <- "%Y-%m-%dT%H:%M:%S"
     startUTC <- format(startTime, fmt, tz="UTC")

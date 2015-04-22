@@ -25,7 +25,7 @@
 ##'   con <- blpConnect()   # adjust as needed
 ##'   bds(con, "GOOG US Equity", "TOP_20_HOLDERS_PUBLIC_FILINGS")
 ##' }
-bds <- function(con, securities, fields, options=NULL, overrides=NULL, identity=NULL) {
+bds <- function(securities, fields, options=NULL, overrides=NULL, identity=NULL, con=getCon()) {
     if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
     res <- bds_Impl(con, securities, fields, options, overrides, identity)
     if (typeof(res)=="list" && length(res)==1) {

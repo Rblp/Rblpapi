@@ -22,7 +22,7 @@
 ##'   con <- blpConnect()   # adjust as needed
 ##'   bdp(con, c("ESA Index", "SPY US Equity"), c("PX_LAST", "VOLUME"))
 ##' }
-bdp <- function(con, securities, fields, options=NULL, overrides=NULL, identity=NULL) {
+bdp <- function(securities, fields, options=NULL, overrides=NULL, identity=NULL, con=getCon()) {
     if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
     bdp_Impl(con, securities, fields, options, overrides, identity)
 }
