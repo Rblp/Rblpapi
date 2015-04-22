@@ -4,7 +4,8 @@
 \alias{bdp}
 \title{Run 'Bloomberg Data Point' Queries}
 \usage{
-bdp(con, securities, fields, options = NULL, identity = NULL)
+bdp(con, securities, fields, options = NULL, overrides = NULL,
+  identity = NULL)
 }
 \arguments{
 \item{con}{A connection object as returned by a \code{blpConnect} call}
@@ -16,6 +17,10 @@ Bloomberg notation.}
 
 \item{options}{An optional named character vector with option
 values. Each field must have both a name (designating the option
+being set) as well as a value.}
+
+\item{overrides}{An optional named character vector with override
+values. Each field must have both a name (designating the override
 being set) as well as a value.}
 
 \item{identity}{An optional idendity object.}

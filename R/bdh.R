@@ -15,6 +15,9 @@
 ##' @param options An optional named character vector with option
 ##' values. Each field must have both a name (designating the option
 ##' being set) as well as a value.
+##' @param overrides An optional named character vector with override
+##' values. Each field must have both a name (designating the override
+##' being set) as well as a value.
 ##' @param identity An optional idendity object.
 ##' @return A list with as a entries as there are entries in
 ##' \code{securities}; each list contains a data.frame with one row
@@ -28,7 +31,7 @@
 ##'   bdh(con, "SPY US Equity", c("PX_LAST", "VOLUME"), start.date=Sys.Date()-31)
 ##' }
 bdh <- function(con, securities, fields, start.date, end.date=NULL,
-                include.non.trading.days=FALSE, options=NULL, identity=NULL) {
+                include.non.trading.days=FALSE, options=NULL, overrides=NULL, identity=NULL) {
     if (!class(start.date) == "Date") stop("start.date must be a Date object", call.=FALSE)
     start.date <- format(start.date, format="%Y%m%d")
     if (!is.null(end.date)) {
@@ -41,7 +44,7 @@ bdh <- function(con, securities, fields, start.date, end.date=NULL,
                                names=c("nonTradingDayFillOption", "nonTradingDayFillMethod")))
     }
 
-    res <- bdh_Impl(con, securities, fields, start.date, end.date, options, identity)
+    res <- bdh_Impl(con, securities, fields, start.date, end.date, options, overrides, identity)
     if (typeof(res)=="list" && length(res)==1) {
         res <- res[[1]]
     }

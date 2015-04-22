@@ -33,7 +33,7 @@ const double bbgDatetimeToPOSIX(const BloombergLP::blpapi::Datetime& dt);
 const double bbgDatetimeToUTC(const BloombergLP::blpapi::Datetime& dt);
 void appendOptionsToRequest(BloombergLP::blpapi::Request& request, SEXP options_);
 void appendOverridesToRequest(BloombergLP::blpapi::Request& request, SEXP overrides_);
-void createStandardRequest(BloombergLP::blpapi::Request& request,const std::vector<std::string>& securities,const std::vector<std::string>& fields,SEXP options_);
+void createStandardRequest(BloombergLP::blpapi::Request& request,const std::vector<std::string>& securities,const std::vector<std::string>& fields,SEXP options_,SEXP overrides_);
 void sendRequestWithIdentity(BloombergLP::blpapi::Session* session, BloombergLP::blpapi::Request& request, SEXP identity_);
 
 void populateDfRow(SEXP ans, R_len_t row_index, BloombergLP::blpapi::Element& e);

@@ -19,8 +19,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // bdh_Impl
-SEXP bdh_Impl(SEXP conn_, std::vector<std::string> securities, std::vector<std::string> fields, std::string start_date_, SEXP end_date_, SEXP options_, SEXP identity_);
-RcppExport SEXP Rblpapi_bdh_Impl(SEXP conn_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP start_date_SEXP, SEXP end_date_SEXP, SEXP options_SEXP, SEXP identity_SEXP) {
+SEXP bdh_Impl(SEXP conn_, std::vector<std::string> securities, std::vector<std::string> fields, std::string start_date_, SEXP end_date_, SEXP options_, SEXP overrides_, SEXP identity_);
+RcppExport SEXP Rblpapi_bdh_Impl(SEXP conn_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP start_date_SEXP, SEXP end_date_SEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP identity_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -30,14 +30,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type start_date_(start_date_SEXP);
     Rcpp::traits::input_parameter< SEXP >::type end_date_(end_date_SEXP);
     Rcpp::traits::input_parameter< SEXP >::type options_(options_SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type overrides_(overrides_SEXP);
     Rcpp::traits::input_parameter< SEXP >::type identity_(identity_SEXP);
-    __result = Rcpp::wrap(bdh_Impl(conn_, securities, fields, start_date_, end_date_, options_, identity_));
+    __result = Rcpp::wrap(bdh_Impl(conn_, securities, fields, start_date_, end_date_, options_, overrides_, identity_));
     return __result;
 END_RCPP
 }
 // bdp_Impl
-SEXP bdp_Impl(SEXP conn_, std::vector<std::string> securities, std::vector<std::string> fields, SEXP options_, SEXP identity_);
-RcppExport SEXP Rblpapi_bdp_Impl(SEXP conn_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP options_SEXP, SEXP identity_SEXP) {
+SEXP bdp_Impl(SEXP conn_, std::vector<std::string> securities, std::vector<std::string> fields, SEXP options_, SEXP overrides_, SEXP identity_);
+RcppExport SEXP Rblpapi_bdp_Impl(SEXP conn_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP identity_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -45,8 +46,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::vector<std::string> >::type securities(securitiesSEXP);
     Rcpp::traits::input_parameter< std::vector<std::string> >::type fields(fieldsSEXP);
     Rcpp::traits::input_parameter< SEXP >::type options_(options_SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type overrides_(overrides_SEXP);
     Rcpp::traits::input_parameter< SEXP >::type identity_(identity_SEXP);
-    __result = Rcpp::wrap(bdp_Impl(conn_, securities, fields, options_, identity_));
+    __result = Rcpp::wrap(bdp_Impl(conn_, securities, fields, options_, overrides_, identity_));
     return __result;
 END_RCPP
 }

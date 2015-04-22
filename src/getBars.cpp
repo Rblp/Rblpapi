@@ -103,9 +103,9 @@ void processMessage(bbg::Message &msg, Bars &bars,
     for (int i = 0; i < numBars; ++i) {
         bbg::Element bar = data.getValueAsElement(i);
         bbg::Datetime time = bar.getElementAsDatetime(TIME);
-        assert(time.hasParts(DatetimeParts::DATE
-                             | DatetimeParts::HOURS
-                             | DatetimeParts::MINUTES));
+        assert(time.hasParts(bbg::DatetimeParts::DATE
+                             | bbg::DatetimeParts::HOURS
+                             | bbg::DatetimeParts::MINUTES));
         double open = bar.getElementAsFloat64(OPEN);
         double high = bar.getElementAsFloat64(HIGH);
         double low = bar.getElementAsFloat64(LOW);
