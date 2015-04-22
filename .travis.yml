@@ -24,8 +24,11 @@ before_install:
 
 install:
   - ./travis-tool.sh install_aptget r-cran-rcpp
+  - ./travis-tool.sh install_r BH
 
 script:
+  # run configure to fetch libblpapi3_*.so
+  - ./configure
   - ./travis-tool.sh run_tests
 
 notifications:
