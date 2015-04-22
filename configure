@@ -20,5 +20,5 @@ else
     echo "Unknown architecture: ${arch}. Exiting."
     exit -1
 fi
-
+   
 exit 0
