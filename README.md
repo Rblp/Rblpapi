@@ -5,8 +5,8 @@ R Access to Bloomberg API
 
 ### Background
 
-Rblpapi provides APU to access to data and calculations from Bloomberg
-Finance L.P.  
+Rblpapi provides R with API access to data and calculations from Bloomberg
+Finance L.P. 
 
 ### Requirements
 
