@@ -82,12 +82,12 @@ void getBDPResult(Event& event, LazyFrameT& lazy_frame, std::vector<std::string>
 // Simpler interface with std::vector<std::string> thanks to Rcpp::Attributes
 //
 // [[Rcpp::export]]
-SEXP bdp_Impl(SEXP conn_, std::vector<std::string> securities, std::vector<std::string> fields, 
+SEXP bdp_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields, 
               SEXP options_, SEXP overrides_, SEXP identity_) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     Session* session = 
-        reinterpret_cast<Session*>(checkExternalPointer(conn_, "blpapi::Session*"));
+        reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
 
     const std::string rdsrv = "//blp/refdata";
     if (!session->openService(rdsrv.c_str())) {

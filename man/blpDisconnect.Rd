@@ -4,10 +4,10 @@
 \alias{blpDisconnect}
 \title{Placeholder function for disconnection from Bloomberg}
 \usage{
-blpDisconnect(conn)
+blpDisconnect(con)
 }
 \arguments{
-\item{conn}{A connection object}
+\item{con}{A connection object}
 }
 \value{
 A boolean is returned; it simply states whether the

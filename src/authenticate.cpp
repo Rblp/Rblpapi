@@ -48,11 +48,11 @@ static void identityFinalizer(SEXP identity_) {
 // Simpler interface 
 //
 // [[Rcpp::export]]
-SEXP authenticate_Impl(SEXP conn_, SEXP uuid_, SEXP ip_address_) {
+SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     Session* session = 
-        reinterpret_cast<Session*>(checkExternalPointer(conn_, "blpapi::Session*"));
+        reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
 
     if (uuid_ == R_NilValue || ip_address_ == R_NilValue) {
         Rcpp::stop("Either uuid or ip_address was null.");
