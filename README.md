@@ -1,12 +1,12 @@
 
-## Rblpapi [![Build Status](https://travis-ci.org/eddelbuettel/Rblpapi.png)](https://travis-ci.org/eddelbuettel/Rblpapi) [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-3.0.html)
+## Rblpapi [![Build Status](https://travis-ci.org/eddelbuettel/Rblpapi.png)](https://travis-ci.org/eddelbuettel/Rblpapi) [![License](http://img.shields.io/badge/license-GPL%30%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-3.0.html)
 
 R Access to Bloomberg API
 
 ### Background
 
-Rblpapi provides APU to access to data and calculations from Bloomberg
-Finance L.P.  
+Rblpapi provides R with API access to data and calculations from Bloomberg
+Finance L.P. 
 
 ### Requirements
 
