@@ -1,7 +1,7 @@
 ##' This function provides an empty stub and does not really disconnect.
 ##'
 ##' @title Placeholder function for disconnection from Bloomberg
-##' @param conn A connection object
+##' @param con A connection object
 ##' @return A boolean is returned; it simply states whether the
 ##' connection object was small or large relative to an arbitrary
 ##' cutoff of 1000 bytes.
@@ -14,7 +14,7 @@
 ##' \dontrun{
 ##'   blpDiscnnect(con)  
 ##' }
-blpDisconnect <- function(conn) {
+blpDisconnect <- function(con) {
     # do nothing, just return a simple test
-    invisible(object.size(conn) < 1000)
+    invisible(object.size(con) < 1000)
 }

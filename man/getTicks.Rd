@@ -4,14 +4,11 @@
 \alias{getTicks}
 \title{Get Ticks from Bloomberg}
 \usage{
-getTicks(con, security, eventType = "TRADE", startTime = Sys.time() - 60 *
-  60, endTime = Sys.time(), verbose = FALSE,
-  returnAs = getOption("blpType", "matrix"), tz = Sys.getenv("TZ", unset =
-  "UTC"))
+getTicks(security, eventType = "TRADE", startTime = Sys.time() - 60 * 60,
+  endTime = Sys.time(), verbose = FALSE, returnAs = getOption("blpType",
+  "matrix"), tz = Sys.getenv("TZ", unset = "UTC"), con = .pkgenv$con)
 }
 \arguments{
-\item{con}{A connection object as returned by a \code{blpConnect} call}
-
 \item{security}{A character variable describing a valid security ticker}
 
 \item{eventType}{A character variable describing an event type;
@@ -33,6 +30,8 @@ object; currently supported are \sQuote{matrix} (also the default),
 \item{tz}{A character variable with the desired local timezone,
 defaulting to the value \sQuote{TZ} environment variable, and
 \sQuote{UTC} if unset}
+
+\item{con}{A connection object as returned by a \code{blpConnect} call}
 }
 \value{
 A numeric matrix with elements \sQuote{time}, (as a

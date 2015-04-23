@@ -4,12 +4,10 @@
 \alias{bdp}
 \title{Run 'Bloomberg Data Point' Queries}
 \usage{
-bdp(con, securities, fields, options = NULL, overrides = NULL,
-  identity = NULL)
+bdp(securities, fields, options = NULL, overrides = NULL, identity = NULL,
+  con = .pkgenv$con)
 }
 \arguments{
-\item{con}{A connection object as returned by a \code{blpConnect} call}
-
 \item{securities}{A character vector with security symbols in
 Bloomberg notation.}
 
@@ -24,6 +22,8 @@ values. Each field must have both a name (designating the override
 being set) as well as a value.}
 
 \item{identity}{An optional idendity object.}
+
+\item{con}{A connection object as returned by a \code{blpConnect} call}
 }
 \value{
 A data frame with as a many rows as entries in

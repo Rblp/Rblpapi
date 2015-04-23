@@ -92,11 +92,11 @@ SEXP BulkDataResponseToDF(Event& event, std::string& requested_field) {
 
 // only allow one field for bds in contrast to bdp
 // [[Rcpp::export]]
-SEXP bds_Impl(SEXP conn_, std::vector<std::string> securities, 
+SEXP bds_Impl(SEXP con_, std::vector<std::string> securities, 
               std::string field, SEXP options_, SEXP overrides_, SEXP identity_) {
 
     Session* session = 
-        reinterpret_cast<Session*>(checkExternalPointer(conn_, "blpapi::Session*"));
+        reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
 
     std::vector<std::string> field_types;
 

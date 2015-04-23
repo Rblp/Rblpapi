@@ -5,16 +5,20 @@
 \title{Establish connection to Bloomberg service}
 \usage{
 blpConnect(host = getOption("blpHost", "localhost"),
-  port = getOption("blpPort", 8194L))
+  port = getOption("blpPort", 8194L), default = TRUE)
 }
 \arguments{
 \item{host}{A character option with either a machine name that is resolvable by DNS, or an IP address. Defaults to \sQuote{localhost}.}
 
 \item{port}{An integer variable with the connection port. Default to \code{8194L}.}
+
+\item{default}{A logical indicating whether this connection should be saved as the default,
+as opposed to returned to the user. Default to \code{TRUE}.}
 }
 \value{
-A connection object is returned. It is required by all the
-accessor functions in th epackage.
+In the \code{default=TRUE} case nothing is returned, and this connection is automatically
+used for all future calls which omit the \code{con} argument. Otherwise a connection object is returned
+which is required by all the accessor functions in the package.
 }
 \description{
 This function connects to the Bloomberg API
