@@ -4,16 +4,16 @@
 \alias{blpAuthenticate}
 \title{Authenticate Bloomberg API access}
 \usage{
-blpAuthenticate(con, uuid, host = "localhost", ip.address)
+blpAuthenticate(uuid, host = "localhost", ip.address, con = .pkgenv$con)
 }
 \arguments{
-\item{con}{A connection object as returned by a \code{blpConnect} call}
-
 \item{uuid}{A character variable with a unique user id token}
 
 \item{host}{A character variable with a hostname, defaults to 'localhost'}
 
 \item{ip.address}{An optional character variable with an IP address}
+
+\item{con}{A connection object as returned by a \code{blpConnect} call}
 }
 \value{
 Not sure. May just be the side effect of having the

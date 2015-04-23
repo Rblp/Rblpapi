@@ -4,13 +4,11 @@
 \alias{bdh}
 \title{Run 'Bloomberg Data History' Queries}
 \usage{
-bdh(con, securities, fields, start.date, end.date = NULL,
+bdh(securities, fields, start.date, end.date = NULL,
   include.non.trading.days = FALSE, options = NULL, overrides = NULL,
-  identity = NULL)
+  identity = NULL, con = .pkgenv$con)
 }
 \arguments{
-\item{con}{A connection object as returned by a \code{blpConnect} call}
-
 \item{securities}{A character vector with security symbols in
 Bloomberg notation.}
 
@@ -33,6 +31,8 @@ values. Each field must have both a name (designating the override
 being set) as well as a value.}
 
 \item{identity}{An optional idendity object.}
+
+\item{con}{A connection object as returned by a \code{blpConnect} call}
 }
 \value{
 A list with as a entries as there are entries in

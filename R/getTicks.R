@@ -2,7 +2,6 @@
 ##' This function uses the Bloomberg API to retrieve ticks for the requested security.
 ##'
 ##' @title Get Ticks from Bloomberg
-##' @param con A connection object as returned by a \code{blpConnect} call
 ##' @param security A character variable describing a valid security ticker
 ##' @param eventType A character variable describing an event type;
 ##' default is \sQuote{TRADE}
@@ -18,6 +17,7 @@
 ##' @param tz A character variable with the desired local timezone,
 ##' defaulting to the value \sQuote{TZ} environment variable, and
 ##' \sQuote{UTC} if unset
+##' @param con A connection object as returned by a \code{blpConnect} call
 ##' @return A numeric matrix with elements \sQuote{time}, (as a
 ##' \sQuote{POSIXct} object), \sQuote{values} and \sQuote{sizes}, or
 ##' an object of the type selected in \code{returnAs}.
@@ -29,7 +29,7 @@ getTicks <- function(security,
                      verbose = FALSE,
                      returnAs = getOption("blpType", "matrix"),
                      tz = Sys.getenv("TZ", unset="UTC"),
-                     con = getCon()) {
+                     con = .pkgenv$con) {
 
     fmt <- "%Y-%m-%dT%H:%M:%S"
     startUTC <- format(startTime, fmt, tz="UTC")

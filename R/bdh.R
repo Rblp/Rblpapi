@@ -3,7 +3,6 @@
 ##' Data History) queries
 ##'
 ##' @title Run 'Bloomberg Data History' Queries
-##' @param con A connection object as returned by a \code{blpConnect} call
 ##' @param securities A character vector with security symbols in
 ##' Bloomberg notation.
 ##' @param fields A character vector with Bloomberg query fields.
@@ -19,6 +18,7 @@
 ##' values. Each field must have both a name (designating the override
 ##' being set) as well as a value.
 ##' @param identity An optional idendity object.
+##' @param con A connection object as returned by a \code{blpConnect} call
 ##' @return A list with as a entries as there are entries in
 ##' \code{securities}; each list contains a data.frame with one row
 ##' per observations and as many columns as entries in
@@ -31,7 +31,7 @@
 ##'   bdh(con, "SPY US Equity", c("PX_LAST", "VOLUME"), start.date=Sys.Date()-31)
 ##' }
 bdh <- function(securities, fields, start.date, end.date=NULL,
-                include.non.trading.days=FALSE, options=NULL, overrides=NULL, identity=NULL, con=getCon()) {
+                include.non.trading.days=FALSE, options=NULL, overrides=NULL, identity=NULL, con=.pkgenv$con) {
     if (!class(start.date) == "Date") stop("start.date must be a Date object", call.=FALSE)
     start.date <- format(start.date, format="%Y%m%d")
     if (!is.null(end.date)) {
