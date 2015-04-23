@@ -1,5 +1,5 @@
 
-## Rblpapi [![Build Status](https://travis-ci.org/eddelbuettel/rblpapi.png)](https://travis-ci.org/eddelbuettel/rblpapi) [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-3.0.html)
+## Rblpapi [![Build Status](https://travis-ci.org/eddelbuettel/Rblpapi.png)](https://travis-ci.org/eddelbuettel/Rblpapi) [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-3.0.html)
 
 R Access to Bloomberg API
 
@@ -10,9 +10,8 @@ Finance L.P.
 
 ### Requirements
 
-A valid and working Bloomberg installation is required.
-
-The Bloomberg API [libraries](http://www.bloomberglabs.com/api/libraries/).
+A valid and working Bloomberg installation, and the Bloomberg API
+[libraries](http://www.bloomberglabs.com/api/libraries/).
 
 ### Examples
 
@@ -31,6 +30,10 @@ spx.ndx.monthly <- bdh(con,securities=c("SPX Index","NDX Index"), fields="PX_LAS
 goog.ge.div <- bdh(con,securities=c("GOOG Equity","GE Equity"), fields=c("PX_LAST","CF_DVD_PAID"), start.date="20121101")
 goog.ge.px <- bdp(con,securities=c("GOOG Equity","GE Equity"), fields=c("PX_LAST","DS002")
 ```
+
+### Status
+
+Fully functional on Linux. 
 
 ### Authors
 
