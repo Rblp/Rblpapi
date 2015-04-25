@@ -35,8 +35,7 @@ Data Point) queries
 }
 \examples{
 \dontrun{
-  con <- blpConnect()   # adjust as needed
-  bdp(con, c("ESA Index", "SPY US Equity"), c("PX_LAST", "VOLUME"))
+  bdp(c("ESA Index", "SPY US Equity"), c("PX_LAST", "VOLUME"))
 }
 }
 \author{

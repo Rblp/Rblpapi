@@ -47,8 +47,7 @@ Data History) queries
 }
 \examples{
 \dontrun{
-  con <- blpConnect()   # adjust as needed
-  bdh(con, "SPY US Equity", c("PX_LAST", "VOLUME"), start.date=Sys.Date()-31)
+  bdh("SPY US Equity", c("PX_LAST", "VOLUME"), start.date=Sys.Date()-31)
 }
 }
 \author{

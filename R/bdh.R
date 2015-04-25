@@ -27,8 +27,7 @@
 ##' @author Whit Armstrong and Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{
-##'   con <- blpConnect()   # adjust as needed
-##'   bdh(con, "SPY US Equity", c("PX_LAST", "VOLUME"), start.date=Sys.Date()-31)
+##'   bdh("SPY US Equity", c("PX_LAST", "VOLUME"), start.date=Sys.Date()-31)
 ##' }
 bdh <- function(securities, fields, start.date, end.date=NULL,
                 include.non.trading.days=FALSE, options=NULL, overrides=NULL, identity=NULL, con=.pkgenv$con) {
