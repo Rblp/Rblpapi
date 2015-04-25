@@ -22,7 +22,6 @@
 ##' @author Whit Armstrong and Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{
-##'   con <- blpConnect()   # adjust as needed
 ##'   bds("GOOG US Equity", "TOP_20_HOLDERS_PUBLIC_FILINGS")
 ##' }
 bds <- function(securities, fields, options=NULL, overrides=NULL, identity=NULL, con=.pkgenv$con) {
