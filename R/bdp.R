@@ -19,8 +19,7 @@
 ##' @author Whit Armstrong and Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{
-##'   con <- blpConnect()   # adjust as needed
-##'   bdp(con, c("ESA Index", "SPY US Equity"), c("PX_LAST", "VOLUME"))
+##'   bdp(c("ESA Index", "SPY US Equity"), c("PX_LAST", "VOLUME"))
 ##' }
 bdp <- function(securities, fields, options=NULL, overrides=NULL, identity=NULL, con=.pkgenv$con) {
     if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
