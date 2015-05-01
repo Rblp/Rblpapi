@@ -38,7 +38,6 @@ Data Set) queries
 }
 \examples{
 \dontrun{
-  con <- blpConnect()   # adjust as needed
   bds("GOOG US Equity", "TOP_20_HOLDERS_PUBLIC_FILINGS")
 }
 }
