@@ -8,17 +8,23 @@ blpConnect(host = getOption("blpHost", "localhost"),
   port = getOption("blpPort", 8194L), default = TRUE)
 }
 \arguments{
-\item{host}{A character option with either a machine name that is resolvable by DNS, or an IP address. Defaults to \sQuote{localhost}.}
+\item{host}{A character option with either a machine name that is
+resolvable by DNS, or an IP address. Defaults to
+\sQuote{localhost}.}
 
-\item{port}{An integer variable with the connection port. Default to \code{8194L}.}
+\item{port}{An integer variable with the connection port. Default
+to \code{8194L}.}
 
-\item{default}{A logical indicating whether this connection should be saved as the default,
-as opposed to returned to the user. Default to \code{TRUE}.}
+\item{default}{A logical indicating whether this connection should
+be saved as the default, as opposed to returned to the
+user. Default to \code{TRUE}.}
 }
 \value{
-In the \code{default=TRUE} case nothing is returned, and this connection is automatically
-used for all future calls which omit the \code{con} argument. Otherwise a connection object is returned
-which is required by all the accessor functions in the package.
+In the \code{default=TRUE} case nothing is returned, and
+this connection is automatically used for all future calls which
+omit the \code{con} argument. Otherwise a connection object is
+returned which is required by all the accessor functions in the
+package.
 }
 \description{
 This function connects to the Bloomberg API
@@ -28,6 +34,12 @@ For both \code{host} and \code{port} argument, default
 values can also be specified via \code{\link{options}} using,
 respectively, the named entries \code{blpHost} and
 \code{blpConnect}.
+
+If an additional option \code{blpAutoConnect} is set to
+\sQuote{TRUE}, a connection is established in the
+\code{.onAttach()} function and stored in the package
+environment. This effectively frees users from having to
+explicitly create such an object.
 }
 \examples{
 \dontrun{
