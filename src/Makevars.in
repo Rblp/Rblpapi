@@ -5,8 +5,11 @@ CXX_STD      = CXX11
 
 ## filled in by configure
 BBG_LIB     = @config@
+BBG_RPATH   = @rpath@
 
 ## set include and linker options
 ## Bbg API files are assummed to be in the standard search path
 PKG_CPPFLAGS = -I../inst/include/ -I.
-PKG_LIBS    = -l$(BBG_LIB)
+PKG_LIBS     = -l$(BBG_LIB) -L../inst/blp/ -Wl,-rpath,$(BBG_RPATH)
+
+
