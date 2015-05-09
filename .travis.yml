@@ -16,15 +16,15 @@ env:
     - _R_CHECK_FORCE_SUGGESTS_=FALSE
 
 before_install:
+  ## PPA for Rcpp and some other packages
+  - sudo add-apt-repository -y ppa:edd/misc
+  ## r-travis by Craig Citro et al
   - curl -OL http://raw.github.com/eddelbuettel/r-travis/master/scripts/travis-tool.sh
   - chmod 755 ./travis-tool.sh
   - ./travis-tool.sh bootstrap
-  - sudo add-apt-repository -y ppa:edd/misc
-  - sudo apt-get update -qq
 
 install:
-  - ./travis-tool.sh install_aptget r-cran-rcpp
-  - ./travis-tool.sh install_r BH
+  - ./travis-tool.sh install_aptget r-cran-rcpp r-cran-bh
 
 script:
   # fetch libblpapi3_*.so
