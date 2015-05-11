@@ -36,18 +36,43 @@ typedef int(*blpapi_StreamWriter_t)(const char* data,
 
 #ifdef __cplusplus
 
-#ifndef INCLUDED_OSTREAM
 #include <ostream>
-#define INCLUDED_OSTREAM
-#endif
 
 namespace BloombergLP {
 namespace blpapi {
 
-static int OstreamWriter(const char* data, int length, void *stream)
+inline int OstreamWriter(const char *data, int length, void *stream);
+    // DEPRECATED
+
+                             // ==================
+                             // struct StreamProxy
+                             // ==================
+
+struct StreamProxyOstream {
+
+static int writeToStream(const char* data, int length, void *stream);
+    // Format, to the specified 'stream', which must be a pointer to a
+    // 'std::ostream', the specified 'length' bytes of the specified 'data'.
+
+};
+
+//=============================================================================
+//                           INLINE FUNCTION DEFINITIONS
+//=============================================================================
+
+inline
+int StreamProxyOstream::writeToStream(const char *data,
+                                      int         length,
+                                      void       *stream)
 {
     reinterpret_cast<std::ostream*>(stream)->write(data, length);
     return 0;
+}
+
+inline
+int OstreamWriter(const char *data, int length, void *stream)
+{
+    return StreamProxyOstream::writeToStream(data, length, stream);
 }
 
 }  // close namespace blpapi

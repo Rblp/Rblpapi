@@ -73,10 +73,7 @@
 #include <blpapi_types.h>
 #endif
 
-#ifndef INCLUDED_STDDEF
 #include <stddef.h>
-#define INCLUDED_STDDEF
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -776,8 +773,8 @@ Session::Session(const SessionOptions& parameters,
 }
 
 inline
-Session::Session(blpapi_Session_t *handle)
-    : d_handle_p(handle)
+Session::Session(blpapi_Session_t *newHandle)
+    : d_handle_p(newHandle)
 {
     initAbstractSessionHandle(blpapi_Session_getAbstractSession(d_handle_p));
 }
@@ -989,8 +986,9 @@ void Session::dispatchEvent(const Event& event)
     d_eventHandler_p->processEvent(event, this);
 }
 
-static void eventHandlerProxy(blpapi_Event_t* event, blpapi_Session_t *session,
-                              void *userData)
+static void eventHandlerProxy(blpapi_Event_t   *event,
+                              blpapi_Session_t *,
+                              void             *userData)
 {
     reinterpret_cast<Session*>(userData)->dispatchEvent(Event(event));
 }

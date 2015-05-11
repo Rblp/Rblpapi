@@ -70,7 +70,7 @@ extern "C" {
 #endif
 
 BLPAPI_EXPORT
-blpapi_SessionOptions_t *blpapi_SessionOptions_create();
+blpapi_SessionOptions_t *blpapi_SessionOptions_create(void);
 
 BLPAPI_EXPORT
 blpapi_SessionOptions_t *blpapi_SessionOptions_duplicate(
@@ -187,6 +187,11 @@ int blpapi_SessionOptions_setKeepAliveEnabled(
                                            int                      isEnabled);
 
 BLPAPI_EXPORT
+void blpapi_SessionOptions_setRecordSubscriptionDataReceiveTimes(
+                                        blpapi_SessionOptions_t *parameters,
+                                        int                      shouldRecord);
+
+BLPAPI_EXPORT
 const char *blpapi_SessionOptions_serverHost(
                                           blpapi_SessionOptions_t *parameters);
 
@@ -271,6 +276,10 @@ int blpapi_SessionOptions_defaultKeepAliveResponseTimeout(
 
 BLPAPI_EXPORT
 int blpapi_SessionOptions_keepAliveEnabled(
+                                          blpapi_SessionOptions_t *parameters);
+
+BLPAPI_EXPORT
+int blpapi_SessionOptions_recordSubscriptionDataReceiveTimes(
                                           blpapi_SessionOptions_t *parameters);
 
 #ifdef __cplusplus
@@ -461,6 +470,12 @@ class SessionOptions {
         // ping-based keep-alives), and from the server to the client as
         // specified by the server configuration.
 
+    void setRecordSubscriptionDataReceiveTimes(bool shouldRecord);
+        // Set whether the receipt time (accessed via
+        // blpapi::Message::timeReceived) should be recorded for subscription
+        // data messages. By default, the receipt time for these messages is
+        // not recorded.
+
     // ACCESSORS
     const char *serverHost() const;
         // Return a pointer to the value of the server host option in this
@@ -549,6 +564,11 @@ class SessionOptions {
     bool keepAliveEnabled() const;
         // Return 'true' if the keep-alive mechanism is enabled; otherwise
         // return 'false'.
+
+    bool recordSubscriptionDataReceiveTimes() const;
+        // Return whether the receipt time (accessed via
+        // blpapi::Message::timeReceived) should be recorded for subscription
+        // data messages.
 };
 
 // ============================================================================
@@ -589,24 +609,26 @@ SessionOptions& SessionOptions::operator=(const SessionOptions& rhs)
 }
 
 inline
-void SessionOptions::setServerHost(const char *serverHost)
+void SessionOptions::setServerHost(const char *newServerHost)
 {
-    blpapi_SessionOptions_setServerHost(d_handle_p, serverHost);
+    blpapi_SessionOptions_setServerHost(d_handle_p, newServerHost);
 }
 
 inline
-void SessionOptions::setServerPort(unsigned short serverPort)
+void SessionOptions::setServerPort(unsigned short newServerPort)
 {
-    blpapi_SessionOptions_setServerPort(d_handle_p, serverPort);
+    blpapi_SessionOptions_setServerPort(d_handle_p, newServerPort);
 }
 
 inline
-int SessionOptions::setServerAddress(const char     *serverHost,
-                                     unsigned short  serverPort,
+int SessionOptions::setServerAddress(const char     *newServerHost,
+                                     unsigned short  newServerPort,
                                      size_t          index)
 {
-    return blpapi_SessionOptions_setServerAddress(
-            d_handle_p, serverHost, serverPort, index);
+    return blpapi_SessionOptions_setServerAddress(d_handle_p,
+                                                  newServerHost,
+                                                  newServerPort,
+                                                  index);
 }
 
 inline
@@ -624,9 +646,9 @@ void SessionOptions::setConnectTimeout(unsigned int timeoutMilliSeconds)
 }
 
 inline
-void SessionOptions::setDefaultServices(const char *defaultServices)
+void SessionOptions::setDefaultServices(const char *newDefaultServices)
 {
-    blpapi_SessionOptions_setDefaultServices(d_handle_p, defaultServices);
+    blpapi_SessionOptions_setDefaultServices(d_handle_p, newDefaultServices);
 }
 
 inline
@@ -648,31 +670,31 @@ void SessionOptions::setDefaultTopicPrefix(const char *prefix)
 
 inline
 void SessionOptions::setAllowMultipleCorrelatorsPerMsg(
-                                           bool allowMultipleCorrelatorsPerMsg)
+                                        bool newAllowMultipleCorrelatorsPerMsg)
 {
     blpapi_SessionOptions_setAllowMultipleCorrelatorsPerMsg(
             d_handle_p,
-            allowMultipleCorrelatorsPerMsg);
+            newAllowMultipleCorrelatorsPerMsg);
 }
 
 inline
-void SessionOptions::setClientMode(int clientMode)
+void SessionOptions::setClientMode(int newClientMode)
 {
 #if BLPAPI_COMPAT_33X
-    clientMode |= BLPAPI_CLIENTMODE_COMPAT_33X;
+    newClientMode |= BLPAPI_CLIENTMODE_COMPAT_33X;
 #endif
 
     blpapi_SessionOptions_setClientMode(
             d_handle_p,
-            clientMode);
+            newClientMode);
 }
 
 inline
-void SessionOptions::setMaxPendingRequests(int maxPendingRequests)
+void SessionOptions::setMaxPendingRequests(int newMaxPendingRequests)
 {
     blpapi_SessionOptions_setMaxPendingRequests(
             d_handle_p,
-            maxPendingRequests);
+            newMaxPendingRequests);
 }
 
 inline
@@ -691,10 +713,10 @@ void SessionOptions::setAuthenticationOptions(const char *authOptions)
 }
 
 inline
-void SessionOptions::setNumStartAttempts(int numStartAttempts)
+void SessionOptions::setNumStartAttempts(int newNumStartAttempts)
 {
     blpapi_SessionOptions_setNumStartAttempts(
-            d_handle_p, numStartAttempts);
+            d_handle_p, newNumStartAttempts);
 }
 
 inline
@@ -749,6 +771,14 @@ void SessionOptions::setKeepAliveEnabled(bool isEnabled)
 }
 
 inline
+void SessionOptions::setRecordSubscriptionDataReceiveTimes(bool shouldRecrod)
+{
+    BLPAPI_CALL_SESSIONOPTION_SETRECORDSUBSCRIPTIONDATARECEIVETIMES(
+            d_handle_p,
+            shouldRecrod);
+}
+
+inline
 const char *SessionOptions::serverHost() const
 {
     return blpapi_SessionOptions_serverHost(d_handle_p);
@@ -757,7 +787,8 @@ const char *SessionOptions::serverHost() const
 inline
 unsigned short SessionOptions::serverPort() const
 {
-    return blpapi_SessionOptions_serverPort(d_handle_p);
+    return static_cast<unsigned short>(
+        blpapi_SessionOptions_serverPort(d_handle_p));
 }
 
 inline
@@ -768,12 +799,14 @@ size_t SessionOptions::numServerAddresses() const
 
 inline
 int SessionOptions::getServerAddress(
-                            const char     **serverHost,
-                            unsigned short  *serverPort,
+                            const char     **serverHostOut,
+                            unsigned short  *serverPortOut,
                             size_t           index) const
 {
-    return blpapi_SessionOptions_getServerAddress(
-                d_handle_p, serverHost, serverPort, index);
+    return blpapi_SessionOptions_getServerAddress(d_handle_p,
+                                                  serverHostOut,
+                                                  serverPortOut,
+                                                  index);
 }
 
 inline
@@ -872,7 +905,19 @@ int SessionOptions::defaultKeepAliveResponseTimeout() const
 inline
 bool SessionOptions::keepAliveEnabled() const
 {
-    return BLPAPI_CALL_SESSIONOPTIONS_KEEPALIVEENABLED(d_handle_p) != 0;
+    return BLPAPI_CALL_SESSIONOPTIONS_KEEPALIVEENABLED(d_handle_p) != 0
+        ? true
+        : false;
+}
+
+inline
+bool SessionOptions::recordSubscriptionDataReceiveTimes() const
+{
+    return
+        BLPAPI_CALL_SESSIONOPTION_RECORDSUBSCRIPTIONDATARECEIVETIMES(
+                                                                    d_handle_p)
+        ? true
+        : false;
 }
 
 inline

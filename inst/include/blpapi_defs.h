@@ -26,10 +26,7 @@
 //@DESCRIPTION: This component provides a list of preprocessors that are used
 // by the library.
 
-#ifndef INCLUDED_LIMITS
 #include <limits.h>
-#define INCLUDED_LIMITS
-#endif
 
 #define BLPAPI_CORRELATION_TYPE_UNSET   0
 #define BLPAPI_CORRELATION_TYPE_INT     1

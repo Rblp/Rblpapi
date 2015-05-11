@@ -38,10 +38,7 @@
 #include <blpapi_defs.h>
 #endif
 
-#ifndef INCLUDED_STDDEF
 #include <stddef.h>
-#define INCLUDED_STDDEF
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -79,20 +76,9 @@ blpapi_Name_t* blpapi_Name_findName(
 #ifdef __cplusplus
 }
 
-#ifndef INCLUDED_ALGORITHM
 #include <algorithm> // for swap
-#define INCLUDED_ALGORITHM
-#endif
-
-#ifndef INCLUDED_IOSTREAM
 #include <iostream>
-#define INCLUDED_IOSTREAM
-#endif
-
-#ifndef INCLUDED_CSTRING
 #include <cstring>   // for strcmp
-#define INCLUDED_CSTRING
-#endif
 
 namespace BloombergLP {
 namespace blpapi {

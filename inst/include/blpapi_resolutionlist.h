@@ -55,10 +55,7 @@
 #include <blpapi_message.h>
 #endif
 
-#ifndef INCLUDED_STDDEF
 #include <stddef.h>
-#define INCLUDED_STDDEF
-#endif
 
 struct blpapi_ResolutionList;
 typedef struct blpapi_ResolutionList blpapi_ResolutionList_t;
@@ -372,9 +369,9 @@ int ResolutionList::add(Message const& subscriptionStartedMessage,
 }
 
 inline
-int ResolutionList::addAttribute(const Name& attribute)
+int ResolutionList::addAttribute(const Name& newAttribute)
 {
-    return blpapi_ResolutionList_addAttribute(d_handle_p, attribute.impl());
+    return blpapi_ResolutionList_addAttribute(d_handle_p, newAttribute.impl());
 }
 
 inline
@@ -436,25 +433,27 @@ int ResolutionList::statusAt(size_t index) const
 
 inline
 Element const ResolutionList::attribute(
-                                     const Name& attribute,
+                                     const Name& attributeName,
                                      const CorrelationId& correlationId) const
 {
     blpapi_Element_t* element;
     ExceptionUtil::throwOnError(
-        blpapi_ResolutionList_attribute(d_handle_p, &element, attribute.impl(),
+        blpapi_ResolutionList_attribute(d_handle_p,
+                                        &element,
+                                        attributeName.impl(),
                                         &correlationId.impl()));
     return Element(element);
 }
 
 inline
-Element const ResolutionList::attributeAt(const Name& attribute,
+Element const ResolutionList::attributeAt(const Name& attributeName,
                                           size_t index) const
 {
     blpapi_Element_t* element;
     ExceptionUtil::throwOnError(
         blpapi_ResolutionList_attributeAt(d_handle_p,
                                           &element,
-                                          attribute.impl(),
+                                          attributeName.impl(),
                                           index));
     return Element(element);
 }
@@ -462,27 +461,27 @@ Element const ResolutionList::attributeAt(const Name& attribute,
 inline
 Message const ResolutionList::message(const CorrelationId& correlationId) const
 {
-    blpapi_Message_t* message;
+    blpapi_Message_t* messageByCid;
     ExceptionUtil::throwOnError(
         blpapi_ResolutionList_message(d_handle_p,
-                                      &message,
+                                      &messageByCid,
                                       &correlationId.impl()));
 
     bool makeMessageCopyable = true;
-    BLPAPI_CALL_MESSAGE_ADDREF(message);
-    return Message(message, makeMessageCopyable);
+    BLPAPI_CALL_MESSAGE_ADDREF(messageByCid);
+    return Message(messageByCid, makeMessageCopyable);
 }
 
 inline
 Message const ResolutionList::messageAt(size_t index) const
 {
-    blpapi_Message_t* message;
+    blpapi_Message_t* messageByIndex;
     ExceptionUtil::throwOnError(
-        blpapi_ResolutionList_messageAt(d_handle_p, &message, index));
+        blpapi_ResolutionList_messageAt(d_handle_p, &messageByIndex, index));
 
     bool makeMessageCopyable = true;
-    BLPAPI_CALL_MESSAGE_ADDREF(message);
-    return Message(message, makeMessageCopyable);
+    BLPAPI_CALL_MESSAGE_ADDREF(messageByIndex);
+    return Message(messageByIndex, makeMessageCopyable);
 }
 
 inline

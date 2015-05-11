@@ -80,7 +80,7 @@ int blpapi_Event_release(
         const blpapi_Event_t *event);
 
 BLPAPI_EXPORT
-blpapi_EventQueue_t* blpapi_EventQueue_create();
+blpapi_EventQueue_t* blpapi_EventQueue_create(void);
 
 BLPAPI_EXPORT
 int blpapi_EventQueue_destroy(blpapi_EventQueue_t* eventQueue);

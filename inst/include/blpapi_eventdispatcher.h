@@ -38,10 +38,7 @@
 #include <blpapi_types.h>
 #endif
 
-#ifndef INCLUDED_STDDEF
 #include <stddef.h> // for size_t
-#define INCLUDED_STDDEF
-#endif
 
 #ifdef __cplusplus
 extern "C" {

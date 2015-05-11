@@ -123,10 +123,7 @@
 #include <blpapi_types.h>
 #endif
 
-#ifndef INCLUDED_STDDEF
 #include <stddef.h>
-#define INCLUDED_STDDEF
-#endif
 
 struct blpapi_SubscriptionList;
 typedef struct blpapi_SubscriptionList blpapi_SubscriptionList_t;
@@ -136,7 +133,7 @@ extern "C" {
 #endif
 
 BLPAPI_EXPORT
-blpapi_SubscriptionList_t *blpapi_SubscriptionList_create();
+blpapi_SubscriptionList_t *blpapi_SubscriptionList_create(void);
 
 BLPAPI_EXPORT
 void blpapi_SubscriptionList_destroy(blpapi_SubscriptionList_t *list);

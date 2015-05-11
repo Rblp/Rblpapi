@@ -51,6 +51,10 @@
 #include <blpapi_service.h>
 #endif
 
+#ifndef INCLUDED_BLPAPI_TIMEPOINT
+#include <blpapi_timepoint.h>
+#endif
+
 struct blpapi_Message;
 typedef struct blpapi_Message blpapi_Message_t;
 
@@ -100,7 +104,12 @@ BLPAPI_EXPORT
 int blpapi_Message_addRef(const blpapi_Message_t *message);
 
 BLPAPI_EXPORT
-int  blpapi_Message_release(const blpapi_Message_t *message);
+int blpapi_Message_release(const blpapi_Message_t *message);
+
+BLPAPI_EXPORT
+int blpapi_Message_timeReceived(
+    const blpapi_Message_t *message,
+    blpapi_TimePoint_t *timeReceived);
 
 #ifdef __cplusplus
 }
@@ -263,6 +272,16 @@ class Message {
         // Return fragment type of this message. The return value is a value
         // of enum Fragment to indicate whether it is a fragmented message of a
         // big message and its positions in fragmentation if it is.
+
+    int timeReceived(TimePoint *timestamp) const;
+        // Load into the specified 'timestamp', the time when the message was
+        // received by the sdk. This method will fail if there is no timestamp
+        // associated with Message. On failure, the 'timestamp' is not
+        // modified. Return 0 on success and a non-zero value otherwise.
+        // Note that by default the subscription data messages are not
+        // timestamped (but all the other messages are). To enable recording
+        // receive time for subscription data, set
+        // 'SessionOptions::recordSubscriptionDataReceiveTimes'.
 
     std::ostream& print(std::ostream& stream,
                         int level=0,
@@ -535,6 +554,14 @@ inline
 Message::Fragment Message::fragmentType() const
 {
     return (Message::Fragment) BLPAPI_CALL_MESSAGE_FRAGMENTTYPE(d_handle);
+}
+
+inline
+int Message::timeReceived(TimePoint *timestamp) const
+{
+    return BLPAPI_CALL_MESSAGE_TIMERECEIVED(
+        d_handle,
+        timestamp);
 }
 
 inline

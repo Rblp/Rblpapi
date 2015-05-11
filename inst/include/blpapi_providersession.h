@@ -302,7 +302,7 @@ blpapi_AbstractSession_t *blpapi_ProviderSession_getAbstractSession(
 
 BLPAPI_EXPORT
 blpapi_ServiceRegistrationOptions_t*
-blpapi_ServiceRegistrationOptions_create();
+blpapi_ServiceRegistrationOptions_create(void);
 
 BLPAPI_EXPORT
 blpapi_ServiceRegistrationOptions_t*
@@ -845,8 +845,8 @@ ProviderSession::ProviderSession(const SessionOptions&  parameters,
 }
 
 inline
-ProviderSession::ProviderSession(blpapi_ProviderSession_t *handle)
-    : d_handle_p(handle)
+ProviderSession::ProviderSession(blpapi_ProviderSession_t *newHandle)
+    : d_handle_p(newHandle)
 {
     initAbstractSessionHandle(
         blpapi_ProviderSession_getAbstractSession(d_handle_p));
@@ -1233,7 +1233,7 @@ blpapi_ServiceRegistrationOptions_t* ServiceRegistrationOptions::handle() const
                             // --------------------------
 
 static void providerEventHandlerProxy(blpapi_Event_t           *event,
-                                      blpapi_ProviderSession_t *session,
+                                      blpapi_ProviderSession_t *,
                                       void                     *userData)
 {
     reinterpret_cast<ProviderSession*>(userData)->dispatchEvent(Event(event));

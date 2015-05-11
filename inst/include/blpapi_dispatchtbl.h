@@ -34,7 +34,8 @@
 #include <blpapi_defs.h>
 #include <blpapi_correlationid.h>
 #include <blpapi_streamproxy.h>
-#include <blpapi_versioninfo.h>
+#include <blpapi_types.h>
+#include <blpapi_versionmacros.h>
 #include <stddef.h>
 
 #ifdef __cplusplus
@@ -68,6 +69,9 @@ typedef struct blpapi_Request blpapi_Request_t;
 
 struct blpapi_HighPrecisionDatetime_tag;
 typedef struct blpapi_HighPrecisionDatetime_tag blpapi_HighPrecisionDatetime_t;
+
+struct blpapi_TimePoint;
+typedef struct blpapi_TimePoint blpapi_TimePoint_t;
 
 struct blpapi_SubscriptionList;
 typedef struct blpapi_SubscriptionList blpapi_SubscriptionList_t;
@@ -206,6 +210,27 @@ typedef struct blpapi_FunctionEntries {
     void
     (*blpapi_ServiceRegistrationOptions_removeAllActiveSubServiceCodeRanges)(
         blpapi_ServiceRegistrationOptions_t *parameters);
+    void (*blpapi_Logging_logTestMessage)(
+        blpapi_Logging_Severity_t severity);
+    const char *(*blpapi_getVersionIdentifier)();
+    int (*blpapi_Message_timeReceived)(
+        const blpapi_Message_t *message,
+        blpapi_TimePoint_t *timeReceived);
+    int (*blpapi_SessionOptions_recordSubscriptionDataReceiveTimes)(
+        blpapi_SessionOptions_t *parameters);
+    void (*blpapi_SessionOptions_setRecordSubscriptionDataReceiveTimes)(
+        blpapi_SessionOptions_t *parameters,
+        int shouldRecord);
+    long long (*blpapi_TimePointUtil_nanosecondsBetween)(
+        const blpapi_TimePoint_t *start,
+        const blpapi_TimePoint_t *end);
+    int (*blpapi_HighResolutionClock_now)(
+        blpapi_TimePoint_t *timePoint);
+    int (*blpapi_HighPrecisionDatetime_fromTimePoint)(
+        blpapi_HighPrecisionDatetime_t  *datetime,
+        const blpapi_TimePoint_t *timePoint,
+        short offset);
+
 } blpapi_FunctionEntries_t;
 
 BLPAPI_EXPORT extern size_t                   g_blpapiFunctionTableSize;
