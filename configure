@@ -7,24 +7,32 @@ if [ "${uname}" = "" ]; then
     exit -1
 fi
 
-rpath=$(Rscript -e 'cat(file.path(.libPaths()[1], "Rblpapi", "blp"))')
+sysname=$(Rscript -e 'cat(Sys.info()["sysname"])')
 
-arch=$(uname -m)
-if [ "${arch}" = "x86_64" ]; then
-    echo "Setting up compilation for 64-bit system"
-    sed -e"s/@config@/blpapi3_64/" -e"s|@rpath@|"${rpath}"|" src/Makevars.in > src/Makevars
-    flavour="64"
-elif [ "${arch}" = "i686" ]; then
-    echo "Setting up compilation for 32-bit system"
-    sed -e"s/@config@/blpapi3_32/" -e"s|@rpath@|"${rpath}"|" src/Makevars.in > src/Makevars
-    flavour="32"
-else 
-    echo "Unknown architecture: ${arch}. Exiting."
+if [ ${sysname} == "Linux" ]; then
+    rpath=$(Rscript -e 'cat(file.path(.libPaths()[1], "Rblpapi", "blp"))')
+
+    arch=$(uname -m)
+    if [ "${arch}" = "x86_64" ]; then
+        echo "Setting up compilation for 64-bit system"
+        sed -e"s/@config@/blpapi3_64/" -e"s|@rpath@|"${rpath}"|" src/Makevars.in > src/Makevars
+        flavour="64"
+    elif [ "${arch}" = "i686" ]; then
+        echo "Setting up compilation for 32-bit system"
+        sed -e"s/@config@/blpapi3_32/" -e"s|@rpath@|"${rpath}"|" src/Makevars.in > src/Makevars
+        flavour="32"
+    else 
+        echo "Unknown architecture: ${arch}. Exiting."
+        exit -1
+    fi
+
+    ## unpack shared library from tarball
+    cd inst/blp/
+    tar xfz blpLinux.tar.gz libblpapi3_${flavour}.so
+
+else
+    echo "OS X is not yet supported. Contributions are welcome."
     exit -1
 fi
-
-## unpack shared library from tarball
-cd inst/blp/
-tar xfz blpLinux.tar.gz libblpapi3_${flavour}.so
 
 exit 0
