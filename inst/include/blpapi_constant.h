@@ -53,10 +53,7 @@
 #include <blpapi_exception.h>
 #endif
 
-#ifndef INCLUDED_STDDEF
 #include <stddef.h>
-#define INCLUDED_STDDEF
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -557,9 +554,9 @@ std::string Constant::getValueAsString() const
 }
 
 inline
-void Constant::setUserData(void *userData)
+void Constant::setUserData(void *newUserData)
 {
-    blpapi_Constant_setUserData(d_impl_p, userData);
+    blpapi_Constant_setUserData(d_impl_p, newUserData);
 }
 
 inline
@@ -615,9 +612,9 @@ int ConstantList::numConstants() const
 }
 
 inline
-Constant ConstantList::getConstant(const Name& name) const
+Constant ConstantList::getConstant(const Name& constantName) const
 {
-    return blpapi_ConstantList_getConstant(d_impl_p, 0, name.impl());
+    return blpapi_ConstantList_getConstant(d_impl_p, 0, constantName.impl());
 }
 
 inline
@@ -639,9 +636,9 @@ const blpapi_ConstantList_t *ConstantList::impl() const
 }
 
 inline
-void ConstantList::setUserData(void *userData)
+void ConstantList::setUserData(void *newUserData)
 {
-    blpapi_ConstantList_setUserData(d_impl_p, userData);
+    blpapi_ConstantList_setUserData(d_impl_p, newUserData);
 }
 
 inline

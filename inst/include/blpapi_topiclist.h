@@ -294,11 +294,12 @@ int TopicList::add(const char* topic,
 }
 
 inline
-int TopicList::add(Message const& message,
-                          const CorrelationId& correlationId)
+int TopicList::add(const Message&       newMessage,
+                   const CorrelationId& correlationId)
 {
-    return blpapi_TopicList_addFromMessage(
-        d_handle_p, message.impl(), &correlationId.impl());
+    return blpapi_TopicList_addFromMessage(d_handle_p,
+                                           newMessage.impl(),
+                                           &correlationId.impl());
 }
 
 inline
@@ -356,23 +357,24 @@ int TopicList::statusAt(size_t index) const
 inline
 Message const TopicList::message(const CorrelationId& correlationId) const
 {
-    blpapi_Message_t* message;
+    blpapi_Message_t* messageByCid;
     ExceptionUtil::throwOnError(
-        blpapi_TopicList_message(d_handle_p, &message, &correlationId.impl()));
-
-    BLPAPI_CALL_MESSAGE_ADDREF(message);
-    return Message(message, true);
+        blpapi_TopicList_message(d_handle_p,
+                                 &messageByCid,
+                                 &correlationId.impl()));
+    BLPAPI_CALL_MESSAGE_ADDREF(messageByCid);
+    return Message(messageByCid, true);
 }
 
 inline
 Message const TopicList::messageAt(size_t index) const
 {
-    blpapi_Message_t* message;
+    blpapi_Message_t* messageByIndex;
     ExceptionUtil::throwOnError(
-        blpapi_TopicList_messageAt(d_handle_p, &message, index));
+        blpapi_TopicList_messageAt(d_handle_p, &messageByIndex, index));
 
-    BLPAPI_CALL_MESSAGE_ADDREF(message);
-    return Message(message, true);
+    BLPAPI_CALL_MESSAGE_ADDREF(messageByIndex);
+    return Message(messageByIndex, true);
 }
 
 inline

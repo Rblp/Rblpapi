@@ -309,11 +309,11 @@ public:
                             // -------------
 
 inline
-Request::Request(blpapi_Request_t *handle)
+Request::Request(blpapi_Request_t *newHandle)
 {
-    d_handle = handle;
-    if (handle) {
-        d_elements.rebind(blpapi_Request_elements(handle));
+    d_handle = newHandle;
+    if (newHandle) {
+        d_elements.rebind(blpapi_Request_elements(newHandle));
     }
 }
 
@@ -401,49 +401,57 @@ void Request::set(const char* element, const char* value)
 inline
 void Request::append(const char* element, bool value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 inline
 void Request::append(const char* element, char value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 inline
 void Request::append(const char* element, Int32 value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 inline
 void Request::append(const char* element, Int64 value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 inline
 void Request::append(const char* element, Float32 value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 inline
 void Request::append(const char* element, Float64 value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 inline
 void Request::append(const char* element, const Datetime& value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 inline
 void Request::append(const char* element, const char* value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 inline
@@ -497,49 +505,57 @@ void Request::set(const Name& element, const char* value)
 inline
 void Request::append(const Name& element, bool value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 inline
 void Request::append(const Name& element, char value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 inline
 void Request::append(const Name& element, Int32 value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 inline
 void Request::append(const Name& element, Int64 value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 inline
 void Request::append(const Name& element, Float32 value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 inline
 void Request::append(const Name& element, Float64 value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 inline
 void Request::append(const Name& element, const Datetime& value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 inline
 void Request::append(const Name& element, const char* value)
 {
-    d_elements.getElement(element).appendValue(value);
+    Element namedElement = d_elements.getElement(element);
+    namedElement.appendValue(value);
 }
 
 

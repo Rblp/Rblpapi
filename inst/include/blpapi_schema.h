@@ -605,12 +605,12 @@ size_t SchemaElementDefinition::numAlternateNames() const
 inline
 Name SchemaElementDefinition::getAlternateName(size_t index) const
 {
-    blpapi_Name_t *name =
+    blpapi_Name_t *alternateName =
         blpapi_SchemaElementDefinition_getAlternateName(d_impl_p, index);
-    if (name == 0) {
+    if (alternateName == 0) {
         ExceptionUtil::throwOnError(BLPAPI_ERROR_INDEX_OUT_OF_RANGE);
     }
-    return name;
+    return alternateName;
 }
 
 inline
@@ -619,8 +619,11 @@ std::ostream& SchemaElementDefinition::print(
         int level,
         int spacesPerLevel) const
 {
-    blpapi_SchemaElementDefinition_print(
-            d_impl_p, OstreamWriter,  &stream, level, spacesPerLevel);
+    blpapi_SchemaElementDefinition_print(d_impl_p,
+                                         StreamProxyOstream::writeToStream,
+                                         &stream,
+                                         level,
+                                         spacesPerLevel);
     return stream;
 }
 
@@ -634,9 +637,9 @@ std::ostream& operator<<(
 }
 
 inline
-void SchemaElementDefinition::setUserData(void *userData)
+void SchemaElementDefinition::setUserData(void *newUserData)
 {
-    blpapi_SchemaElementDefinition_setUserData(d_impl_p, userData);
+    blpapi_SchemaElementDefinition_setUserData(d_impl_p, newUserData);
 }
 
 inline
@@ -697,10 +700,10 @@ size_t SchemaTypeDefinition::numElementDefinitions() const
 }
 
 inline
-bool SchemaTypeDefinition::hasElementDefinition(const Name& name) const
+bool SchemaTypeDefinition::hasElementDefinition(const Name& elementName) const
 {
     return blpapi_SchemaTypeDefinition_getElementDefinition(
-            d_impl_p, 0, name.impl()) ? true : false;
+            d_impl_p, 0, elementName.impl()) ? true : false;
 }
 
 inline
@@ -713,12 +716,12 @@ SchemaTypeDefinition::hasElementDefinition(const char *nameString) const
 
 inline
 SchemaElementDefinition
-SchemaTypeDefinition::getElementDefinition(const Name& name) const
+SchemaTypeDefinition::getElementDefinition(const Name& elementName) const
 {
     blpapi_SchemaElementDefinition_t *def =
         blpapi_SchemaTypeDefinition_getElementDefinition(d_impl_p,
                                                          0,
-                                                         name.impl());
+                                                         elementName.impl());
     if (def == 0) {
         ExceptionUtil::throwOnError(BLPAPI_ERROR_ITEM_NOT_FOUND);
     }
@@ -777,8 +780,11 @@ std::ostream& SchemaTypeDefinition::print(
         int level,
         int spacesPerLevel) const
 {
-    blpapi_SchemaTypeDefinition_print(
-            d_impl_p, OstreamWriter,  &stream, level, spacesPerLevel);
+    blpapi_SchemaTypeDefinition_print(d_impl_p,
+                                      StreamProxyOstream::writeToStream,
+                                      &stream,
+                                      level,
+                                      spacesPerLevel);
     return stream;
 }
 
@@ -792,9 +798,9 @@ std::ostream& operator<<(
 }
 
 inline
-void SchemaTypeDefinition::setUserData(void *userData)
+void SchemaTypeDefinition::setUserData(void *newUserData)
 {
-    blpapi_SchemaTypeDefinition_setUserData(d_impl_p, userData);
+    blpapi_SchemaTypeDefinition_setUserData(d_impl_p, newUserData);
 }
 
 inline

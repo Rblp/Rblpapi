@@ -210,8 +210,8 @@ Identity::Identity()
 }
 
 inline
-Identity::Identity(blpapi_Identity_t *handle)
-    : d_handle_p(handle)
+Identity::Identity(blpapi_Identity_t *newHandle)
+    : d_handle_p(newHandle)
 {
 }
 

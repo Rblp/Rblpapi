@@ -23,10 +23,11 @@
 //@PURPOSE: Represents a date and/or time.
 //
 //@CLASSES:
-//                blpapi_Datetime_tag: C struct for date and/or msec time.
-//   blpapi_HighPrecisionDatetime_tag: C struct for date and/or psec time.
-//                   blpapi::Datetime: C++ class for date and/or psec time.
-//              blpapi::DatetimeParts: Identifiers for fields within date/time.
+//                blpapi_Datetime_tag: C struct for date and/or msec time
+//   blpapi_HighPrecisionDatetime_tag: C struct for date and/or psec time
+//                   blpapi::Datetime: C++ class for date and/or psec time
+//              blpapi::DatetimeParts: Identifiers for fields within date/time
+//               blpapi::DatetimeUtil: 'Datetime' utility functions 
 //
 //@DESCRIPTION: This file provides a C and C++ data type to represent a
 // date and/or time value.
@@ -45,6 +46,10 @@
 
 #ifndef INCLUDED_BLPAPI_STREAMPROXY
 #include <blpapi_streamproxy.h>
+#endif
+
+#ifndef INCLUDED_BLPAPI_TIMEPOINT
+#include <blpapi_timepoint.h>
 #endif
 
 #ifndef INCLUDED_BLPAPI_TYPES
@@ -103,6 +108,12 @@ int blpapi_HighPrecisionDatetime_print(
                          void                                 *stream,
                          int                                   level,
                          int                                   spacesPerLevel);
+
+BLPAPI_EXPORT
+int blpapi_HighPrecisionDatetime_fromTimePoint(
+                                     blpapi_HighPrecisionDatetime_t *datetime,
+                                     const blpapi_TimePoint_t       *timePoint,
+                                     short                           offset);
 
 #ifdef __cplusplus
 } // extern "C"
@@ -905,6 +916,22 @@ std::ostream& operator<<(std::ostream& stream, const Datetime& datetime);
     //  print(stream, 0, -1);
     //..
 
+                            // ===================
+                            // struct DatetimeUtil
+                            // ===================
+
+struct DatetimeUtil {
+    // This provides a namespace for 'Datetime' utility functions.
+
+    static Datetime fromTimePoint(
+                                const TimePoint& timePoint,
+                                Datetime::Offset offset = Datetime::Offset(0));
+        // Create and return a 'Datetime' object having the value of the
+        // specified 'timePoint' and the optionally specified timezone
+        // 'offset', 0 by default. The resulting 'Datetime' object has the
+        // parts specified by 'DATE', 'TIMEFRACSECONDS', and 'OFFSET' set.
+};
+
 // ============================================================================
 //                      INLINE FUNCTION DEFINITIONS
 // ============================================================================
@@ -920,13 +947,13 @@ bool Datetime::isLeapYear(int y)
 }
 
 inline
-Datetime::Datetime(unsigned hours,
-                   unsigned minutes,
-                   unsigned seconds,
+Datetime::Datetime(unsigned newHours,
+                   unsigned newMinutes,
+                   unsigned newSeconds,
                    TimeTag)
 {
     std::memset(&d_value, 0, sizeof(d_value));
-    setTime(hours, minutes, seconds);
+    setTime(newHours, newMinutes, newSeconds);
 }
 
 inline
@@ -1396,206 +1423,212 @@ Datetime::Datetime(const Datetime& original)
 }
 
 inline
-Datetime::Datetime(const blpapi_Datetime_t& rawValue)
+Datetime::Datetime(const blpapi_Datetime_t& newRawValue)
 {
-    d_value.datetime = rawValue;
+    d_value.datetime = newRawValue;
     d_value.picoseconds = 0;
 }
 
 inline
-Datetime::Datetime(const blpapi_HighPrecisionDatetime_t& rawValue)
-: d_value(rawValue)
+Datetime::Datetime(const blpapi_HighPrecisionDatetime_t& newRawValue)
+: d_value(newRawValue)
 {
 }
 
 inline
-Datetime::Datetime(unsigned year,
-                   unsigned month,
-                   unsigned day,
-                   unsigned hours,
-                   unsigned minutes,
-                   unsigned seconds)
+Datetime::Datetime(unsigned newYear,
+                   unsigned newMonth,
+                   unsigned newDay,
+                   unsigned newHours,
+                   unsigned newMinutes,
+                   unsigned newSeconds)
 {
     d_value.datetime.offset = 0;
-    d_value.datetime.year = year;
-    d_value.datetime.month = month;
-    d_value.datetime.day = day;
-    d_value.datetime.hours = hours;
-    d_value.datetime.minutes = minutes;
-    d_value.datetime.seconds = seconds;
+    d_value.datetime.year = static_cast<blpapi_UInt16_t>(newYear);
+    d_value.datetime.month = static_cast<blpapi_UChar_t>(newMonth);
+    d_value.datetime.day = static_cast<blpapi_UChar_t>(newDay);
+    d_value.datetime.hours = static_cast<blpapi_UChar_t>(newHours);
+    d_value.datetime.minutes = static_cast<blpapi_UChar_t>(newMinutes);
+    d_value.datetime.seconds = static_cast<blpapi_UChar_t>(newSeconds);
     d_value.datetime.milliSeconds = 0;
     d_value.picoseconds = 0;
     d_value.datetime.parts = DatetimeParts::DATE | DatetimeParts::TIME;
 }
 
 inline
-Datetime::Datetime(unsigned year,
-                   unsigned month,
-                   unsigned day,
-                   unsigned hours,
-                   unsigned minutes,
-                   unsigned seconds,
-                   unsigned milliSeconds)
+Datetime::Datetime(unsigned newYear,
+                   unsigned newMonth,
+                   unsigned newDay,
+                   unsigned newHours,
+                   unsigned newMinutes,
+                   unsigned newSeconds,
+                   unsigned newMilliSeconds)
 {
     d_value.datetime.offset = 0;
-    d_value.datetime.year = year;
-    d_value.datetime.month = month;
-    d_value.datetime.day = day;
-    d_value.datetime.hours = hours;
-    d_value.datetime.minutes = minutes;
-    d_value.datetime.seconds = seconds;
-    d_value.datetime.milliSeconds = milliSeconds;
+    d_value.datetime.year = static_cast<blpapi_UInt16_t>(newYear);
+    d_value.datetime.month = static_cast<blpapi_UChar_t>(newMonth);
+    d_value.datetime.day = static_cast<blpapi_UChar_t>(newDay);
+    d_value.datetime.hours = static_cast<blpapi_UChar_t>(newHours);
+    d_value.datetime.minutes = static_cast<blpapi_UChar_t>(newMinutes);
+    d_value.datetime.seconds = static_cast<blpapi_UChar_t>(newSeconds);
+    d_value.datetime.milliSeconds
+        = static_cast<blpapi_UInt16_t>(newMilliSeconds);
     d_value.picoseconds = 0;
     d_value.datetime.parts
         = DatetimeParts::DATE | DatetimeParts::TIMEFRACSECONDS;
 }
 
 inline
-Datetime::Datetime(unsigned     year,
-                   unsigned     month,
-                   unsigned     day,
-                   unsigned     hours,
-                   unsigned     minutes,
-                   unsigned     seconds,
+Datetime::Datetime(unsigned     newYear,
+                   unsigned     newMonth,
+                   unsigned     newDay,
+                   unsigned     newHours,
+                   unsigned     newMinutes,
+                   unsigned     newSeconds,
                    Milliseconds fractionOfSecond)
 {
     d_value.datetime.offset = 0;
-    d_value.datetime.year = year;
-    d_value.datetime.month = month;
-    d_value.datetime.day = day;
-    d_value.datetime.hours = hours;
-    d_value.datetime.minutes = minutes;
-    d_value.datetime.seconds = seconds;
-    d_value.datetime.milliSeconds = fractionOfSecond.d_msec;
+    d_value.datetime.year = static_cast<blpapi_UInt16_t>(newYear);
+    d_value.datetime.month = static_cast<blpapi_UChar_t>(newMonth);
+    d_value.datetime.day = static_cast<blpapi_UChar_t>(newDay);
+    d_value.datetime.hours = static_cast<blpapi_UChar_t>(newHours);
+    d_value.datetime.minutes = static_cast<blpapi_UChar_t>(newMinutes);
+    d_value.datetime.seconds = static_cast<blpapi_UChar_t>(newSeconds);
+    d_value.datetime.milliSeconds
+        = static_cast<blpapi_UInt16_t>(fractionOfSecond.d_msec);
     d_value.picoseconds = 0;
     d_value.datetime.parts
         = DatetimeParts::DATE | DatetimeParts::TIMEFRACSECONDS;
 }
 
 inline
-Datetime::Datetime(unsigned     year,
-                   unsigned     month,
-                   unsigned     day,
-                   unsigned     hours,
-                   unsigned     minutes,
-                   unsigned     seconds,
+Datetime::Datetime(unsigned     newYear,
+                   unsigned     newMonth,
+                   unsigned     newDay,
+                   unsigned     newHours,
+                   unsigned     newMinutes,
+                   unsigned     newSeconds,
                    Microseconds fractionOfSecond)
 {
     d_value.datetime.offset = 0;
-    d_value.datetime.year = year;
-    d_value.datetime.month = month;
-    d_value.datetime.day = day;
-    d_value.datetime.hours = hours;
-    d_value.datetime.minutes = minutes;
-    d_value.datetime.seconds = seconds;
-    d_value.datetime.milliSeconds = fractionOfSecond.d_usec / 1000;
+    d_value.datetime.year = static_cast<blpapi_UInt16_t>(newYear);
+    d_value.datetime.month = static_cast<blpapi_UChar_t>(newMonth);
+    d_value.datetime.day = static_cast<blpapi_UChar_t>(newDay);
+    d_value.datetime.hours = static_cast<blpapi_UChar_t>(newHours);
+    d_value.datetime.minutes = static_cast<blpapi_UChar_t>(newMinutes);
+    d_value.datetime.seconds = static_cast<blpapi_UChar_t>(newSeconds);
+    d_value.datetime.milliSeconds
+        = static_cast<blpapi_UInt16_t>(fractionOfSecond.d_usec / 1000);
     d_value.picoseconds = (fractionOfSecond.d_usec % 1000) * 1000 * 1000;
     d_value.datetime.parts
         = DatetimeParts::DATE | DatetimeParts::TIMEFRACSECONDS;
 }
 
 inline
-Datetime::Datetime(unsigned    year,
-                   unsigned    month,
-                   unsigned    day,
-                   unsigned    hours,
-                   unsigned    minutes,
-                   unsigned    seconds,
+Datetime::Datetime(unsigned    newYear,
+                   unsigned    newMonth,
+                   unsigned    newDay,
+                   unsigned    newHours,
+                   unsigned    newMinutes,
+                   unsigned    newSeconds,
                    Nanoseconds fractionOfSecond)
 {
     d_value.datetime.offset = 0;
-    d_value.datetime.year = year;
-    d_value.datetime.month = month;
-    d_value.datetime.day = day;
-    d_value.datetime.hours = hours;
-    d_value.datetime.minutes = minutes;
-    d_value.datetime.seconds = seconds;
-    d_value.datetime.milliSeconds = fractionOfSecond.d_nsec / 1000 / 1000;
+    d_value.datetime.year = static_cast<blpapi_UInt16_t>(newYear);
+    d_value.datetime.month = static_cast<blpapi_UChar_t>(newMonth);
+    d_value.datetime.day = static_cast<blpapi_UChar_t>(newDay);
+    d_value.datetime.hours = static_cast<blpapi_UChar_t>(newHours);
+    d_value.datetime.minutes = static_cast<blpapi_UChar_t>(newMinutes);
+    d_value.datetime.seconds = static_cast<blpapi_UChar_t>(newSeconds);
+    d_value.datetime.milliSeconds
+        = static_cast<blpapi_UInt16_t>(fractionOfSecond.d_nsec / 1000 / 1000);
     d_value.picoseconds = (fractionOfSecond.d_nsec % (1000 * 1000)) * 1000;
     d_value.datetime.parts
         = DatetimeParts::DATE | DatetimeParts::TIMEFRACSECONDS;
 }
 
 inline
-Datetime::Datetime(unsigned    year,
-                   unsigned    month,
-                   unsigned    day,
-                   unsigned    hours,
-                   unsigned    minutes,
-                   unsigned    seconds,
+Datetime::Datetime(unsigned    newYear,
+                   unsigned    newMonth,
+                   unsigned    newDay,
+                   unsigned    newHours,
+                   unsigned    newMinutes,
+                   unsigned    newSeconds,
                    Picoseconds fractionOfSecond)
 {
     d_value.datetime.offset = 0;
-    d_value.datetime.year = year;
-    d_value.datetime.month = month;
-    d_value.datetime.day = day;
-    d_value.datetime.hours = hours;
-    d_value.datetime.minutes = minutes;
-    d_value.datetime.seconds = seconds;
+    d_value.datetime.year = static_cast<blpapi_UInt16_t>(newYear);
+    d_value.datetime.month = static_cast<blpapi_UChar_t>(newMonth);
+    d_value.datetime.day = static_cast<blpapi_UChar_t>(newDay);
+    d_value.datetime.hours = static_cast<blpapi_UChar_t>(newHours);
+    d_value.datetime.minutes = static_cast<blpapi_UChar_t>(newMinutes);
+    d_value.datetime.seconds = static_cast<blpapi_UChar_t>(newSeconds);
     d_value.datetime.milliSeconds = static_cast<blpapi_UInt16_t>(
                                  fractionOfSecond.d_psec / 1000 / 1000 / 1000);
-    d_value.picoseconds = fractionOfSecond.d_psec % (1000 * 1000 * 1000);
+    d_value.picoseconds
+        = static_cast<blpapi_UInt32_t>(
+              fractionOfSecond.d_psec % (1000 * 1000 * 1000));
     d_value.datetime.parts
         = DatetimeParts::DATE | DatetimeParts::TIMEFRACSECONDS;
 }
 
 inline
-Datetime::Datetime(unsigned year,
-                   unsigned month,
-                   unsigned day)
+Datetime::Datetime(unsigned newYear,
+                   unsigned newMonth,
+                   unsigned newDay)
 {
     std::memset(&d_value, 0, sizeof(d_value));
-    setDate(year, month, day);
+    setDate(newYear, newMonth, newDay);
 }
 
 inline
-Datetime::Datetime(unsigned hours,
-                   unsigned minutes,
-                   unsigned seconds,
-                   unsigned milliSeconds)
+Datetime::Datetime(unsigned newHours,
+                   unsigned newMinutes,
+                   unsigned newSeconds,
+                   unsigned newMilliSeconds)
 {
     std::memset(&d_value, 0, sizeof(d_value));
-    setTime(hours, minutes, seconds, milliSeconds);
+    setTime(newHours, newMinutes, newSeconds, newMilliSeconds);
 }
 
 inline
-Datetime::Datetime(unsigned     hours,
-                   unsigned     minutes,
-                   unsigned     seconds,
+Datetime::Datetime(unsigned     newHours,
+                   unsigned     newMinutes,
+                   unsigned     newSeconds,
                    Milliseconds fractionOfSecond)
 {
     std::memset(&d_value, 0, sizeof(d_value));
-    setTime(hours, minutes, seconds, fractionOfSecond);
+    setTime(newHours, newMinutes, newSeconds, fractionOfSecond);
 }
 
 inline
-Datetime::Datetime(unsigned     hours,
-                   unsigned     minutes,
-                   unsigned     seconds,
+Datetime::Datetime(unsigned     newHours,
+                   unsigned     newMinutes,
+                   unsigned     newSeconds,
                    Microseconds fractionOfSecond)
 {
     std::memset(&d_value, 0, sizeof(d_value));
-    setTime(hours, minutes, seconds, fractionOfSecond);
+    setTime(newHours, newMinutes, newSeconds, fractionOfSecond);
 }
 
 inline
-Datetime::Datetime(unsigned    hours,
-                   unsigned    minutes,
-                   unsigned    seconds,
+Datetime::Datetime(unsigned    newHours,
+                   unsigned    newMinutes,
+                   unsigned    newSeconds,
                    Nanoseconds fractionOfSecond)
 {
     std::memset(&d_value, 0, sizeof(d_value));
-    setTime(hours, minutes, seconds, fractionOfSecond);
+    setTime(newHours, newMinutes, newSeconds, fractionOfSecond);
 }
 
 inline
-Datetime::Datetime(unsigned    hours,
-                   unsigned    minutes,
-                   unsigned    seconds,
+Datetime::Datetime(unsigned    newHours,
+                   unsigned    newMinutes,
+                   unsigned    newSeconds,
                    Picoseconds fractionOfSecond)
 {
     std::memset(&d_value, 0, sizeof(d_value));
-    setTime(hours, minutes, seconds, fractionOfSecond);
+    setTime(newHours, newMinutes, newSeconds, fractionOfSecond);
 }
 
 inline
@@ -1606,24 +1639,24 @@ Datetime& Datetime::operator=(const Datetime& rhs)
 }
 
 inline
-void Datetime::setDate(unsigned year,
-                       unsigned month,
-                       unsigned day)
+void Datetime::setDate(unsigned newYear,
+                       unsigned newMonth,
+                       unsigned newDay)
 {
-    d_value.datetime.day   = day;
-    d_value.datetime.month = month;
-    d_value.datetime.year  = year;
+    d_value.datetime.day   = static_cast<blpapi_UChar_t>(newDay);
+    d_value.datetime.month = static_cast<blpapi_UChar_t>(newMonth);
+    d_value.datetime.year  = static_cast<blpapi_UInt16_t>(newYear);
     d_value.datetime.parts |= DatetimeParts::DATE;
 }
 
 inline
-void Datetime::setTime(unsigned hours,
-                       unsigned minutes,
-                       unsigned seconds)
+void Datetime::setTime(unsigned newHours,
+                       unsigned newMinutes,
+                       unsigned newSeconds)
 {
-    d_value.datetime.hours        = hours;
-    d_value.datetime.minutes      = minutes;
-    d_value.datetime.seconds      = seconds;
+    d_value.datetime.hours        = static_cast<blpapi_UChar_t>(newHours);
+    d_value.datetime.minutes      = static_cast<blpapi_UChar_t>(newMinutes);
+    d_value.datetime.seconds      = static_cast<blpapi_UChar_t>(newSeconds);
     d_value.datetime.milliSeconds = 0;
     d_value.picoseconds           = 0;
     d_value.datetime.parts        =  (d_value.datetime.parts
@@ -1633,45 +1666,48 @@ void Datetime::setTime(unsigned hours,
 
 
 inline
-void Datetime::setTime(unsigned hours,
-                       unsigned minutes,
-                       unsigned seconds,
-                       unsigned milliSeconds)
+void Datetime::setTime(unsigned newHours,
+                       unsigned newMinutes,
+                       unsigned newSeconds,
+                       unsigned newMilliSeconds)
 {
-    d_value.datetime.hours        = hours;
-    d_value.datetime.minutes      = minutes;
-    d_value.datetime.seconds      = seconds;
-    d_value.datetime.milliSeconds = milliSeconds;
+    d_value.datetime.hours        = static_cast<blpapi_UChar_t>(newHours);
+    d_value.datetime.minutes      = static_cast<blpapi_UChar_t>(newMinutes);
+    d_value.datetime.seconds      = static_cast<blpapi_UChar_t>(newSeconds);
+    d_value.datetime.milliSeconds
+        = static_cast<blpapi_UInt16_t>(newMilliSeconds);
     d_value.picoseconds           = 0;
     d_value.datetime.parts       |= DatetimeParts::TIMEFRACSECONDS;
 }
 
 
 inline
-void Datetime::setTime(unsigned     hours,
-                       unsigned     minutes,
-                       unsigned     seconds,
+void Datetime::setTime(unsigned     newHours,
+                       unsigned     newMinutes,
+                       unsigned     newSeconds,
                        Milliseconds fractionOfSecond)
 {
-    d_value.datetime.hours        = hours;
-    d_value.datetime.minutes      = minutes;
-    d_value.datetime.seconds      = seconds;
-    d_value.datetime.milliSeconds = fractionOfSecond.d_msec;
+    d_value.datetime.hours        = static_cast<blpapi_UChar_t>(newHours);
+    d_value.datetime.minutes      = static_cast<blpapi_UChar_t>(newMinutes);
+    d_value.datetime.seconds      = static_cast<blpapi_UChar_t>(newSeconds);
+    d_value.datetime.milliSeconds
+        = static_cast<blpapi_UInt16_t>(fractionOfSecond.d_msec);
     d_value.picoseconds           = 0;
     d_value.datetime.parts       |= DatetimeParts::TIMEFRACSECONDS;
 }
 
 
 inline
-void Datetime::setTime(unsigned     hours,
-                       unsigned     minutes,
-                       unsigned     seconds,
+void Datetime::setTime(unsigned     newHours,
+                       unsigned     newMinutes,
+                       unsigned     newSeconds,
                        Microseconds fractionOfSecond)
 {
-    d_value.datetime.hours        = hours;
-    d_value.datetime.minutes      = minutes;
-    d_value.datetime.seconds      = seconds;
-    d_value.datetime.milliSeconds = fractionOfSecond.d_usec / 1000;
+    d_value.datetime.hours        = static_cast<blpapi_UChar_t>(newHours);
+    d_value.datetime.minutes      = static_cast<blpapi_UChar_t>(newMinutes);
+    d_value.datetime.seconds      = static_cast<blpapi_UChar_t>(newSeconds);
+    d_value.datetime.milliSeconds
+        = static_cast<blpapi_UInt16_t>(fractionOfSecond.d_usec / 1000);
     d_value.picoseconds           = fractionOfSecond.d_usec % 1000
                                                             * 1000
                                                             * 1000;
@@ -1680,15 +1716,16 @@ void Datetime::setTime(unsigned     hours,
 
 
 inline
-void Datetime::setTime(unsigned    hours,
-                       unsigned    minutes,
-                       unsigned    seconds,
+void Datetime::setTime(unsigned    newHours,
+                       unsigned    newMinutes,
+                       unsigned    newSeconds,
                        Nanoseconds fractionOfSecond)
 {
-    d_value.datetime.hours        = hours;
-    d_value.datetime.minutes      = minutes;
-    d_value.datetime.seconds      = seconds;
-    d_value.datetime.milliSeconds = fractionOfSecond.d_nsec / 1000 / 1000;
+    d_value.datetime.hours        = static_cast<blpapi_UChar_t>(newHours);
+    d_value.datetime.minutes      = static_cast<blpapi_UChar_t>(newMinutes);
+    d_value.datetime.seconds      = static_cast<blpapi_UChar_t>(newSeconds);
+    d_value.datetime.milliSeconds
+        = static_cast<blpapi_UInt16_t>(fractionOfSecond.d_nsec / 1000 / 1000);
     d_value.picoseconds           = fractionOfSecond.d_nsec % (1000 * 1000)
                                                             * 1000;
     d_value.datetime.parts       |= DatetimeParts::TIMEFRACSECONDS;
@@ -1696,21 +1733,21 @@ void Datetime::setTime(unsigned    hours,
 
 
 inline
-void Datetime::setTime(unsigned    hours,
-                       unsigned    minutes,
-                       unsigned    seconds,
+void Datetime::setTime(unsigned    newHours,
+                       unsigned    newMinutes,
+                       unsigned    newSeconds,
                        Picoseconds fractionOfSecond)
 {
-    d_value.datetime.hours        = hours;
-    d_value.datetime.minutes      = minutes;
-    d_value.datetime.seconds      = seconds;
+    d_value.datetime.hours        = static_cast<blpapi_UChar_t>(newHours);
+    d_value.datetime.minutes      = static_cast<blpapi_UChar_t>(newMinutes);
+    d_value.datetime.seconds      = static_cast<blpapi_UChar_t>(newSeconds);
     d_value.datetime.milliSeconds
         = static_cast<blpapi_UInt16_t>(fractionOfSecond.d_psec / 1000
                                                                / 1000
                                                                / 1000);
-    d_value.picoseconds           = fractionOfSecond.d_psec % (  1000
-                                                               * 1000
-                                                               * 1000);
+    d_value.picoseconds
+        = static_cast<blpapi_UInt32_t>(
+              fractionOfSecond.d_psec % (1000 * 1000 * 1000));
     d_value.datetime.parts       |= DatetimeParts::TIMEFRACSECONDS;
 }
 
@@ -1726,7 +1763,7 @@ void Datetime::setOffset(short value)
 inline
 void Datetime::setYear(unsigned value)
 {
-    d_value.datetime.year   = value;
+    d_value.datetime.year   = static_cast<blpapi_UInt16_t>(value);
     d_value.datetime.parts |= DatetimeParts::YEAR;
 }
 
@@ -1734,7 +1771,7 @@ void Datetime::setYear(unsigned value)
 inline
 void Datetime::setMonth(unsigned value)
 {
-    d_value.datetime.month  = value;
+    d_value.datetime.month  = static_cast<blpapi_UChar_t>(value);
     d_value.datetime.parts |= DatetimeParts::MONTH;
 }
 
@@ -1742,7 +1779,7 @@ void Datetime::setMonth(unsigned value)
 inline
 void Datetime::setDay(unsigned value)
 {
-    d_value.datetime.day    = value;
+    d_value.datetime.day    = static_cast<blpapi_UChar_t>(value);
     d_value.datetime.parts |= DatetimeParts::DAY;
 }
 
@@ -1750,7 +1787,7 @@ void Datetime::setDay(unsigned value)
 inline
 void Datetime::setHours(unsigned value)
 {
-    d_value.datetime.hours  = value;
+    d_value.datetime.hours  = static_cast<blpapi_UChar_t>(value);
     d_value.datetime.parts |= DatetimeParts::HOURS;
 }
 
@@ -1758,7 +1795,7 @@ void Datetime::setHours(unsigned value)
 inline
 void Datetime::setMinutes(unsigned value)
 {
-    d_value.datetime.minutes  = value;
+    d_value.datetime.minutes  = static_cast<blpapi_UChar_t>(value);
     d_value.datetime.parts   |= DatetimeParts::MINUTES;
 }
 
@@ -1766,7 +1803,7 @@ void Datetime::setMinutes(unsigned value)
 inline
 void Datetime::setSeconds(unsigned value)
 {
-    d_value.datetime.seconds  = value;
+    d_value.datetime.seconds  = static_cast<blpapi_UChar_t>(value);
     d_value.datetime.parts   |= DatetimeParts::SECONDS;
 }
 
@@ -1774,7 +1811,7 @@ void Datetime::setSeconds(unsigned value)
 inline
 void Datetime::setMilliseconds(unsigned value)
 {
-    d_value.datetime.milliSeconds = value;
+    d_value.datetime.milliSeconds = static_cast<blpapi_UInt16_t>(value);
     d_value.picoseconds           = 0;
     d_value.datetime.parts       |= DatetimeParts::FRACSECONDS;
 }
@@ -1782,7 +1819,7 @@ void Datetime::setMilliseconds(unsigned value)
 inline
 void Datetime::setFractionOfSecond(Milliseconds value)
 {
-    d_value.datetime.milliSeconds = value.d_msec;
+    d_value.datetime.milliSeconds = static_cast<blpapi_UInt16_t>(value.d_msec);
     d_value.picoseconds           = 0;
     d_value.datetime.parts       |= DatetimeParts::FRACSECONDS;
 }
@@ -1790,7 +1827,8 @@ void Datetime::setFractionOfSecond(Milliseconds value)
 inline
 void Datetime::setFractionOfSecond(Microseconds value)
 {
-    d_value.datetime.milliSeconds = value.d_usec / 1000;
+    d_value.datetime.milliSeconds
+        = static_cast<blpapi_UInt16_t>(value.d_usec / 1000);
     d_value.picoseconds           = value.d_usec % 1000 * 1000 * 1000;
     d_value.datetime.parts       |= DatetimeParts::FRACSECONDS;
 }
@@ -1798,7 +1836,8 @@ void Datetime::setFractionOfSecond(Microseconds value)
 inline
 void Datetime::setFractionOfSecond(Nanoseconds value)
 {
-    d_value.datetime.milliSeconds = value.d_nsec / 1000 / 1000;
+    d_value.datetime.milliSeconds
+        = static_cast<blpapi_UInt16_t>(value.d_nsec / 1000 / 1000);
     d_value.picoseconds           = value.d_nsec % (1000 * 1000) * 1000;
     d_value.datetime.parts       |= DatetimeParts::FRACSECONDS;
 }
@@ -1808,7 +1847,8 @@ void Datetime::setFractionOfSecond(Picoseconds value)
 {
     d_value.datetime.milliSeconds
         = static_cast<blpapi_UInt16_t>(value.d_psec / 1000 / 1000 / 1000);
-    d_value.picoseconds           = value.d_psec % (1000 * 1000 * 1000);
+    d_value.picoseconds
+        = static_cast<blpapi_UInt32_t>(value.d_psec % (1000 * 1000 * 1000));
     d_value.datetime.parts       |= DatetimeParts::FRACSECONDS;
 }
 
@@ -1825,9 +1865,9 @@ blpapi_HighPrecisionDatetime_t& Datetime::rawHighPrecisionValue()
 }
 
 inline
-bool Datetime::hasParts(unsigned parts) const
+bool Datetime::hasParts(unsigned newParts) const
 {
-    return parts == (d_value.datetime.parts & parts);
+    return newParts == (d_value.datetime.parts & newParts);
 }
 
 inline
@@ -1951,8 +1991,11 @@ std::ostream& Datetime::print(std::ostream& stream,
                               int           level,
                               int           spacesPerLevel) const
 {
-    BLPAPI_CALL_HIGHPRECISIONDATETIME_PRINT(
-            &d_value, OstreamWriter, &stream, level, spacesPerLevel);
+    BLPAPI_CALL_HIGHPRECISIONDATETIME_PRINT(&d_value,
+                                            StreamProxyOstream::writeToStream,
+                                            &stream,
+                                            level,
+                                            spacesPerLevel);
     return stream;
 }
 
@@ -2006,6 +2049,22 @@ inline
 std::ostream& operator<<(std::ostream& stream, const Datetime& datetime)
 {
     return datetime.print(stream, 0, -1);
+}
+
+                            // ------------------
+                            // class DatetimeUtil
+                            // ------------------
+
+inline
+Datetime DatetimeUtil::fromTimePoint(const TimePoint& timePoint,
+                                     Datetime::Offset offset)
+{
+    blpapi_HighPrecisionDatetime_t highPrecisionDatetime;
+    BLPAPI_CALL_HIGHPRECISIONDATETIME_FROMTIMEPOINT(
+                      &highPrecisionDatetime,
+                      &timePoint,
+                      offset.d_minutesAheadOfUTC);
+    return Datetime(highPrecisionDatetime);
 }
 
 }  // close namespace blpapi

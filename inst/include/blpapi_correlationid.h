@@ -329,31 +329,31 @@ CorrelationId::CorrelationId(const CorrelationId& original)
 }
 
 inline
-CorrelationId::CorrelationId(long long intValue, int classId)
+CorrelationId::CorrelationId(long long intValue, int newClassId)
 {
     std::memset(&d_impl, 0, sizeof(d_impl));
 
-    d_impl.size           = sizeof(d_impl);
+    d_impl.size           = static_cast<unsigned>(sizeof(d_impl));
     d_impl.valueType      = INT_VALUE;
     d_impl.value.intValue = intValue;
-    d_impl.classId        = classId;
+    d_impl.classId        = newClassId;
 }
 
 inline
-CorrelationId::CorrelationId(void *ptrValue, int classId)
+CorrelationId::CorrelationId(void *ptrValue, int newClassId)
 {
     std::memset(&d_impl, 0, sizeof(d_impl));
 
-    d_impl.size                   = sizeof(d_impl);
+    d_impl.size                   = static_cast<unsigned>(sizeof(d_impl));
     d_impl.valueType              = POINTER_VALUE;
     d_impl.value.ptrValue.pointer = ptrValue;
-    d_impl.classId                = classId;
+    d_impl.classId                = newClassId;
 }
 
 template <typename TYPE>
 inline
 CorrelationId::CorrelationId(const TYPE& smartPtr, void *ptrValue,
-    int classId)
+    int newClassId)
 {
     // If you get a compiler error here, the specified smart pointer does not
     // fit in the CorrelationId and cannot be used at this time.
@@ -364,7 +364,7 @@ CorrelationId::CorrelationId(const TYPE& smartPtr, void *ptrValue,
 
     d_impl.size           = sizeof(d_impl);
     d_impl.valueType      = POINTER_VALUE;
-    d_impl.classId        = classId;
+    d_impl.classId        = newClassId;
 
     d_impl.value.ptrValue.pointer = ptrValue;
     d_impl.value.ptrValue.manager = &CorrelationId::managerFunc<TYPE>;
@@ -488,7 +488,8 @@ void CorrelationId::assertSmartPtrFits()
         // not fit in the CorrelationId and cannot be used at this time.
 
         char errorIfSmartPtrDoesNotFit[
-            sizeof(TYPE) <= (sizeof(void*)*4) ? 1 : 0] = {' '};
+            sizeof(TYPE) <= (sizeof(void*)*4) ? 1 : -1];
+        (void)errorIfSmartPtrDoesNotFit;
     }
 }
 

@@ -62,6 +62,16 @@ enum blpapi_DataType_t {
                                                // messages
 };
 
+typedef enum blpapi_Logging_Severity_t {
+    blpapi_Logging_SEVERITY_OFF   = 0,
+    blpapi_Logging_SEVERITY_FATAL = 1,
+    blpapi_Logging_SEVERITY_ERROR = 2,
+    blpapi_Logging_SEVERITY_WARN  = 3,
+    blpapi_Logging_SEVERITY_INFO  = 4,
+    blpapi_Logging_SEVERITY_DEBUG = 5,
+    blpapi_Logging_SEVERITY_TRACE = 6
+} blpapi_Logging_Severity_t;
+
 struct blpapi_AbstractSession;
 typedef struct blpapi_AbstractSession blpapi_AbstractSession_t;
 

@@ -89,6 +89,10 @@ class Exception : public std::exception {
     // DATA
     const std::string d_description;
 
+  private:
+    // NOT IMPLEMENTED
+    Exception& operator=(const Exception&);  // = delete
+
   public:
     // CREATORS
     explicit Exception(const std::string& description);
@@ -257,8 +261,8 @@ class ExceptionUtil {
                               // ---------------
 
 inline
-Exception::Exception(const std::string& description)
-: d_description(description)
+Exception::Exception(const std::string& newDescription)
+: d_description(newDescription)
 {
 }
 
@@ -285,8 +289,8 @@ const char* Exception::what() const throw()
 
 inline
 DuplicateCorrelationIdException::DuplicateCorrelationIdException(
-                                                const std::string& description)
-: Exception(description)
+                                             const std::string& newDescription)
+: Exception(newDescription)
 {
 }
 
@@ -295,8 +299,8 @@ DuplicateCorrelationIdException::DuplicateCorrelationIdException(
                         // ---------------------------
 
 inline
-InvalidStateException::InvalidStateException(const std::string& description)
-: Exception(description)
+InvalidStateException::InvalidStateException(const std::string& newDescription)
+: Exception(newDescription)
 {
 }
 
@@ -306,8 +310,8 @@ InvalidStateException::InvalidStateException(const std::string& description)
 
 inline
 InvalidArgumentException::InvalidArgumentException(
-                                                const std::string& description)
-: Exception(description)
+                                             const std::string& newDescription)
+: Exception(newDescription)
 {
 }
 
@@ -317,8 +321,8 @@ InvalidArgumentException::InvalidArgumentException(
 
 inline
 InvalidConversionException::InvalidConversionException(
-                                                const std::string& description)
-: Exception(description)
+                                             const std::string& newDescription)
+: Exception(newDescription)
 {
 }
 
@@ -328,8 +332,8 @@ InvalidConversionException::InvalidConversionException(
 
 inline
 IndexOutOfRangeException::IndexOutOfRangeException(
-                                                const std::string& description)
-: Exception(description)
+                                             const std::string& newDescription)
+: Exception(newDescription)
 {
 }
 
@@ -338,8 +342,9 @@ IndexOutOfRangeException::IndexOutOfRangeException(
                         // ----------------------------
 
 inline
-FieldNotFoundException::FieldNotFoundException(const std::string& description)
-: Exception(description)
+FieldNotFoundException::FieldNotFoundException(
+                                             const std::string& newDescription)
+: Exception(newDescription)
 {
 }
 
@@ -348,8 +353,8 @@ FieldNotFoundException::FieldNotFoundException(const std::string& description)
                         // ---------------------------
 
 inline
-UnknownErrorException::UnknownErrorException(const std::string& description)
-: Exception(description)
+UnknownErrorException::UnknownErrorException(const std::string& newDescription)
+: Exception(newDescription)
 {
 }
 
@@ -359,8 +364,8 @@ UnknownErrorException::UnknownErrorException(const std::string& description)
 
 inline
 UnsupportedOperationException::UnsupportedOperationException(
-                                                const std::string& description)
-: Exception(description)
+                                             const std::string& newDescription)
+: Exception(newDescription)
 {
 }
 
@@ -369,8 +374,8 @@ UnsupportedOperationException::UnsupportedOperationException(
                           // -----------------------
 
 inline
-NotFoundException::NotFoundException(const std::string& description)
-: Exception (description)
+NotFoundException::NotFoundException(const std::string& newDescription)
+: Exception (newDescription)
 {
 }
 

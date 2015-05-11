@@ -46,6 +46,9 @@
         ? (g_blpapiFunctionEntries.FUNCNAME)                                  \
         : BLPAPI_UNSUPPORTED_CALL(FUNCNAME))
 
+#define BLPAPI_CALL_AVAILABLE(FUNCNAME) BLPAPI_TABLE_CHECK(FUNCNAME)
+#define BLPAPI_CALL(FUNCNAME) BLPAPI_TABLE_CALL(FUNCNAME)
+
 #define BLPAPI_UNSUPPORTED_CALL(FUNCNAME)                                     \
     (throw UnsupportedOperationException(#FUNCNAME " not supported"), 0)
 
@@ -58,23 +61,20 @@
         blpapi_EventFormatter_appendRecapMessageSeq)(a1, a2, a3, a4, a5))
 
 #define BLPAPI_CALL_MESSAGE_ADDREF(a1)                                        \
-    do {                                                                      \
-        if (BLPAPI_TABLE_CHECK(blpapi_Message_addRef))                        \
-            g_blpapiFunctionEntries.blpapi_Message_addRef(a1);                \
-    } while(0)
+    (BLPAPI_TABLE_CHECK(blpapi_Message_addRef)                                \
+    ? g_blpapiFunctionEntries.blpapi_Message_addRef(a1)                       \
+    : 0)
 
 #define BLPAPI_CALL_MESSAGE_RELEASE(a1)                                       \
-    do {                                                                      \
-        if (BLPAPI_TABLE_CHECK(blpapi_Message_release))                       \
-            g_blpapiFunctionEntries.blpapi_Message_release(a1);               \
-    } while(0)
+    (BLPAPI_TABLE_CHECK(blpapi_Message_release)                               \
+    ? g_blpapiFunctionEntries.blpapi_Message_release(a1)                      \
+    : 0)
 
 #define BLPAPI_CALL_SESSIONOPTIONS_SETMAXEVENTQUEUESIZE(a1, a2)               \
-    do {                                                                      \
-        if (BLPAPI_TABLE_CHECK(blpapi_SessionOptions_setMaxEventQueueSize))   \
-            g_blpapiFunctionEntries.                                          \
-                      blpapi_SessionOptions_setMaxEventQueueSize(a1, a2);     \
-    } while(0)
+    (BLPAPI_TABLE_CHECK(blpapi_SessionOptions_setMaxEventQueueSize)           \
+    ? g_blpapiFunctionEntries.                                                \
+                      blpapi_SessionOptions_setMaxEventQueueSize(a1, a2)      \
+	: 0)
 
 #define BLPAPI_CALL_SESSIONOPTIONS_SETSLOWCONSUMERHIWATERMARK(a1, a2)         \
     (BLPAPI_TABLE_CHECK(                                                      \
@@ -268,7 +268,38 @@
        blpapi_ServiceRegistrationOptions_removeAllActiveSubServiceCodeRanges)(\
                                                                            a1))
 
+#define BLPAPI_CALL_MESSAGE_TIMERECEIVED(a1, a2)                              \
+    (BLPAPI_TABLE_CALL(blpapi_Message_timeReceived)(a1, a2))
+
+#define BLPAPI_CALL_SESSIONOPTION_SETRECORDSUBSCRIPTIONDATARECEIVETIMES(a1,   \
+                                                                        a2)   \
+    (BLPAPI_TABLE_CHECK(                                                      \
+              blpapi_SessionOptions_setRecordSubscriptionDataReceiveTimes)    \
+	? g_blpapiFunctionEntries                                                 \
+        .blpapi_SessionOptions_setRecordSubscriptionDataReceiveTimes(a1, a2)  \
+	: 0)
+
+#define BLPAPI_CALL_SESSIONOPTION_RECORDSUBSCRIPTIONDATARECEIVETIMES(a1)      \
+    (BLPAPI_TABLE_CHECK(                                                      \
+            blpapi_SessionOptions_recordSubscriptionDataReceiveTimes)         \
+        ? g_blpapiFunctionEntries                                             \
+            .blpapi_SessionOptions_recordSubscriptionDataReceiveTimes(a1)     \
+        : false)
+
+#define BLPAPI_CALL_TIMEPOINTUTIL_NANOSECONDSBETWEEN(a1, a2)                  \
+    (BLPAPI_TABLE_CALL(blpapi_TimePointUtil_nanosecondsBetween)(a1, a2))
+
+#define BLPAPI_CALL_HIGHRESOLUTIONCLOCK_NOW(a1)                               \
+    (BLPAPI_TABLE_CALL(blpapi_HighResolutionClock_now)(a1))
+
+#define BLPAPI_CALL_HIGHPRECISIONDATETIME_FROMTIMEPOINT(a1, a2, a3)           \
+    (BLPAPI_TABLE_CALL(blpapi_HighPrecisionDatetime_fromTimePoint)(a1, a2, a3))
+
 #else  // if defined(_WIN32) || defined(__WIN32__)
+
+#define BLPAPI_CALL_AVAILABLE(FUNCNAME) true
+#define BLPAPI_CALL(FUNCNAME) FUNCNAME
+
 #define BLPAPI_CALL_EVENTFORMATTER_APPENDMESSAGESEQ(a1, a2, a3, a4, a5, a6)   \
     (blpapi_EventFormatter_appendMessageSeq)(a1, a2, a3, a4, a5, a6)
 #define BLPAPI_CALL_EVENTFORMATTER_APPENDRECAPMESSAGESEQ(a1, a2, a3, a4, a5)  \
@@ -363,6 +394,21 @@
   BLPAPI_CALL_SERVICEREGISTRATIONOPTIONS_REMOVEALLACTIVESUBSERVICECODERANGES( \
                                                                           a1) \
     (blpapi_ServiceRegistrationOptions_removeAllActiveSubServiceCodeRanges)(a1)
+
+#define BLPAPI_CALL_MESSAGE_TIMERECEIVED(a1, a2)                              \
+    (blpapi_Message_timeReceived)(a1, a2)
+#define BLPAPI_CALL_SESSIONOPTION_SETRECORDSUBSCRIPTIONDATARECEIVETIMES(a1,   \
+                                                                        a2)   \
+    (blpapi_SessionOptions_setRecordSubscriptionDataReceiveTimes)(a1, a2)
+#define BLPAPI_CALL_SESSIONOPTION_RECORDSUBSCRIPTIONDATARECEIVETIMES(a1)      \
+    (blpapi_SessionOptions_recordSubscriptionDataReceiveTimes)(a1)
+
+#define BLPAPI_CALL_TIMEPOINTUTIL_NANOSECONDSBETWEEN(a1,a2)                   \
+    (blpapi_TimePointUtil_nanosecondsBetween)(a1, a2)
+#define BLPAPI_CALL_HIGHRESOLUTIONCLOCK_NOW(a1)                               \
+    (blpapi_HighResolutionClock_now)(a1)
+#define BLPAPI_CALL_HIGHPRECISIONDATETIME_FROMTIMEPOINT(a1, a2, a3)           \
+    (blpapi_HighPrecisionDatetime_fromTimePoint)(a1, a2, a3)
 
 #endif // if defined(_WIN32) || defined(__WIN32__)
 

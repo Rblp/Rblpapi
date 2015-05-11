@@ -56,10 +56,7 @@
 #include <blpapi_streamproxy.h>
 #endif
 
-#ifndef INCLUDED_STDDEF
 #include <stddef.h>
-#define INCLUDED_STDDEF
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -426,8 +423,8 @@ std::ostream& operator<<(std::ostream& stream, const Service& service);
                             // class Operation
                             // ---------------
 inline
-Operation::Operation(blpapi_Operation_t *handle)
-: d_handle(handle)
+Operation::Operation(blpapi_Operation_t *newHandle)
+: d_handle(newHandle)
 {
 }
 
@@ -503,8 +500,8 @@ Service::Service(const Service& original)
 }
 
 inline
-Service::Service(blpapi_Service_t *handle)
-    : d_handle(handle)
+Service::Service(blpapi_Service_t *newHandle)
+    : d_handle(newHandle)
 {
     addRef();
 }
@@ -637,20 +634,21 @@ size_t Service::numOperations() const
 }
 
 inline
-bool Service::hasOperation(const char* name) const
+bool Service::hasOperation(const char* operationName) const
 {
     blpapi_Operation_t *operation;
-    return blpapi_Service_getOperation(d_handle, &operation, name, 0) == 0;
+    return
+      blpapi_Service_getOperation(d_handle, &operation, operationName, 0) == 0;
 }
 
 inline
-bool Service::hasOperation(const Name& name) const
+bool Service::hasOperation(const Name& operationName) const
 {
     blpapi_Operation_t *operation;
     return blpapi_Service_getOperation(d_handle,
                                        &operation,
                                        0,
-                                       name.impl()) == 0;
+                                       operationName.impl()) == 0;
 }
 
 inline
@@ -663,20 +661,23 @@ Operation Service::getOperation(size_t index) const
 }
 
 inline
-Operation Service::getOperation(const char* name) const
+Operation Service::getOperation(const char* operationName) const
 {
     blpapi_Operation_t *operation;
     ExceptionUtil::throwOnError(
-            blpapi_Service_getOperation(d_handle, &operation, name, 0));
+          blpapi_Service_getOperation(d_handle, &operation, operationName, 0));
     return operation;
 }
 
 inline
-Operation Service::getOperation(const Name& name) const
+Operation Service::getOperation(const Name& operationName) const
 {
     blpapi_Operation_t *operation;
     ExceptionUtil::throwOnError(
-            blpapi_Service_getOperation(d_handle, &operation, 0, name.impl()));
+        blpapi_Service_getOperation(d_handle,
+                                    &operation,
+                                    0,
+                                    operationName.impl()));
     return operation;
 }
 
@@ -688,21 +689,24 @@ int Service::numEventDefinitions() const
 
 
 inline
-bool Service::hasEventDefinition(const char* name) const
+bool Service::hasEventDefinition(const char* definitionName) const
 {
     blpapi_SchemaElementDefinition_t *eventDefinition;
 
     return blpapi_Service_getEventDefinition(
-            d_handle, &eventDefinition, name, 0) == 0 ? true : false;
+            d_handle, &eventDefinition, definitionName, 0) == 0 ? true : false;
 }
 
 inline
-bool Service::hasEventDefinition(const Name& name) const
+bool Service::hasEventDefinition(const Name& definitionName) const
 {
     blpapi_SchemaElementDefinition_t *eventDefinition;
 
-    return blpapi_Service_getEventDefinition(
-            d_handle, &eventDefinition, 0, name.impl()) == 0 ? true : false;
+    return blpapi_Service_getEventDefinition(d_handle,
+                                             &eventDefinition,
+                                             0,
+                                             definitionName.impl()) == 0
+           ? true : false;
 }
 
 
@@ -719,22 +723,30 @@ SchemaElementDefinition Service::getEventDefinition(size_t index) const
 
 
 inline
-SchemaElementDefinition Service::getEventDefinition(const char* name) const
+SchemaElementDefinition Service::getEventDefinition(
+                                              const char* definitionName) const
 {
     blpapi_SchemaElementDefinition_t *eventDefinition;
     ExceptionUtil::throwOnError(
-            blpapi_Service_getEventDefinition(
-                d_handle, &eventDefinition, name, 0));
+        blpapi_Service_getEventDefinition(
+            d_handle,
+            &eventDefinition,
+            definitionName,
+            0));
     return SchemaElementDefinition(eventDefinition);
 }
 
 inline
-SchemaElementDefinition Service::getEventDefinition(const Name& name) const
+SchemaElementDefinition Service::getEventDefinition(
+                                              const Name& definitionName) const
 {
     blpapi_SchemaElementDefinition_t *eventDefinition;
     ExceptionUtil::throwOnError(
-            blpapi_Service_getEventDefinition(
-                d_handle, &eventDefinition, 0, name.impl()));
+        blpapi_Service_getEventDefinition(
+            d_handle,
+            &eventDefinition,
+            0,
+            definitionName.impl()));
     return SchemaElementDefinition(eventDefinition);
 }
 
@@ -750,8 +762,11 @@ std::ostream& Service::print(
         int level,
         int spacesPerLevel) const
 {
-    blpapi_Service_print(
-            d_handle, OstreamWriter,  &stream, level, spacesPerLevel);
+    blpapi_Service_print(d_handle,
+                         StreamProxyOstream::writeToStream,
+                         &stream,
+                         level,
+                         spacesPerLevel);
     return stream;
 }
 

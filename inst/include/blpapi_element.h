@@ -57,10 +57,7 @@
 #include <blpapi_streamproxy.h>
 #endif
 
-#ifndef INCLUDED_STDDEF
 #include <stddef.h>
-#define INCLUDED_STDDEF
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -1179,8 +1176,8 @@ Element::Element()
 }
 
 inline
-Element::Element(blpapi_Element_t *handle)
-: d_handle_p(handle)
+Element::Element(blpapi_Element_t *newHandle)
+: d_handle_p(newHandle)
 {
 }
 
@@ -1192,151 +1189,165 @@ void Element::rebind(blpapi_Element_t *element)
 
 
 inline
-void Element::setElement(const char* name, bool value)
+void Element::setElement(const char* elementName, bool value)
 {
     ExceptionUtil::throwOnError(
-            blpapi_Element_setElementBool(d_handle_p, name, 0 , value ? 1 :
-                0));
+            blpapi_Element_setElementBool(d_handle_p,
+                                          elementName,
+                                          0,
+                                          value ? 1 : 0));
 }
 
 inline
-void Element::setElement(const char* name, char value)
+void Element::setElement(const char* elementName, char value)
 {
     ExceptionUtil::throwOnError(
-            blpapi_Element_setElementChar(d_handle_p, name, 0 , value));
+            blpapi_Element_setElementChar(d_handle_p, elementName, 0 , value));
 }
 
 inline
-void Element::setElement(const char* name, Int32 value)
+void Element::setElement(const char* elementName, Int32 value)
 {
     ExceptionUtil::throwOnError(
-            blpapi_Element_setElementInt32(d_handle_p, name, 0 , value));
+           blpapi_Element_setElementInt32(d_handle_p, elementName, 0 , value));
 }
 
 inline
-void Element::setElement(const char* name, Int64 value)
+void Element::setElement(const char* elementName, Int64 value)
 {
     ExceptionUtil::throwOnError(
-            blpapi_Element_setElementInt64(d_handle_p, name, 0 , value));
+           blpapi_Element_setElementInt64(d_handle_p, elementName, 0 , value));
 }
 
 inline
-void Element::setElement(const char* name, Float32 value)
+void Element::setElement(const char* elementName, Float32 value)
 {
     ExceptionUtil::throwOnError(
-        blpapi_Element_setElementFloat32(d_handle_p, name, 0 , value));
+        blpapi_Element_setElementFloat32(d_handle_p, elementName, 0 , value));
 }
 
 inline
-void Element::setElement(const char* name, Float64 value)
+void Element::setElement(const char* elementName, Float64 value)
 {
     ExceptionUtil::throwOnError(
-        blpapi_Element_setElementFloat64(d_handle_p, name, 0 , value));
+        blpapi_Element_setElementFloat64(d_handle_p, elementName, 0 , value));
 }
 
 inline
-void Element::setElement(const char* name, const Datetime& value)
+void Element::setElement(const char* elementName, const Datetime& value)
 {
     ExceptionUtil::throwOnError(
         BLPAPI_CALL_ELEMENT_SETELEMENTHIGHPRECISIONDATETIME(
                                                 d_handle_p,
-                                                name,
+                                                elementName,
                                                 0,
                                                 &value.rawHighPrecisionValue())
     );
 }
 
 inline
-void Element::setElement(const char* name, const char* value)
+void Element::setElement(const char* elementName, const char* value)
 {
     ExceptionUtil::throwOnError(
-            blpapi_Element_setElementString(d_handle_p, name, 0 , value));
+          blpapi_Element_setElementString(d_handle_p, elementName, 0 , value));
 }
 
 inline
-void Element::setElement(const char* name, const Name& value)
+void Element::setElement(const char* elementName, const Name& value)
 {
     ExceptionUtil::throwOnError(
             blpapi_Element_setElementFromName(d_handle_p,
-                                              name,
+                                              elementName,
                                               0,
                                               value.impl()));
 }
 
 inline
-void Element::setElement(const Name& name, bool value)
+void Element::setElement(const Name& elementName, bool value)
 {
     ExceptionUtil::throwOnError(
             blpapi_Element_setElementBool(d_handle_p,
                                           0,
-                                          name.impl(),
+                                          elementName.impl(),
                                           value ? 1 : 0));
 }
 
 inline
-void Element::setElement(const Name& name, char value)
+void Element::setElement(const Name& elementName, char value)
 {
     ExceptionUtil::throwOnError(
-            blpapi_Element_setElementChar(d_handle_p, 0, name.impl(), value));
+      blpapi_Element_setElementChar(d_handle_p, 0, elementName.impl(), value));
 }
 
 inline
-void Element::setElement(const Name& name, Int32 value)
+void Element::setElement(const Name& elementName, Int32 value)
 {
     ExceptionUtil::throwOnError(
-            blpapi_Element_setElementInt32(d_handle_p, 0, name.impl(), value));
+        blpapi_Element_setElementInt32(d_handle_p,
+                                       0,
+                                       elementName.impl(),
+                                       value));
 }
 
 inline
-void Element::setElement(const Name& name, Int64 value)
+void Element::setElement(const Name& elementName, Int64 value)
 {
     ExceptionUtil::throwOnError(
-            blpapi_Element_setElementInt64(d_handle_p, 0, name.impl(), value));
+        blpapi_Element_setElementInt64(d_handle_p,
+                                       0,
+                                       elementName.impl(),
+                                       value));
 }
 
 inline
-void Element::setElement(const Name& name, Float32 value)
+void Element::setElement(const Name& elementName, Float32 value)
 {
     ExceptionUtil::throwOnError(
-        blpapi_Element_setElementFloat32(d_handle_p, 0, name.impl(), value));
+        blpapi_Element_setElementFloat32(d_handle_p,
+                                         0,
+                                         elementName.impl(),
+                                         value));
 }
 
 inline
-void Element::setElement(const Name& name, Float64 value)
+void Element::setElement(const Name& elementName, Float64 value)
 {
     ExceptionUtil::throwOnError(
-        blpapi_Element_setElementFloat64(d_handle_p, 0, name.impl(), value));
+        blpapi_Element_setElementFloat64(d_handle_p,
+                                         0,
+                                         elementName.impl(),
+                                         value));
 }
 
 inline
-void Element::setElement(const Name& name, const Datetime& value)
+void Element::setElement(const Name& elementName, const Datetime& value)
 {
     ExceptionUtil::throwOnError(
         BLPAPI_CALL_ELEMENT_SETELEMENTHIGHPRECISIONDATETIME(
                                                 d_handle_p,
                                                 0,
-                                                name.impl(),
+                                                elementName.impl(),
                                                 &value.rawHighPrecisionValue())
     );
 }
 
 inline
-void Element::setElement(const Name& name, const char* value)
+void Element::setElement(const Name& elementName, const char* value)
 {
     ExceptionUtil::throwOnError(
             blpapi_Element_setElementString(d_handle_p,
                                             0,
-                                            name.impl(),
+                                            elementName.impl(),
                                             value));
 }
 
 inline
-void Element::setElement(const Name& name, const Name& value)
+void Element::setElement(const Name& elementName, const Name& value)
 {
     ExceptionUtil::throwOnError(
             blpapi_Element_setElementFromName(d_handle_p,
                                               0,
-                                              name.impl(),
+                                              elementName.impl(),
                                               value.impl()));
 }
 
@@ -1550,10 +1561,11 @@ int Element::getElement(Element* element, const char *nameString) const
 }
 
 inline
-int Element::getElement(Element* element, const Name& name) const
+int Element::getElement(Element* element, const Name& elementName) const
 {
     blpapi_Element_t *fldt;
-    int rc = blpapi_Element_getElement(d_handle_p, &fldt, 0, name.impl());
+    int rc
+        = blpapi_Element_getElement(d_handle_p, &fldt, 0, elementName.impl());
     if (!rc) {
         element->rebind(fldt);
     }
@@ -1649,20 +1661,20 @@ bool Element::hasElement(const char* nameString,
 }
 
 inline
-bool Element::hasElement(const Name& name,
-                                bool excludeNullElements) const
+bool Element::hasElement(const Name& elementName,
+                         bool excludeNullElements) const
 {
     if (excludeNullElements) {
         return (blpapi_Element_hasElementEx(d_handle_p, 0,
-                name.impl(), excludeNullElements, 0) ? true : false);
+                elementName.impl(), excludeNullElements, 0) ? true : false);
     }
-    return blpapi_Element_hasElement(d_handle_p, 0, name.impl())
+    return blpapi_Element_hasElement(d_handle_p, 0, elementName.impl())
                                      ? true
                                      : false;
 }
 
 inline
-Element Element::getElement(const Name& name) const
+Element Element::getElement(const Name& elementName) const
 {
     blpapi_Element_t *fldt;
     ExceptionUtil::throwOnError(
@@ -1670,19 +1682,19 @@ Element Element::getElement(const Name& name) const
                     d_handle_p,
                     &fldt,
                     0,
-                    name.impl()));
+                    elementName.impl()));
     return Element(fldt);
 }
 
 inline
-Element Element::getElement(const char* name) const
+Element Element::getElement(const char* elementName) const
 {
     blpapi_Element_t *fldt;
     ExceptionUtil::throwOnError(
             blpapi_Element_getElement(
                 d_handle_p,
                 &fldt,
-                name,
+                elementName,
                 0));
     return Element(fldt);
 }
@@ -1860,11 +1872,11 @@ Element Element::getValueAsElement(size_t index) const
 inline
 Name Element::getValueAsName(size_t index) const
 {
-    blpapi_Name_t *name;
+    blpapi_Name_t *nameValue;
     ExceptionUtil::throwOnError(blpapi_Element_getValueAsName(d_handle_p,
-                                                              &name,
+                                                              &nameValue,
                                                               index));
-    return name;
+    return nameValue;
 }
 
 inline
@@ -1877,111 +1889,111 @@ Element Element::getChoice() const
 }
 
 inline
-bool Element::getElementAsBool(const char* name) const
+bool Element::getElementAsBool(const char* elementName) const
 {
-    return getElement(name).getValueAsBool();
+    return getElement(elementName).getValueAsBool();
 }
 
 inline
-bool Element::getElementAsBool(const Name& name) const
+bool Element::getElementAsBool(const Name& elementName) const
 {
-    return getElement(name).getValueAsBool();
+    return getElement(elementName).getValueAsBool();
 }
 
 inline
-char Element::getElementAsChar(const char* name) const
+char Element::getElementAsChar(const char* elementName) const
 {
-    return getElement(name).getValueAsChar();
+    return getElement(elementName).getValueAsChar();
 }
 
 inline
-char Element::getElementAsChar(const Name& name) const
+char Element::getElementAsChar(const Name& elementName) const
 {
-    return getElement(name).getValueAsChar();
+    return getElement(elementName).getValueAsChar();
 }
 
 inline
-Int32 Element::getElementAsInt32(const char* name) const
+Int32 Element::getElementAsInt32(const char* elementName) const
 {
-    return getElement(name).getValueAsInt32();
+    return getElement(elementName).getValueAsInt32();
 }
 
 inline
-Int32 Element::getElementAsInt32(const Name& name) const
+Int32 Element::getElementAsInt32(const Name& elementName) const
 {
-    return getElement(name).getValueAsInt32();
+    return getElement(elementName).getValueAsInt32();
 }
 
 inline
-Int64 Element::getElementAsInt64(const char* name) const
+Int64 Element::getElementAsInt64(const char* elementName) const
 {
-    return getElement(name).getValueAsInt64();
+    return getElement(elementName).getValueAsInt64();
 }
 
 inline
-Int64 Element::getElementAsInt64(const Name& name) const
+Int64 Element::getElementAsInt64(const Name& elementName) const
 {
-    return getElement(name).getValueAsInt64();
+    return getElement(elementName).getValueAsInt64();
 }
 
 inline
-Float32 Element::getElementAsFloat32(const char* name) const
+Float32 Element::getElementAsFloat32(const char* elementName) const
 {
-    return getElement(name).getValueAsFloat32();
+    return getElement(elementName).getValueAsFloat32();
 }
 
 inline
-Float32 Element::getElementAsFloat32(const Name& name) const
+Float32 Element::getElementAsFloat32(const Name& elementName) const
 {
-    return getElement(name).getValueAsFloat32();
+    return getElement(elementName).getValueAsFloat32();
 }
 
 inline
-Float64 Element::getElementAsFloat64(const char* name) const
+Float64 Element::getElementAsFloat64(const char* elementName) const
 {
-    return getElement(name).getValueAsFloat64();
+    return getElement(elementName).getValueAsFloat64();
 }
 
 inline
-Float64 Element::getElementAsFloat64(const Name& name) const
+Float64 Element::getElementAsFloat64(const Name& elementName) const
 {
-    return getElement(name).getValueAsFloat64();
+    return getElement(elementName).getValueAsFloat64();
 }
 
 inline
-Datetime Element::getElementAsDatetime(const char* name) const
+Datetime Element::getElementAsDatetime(const char* elementName) const
 {
-    return getElement(name).getValueAsDatetime();
+    return getElement(elementName).getValueAsDatetime();
 }
 
 inline
-Datetime Element::getElementAsDatetime(const Name& name) const
+Datetime Element::getElementAsDatetime(const Name& elementName) const
 {
-    return getElement(name).getValueAsDatetime();
+    return getElement(elementName).getValueAsDatetime();
 }
 
 inline
-const char* Element::getElementAsString(const char* name) const
+const char* Element::getElementAsString(const char* elementName) const
 {
-    return getElement(name).getValueAsString();
+    return getElement(elementName).getValueAsString();
 }
 
 inline
-const char* Element::getElementAsString(const Name& name) const
+const char* Element::getElementAsString(const Name& elementName) const
 {
-    return getElement(name).getValueAsString();
+    return getElement(elementName).getValueAsString();
 }
 
 inline
-Name Element::getElementAsName(const char* name) const
+Name Element::getElementAsName(const char* elementName) const
 {
-    return getElement(name).getValueAsName();
+    return getElement(elementName).getValueAsName();
 }
 
 inline
-Name Element::getElementAsName(const Name& name) const
+Name Element::getElementAsName(const Name& elementName) const
 {
-    return getElement(name).getValueAsName();
+    return getElement(elementName).getValueAsName();
 }
 
 inline
@@ -1996,8 +2008,11 @@ std::ostream& Element::print(
         int level,
         int spacesPerLevel) const
 {
-    blpapi_Element_print(
-            d_handle_p, OstreamWriter,  &stream, level, spacesPerLevel);
+    blpapi_Element_print(d_handle_p,
+                         StreamProxyOstream::writeToStream,
+                         &stream,
+                         level,
+                         spacesPerLevel);
     return stream;
 }
 
