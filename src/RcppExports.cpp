@@ -80,16 +80,16 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// fieldSearch
-Rcpp::DataFrame fieldSearch(SEXP con, std::string searchterm, std::string excludeterm);
-RcppExport SEXP Rblpapi_fieldSearch(SEXP conSEXP, SEXP searchtermSEXP, SEXP excludetermSEXP) {
+// fieldSearch_Impl
+Rcpp::DataFrame fieldSearch_Impl(SEXP con, std::string searchterm, std::string excludeterm);
+RcppExport SEXP Rblpapi_fieldSearch_Impl(SEXP conSEXP, SEXP searchtermSEXP, SEXP excludetermSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< SEXP >::type con(conSEXP);
     Rcpp::traits::input_parameter< std::string >::type searchterm(searchtermSEXP);
     Rcpp::traits::input_parameter< std::string >::type excludeterm(excludetermSEXP);
-    __result = Rcpp::wrap(fieldSearch(con, searchterm, excludeterm));
+    __result = Rcpp::wrap(fieldSearch_Impl(con, searchterm, excludeterm));
     return __result;
 END_RCPP
 }

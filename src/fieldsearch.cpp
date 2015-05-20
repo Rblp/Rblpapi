@@ -2,8 +2,8 @@
 //
 //  fieldsearch.cpp -- a simple field search function for the BLP API
 //
-//  Copyright (C) 2013  Whit Armstrong
-//  Copyright (C) 2014  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2013         Whit Armstrong
+//  Copyright (C) 2014 - 2015  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -59,26 +59,8 @@ namespace {
     const bbg::Name FIELD_MSG("message");
 }
 
-//' This function searches for matching Bloomberg data fields given a search term.
-//'
-//' @title Search for matching data fields
-//'
-//' @param con A connection object as returned by a \code{blpConnect} call
-//' @param searchterm A string with the term to search for
-//' @param excludeterm A string with an expression for matches to excludes, defaults to \dQuote{Static}
-//'
-//' @return A \code{data.frame} with three columns of the id, mnenemonic and description of each match.
-//'
-//' @author Dirk Eddelbuettel
-//'
-//' @examples
-//' \dontrun{
-//'   con <- blpConnect()
-//'   res <- fieldSearch(con, "vwap")
-//' }
-//'
 // [[Rcpp::export]]
-Rcpp::DataFrame fieldSearch(SEXP con, std::string searchterm, std::string excludeterm="Static") {
+Rcpp::DataFrame fieldSearch_Impl(SEXP con, std::string searchterm, std::string excludeterm) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     bbg::Session* session =
