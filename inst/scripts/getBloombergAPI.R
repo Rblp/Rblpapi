@@ -27,7 +27,7 @@ if (Sys.info()["sysname"] == "Linux") {
     basefile <- basename(blpfile)
 
     tmpfile <- file.path(tmpdir, basefile)
-    #download.file(blpfile, tmpfile)
+    download.file(blpfile, tmpfile)
     unzip(tmpfile, exdir = tmpdir)
 
     dirname <- gsub("-windows\\.zip", "", basefile)
