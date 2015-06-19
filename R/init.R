@@ -1,4 +1,4 @@
-winDllPath = function() {
+winDllPath <- function() {
     file.path(.libPaths()[1], "Rblpapi/inst/libs",
               ifelse(Sys.info()["machine"] == "x86-64",
                      "x64", "i386"))
@@ -18,11 +18,11 @@ winDllPath = function() {
     }
 
     if (Sys.info()["sysname"] == "Windows") {
-        fldrs = strsplit(Sys.getenv("PATH"), ";")[[1]]
+        fldrs <- strsplit(Sys.getenv("PATH"), ";")[[1]]
         # remove any existing blp locations
-        # fldrs = fldrs[!grepl("blp", fldrs)]
+        # fldrs <- fldrs[!grepl("blp", fldrs)]
 
-        pth = paste(c(winDllPath(), fldrs), collapse = ";")
+        pth <- paste(c(winDllPath(), fldrs), collapse = ";")
 
         # packageStartupMessage("Setting path to: ", pth)
         Sys.setenv(PATH=pth)
@@ -31,10 +31,10 @@ winDllPath = function() {
 
 .onDetach <- function(libpath) {
     if (Sys.info()["sysname"] == "Windows") {
-        fldrs = strsplit(Sys.getenv("PATH"), ";")[[1]]
+        fldrs <- strsplit(Sys.getenv("PATH"), ";")[[1]]
 
 
-        pth = paste(fldrs[fldrs != winDllPath()], collapse = ";")
+        pth <- paste(fldrs[fldrs != winDllPath()], collapse = ";")
 
         # packageStartupMessage("Setting path to: ", pth)
         Sys.setenv(PATH=pth)

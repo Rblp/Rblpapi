@@ -35,7 +35,7 @@ if (Sys.info()["sysname"] == "Linux") {
       libname <- paste0("blpapi3_", x$dll, ".dll")
       libfile <- file.path(tmpdir, dirname, "lib", libname)
   
-      dllpath = file.path("inst/lib", x$path)
+      dllpath <- file.path("inst/lib", x$path)
       if (!file.exists(dllpath))
         dir.create(dllpath)
       file.copy(libfile, dllpath)
