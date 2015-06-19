@@ -31,15 +31,18 @@ if (Sys.info()["sysname"] == "Linux") {
     unzip(tmpfile, exdir = tmpdir)
 
     dirname <- gsub("-windows\\.zip", "", basefile)
-    libname <- paste0("blpapi3_",
-                      ifelse(Sys.info()["machine"] == "x86-64", "64", "32"),
-                      ".dll")
-    libfile <- file.path(tmpdir, dirname, "lib", libname)
-
-    if (!file.exists("inst/win"))
-        dir.create("inst/win")
-    file.copy(libfile, "inst/win")
-
+    
+    for (x in list(list(dll = "32", path = "i386"),
+                   list(dll = "64", path = "x64"))) {
+      libname <- paste0("blpapi3_", x$dll, ".dll")
+      libfile <- file.path(tmpdir, dirname, "lib", libname)
+  
+      dllpath = file.path("inst/win", x$path)  
+      if (!file.exists(dllpath))
+        dir.create(dllpath)
+      file.copy(libfile, dllpath)
+    }
+    
     inclfolder <- file.path(tmpdir, dirname, "include")
     inclfiles <- list.files(inclfolder, full.names = TRUE)
 
