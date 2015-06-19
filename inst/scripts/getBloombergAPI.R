@@ -19,8 +19,6 @@ if (Sys.info()["sysname"] == "Linux") {
 
     system("ldconfig")
 } else if (Sys.info()["sysname"] == "Windows") {
-    unlink("inst/win")
-
     tmpdir = tempdir()
 
     blpfile <- "http://static.bloomberglabs.com/api/cpp/blpapi_cpp_3.7.9.1-windows.zip"
@@ -37,7 +35,7 @@ if (Sys.info()["sysname"] == "Linux") {
       libname <- paste0("blpapi3_", x$dll, ".dll")
       libfile <- file.path(tmpdir, dirname, "lib", libname)
   
-      dllpath = file.path("inst/win", x$path)  
+      dllpath = file.path("inst/lib", x$path)
       if (!file.exists(dllpath))
         dir.create(dllpath)
       file.copy(libfile, dllpath)
@@ -46,6 +44,7 @@ if (Sys.info()["sysname"] == "Linux") {
     inclfolder <- file.path(tmpdir, dirname, "include")
     inclfiles <- list.files(inclfolder, full.names = TRUE)
 
+    unlink("inst/win")
     if (!file.exists("inst/win/include"))
         dir.create("inst/win/include")
     file.copy(inclfiles, "inst/win/include")
