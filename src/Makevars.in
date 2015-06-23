@@ -12,4 +12,3 @@ BBG_RPATH   = @rpath@
 PKG_CPPFLAGS = -I../inst/include/ -I.
 PKG_LIBS     = -l$(BBG_LIB) -L../inst/blp/ -Wl,-rpath,$(BBG_RPATH)
 
-
