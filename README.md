@@ -48,7 +48,7 @@ goog.ge.px <- bdp(securities = c("GOOG Equity","GE Equity"),
 
 ### Status
 
-Fully functional on Linux. 
+Fully functional on Linux and Windows. 
 
 ### Authors
 
