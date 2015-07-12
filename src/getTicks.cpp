@@ -43,6 +43,8 @@
  * IN THE SOFTWARE.
  */
 
+#include <vector>
+#include <string>
 #include <blpapi_session.h>
 #include <blpapi_eventdispatcher.h>
 
@@ -54,6 +56,7 @@
 #include <blpapi_subscriptionlist.h>
 #include <blpapi_defs.h>
 
+
 #include <time.h>
 #include <sstream>
 #include <iomanip>
@@ -62,6 +65,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <Rcpp.h>
 #include <blpapi_utils.h>
 
 namespace bbg = BloombergLP::blpapi;	// shortcut to not globally import both namespace
@@ -81,8 +85,10 @@ namespace {
 
 struct Ticks {
     std::vector<double> time;     // to be converted to POSIXct later
+    std::vector<std::string> type;     // string field to save quote type
     std::vector<double> value;
     std::vector<double> size;
+    std::vector<std::string> conditionCode;
 };
 
 void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
@@ -90,7 +96,7 @@ void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
     int numItems = data.numValues();
     if (verbose) {
         Rcpp::Rcout <<"Response contains " << numItems << " items" << std::endl;
-        Rcpp::Rcout <<"Time\t\tType\t\tValue\t\tSize" << std::endl;
+        Rcpp::Rcout <<"Time\t\tType\t\tValue\t\tSize\t\tCondition Code" << std::endl;
     }
     for (int i = 0; i < numItems; ++i) {
         bbg::Element item = data.getValueAsElement(i);
@@ -98,6 +104,13 @@ void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
         std::string type = item.getElementAsString(TYPE);
         double value = item.getElementAsFloat64(VALUE);
         int size = item.getElementAsInt32(TICK_SIZE);
+        std::string conditionCode;
+        if (item.hasElement(COND_CODE)) {
+            conditionCode = item.getElementAsString(COND_CODE);
+        }
+        else {
+            conditionCode = "";
+        }
         if (verbose) {
             Rcpp::Rcout.setf(std::ios::fixed, std::ios::floatfield);
             Rcpp::Rcout << time.month() << '/' << time.day() << '/' << time.year()
@@ -105,11 +118,14 @@ void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
                         <<  "\t\t" << std::showpoint
                         << type << "\t\t"
                         << value << "\t\t"
-                        << size << std::endl;
+                        << size << "\t\t"
+                        << conditionCode << std::endl;
         }
         ticks.time.push_back(bbgDatetimeToUTC(time));
+        ticks.type.push_back(type);    // since verbose mode is saving tick type, push into newly defined type vector in ticks
         ticks.value.push_back(value);
         ticks.size.push_back(size);
+        ticks.conditionCode.push_back(conditionCode);
     }
 }
 
@@ -128,10 +144,11 @@ void processResponseEvent(bbg::Event &event, Ticks &ticks, const bool verbose) {
 // [[Rcpp::export]]
 Rcpp::DataFrame getTicks_Impl(SEXP con,
                              std::string security,
-                             std::string eventType,
+                             std::vector<std::string> eventType,
                              std::string startDateTime,
                              std::string endDateTime,
-                             bool verbose=false) {
+                             bool setCondCodes=false,
+                             bool verbose=false) { // verbose mode false = default
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     bbg::Session* session =
@@ -148,7 +165,14 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
     request.set("security", security.c_str());
 
     bbg::Element eventTypes = request.getElement("eventTypes");
-    eventTypes.appendValue(eventType.c_str());   // could generalize to vector of even
+    //eventTypes.appendValue(eventType[0].c_str());   // could generalize to vector of even
+    for (size_t i = 0; i < eventType.size(); i++) {
+        eventTypes.appendValue(eventType[i].c_str());
+    }
+    
+    // remember to expose this to R function later. hardcoded for now. also remember additional conditionCode field available to save if set to true
+    request.set("includeConditionCodes", setCondCodes);
+    request.set("includeNonPlottableEvents", setCondCodes);
 
     request.set("startDateTime", startDateTime.c_str());
     request.set("endDateTime", endDateTime.c_str());
@@ -183,8 +207,10 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
     }
 
     return Rcpp::DataFrame::create(Rcpp::Named("times") = createPOSIXtVector(ticks.time),
+                                   Rcpp::Named("type") = ticks.type, // export/save to R the ticktype from newly created type vector in ticks.
                                    Rcpp::Named("value") = ticks.value,
-                                   Rcpp::Named("size")  = ticks.size);
+                                   Rcpp::Named("size")  = ticks.size,
+                                   Rcpp::Named("conditionCode") = ticks.conditionCode);
 
 }
 
