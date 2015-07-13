@@ -26,7 +26,7 @@
 ##' an object of the type selected in \code{returnAs}.
 ##' @author Dirk Eddelbuettel
 getTicks <- function(security,
-                     eventType = c("TRADE"),
+                     eventType = "TRADE",
                      startTime = Sys.time()-60*60,
                      endTime = Sys.time(),
                      verbose = FALSE,

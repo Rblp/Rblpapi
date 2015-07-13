@@ -6,13 +6,14 @@
 \usage{
 getTicks(security, eventType = "TRADE", startTime = Sys.time() - 60 * 60,
   endTime = Sys.time(), verbose = FALSE, returnAs = getOption("blpType",
-  "matrix"), tz = Sys.getenv("TZ", unset = "UTC"), con = .pkgenv$con)
+  "matrix"), setCondCodes = FALSE, tz = Sys.getenv("TZ", unset = "UTC"),
+  con = .pkgenv$con)
 }
 \arguments{
 \item{security}{A character variable describing a valid security ticker}
 
-\item{eventType}{A character variable describing an event type;
-default is \sQuote{TRADE}}
+\item{eventType}{A character variable describing an event type. Multiple events can be specified
+by a list \code{c("TRADE", "BEST_BID", "BEST_ASK")}, default is \sQuote{TRADE}}
 
 \item{startTime}{A Datetime object with the start time, defaults
 to one hour before current time}
@@ -26,6 +27,10 @@ desired, defaults to \sQuote{FALSE}}
 \item{returnAs}{A character variable describing the type of return
 object; currently supported are \sQuote{matrix} (also the default),
 \sQuote{fts}, \sQuote{xts} and \sQuote{zoo}}
+
+\item{setCondCodes}{A boolean indicating whether to return any ticks with condition codes,
+associated with extraordinary trading and quoting circumstances,
+defaults to \sQuote{FALSE}. Similar to setting \code{CondCodes = S} and \code{QRM = S} in Excel API}
 
 \item{tz}{A character variable with the desired local timezone,
 defaulting to the value \sQuote{TZ} environment variable, and

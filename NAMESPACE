@@ -1,15 +1,14 @@
 useDynLib(Rblpapi)
 
 import(Rcpp)
-
-export(
-blpConnect,
-blpDisconnect,
-blpAuthenticate,
-bdp,
-bdh,
-bds,
-fieldSearch,
-getBars,
-getTicks
-)
+importFrom(utils, "object.size", "packageDescription")
+export(blpConnect,
+       blpDisconnect,
+       blpAuthenticate,
+       bdp,
+       bdh,
+       bds,
+       fieldSearch,
+       getBars,
+       getTicks
+       )
