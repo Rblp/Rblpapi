@@ -11,6 +11,7 @@
 ##' @param endTime A Datetime object with the end time, defaults
 ##' to current time
 ##' @param gapFillInitialBar A boolean indicating whether the initial bar is to be filled, defaults to \sQuote{FALSE}
+##' @param adjustmentFollowDPDF A boolean indicating whether DPDF settings will be applied, defaults to \sQuote{TRUE}
 ##' @param verbose A boolean indicating whether verbose operation is
 ##' desired, defaults to \sQuote{FALSE}
 ##' @param returnAs A character variable describing the type of return
@@ -36,6 +37,7 @@ getBars <- function(security,
                     startTime = Sys.time()-60*60*6,
                     endTime = Sys.time(),
                     gapFillInitialBar = FALSE,
+                    adjustmentFollowDPDF = TRUE,
                     verbose = FALSE,
                     returnAs = getOption("blpType", "matrix"),
                     tz = Sys.getenv("TZ", unset="UTC"),
@@ -45,10 +47,10 @@ getBars <- function(security,
     startUTC <- format(startTime, fmt, tz="UTC")
     endUTC <- format(endTime, fmt, tz="UTC")
     res <- getBars_Impl(con, security, eventType, barInterval,
-                        startUTC, endUTC, gapFillInitialBar, verbose)
+                        startUTC, endUTC, gapFillInitialBar, adjustmentFollowDPDF, verbose)
 
     attr(res[,1], "tzone") <- tz
-    
+
     res <- switch(returnAs,
                   matrix = res,                # default is matrix
                   fts    = fts::fts(res[,1], res[,-1]),

@@ -6,7 +6,7 @@
 \usage{
 getBars(security, eventType = "TRADE", barInterval = 60,
   startTime = Sys.time() - 60 * 60 * 6, endTime = Sys.time(),
-  gapFillInitialBar = FALSE, verbose = FALSE,
+  gapFillInitialBar = FALSE, adjustmentFollowDPDF = TRUE, verbose = FALSE,
   returnAs = getOption("blpType", "matrix"), tz = Sys.getenv("TZ", unset =
   "UTC"), con = .pkgenv$con)
 }
@@ -25,6 +25,8 @@ to one hour before current time}
 to current time}
 
 \item{gapFillInitialBar}{A boolean indicating whether the initial bar is to be filled, defaults to \sQuote{FALSE}}
+
+\item{adjustmentFollowDPDF}{A boolean indicating whether DPDF settings will be applied, defaults to \sQuote{TRUE}}
 
 \item{verbose}{A boolean indicating whether verbose operation is
 desired, defaults to \sQuote{FALSE}}

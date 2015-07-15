@@ -91,7 +91,7 @@ struct Bars {
     std::vector<double> volume;   // instread of long long
 };
 
-void processMessage(bbg::Message &msg, Bars &bars, 
+void processMessage(bbg::Message &msg, Bars &bars,
                     const int barInterval, const bool verbose) {
     bbg::Element data = msg.getElement(BAR_DATA).getElement(BAR_TICK_DATA);
     int numBars = data.numValues();
@@ -126,7 +126,7 @@ void processMessage(bbg::Message &msg, Bars &bars,
                         << std::noshowpoint
                         << volume << std::endl;
         }
-        bars.time.push_back(bbgDatetimeToUTC(time)); 
+        bars.time.push_back(bbgDatetimeToUTC(time));
         bars.open.push_back(open);
         bars.high.push_back(high);
         bars.low.push_back(low);
@@ -136,7 +136,7 @@ void processMessage(bbg::Message &msg, Bars &bars,
     }
 }
 
-void processResponseEvent(bbg::Event &event, Bars &bars, 
+void processResponseEvent(bbg::Event &event, Bars &bars,
                           const int barInterval, const bool verbose) {
     bbg::MessageIterator msgIter(event);
     while (msgIter.next()) {
@@ -157,6 +157,7 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
                              std::string startDateTime,
                              std::string endDateTime,
                              bool gapFillInitialBar=false,
+                             bool adjustmentFollowDPDF=true,
                              bool verbose=false) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
@@ -178,6 +179,7 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
     request.set("startDateTime", startDateTime.c_str());
     request.set("endDateTime", endDateTime.c_str());
     request.set("gapFillInitialBar", gapFillInitialBar);
+    request.set("adjustmentFollowDPDF", adjustmentFollowDPDF);
 
     if (verbose) Rcpp::Rcout <<"Sending Request: " << request << std::endl;
     session->sendRequest(request);
