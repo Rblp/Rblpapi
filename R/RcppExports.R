@@ -29,7 +29,7 @@ getBars_Impl <- function(con, security, eventType, barInterval, startDateTime, e
     .Call('Rblpapi_getBars_Impl', PACKAGE = 'Rblpapi', con, security, eventType, barInterval, startDateTime, endDateTime, gapFillInitialBar, verbose)
 }
 
-getTicks_Impl <- function(con, security, eventType, startDateTime, endDateTime, setCondCodes = FALSE, verbose = FALSE) {
-    .Call('Rblpapi_getTicks_Impl', PACKAGE = 'Rblpapi', con, security, eventType, startDateTime, endDateTime, setCondCodes, verbose)
+getTicks_Impl <- function(con, security, eventType, startDateTime, endDateTime, verbose = FALSE) {
+    .Call('Rblpapi_getTicks_Impl', PACKAGE = 'Rblpapi', con, security, eventType, startDateTime, endDateTime, verbose)
 }
 
