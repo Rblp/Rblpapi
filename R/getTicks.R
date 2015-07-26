@@ -38,12 +38,33 @@ getTicks <- function(security,
     res <- getTicks_Impl(con, security, eventType, startUTC, endUTC, verbose)
 
     attr(res[,1], "tzone") <- tz
-    
+
+    ## if length(eventype) > 1 and xts is desired, create a larger xts
+    if (length(eventType) > 1 && returnAs == "xts") {
+
+        ## Subset into blocks for each event type, creating xts
+        rl <- lapply(eventType,
+                 function(s) {
+                     x <- subset(res, res$type==s)
+                     colnames(x)[3] <- tolower(s)
+                     colnames(x)[4] <- paste0(tolower(s), "sz")
+                     xts::xts(x[,3:4], order.by=x[,1])
+                 })
+        x <- do.call(merge, rl)
+
+        ## Use na.locf to carry bid, ask, .. forward, but do not use trade column
+        ind <- !grepl("trade", colnames(x))
+        x[,ind] <- zoo::na.locf(x[,ind])
+
+        return(x)
+    }
+
+    ## return data, but omit event type which is character type
     res <- switch(returnAs,
-                  matrix = res,                # default is matrix
-                  fts    = fts::fts(res[,1], res[,-1]),
-                  xts    = xts::xts(res[,-1], order.by=res[,1]),
-                  zoo    = zoo::zoo(res[,-1], order.by=res[,1]),
+                  matrix = res[,-2],           # default is matrix
+                  fts    = fts::fts(res[,1], res[,-(1:2)]),
+                  xts    = xts::xts(res[,-(1:2)], order.by=res[,1]),
+                  zoo    = zoo::zoo(res[,-(1:2)], order.by=res[,1]),
                   res)                         # fallback is also matrix
     return(res)   # to return visibly
 
