@@ -5,9 +5,9 @@ CXX_STD = CXX11
 PKG_CPPFLAGS = -I../inst/win/include -I.
 
 ifeq "$(WIN)" "64"
-    PKG_LIBS = -lblpapi3_64 -Lx64
+    PKG_LIBS = -lblpapi3_64 -L../inst/libs/x64
 else
-    PKG_LIBS = -lblpapi3_32 -Li386
+    PKG_LIBS = -lblpapi3_32 -L../inst/libs/i386
 endif
 
 ## dll files contained in the tar.gz we shop

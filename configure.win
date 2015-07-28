@@ -1,4 +1,7 @@
 #!/bin/sh
 
-cd src && tar xfz ../inst/blp/blpWindows.tar.gz
+cd inst && \
+   mkdir libs && \
+   cd libs && \
+   tar xvfz ../inst/blp/blpWindows.tar.gz
 
