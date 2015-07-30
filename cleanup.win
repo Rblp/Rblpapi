@@ -1,0 +1,13 @@
+#!/bin/sh
+
+rm -rf src-i386 src-x64
+
+cd inst/
+if [ -d libs ]; then
+   cd libs
+   rm -rf i386 x64
+   cd ..
+   rmdir libs
+fi
+
+exit 0
