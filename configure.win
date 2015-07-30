@@ -1,7 +1,0 @@
-#!/bin/sh
-
-cd inst && \
-   mkdir libs && \
-   cd libs && \
-   tar xvfz ../inst/blp/blpWindows.tar.gz
-

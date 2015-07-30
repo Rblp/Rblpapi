@@ -1,23 +1,24 @@
-## -*- mode: Makefile; tab-width: 8 -*- 
+## -*- mode: Makefile; tab-width: 8 -*-
 
 CXX_STD = CXX11
 
 PKG_CPPFLAGS = -I../inst/win/include -I.
 
 ifeq "$(WIN)" "64"
-    PKG_LIBS = -lblpapi3_64 -L../inst/libs/x64
+    PKG_LIBS = -lblpapi3_64 -Lx64
 else
-    PKG_LIBS = -lblpapi3_32 -L../inst/libs/i386
+    PKG_LIBS = -lblpapi3_32 -Li386
 endif
 
-## dll files contained in the tar.gz we shop
-#win32libfile =  ../inst/blp/i386/blpapi3_32.dll
-#win64libfile =  ../inst/blp/x64/blpapi3_64.dll
+## SHLIB target is built by R, blpLibrary is a target we use to expand the tar.gz
+all:    	blpLibrary $(SHLIB)
 
 ## target to ensure tar.gz gets unpacked
-#blpLibrary:	$(win32libfile) $(win64libfile)
-#		-@if test ! -e $(win32libfile); then tar xfz ../inst/blp/blpWindows.tar.gz; fi
-#		-@if test ! -e $(win64libfile); then tar xfz ../inst/blp/blpWindows.tar.gz; fi
+## the '@' ensure operations are quiet;
+## in order to see commands as they happens add a 'v' to the tar and cp commands
+blpLibrary:
+		@tar xzf ../inst/blp/blpWindows.tar.gz
+		@if [ ! -d ../inst/libs ]; then mkdir ../inst/libs; fi
+		@cp -ax i386/ x64/ ../inst/libs
 
-## SHLIB target is built by R, blpLibrary is a target we use to expand the tar.gz 
-#all:    	$(SHLIB) blpLibrary
+.Phony:		blpLibrary
