@@ -12,7 +12,7 @@
 ##' @param overrides An optional named character vector with override
 ##' values. Each field must have both a name (designating the override
 ##' being set) as well as a value.
-##' @param identity An optional idendity object.
+##' @param identity An optional identity object.
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.

@@ -30,7 +30,7 @@ being set) as well as a value.}
 values. Each field must have both a name (designating the override
 being set) as well as a value.}
 
-\item{identity}{An optional idendity object.}
+\item{identity}{An optional identity object.}
 
 \item{con}{A connection object as created by a \code{blpConnect}
 call, and retrieved via the internal function
