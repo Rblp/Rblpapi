@@ -8,7 +8,7 @@ getBars(security, eventType = "TRADE", barInterval = 60,
   startTime = Sys.time() - 60 * 60 * 6, endTime = Sys.time(),
   gapFillInitialBar = FALSE, verbose = FALSE,
   returnAs = getOption("blpType", "matrix"), tz = Sys.getenv("TZ", unset =
-  "UTC"), con = .pkgenv$con)
+  "UTC"), con = defaultConnection())
 }
 \arguments{
 \item{security}{A character variable describing a valid security ticker}
@@ -37,7 +37,9 @@ object; currently supported are \sQuote{matrix} (also the default),
 defaulting to the value \sQuote{TZ} environment variable, and
 \sQuote{UTC} if unset}
 
-\item{con}{A connection object as returned by a \code{blpConnect} call}
+\item{con}{A connection object as created by a \code{blpConnect}
+call, and retrieved via the internal function
+\code{defaultConnection}.}
 }
 \value{
 A numeric matrix with elements \sQuote{time} (as a

@@ -19,7 +19,9 @@
 ##' @param tz A character variable with the desired local timezone,
 ##' defaulting to the value \sQuote{TZ} environment variable, and
 ##' \sQuote{UTC} if unset
-##' @param con A connection object as returned by a \code{blpConnect} call
+##' @param con A connection object as created by a \code{blpConnect}
+##' call, and retrieved via the internal function
+##' \code{defaultConnection}.
 ##' @return A numeric matrix with elements \sQuote{time} (as a
 ##' \sQuote{POSIXct} object), \sQuote{open}, \sQuote{high},
 ##' \sQuote{low}, \sQuote{close}, \sQuote{numEvents}, \sQuote{volume},
@@ -39,7 +41,7 @@ getBars <- function(security,
                     verbose = FALSE,
                     returnAs = getOption("blpType", "matrix"),
                     tz = Sys.getenv("TZ", unset="UTC"),
-                    con = .pkgenv$con) {
+                    con = defaultConnection()) {
 
     fmt <- "%Y-%m-%dT%H:%M:%S"
     startUTC <- format(startTime, fmt, tz="UTC")

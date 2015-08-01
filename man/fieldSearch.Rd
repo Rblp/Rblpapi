@@ -4,20 +4,25 @@
 \alias{fieldSearch}
 \title{Search for matching data fields}
 \usage{
-fieldSearch(searchterm, excludeterm = "Static", con = .pkgenv$con)
+fieldSearch(searchterm, excludeterm = "Static", con = defaultConnection())
 }
 \arguments{
 \item{searchterm}{A string with the term to search for}
 
-\item{excludeterm}{A string with an expression for matches to excludes, defaults to \dQuote{Static}}
+\item{excludeterm}{A string with an expression for matches to
+excludes, defaults to \dQuote{Static}}
 
-\item{con}{A connection object as returned by a \code{blpConnect} call}
+\item{con}{A connection object as created by a \code{blpConnect}
+call, and retrieved via the internal function
+\code{defaultConnection}.}
 }
 \value{
-A \code{data.frame} with three columns of the id, mnenemonic and description of each match.
+A \code{data.frame} with three columns of the id,
+mnenemonic and description of each match.
 }
 \description{
-This function searches for matching Bloomberg data fields given a search term.
+This function searches for matching Bloomberg data fields given a
+search term.
 }
 \examples{
 \dontrun{

@@ -13,7 +13,9 @@
 ##' values. Each field must have both a name (designating the override
 ##' being set) as well as a value.
 ##' @param identity An optional idendity object.
-##' @param con A connection object as returned by a \code{blpConnect} call
+##' @param con A connection object as created by a \code{blpConnect}
+##' call, and retrieved via the internal function
+##' \code{defaultConnection}.
 ##' @return A list with as a entries as there are entries in
 ##' \code{securities}; each list contains a data.frame with one row
 ##' per observations and as many columns as entries in
@@ -24,7 +26,8 @@
 ##' \dontrun{
 ##'   bds("GOOG US Equity", "TOP_20_HOLDERS_PUBLIC_FILINGS")
 ##' }
-bds <- function(securities, fields, options=NULL, overrides=NULL, identity=NULL, con=.pkgenv$con) {
+bds <- function(securities, fields, options=NULL,
+                overrides=NULL, identity=NULL, con=defaultConnection()) {
     if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
     res <- bds_Impl(con, securities, fields, options, overrides, identity)
     if (typeof(res)=="list" && length(res)==1) {

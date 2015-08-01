@@ -18,7 +18,9 @@
 ##' values. Each field must have both a name (designating the override
 ##' being set) as well as a value.
 ##' @param identity An optional idendity object.
-##' @param con A connection object as returned by a \code{blpConnect} call
+##' @param con A connection object as created by a \code{blpConnect}
+##' call, and retrieved via the internal function
+##' \code{defaultConnection}.
 ##' @return A list with as a entries as there are entries in
 ##' \code{securities}; each list contains a data.frame with one row
 ##' per observations and as many columns as entries in
@@ -30,7 +32,8 @@
 ##'   bdh("SPY US Equity", c("PX_LAST", "VOLUME"), start.date=Sys.Date()-31)
 ##' }
 bdh <- function(securities, fields, start.date, end.date=NULL,
-                include.non.trading.days=FALSE, options=NULL, overrides=NULL, identity=NULL, con=.pkgenv$con) {
+                include.non.trading.days=FALSE, options=NULL, overrides=NULL, identity=NULL,
+                con=defaultConnection()) {
     if (!class(start.date) == "Date") stop("start.date must be a Date object", call.=FALSE)
     start.date <- format(start.date, format="%Y%m%d")
     if (!is.null(end.date)) {
