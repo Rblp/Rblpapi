@@ -5,7 +5,7 @@
 \title{Run 'Bloomberg Data Set' Queries}
 \usage{
 bds(securities, fields, options = NULL, overrides = NULL, identity = NULL,
-  con = .pkgenv$con)
+  con = defaultConnection())
 }
 \arguments{
 \item{securities}{A character vector with security symbols in
@@ -23,7 +23,9 @@ being set) as well as a value.}
 
 \item{identity}{An optional idendity object.}
 
-\item{con}{A connection object as returned by a \code{blpConnect} call}
+\item{con}{A connection object as created by a \code{blpConnect}
+call, and retrieved via the internal function
+\code{defaultConnection}.}
 }
 \value{
 A list with as a entries as there are entries in

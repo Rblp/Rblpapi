@@ -13,7 +13,9 @@
 ##' values. Each field must have both a name (designating the override
 ##' being set) as well as a value.
 ##' @param identity An optional idendity object.
-##' @param con A connection object as returned by a \code{blpConnect} call
+##' @param con A connection object as created by a \code{blpConnect}
+##' call, and retrieved via the internal function
+##' \code{defaultConnection}.
 ##' @return A data frame with as a many rows as entries in
 ##' \code{securities} and columns as entries in \code{fields}.
 ##' @author Whit Armstrong and Dirk Eddelbuettel
@@ -21,7 +23,7 @@
 ##' \dontrun{
 ##'   bdp(c("ESA Index", "SPY US Equity"), c("PX_LAST", "VOLUME"))
 ##' }
-bdp <- function(securities, fields, options=NULL, overrides=NULL, identity=NULL, con=.pkgenv$con) {
+bdp <- function(securities, fields, options=NULL, overrides=NULL, identity=NULL, con=defaultConnection()) {
     if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
     bdp_Impl(con, securities, fields, options, overrides, identity)
 }
