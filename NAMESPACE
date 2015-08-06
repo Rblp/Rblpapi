@@ -10,5 +10,6 @@ export(blpConnect,
        bds,
        fieldSearch,
        getBars,
+       getMultipleTicks,
        getTicks
        )
