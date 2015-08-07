@@ -27,8 +27,6 @@ install:
   - ./travis-tool.sh install_aptget r-cran-rcpp r-cran-bh
 
 script:
-  # fetch libblpapi3_*.so
-  - sudo inst/scripts/getBloombergAPI.sh
   - ./travis-tool.sh run_tests
 
 notifications:
