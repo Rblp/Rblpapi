@@ -3,9 +3,8 @@
 ##'
 ##' @title Get Ticks from Bloomberg
 ##' @param security A character variable describing a valid security ticker
-##' @param eventType A character variable describing an event
-##' type where multiple events can be specified by a vector: \code{c("TRADE",
-##' "BID", "ASK")}, default is just \sQuote{TRADE}.
+##' @param eventType A character variable describing an event, default
+##' is \sQuote{TRADE}.
 ##' @param startTime A Datetime object with the start time, defaults
 ##' to one hour before current time
 ##' @param endTime A Datetime object with the end time, defaults
@@ -41,26 +40,6 @@ getTicks <- function(security,
 
     attr(res[,1], "tzone") <- tz
 
-    ## if length(eventype) > 1 and xts is desired, create a larger xts
-    if (length(eventType) > 1 && returnAs == "xts") {
-
-        ## Subset into blocks for each event type, creating xts
-        rl <- lapply(eventType,
-                 function(s) {
-                     x <- subset(res, res$type==s)
-                     colnames(x)[3] <- tolower(s)
-                     colnames(x)[4] <- paste0(tolower(s), "sz")
-                     xts::xts(x[,3:4], order.by=x[,1])
-                 })
-        x <- do.call(merge, rl)
-
-        ## Use na.locf to carry bid, ask, .. forward, but do not use trade column
-        ind <- !grepl("trade", colnames(x))
-        x[,ind] <- zoo::na.locf(x[,ind])
-
-        return(x)
-    }
-
     ## return data, but omit event type which is character type
     res <- switch(returnAs,
                   matrix = res[,-2],           # default is matrix
@@ -79,5 +58,72 @@ getTicks <- function(security,
     ##' Excel API
 
     ##  setCondCodes = FALSE,
+
+}
+
+##' This function uses the Bloomberg API to retrieve multiple ticks
+##' for the requested security.
+##'
+##' @title Get Multiple Ticks from Bloomberg
+##' @param security A character variable describing a valid security ticker
+##' @param eventType A character vector describing event
+##' types, default is \code{c("TRADE", "BID", "ASK")}
+##' @param startTime A Datetime object with the start time, defaults
+##' to one hour before current time
+##' @param endTime A Datetime object with the end time, defaults
+##' to current time
+##' @param verbose A boolean indicating whether verbose operation is
+##' desired, defaults to \sQuote{FALSE}
+##' @param returnAs A character variable describing the type of return
+##' object; the default is return a matrix with results as received;
+##' optionally a \sQuote{wide} \code{xts} object with merged data can
+##' be returned
+##' @param tz A character variable with the desired local timezone,
+##' defaulting to the value \sQuote{TZ} environment variable, and
+##' \sQuote{UTC} if unset
+##' @param con A connection object as created by a \code{blpConnect}
+##' call, and retrieved via the internal function
+##' \code{defaultConnection}.
+##' @return A numeric matrix with elements \sQuote{time}, (as a
+##' \sQuote{POSIXct} object), \sQuote{values} and \sQuote{sizes}, or
+##' an object of the type selected in \code{returnAs}.
+##' @author Dirk Eddelbuettel
+getMultipleTicks <- function(security,
+                             eventType = c("TRADE", "BID", "ASK"),
+                             startTime = Sys.time()-60*60,
+                             endTime = Sys.time(),
+                             verbose = FALSE,
+                             returnAs = getOption("blpType", "matrix"),
+                             tz = Sys.getenv("TZ", unset="UTC"),
+                             con = defaultConnection()) {
+
+    fmt <- "%Y-%m-%dT%H:%M:%S"
+    startUTC <- format(startTime, fmt, tz="UTC")
+    endUTC <- format(endTime, fmt, tz="UTC")
+    res <- getTicks_Impl(con, security, eventType, startUTC, endUTC, verbose)
+
+    attr(res[,1], "tzone") <- tz
+
+    if (returnAs == "xts") {
+
+        ## Subset into blocks for each event type, creating xts
+        rl <- lapply(eventType,
+                 function(s) {
+                     x <- subset(res, res$type==s)
+                     colnames(x)[3] <- tolower(s)
+                     colnames(x)[4] <- paste0(tolower(s), "sz")
+                     xts::xts(x[,3:4], order.by=x[,1])
+                 })
+        x <- do.call(merge, rl)
+
+        ## Use na.locf to carry bid, ask, .. forward, but do not use trade column
+        ind <- !grepl("trade", colnames(x))
+        x[,ind] <- zoo::na.locf(x[,ind])
+
+        return(x)
+
+    } 
+        
+    return(res)
 
 }
