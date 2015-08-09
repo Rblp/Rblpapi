@@ -34,7 +34,7 @@ if [ ${sysname} == "Linux" ]; then
     rm blpLibrary.tar.gz
     
     cd ../../inst
-    wget https://github.com/Rblp/blp/raw/master/headers/blpHeaders.tar.gz
+    wget https://github.com/Rblp/blp/raw/master/headers/linux/blpHeaders.tar.gz
     tar xfz blpHeaders.tar.gz
     rm blpHeaders.tar.gz
     
