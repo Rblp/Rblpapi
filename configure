@@ -26,10 +26,18 @@ if [ ${sysname} == "Linux" ]; then
         exit -1
     fi
 
-    ## unpack shared library from tarball
+    ## download corresponding tarball and unpack shared library from tarball
+    mkdir -p inst/blp inst/include
     cd inst/blp/
-    tar xfz blpLinux.tar.gz libblpapi3_${flavour}.so
-
+    wget https://github.com/Rblp/blp/raw/master/linux${flavour}/blpLibrary.tar.gz
+    tar xfz blpLibrary.tar.gz libblpapi3_${flavour}.so
+    rm blpLibrary.tar.gz
+    
+    cd ../../inst
+    wget https://github.com/Rblp/blp/raw/master/headers/blpHeaders.tar.gz
+    tar xfz blpHeaders.tar.gz
+    rm blpHeaders.tar.gz
+    
 else
     echo "OS X is not yet supported. Contributions are welcome."
     exit -1
