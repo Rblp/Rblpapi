@@ -9,7 +9,7 @@ Imports: Rcpp (>= 0.11.0), utils
 Suggests: fts, xts, zoo
 LazyLoad: yes
 LinkingTo: Rcpp, BH
-Description: An R Interface to the BBG service is provided by the Blp API.
-SystemRequirements: BBG API headers and dynamic library (which are included 
- for both Linux and Windows)
+Description: An R Interface to the BBG service is provided via the Blp API.
+SystemRequirements: A valid BBG installation. API headers and dynamic library
+ are downloaded from <https://github.com/Rblp/blp> during the build step.
 License: GPL-3
