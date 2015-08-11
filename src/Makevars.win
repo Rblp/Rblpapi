@@ -1,24 +1,36 @@
 ## -*- mode: Makefile; tab-width: 8 -*-
 
-CXX_STD = CXX11
-
-PKG_CPPFLAGS = -I../inst/win/include -I.
-
+## Distinguish between 32 and 64 bit windows
 ifeq "$(WIN)" "64"
-    PKG_LIBS = -lblpapi3_64 -Lx64
+    FLV = x64
 else
-    PKG_LIBS = -lblpapi3_32 -Li386
+    FLV = i386
 endif
+
+## Standard compiler / linker flags including windows flavor
+CXX_STD = CXX11
+PKG_CPPFLAGS = -I../inst/include -I.
+PKG_LIBS = -lblpapi3_${WIN} -L${FLV}
+
 
 ## SHLIB target is built by R, blpLibrary is a target we use to expand the tar.gz
 all:    	blpLibrary $(SHLIB)
 
-## target to ensure tar.gz gets unpacked
-## the '@' ensure operations are quiet;
+## target to ensure tar.gz files get unpacked
+## the opening '@' ensures operations are executed 'quietly'
 ## in order to see commands as they happens add a 'v' to the tar and cp commands
+## curl has '-k' flag to suppress certificate warnings
 blpLibrary:
-		@tar xzf ../inst/blp/blpWindows.tar.gz
+		@if [ ! -d ../inst ]; then mkdir ../inst; fi
+		@curl -s -k -L -O https://github.com/Rblp/blp/raw/master/headers/windows/blpHeaders.tar.gz
+		@tar xfz blpHeaders.tar.gz -C ../inst
+		@curl -s -k -L -O https://github.com/Rblp/blp/raw/master/win${WIN}/blpLibrary.tar.gz
+		@tar xfz blpLibrary.tar.gz
+		@if [ ! -d ${FLV} ]; then mkdir ${FLV}; fi
+		@cp blpapi3_${WIN}.dll ${FLV}
 		@if [ ! -d ../inst/libs ]; then mkdir ../inst/libs; fi
-		@cp -ax i386/ x64/ ../inst/libs
+		@if [ ! -d ../inst/libs/${FLV} ]; then mkdir ../inst/libs/${FLV}; fi
+		@mv blpapi3_${WIN}.dll ../inst/libs/${FLV}
 
+## Ensure the blpLibrary target is always executed
 .Phony:		blpLibrary
