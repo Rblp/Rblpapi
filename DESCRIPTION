@@ -12,4 +12,4 @@ LinkingTo: Rcpp, BH
 Description: An R Interface to the BBG service is provided via the Blp API.
 SystemRequirements: A valid BBG installation. API headers and dynamic library
  are downloaded from <https://github.com/Rblp/blp> during the build step.
-License: GPL-3 + file LICENSE
+License: file LICENSE
