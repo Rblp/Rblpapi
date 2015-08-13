@@ -5,7 +5,8 @@ Date: 2015-08-13
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Author: Whit Armstrong, Dirk Eddelbuettel and John Laing
 Imports: Rcpp (>= 0.11.0), utils
-Suggests: fts, xts, zoo
+Suggests: fts, xts, zoo, knitr
+VignetteBuilder: knitr
 LazyLoad: yes
 LinkingTo: Rcpp, BH
 Description: An R Interface to the BBG service is provided via the Blp API.

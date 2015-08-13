@@ -1,0 +1,164 @@
+---
+title: "Introducing Rblpapi"
+author: "Dirk Eddelbuettel"
+date: "2015-08-13"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introducing Rblpapi}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+## Introduction
+
+The [Rblpapi package](https://github.com/Rblp/Rblpapi) connects the
+[R language and environment for statistical computing](http://www.r-project.org)
+to the [Bloomberg](http://www.bloomberg.com) services supported by the
+[official Bloomberg APIs](http://www.bloomberglabs.com/api/).
+
+The [Rblpapi package](https://github.com/Rblp/Rblpapi) is provided in both
+source and binary (for Windows and OS X) via the
+[CRAN](http://cran.r-project.org) network for R.  Source code is available
+[at the corresponding GitHub repo](https://github.com/Rblp/Rblpapi); the
+[blp](https://github.com/Rblp/blp) contains the Bloomberg APIU components
+required during the build.
+
+## Usage
+
+The next few section illustrate key functions within the package. All
+functions also have proper help pages for fuller details.
+
+### Package Load
+
+Use
+
+```{r, eval=FALSE}
+library(Rblpapi)
+````
+
+to load the package.  You can also set options which will
+automatically connect at package load; see the next section.
+
+### Connecting
+
+Use
+
+```{r, eval=FALSE}
+blpConnect()
+```
+
+which will connect to the Bloomberg backend. Default values for the IP
+address (127.0.0.1) and port (8194) are used and can be overridden both as
+function arguments and via global options `blpHost` and `blpPort`.  Moreever,
+if option `blpAutoConnect` is set to `TRUE`, this connection is done at
+package load.
+
+The resulting connection object is stored in a per-package environment providing
+a default value.  If needed it can be overridden in each accessor function.
+
+As the connection object is being held onto, the `blpDisconnect()`
+function is implemented as empty function without side-effects.  The internal
+function `defaultConnection()` returns the current connection object.
+
+### bdp: Bloomberg Data Point
+
+Current (or most recent) values of market-related instruments can be accessed
+via the `bdp()` function:
+
+```{r, eval=FALSE}
+bdp(c("ESA Index", "SPY US Equity"), c("PX_LAST", "VOLUME"))
+```
+
+### bds: Bloomberg Data Set 
+
+The `bds()` function can retrieve data of a more static nature:
+
+```{r, eval=FALSE}
+bds("GOOG US Equity", "TOP_20_HOLDERS_PUBLIC_FILINGS")
+```
+
+### bdh: Bloomberg Data History
+
+Historical data (at a daily granularity) can be retrieved with `bdh()`:
+
+```{r, eval=FALSE}
+bdh("SPY US Equity", c("PX_LAST", "VOLUME"), start.date=Sys.Date()-31)
+```
+
+### getBars: OHLCV Aggregates
+
+The `getBars()` function retrieves aggregated Open / High / Low /
+Close / Volume data. For example, in
+
+```{r, eval=FALSE}
+getBars("ES1 Index")
+```
+
+the default values of six hourly bars for the lead ES future.
+
+### getTicks: OHLCV Aggregates
+
+
+The `getTicks()` function retrieves tickdata, albeit with timestamps
+at a minute granularity.  For example, the call
+
+```{r, eval=FALSE}
+getTicks("ES1 Index")
+```
+
+retrieves all ticks for the given security over the last hour. 
+
+### fieldSearch: Query For Fields
+
+The `fieldSearch()` helper function can search for available fields
+which can be used with the `bdp()`, `bdh()` or `bds()` functions. For example,
+
+```{r, eval=FALSE}
+res <- fieldSearch("vwap")
+```
+
+search for fields describing volume-weighted average price fields
+
+## Acknowledgements
+
+Most valuable contributions from both
+[Jonathan Owen](https://github.com/jrowen) (who kick-started builds on
+Windows when we considered these to be impossible) and
+[Jeroen Ooms](https://jeroenooms.github.io/) (who took care of builds on OS
+X) are gratefully acknowledged.
+
+## Legal
+
+All trademarks and registered trademarks are the property of their respective owners.
+
+All code of the [Rblpapi package](https://github.com/Rblp/Rblpapi) (ie
+directories `src/`, `R/`, ...) is released under the
+[GNU GPL-3](http://www.gnu.org/licenses/gpl-3.0.en.html).
+
+All code retrieved from the [blp](https://github.com/Rblp/blp) repository
+during build is released by Bloomberg, available at the
+[BloombergLabs API](http://www.bloomberglabs.com/api/libraries/) site
+and released under the license included below.
+
+```
+Copyright 2012. Bloomberg Finance L.P.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this proprietary software and associated documentation files (the "Software"),
+to use, publish, or distribute copies of the Software, and to permit persons to
+whom the Software is furnished to do so.
+
+Any other use, including modifying, adapting, reverse engineering, decompiling,
+or disassembling, is not permitted.
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
