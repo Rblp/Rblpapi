@@ -40,7 +40,7 @@ else
 fi
 
 # Populate Makevars
-rpath=$(Rscript -e 'cat(file.path(.libPaths()[1], "Rblpapi", "libs"))')
+rpath=$(Rscript -e 'cat(file.path(.libPaths()[1], "Rblpapi", "blp"))')
 arch=$(uname -m)
 if [ "${arch}" = "x86_64" ]; then
     echo "Setting up compilation for 64-bit system"
@@ -63,8 +63,8 @@ rm blpHeaders.tar.gz
 
 # Download precompiled shared library
 cd ..
-mkdir -p inst/libs
-cd inst/libs
+mkdir -p inst/blp
+cd inst/blp
 curl -OL https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
 tar xfz blpLibrary.tar.gz libblpapi3_${flavour}.so
 rm blpLibrary.tar.gz
