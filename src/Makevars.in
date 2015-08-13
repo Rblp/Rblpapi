@@ -2,7 +2,7 @@
 ##
 ##  Makefile -- Unix build system
 ##
-##  Copyright (C) 2015  Whit Armstrong, Dirk Eddelbuettel and John Laing
+##  Copyright (C) 2015  Dirk Eddelbuettel and Jeroen Ooms
 ##
 ##  This file is part of Rblpapi
 ##
@@ -30,5 +30,7 @@ BBG_RPATH   = @rpath@
 ## set include and linker options
 ## Bbg API files are assummed to be in the standard search path
 PKG_CPPFLAGS = -I../inst/include/ -I.
-PKG_LIBS     = -l$(BBG_LIB) -L../inst/blp/ -Wl,-rpath,$(BBG_RPATH)
+PKG_LIBS     = -l$(BBG_LIB) -L../inst/blp -Wl,-rpath,$(BBG_RPATH)
 
+all: $(SHLIB)
+	@if command -v install_name_tool; then echo "fixxing"; install_name_tool -change libblpapi3_64.so '@rpath/libblpapi3_64.so' Rblpapi.so; fi
