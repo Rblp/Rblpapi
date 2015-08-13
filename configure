@@ -58,7 +58,7 @@ fi
 
 ## Get and install header files
 (cd inst; 
-    curl -OL https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz; 
+    wget https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz; 
     tar xfz blpHeaders.tar.gz;
     rm blpHeaders.tar.gz)
 
@@ -66,7 +66,7 @@ fi
 (cd inst;
     mkdir -p blp;
     cd blp;
-    curl -OL https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
+    wget https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
     tar xfz blpLibrary.tar.gz libblpapi3_${flavour}.so
     rm blpLibrary.tar.gz)
 
