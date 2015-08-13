@@ -31,8 +31,10 @@ fi
 sysname=$(Rscript -e 'cat(Sys.info()["sysname"])')
 if [ ${sysname} == "Linux" ]; then
     platform="linux"
+    download="wget -q"
 elif [ ${sysname} == "Darwin" ]; then
     platform="osx"
+    download="curl -s -k -L -O"
 else
     echo "Unsupported platform: $sysname"
     echo "Check http://www.bloomberglabs.com/api/libraries/ for possible support first."
@@ -58,7 +60,7 @@ fi
 
 ## Get and install header files
 (cd inst; 
-    wget https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz; 
+    ${download} https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz; 
     tar xfz blpHeaders.tar.gz;
     rm blpHeaders.tar.gz)
 
@@ -66,7 +68,7 @@ fi
 (cd inst;
     mkdir -p blp;
     cd blp;
-    wget https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
+    ${download} https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
     tar xfz blpLibrary.tar.gz libblpapi3_${flavour}.so
     rm blpLibrary.tar.gz)
 
