@@ -28,7 +28,8 @@ if [ "${uname}" = "" ]; then
 fi
 
 ## Check for Linux or OSX
-sysname=$(Rscript -e 'cat(Sys.info()["sysname"])')
+: ${R_HOME=$(R RHOME)}
+sysname=$(${R_HOME}/bin/Rscript -e 'cat(Sys.info()["sysname"])')
 if [ ${sysname} == "Linux" ]; then
     platform="linux"
     download="wget -q"
@@ -43,7 +44,7 @@ else
 fi
 
 ## Populate Makevars
-rpath=$(Rscript -e 'cat(file.path(.libPaths()[1], "Rblpapi", "blp"))')
+rpath=$(${R_HOME}/bin/Rscript -e 'cat(file.path(.libPaths()[1], "Rblpapi", "blp"))')
 arch=$(uname -m)
 if [ "${arch}" = "x86_64" ]; then
     echo "Setting up compilation for 64-bit system on ${platform}"
