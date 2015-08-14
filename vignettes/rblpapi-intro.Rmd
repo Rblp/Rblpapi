@@ -20,7 +20,7 @@ The [Rblpapi package](https://github.com/Rblp/Rblpapi) is provided in both
 source and binary (for Windows and OS X) via the
 [CRAN](http://cran.r-project.org) network for R.  Source code is available
 [at the corresponding GitHub repo](https://github.com/Rblp/Rblpapi); the
-[blp](https://github.com/Rblp/blp) contains the Bloomberg APIU components
+[blp repo](https://github.com/Rblp/blp) contains the Bloomberg API components
 required during the build.
 
 ## Usage
@@ -49,7 +49,7 @@ blpConnect()
 
 which will connect to the Bloomberg backend. Default values for the IP
 address (127.0.0.1) and port (8194) are used and can be overridden both as
-function arguments and via global options `blpHost` and `blpPort`.  Moreever,
+function arguments and via global options `blpHost` and `blpPort`.  Moreover,
 if option `blpAutoConnect` is set to `TRUE`, this connection is done at
 package load.
 
@@ -57,7 +57,7 @@ The resulting connection object is stored in a per-package environment providing
 a default value.  If needed it can be overridden in each accessor function.
 
 As the connection object is being held onto, the `blpDisconnect()`
-function is implemented as empty function without side-effects.  The internal
+function is implemented as an empty function without side-effects.  The internal
 function `defaultConnection()` returns the current connection object.
 
 ### bdp: Bloomberg Data Point
@@ -96,7 +96,7 @@ getBars("ES1 Index")
 
 the default values of six hourly bars for the lead ES future.
 
-### getTicks: OHLCV Aggregates
+### getTicks: Transactional Tick Data
 
 
 The `getTicks()` function retrieves tickdata, albeit with timestamps
