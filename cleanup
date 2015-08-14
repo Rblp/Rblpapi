@@ -1,4 +1,3 @@
 #!/bin/bash
 
-rm -rf src/*.o src/Rblpapi.so src/Rblpapi.dylib src/Rblpapi.dll src/Makevars \
-      inst/blp/*.so inst/blp/*.dylib inst/blp/i386/ inst/blp/x64
+rm -rf src/*.o src/Rblpapi.so src/Rblpapi.dylib src/Rblpapi.dll src/Makevars inst/blp inst/include/

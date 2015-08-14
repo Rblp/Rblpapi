@@ -1,10 +1,15 @@
 2015-08-13  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION: Version 0.3.0
+
 	* vignettes/rblpapi-intro.Rmd: Added vignette
 	* DESCRIPTION: Add knitr to Suggests: and VignetteBuilder:
+
 	* .travis.yml: Add knitr to installed packages
 
 	* configure: Refine which program is used for downloads
+
+	* cleanup: Refine what is removed post-build
 
 2015-08-12  Jeroen Ooms  <jeroenooms@gmail.com>
 
