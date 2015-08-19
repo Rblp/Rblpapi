@@ -49,6 +49,14 @@
 ##' @examples
 ##' \dontrun{
 ##'   bdh("SPY US Equity", c("PX_LAST", "VOLUME"), start.date=Sys.Date()-31)
+##'
+##'   ## example for an options field: request monthly data; see section A.2.4 of
+##'   ##  http://www.bloomberglabs.com/content/uploads/sites/2/2014/07/blpapi-developers-guide-2.54.pdf
+##'   ## for more 
+##'   opt <- c("periodicityAdjustment"="MONTHLY")
+##'   bdh("SPY US Equity", c("PX_LAST", "VOLUME"),
+##'       start.date=Sys.Date()-31*6, options=opt)
+##' 
 ##' }
 bdh <- function(securities, fields, start.date, end.date=NULL,
                 include.non.trading.days=FALSE, options=NULL, overrides=NULL, identity=NULL,

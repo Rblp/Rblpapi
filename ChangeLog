@@ -1,3 +1,8 @@
+2015-08-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/bdh.R: Add example using optional parameter for monthly data
+	* man/bdh.Rd: Corresponding manual page
+
 2015-08-14  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Version 0.3.0
