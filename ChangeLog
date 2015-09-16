@@ -4,6 +4,10 @@
 	issue ticket #67)
 	* man/bdp.Rd: Corresponding manual page update
 
+2015-09-15  John Laing <john.laing@gmail.com>
+
+	* src/blpapi_utils.cpp: Fix Boost auto_ptr warning
+
 2015-08-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/bdh.R: Add example using optional parameter for monthly data
