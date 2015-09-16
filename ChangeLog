@@ -1,3 +1,9 @@
+2015-09-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/bdp.R: Add example using override for vendor-specific data (cf
+	issue ticket #67)
+	* man/bdp.Rd: Corresponding manual page update
+
 2015-08-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/bdh.R: Add example using optional parameter for monthly data
