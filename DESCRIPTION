@@ -1,6 +1,6 @@
 Package: Rblpapi
 Title: R Interface to BBG
-Version: 0.3.0.1
+Version: 0.3.0.2
 Date: 2015-09-16
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Author: Whit Armstrong, Dirk Eddelbuettel and John Laing
