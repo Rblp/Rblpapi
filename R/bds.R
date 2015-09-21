@@ -47,7 +47,7 @@
 ##' }
 bds <- function(securities, fields, options=NULL,
                 overrides=NULL, identity=NULL, con=defaultConnection()) {
-    if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
+    if (length(securities)!=1L) stop("more than one security submitted.", call.=FALSE)
     res <- bds_Impl(con, securities, fields, options, overrides, identity)
     if (typeof(res)=="list" && length(res)==1) {
         res <- res[[1]]
