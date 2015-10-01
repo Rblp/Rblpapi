@@ -125,6 +125,9 @@ getMultipleTicks <- function(security,
 
     if (returnAs == "xts") {
 
+        ## Make timestamps unique
+        res[,1] <- xts::make.index.unique(res[,1], eps=2e-6)
+
         ## Subset into blocks for each event type, creating xts
         rl <- lapply(eventType,
                  function(s) {
@@ -138,6 +141,7 @@ getMultipleTicks <- function(security,
         ## Use na.locf to carry bid, ask, .. forward, but do not use trade column
         ind <- !grepl("trade", colnames(x))
         x[,ind] <- zoo::na.locf(x[,ind])
+        index(x) <- trunc(index(x))     # remove unique-ified timestamps
 
         return(x)
 
