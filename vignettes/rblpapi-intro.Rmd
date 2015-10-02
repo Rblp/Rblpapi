@@ -85,6 +85,16 @@ Historical data (at a daily granularity) can be retrieved with `bdh()`:
 bdh("SPY US Equity", c("PX_LAST", "VOLUME"), start.date=Sys.Date()-31)
 ```
 
+
+### beqs: Bloomberg Equity Screen
+
+EQS data can be retrieved with `beqs()`:
+
+```{r, eval=FALSE}
+beqs(screenName = "PRODUCTION(JALSH)",screenType ="PRIVATE",Group = "JALSH",PiTDate = "20021231",con = con)
+```
+
+
 ### getBars: OHLCV Aggregates
 
 The `getBars()` function retrieves aggregated Open / High / Low /

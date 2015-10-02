@@ -1,3 +1,11 @@
+2015-10-03  Rademeyer Vermaak  <csrvermaak@hotmail.com>
+
+	* src/beqs.cpp: Add BEQS functionality
+	* R/beqs.R: Add BEQS functionality
+	* man/beqs.Rd: Corresponding manual page	
+	* vignettes/rblpapi-intro.Rmd: Add beqs call
+	* NAMESPACE: Add beqs call
+
 2015-08-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/bdh.R: Add example using optional parameter for monthly data

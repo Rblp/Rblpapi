@@ -17,4 +17,5 @@ StripTrailingWhitespace: Yes
 
 BuildType: Package
 PackageInstallArgs: --no-multiarch --with-keep.source
+PackageBuildArgs: Rblpapi/trunk
 PackageRoxygenize: rd
