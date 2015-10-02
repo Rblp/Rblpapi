@@ -60,17 +60,22 @@ else
 fi
 
 ## Get and install header files
-(cd inst; 
-    ${download} https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz; 
-    tar xfz blpHeaders.tar.gz;
-    rm blpHeaders.tar.gz)
+cwd=$(pwd)
+mkdir -p blp/${platform}
+cd blp/${platform}
+if [ ! -f blpHeaders.tar.gz ]; then
+    ${download} https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz
+    tar xfz blpHeaders.tar.gz -C ../../inst
+fi
+cd ${cwd}
 
 ## Get and install precompiled shared library
-(cd inst;
-    mkdir -p blp;
-    cd blp;
+mkdir -p inst/blp
+cd blp/${platform}
+if [ ! -f blpLibrary.tar.gz ]; then
     ${download} https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
-    tar xfz blpLibrary.tar.gz libblpapi3_${flavour}.so
-    rm blpLibrary.tar.gz)
+    tar xfz blpLibrary.tar.gz -C ../../inst/blp/ libblpapi3_${flavour}.so
+fi
+cd ${cwd}
 
 exit 0
