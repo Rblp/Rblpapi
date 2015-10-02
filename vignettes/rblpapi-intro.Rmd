@@ -83,6 +83,9 @@ Historical data (at a daily granularity) can be retrieved with `bdh()`:
 
 ```{r, eval=FALSE}
 bdh("SPY US Equity", c("PX_LAST", "VOLUME"), start.date=Sys.Date()-31)
+```### beqs: Bloomberg EQS data can be retrieved with `beqs()`:
+
+```{r, eval=FALSE}beqs("Global Oil Companies YTD Return","GLOBAL")
 ```
 
 ### getBars: OHLCV Aggregates

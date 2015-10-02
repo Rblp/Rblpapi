@@ -1,3 +1,32 @@
+2015-10-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure: Rewritten to (locally) cache the Bloomberg header and
+	and library files making (repeated) builds quicker (issue #65)
+	* src/Makevars.win: Ditto
+
+	* .gitignore: Add blp/ and inst/include/ with cached files
+	* .Rbuildignore: Ditto
+	* cleanup: Adjusted accordingly as well
+
+2015-09-30  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/getTicks.R (getMultipleTicks): In xts mode, make timestamps
+	unique prior to merge to ensure order is preserved (issue #76)
+
+2015-09-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* .travis.yml (notifications): Added slack notification
+
+2015-09-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/bdp.R: Add example using override for vendor-specific data (cf
+	issue ticket #67)
+	* man/bdp.Rd: Corresponding manual page update
+
+2015-09-15  John Laing <john.laing@gmail.com>
+
+	* src/blpapi_utils.cpp: Fix Boost auto_ptr warning
+
 2015-08-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/bdh.R: Add example using optional parameter for monthly data
