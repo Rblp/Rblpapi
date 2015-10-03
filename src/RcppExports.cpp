@@ -68,6 +68,22 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// beqs_Impl
+SEXP beqs_Impl(SEXP con_, std::string screenName, std::string screenType_, SEXP Group_, SEXP PiTDate_, SEXP languageId_);
+RcppExport SEXP Rblpapi_beqs_Impl(SEXP con_SEXP, SEXP screenNameSEXP, SEXP screenType_SEXP, SEXP Group_SEXP, SEXP PiTDate_SEXP, SEXP languageId_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type con_(con_SEXP);
+    Rcpp::traits::input_parameter< std::string >::type screenName(screenNameSEXP);
+    Rcpp::traits::input_parameter< std::string >::type screenType_(screenType_SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type Group_(Group_SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type PiTDate_(PiTDate_SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type languageId_(languageId_SEXP);
+    __result = Rcpp::wrap(beqs_Impl(con_, screenName, screenType_, Group_, PiTDate_, languageId_));
+    return __result;
+END_RCPP
+}
 // blpConnect_Impl
 SEXP blpConnect_Impl(const std::string host, const int port);
 RcppExport SEXP Rblpapi_blpConnect_Impl(SEXP hostSEXP, SEXP portSEXP) {
