@@ -1,4 +1,12 @@
-2015-10-01  Dirk Eddelbuettel  <edd@debian.org>
+2015-10-03  Rademeyer Vermaak  <csrvermaak@hotmail.com>
+
+	* src/beqs.cpp: Add BEQS functionality
+
+	* R/beqs.R: Add BEQS functionality
+
+	* man/beqs.Rd: Corresponding manual page
+
+	2015-10-01  Dirk Eddelbuettel  <edd@debian.org>
 
 	* configure: Rewritten to (locally) cache the Bloomberg header and
 	and library files making (repeated) builds quicker (issue #65)
