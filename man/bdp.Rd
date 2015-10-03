@@ -38,6 +38,9 @@ Data Point) queries
 \examples{
 \dontrun{
   bdp(c("ESA Index", "SPY US Equity"), c("PX_LAST", "VOLUME"))
+
+  ##  using overrides (cf https://github.com/Rblp/Rblpapi/issues/67)
+  bdp("EN00 Index", "MLI_OAS", overrides=c(MLI_DATE="20150831"))
 }
 }
 \author{

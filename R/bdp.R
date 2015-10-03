@@ -41,6 +41,9 @@
 ##' @examples
 ##' \dontrun{
 ##'   bdp(c("ESA Index", "SPY US Equity"), c("PX_LAST", "VOLUME"))
+##'
+##'   ##  using overrides (cf https://github.com/Rblp/Rblpapi/issues/67)
+##'   bdp("EN00 Index", "MLI_OAS", overrides=c(MLI_DATE="20150831"))
 ##' }
 bdp <- function(securities, fields, options=NULL, overrides=NULL, identity=NULL, con=defaultConnection()) {
     if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)

@@ -41,16 +41,14 @@ all:    	blpLibrary $(SHLIB)
 ## in order to see commands as they happens add a 'v' to the tar and cp commands
 ## curl has '-k' flag to suppress certificate warnings
 blpLibrary:
-		@if [ ! -d ../inst ]; then mkdir ../inst; fi
-		@curl -s -k -L -O https://github.com/Rblp/blp/raw/master/headers/windows/blpHeaders.tar.gz
-		@tar xfz blpHeaders.tar.gz -C ../inst
-		@curl -s -k -L -O https://github.com/Rblp/blp/raw/master/win${WIN}/blpLibrary.tar.gz
-		@tar xfz blpLibrary.tar.gz
-		@if [ ! -d ${FLV} ]; then mkdir ${FLV}; fi
+		@if [ ! -d ../inst ]; then mkdir -p ../inst; fi
+		@if [ ! -d ../blp/win/${FLV} ]; then mkdir -p ../blp/win/${FLV}; fi
+		@if [ ! -f ../blp/win/${FLV}/blpHeaders.tar.gz ]; then curl -s -k -L -O https://github.com/Rblp/blp/raw/master/headers/windows/blpHeaders.tar.gz; mv blpHeaders.tar.gz ../blp/win/${FLV}; tar xfz ../blp/win/${FLV}/blpHeaders.tar.gz -C ../inst; fi
+		@if [ ! -f ../blp/win/${FLV}/blpLibrary.tar.gz ]; then curl -s -k -L -O https://github.com/Rblp/blp/raw/master/win${WIN}/blpLibrary.tar.gz; mv blpLibrary.tar.gz ../blp/win/${FLV}; tar xfz ../blp/win/${FLV}/blpLibrary.tar.gz; fi
+		@if [ ! -d ${FLV} ]; then mkdir -p ${FLV}; fi
 		@cp blpapi3_${WIN}.dll ${FLV}
-		@if [ ! -d ../inst/libs ]; then mkdir ../inst/libs; fi
-		@if [ ! -d ../inst/libs/${FLV} ]; then mkdir ../inst/libs/${FLV}; fi
-		@mv blpapi3_${WIN}.dll ../inst/libs/${FLV}
+		@if [ ! -d ../inst/libs/${FLV} ]; then mkdir -p ../inst/libs/${FLV}; fi
+		@cp blpapi3_${WIN}.dll ../inst/libs/${FLV}
 
 ## Ensure the blpLibrary target is always executed
 .Phony:		blpLibrary

@@ -20,6 +20,7 @@
 #include <sstream>
 //#include <iostream>
 #include <algorithm>
+#define BOOST_NO_AUTO_PTR
 #include <boost/date_time/gregorian/gregorian_types.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/local_time/local_time_types.hpp>
