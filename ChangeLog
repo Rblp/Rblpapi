@@ -1,5 +1,8 @@
 2015-10-03  Dirk Eddelbuettel  <edd@debian.org>
 
+	* src/beqs.cpp: Added verbose flag
+	* R/beqs.R: Ditto
+
 	* man/beqs.Rd: Added by running roxygenize()
 	* src/RcppExports.cpp: Updated by running compileAttributes()
 	* R/RcppExports.R: Updated by running compileAttributes()

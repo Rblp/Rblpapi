@@ -17,8 +17,8 @@ bds_Impl <- function(con_, securities, field, options_, overrides_, identity_) {
     .Call('Rblpapi_bds_Impl', PACKAGE = 'Rblpapi', con_, securities, field, options_, overrides_, identity_)
 }
 
-beqs_Impl <- function(con_, screenName, screenType_, Group_, PiTDate_, languageId_) {
-    .Call('Rblpapi_beqs_Impl', PACKAGE = 'Rblpapi', con_, screenName, screenType_, Group_, PiTDate_, languageId_)
+beqs_Impl <- function(con_, screenName, screenType_, Group_, PiTDate_, languageId_, verbose = FALSE) {
+    .Call('Rblpapi_beqs_Impl', PACKAGE = 'Rblpapi', con_, screenName, screenType_, Group_, PiTDate_, languageId_, verbose)
 }
 
 blpConnect_Impl <- function(host, port) {

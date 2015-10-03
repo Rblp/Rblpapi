@@ -69,8 +69,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // beqs_Impl
-SEXP beqs_Impl(SEXP con_, std::string screenName, std::string screenType_, SEXP Group_, SEXP PiTDate_, SEXP languageId_);
-RcppExport SEXP Rblpapi_beqs_Impl(SEXP con_SEXP, SEXP screenNameSEXP, SEXP screenType_SEXP, SEXP Group_SEXP, SEXP PiTDate_SEXP, SEXP languageId_SEXP) {
+SEXP beqs_Impl(SEXP con_, std::string screenName, std::string screenType_, SEXP Group_, SEXP PiTDate_, SEXP languageId_, bool verbose);
+RcppExport SEXP Rblpapi_beqs_Impl(SEXP con_SEXP, SEXP screenNameSEXP, SEXP screenType_SEXP, SEXP Group_SEXP, SEXP PiTDate_SEXP, SEXP languageId_SEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -80,7 +80,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< SEXP >::type Group_(Group_SEXP);
     Rcpp::traits::input_parameter< SEXP >::type PiTDate_(PiTDate_SEXP);
     Rcpp::traits::input_parameter< SEXP >::type languageId_(languageId_SEXP);
-    __result = Rcpp::wrap(beqs_Impl(con_, screenName, screenType_, Group_, PiTDate_, languageId_));
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    __result = Rcpp::wrap(beqs_Impl(con_, screenName, screenType_, Group_, PiTDate_, languageId_, verbose));
     return __result;
 END_RCPP
 }
