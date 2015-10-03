@@ -141,10 +141,9 @@ getMultipleTicks <- function(security,
         ## Use na.locf to carry bid, ask, .. forward, but do not use trade column
         ind <- !grepl("trade", colnames(x))
         x[,ind] <- zoo::na.locf(x[,ind])
-        index(x) <- trunc(index(x))     # remove unique-ified timestamps
-
+        
+        zoo::index(x) <- trunc(zoo::index(x)) # truncated time stamp down to seconds
         return(x)
-
     } 
         
     return(res)

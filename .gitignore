@@ -6,3 +6,5 @@
 *.so
 .Rproj.user
 local/
+blp/
+inst/include/

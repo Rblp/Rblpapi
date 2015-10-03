@@ -3,3 +3,5 @@
 ^local
 .travis.yml
 ^deprecated
+^blp
+^inst/blp
