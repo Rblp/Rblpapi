@@ -64,10 +64,16 @@ string ToString(size_t sz) {
     return ss.str();
 }
 
-CharacterMatrix processResponseEvent(Event event,std::string PiTDate)
+CharacterMatrix processResponseEvent(Event event,SEXP PiTDate_)
 {
-    MessageIterator msgIter(event);
+    std::string PiTDate;
+    if(PiTDate_ == R_NilValue) {
+        PiTDate  = "NA";
+    } else {
+        PiTDate = Rcpp::as<std::string>(PiTDate_).c_str();
+    }
 
+    MessageIterator msgIter(event);
     CharacterMatrix ans;
 
     while (msgIter.next()) {
@@ -108,7 +114,11 @@ CharacterMatrix processResponseEvent(Event event,std::string PiTDate)
             Element fieldData = security.getElement("fieldData");
 
             // Set the first column as Date
-            m(i,0) = PiTDate.c_str();
+            if(std::strcmp(PiTDate.c_str(),"NA")==0) {
+                m(i,0) = NA_STRING;
+            } else {
+                m(i,0) = PiTDate.c_str();
+            }
 
             // Set Rownames
             rownames[i]=ToString(i+1);
@@ -155,9 +165,10 @@ CharacterMatrix processResponseEvent(Event event,std::string PiTDate)
 // [[Rcpp::export]]
 SEXP beqs_Impl(SEXP con_,
               std::string screenName,
-              std::string screenType,
-              std::string Group,
-              std::string PiTDate) {
+              std::string screenType_,
+              SEXP Group_,
+              SEXP PiTDate_,
+              SEXP languageId_) {
 
     //Rprintf("=======BEQS============ \n");
 
@@ -171,14 +182,25 @@ SEXP beqs_Impl(SEXP con_,
     Service refDataService = session->getService(rdsrv.c_str());
     Request request = refDataService.createRequest("BeqsRequest");
 
+
     request.set("screenName", screenName.c_str());
-    request.set("screenType",screenType.c_str());
-    request.set("Group",Group.c_str());
+    request.set("screenType",screenType_.c_str());
+
+    if (Group_ != R_NilValue) {
+        request.set ("Group", Rcpp::as<std::string>(Group_).c_str());
+    }
+
+    if (languageId_ != R_NilValue) {
+        request.set ("languageId", Rcpp::as<std::string>(languageId_).c_str());
+    }
+
 
     Element overrides = request.getElement("overrides");
     Element override1 = overrides.appendElement();
     override1.setElement("fieldId", "PiTDate");
-    override1.setElement("value", PiTDate.c_str());
+    if(PiTDate_ != R_NilValue) {
+        override1.setElement("value", Rcpp::as<std::string>(PiTDate_).c_str());
+    }
 
     session->sendRequest(request);
 
@@ -189,10 +211,10 @@ SEXP beqs_Impl(SEXP con_,
     while (!done) {
         Event event = session->nextEvent();
         if (event.eventType() == Event::PARTIAL_RESPONSE) {
-            ans = processResponseEvent(event,PiTDate.c_str());
+            ans = processResponseEvent(event,PiTDate_);
         }
         else if (event.eventType() == Event::RESPONSE) {
-            ans = processResponseEvent(event,PiTDate.c_str());
+            ans = processResponseEvent(event,PiTDate_);
             done = true;
         } else {
             MessageIterator msgIter(event);
@@ -207,6 +229,7 @@ SEXP beqs_Impl(SEXP con_,
             }
         }
     }
+
 
 return wrap(ans);
 

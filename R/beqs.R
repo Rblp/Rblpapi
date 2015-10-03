@@ -27,6 +27,7 @@
 ##' @param screenType A character string of value PRIVATE or GLOBAL
 ##' Use PRIVATE for user-defined EQS screen.
 ##' Use GLOBAL for Bloomberg EQS screen.
+##' @param languageID An optional character string with the EQS language
 ##' @param Group An optional character string with the Screen folder name as defined in EQS
 ##' @param PiTDate A character string with the Point in Time Date of the screen to execute.
 ##' Format = "YYYYMMDD"
@@ -37,11 +38,15 @@
 ##' @author Whit Armstrong, Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{
-##'   beqs(screenName = "PRODUCTION(JALSH)",screenType ="PRIVATE",Group = "JALSH",PiTDate = "20021231",con = con)
+##' beqs("Global Oil Companies YTD Return","GLOBAL")
+##' beqs("Global Oil Companies YTD Return","GLOBAL","GERMAN")
+##' beqs("Global Oil Companies YTD Return","GLOBAL","GERMAN","GENERAL")
+##' beqs("Global Oil Companies YTD Return","GLOBAL","ENGLISH","GENERAL","20150930")
 ##' }
-beqs <- function(screenName, screenType, Group=NULL, PiTDate, con=defaultConnection()) {
+beqs <- function(screenName, screenType="GLOBAL",languageID=NULL, Group=NULL, PiTDate=NULL, con=defaultConnection()) {
 
-    res <- beqs_Impl(con, screenName, screenType, Group, PiTDate)
+
+    res <- beqs_Impl(con, screenName, screenType, Group, PiTDate,languageID)
     if (typeof(res)=="list" && length(res)==1) {
         res <- res[[1]]
     }
