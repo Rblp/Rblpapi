@@ -119,6 +119,15 @@ res <- fieldSearch("vwap")
 
 search for fields describing volume-weighted average price fields
 
+### beqs: Bloomberg EQS Queries
+
+The `beqs()` function (which was contribued by Rademeyer Vermaak) can access
+EQS functionality: 
+
+```{r, eval=FALSE}
+beqs("Global Oil Companies YTD Return","GLOBAL")
+```
+
 ## Acknowledgements
 
 Most valuable contributions from both
