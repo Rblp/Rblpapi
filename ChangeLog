@@ -1,3 +1,17 @@
+2015-10-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Rolled (dev) Version and Date
+
+2015-10-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/beqs.cpp: Reworked to return a data frame, also changed some
+	argument names for consistency
+	* R/beqs.R: Corresponding changes
+
+	* man/beqs.Rd: Ditto
+	* src/RcppExports.cpp: Ditto
+	* R/RcppExports.R: Ditto
+
 2015-10-03  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/beqs.cpp: Added verbose flag

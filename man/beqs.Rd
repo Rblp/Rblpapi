@@ -4,30 +4,35 @@
 \alias{beqs}
 \title{Run 'Bloomberg EQS' Queries}
 \usage{
-beqs(screenName, screenType = "GLOBAL", languageID = NULL, Group = NULL,
-  PiTDate = NULL, con = defaultConnection())
+beqs(screenName, screenType = "GLOBAL", language = "", group = "",
+  date = NULL, verbose = FALSE, con = defaultConnection())
 }
 \arguments{
-\item{screenName}{A character string with the name of the screen to execute.
-It can be a user defined EQS screen or one of the Bloomberg Example screens on EQS}
+\item{screenName}{A character string with the name of the screen
+to execute.  It can be a user defined EQS screen or one of the
+Bloomberg Example screens on EQS}
 
 \item{screenType}{A character string of value PRIVATE or GLOBAL
 Use PRIVATE for user-defined EQS screen.
 Use GLOBAL for Bloomberg EQS screen.}
 
-\item{languageID}{An optional character string with the EQS language}
+\item{language}{An optional character string with the EQS language}
 
-\item{Group}{An optional character string with the Screen folder name as defined in EQS}
+\item{group}{An optional character string with the Screen folder
+name as defined in EQS}
 
-\item{PiTDate}{A character string with the Point in Time Date of the screen to execute.
-Format = "YYYYMMDD"}
+\item{date}{An optional date object with the Point in Time Date
+of the screen to execute.}
+
+\item{verbose}{A boolean indicating whether verbose operation is
+desired, defaults to \sQuote{FALSE}}
 
 \item{con}{A connection object as created by a \code{blpConnect}
 call, and retrieved via the internal function
 \code{defaultConnection}.}
 }
 \value{
-A matrix with requested EQS data
+A data frame object with the requested EQS data
 }
 \description{
 This function uses the Bloomberg API to retrieve 'beqs' (Bloomberg
@@ -35,6 +40,7 @@ EQS Data) queries
 }
 \examples{
 \dontrun{
+beqs("Global Oil Companies YTD Return")
 beqs("Global Oil Companies YTD Return","GLOBAL")
 beqs("Global Oil Companies YTD Return","GLOBAL","GERMAN")
 beqs("Global Oil Companies YTD Return","GLOBAL","GERMAN","GENERAL")
@@ -42,6 +48,6 @@ beqs("Global Oil Companies YTD Return","GLOBAL","ENGLISH","GENERAL","20150930")
 }
 }
 \author{
-Whit Armstrong, Dirk Eddelbuettel
+Rademeyer Vermaak and Dirk Eddelbuettel
 }
 
