@@ -64,8 +64,8 @@ string ToString(size_t sz) {
     return ss.str();
 }
 
-CharacterMatrix processResponseEvent(Event event,SEXP PiTDate_)
-{
+CharacterMatrix processResponseEvent(Event event, SEXP PiTDate_, const bool verbose) {
+
     std::string PiTDate;
     if(PiTDate_ == R_NilValue) {
         PiTDate  = "NA";
@@ -79,6 +79,7 @@ CharacterMatrix processResponseEvent(Event event,SEXP PiTDate_)
     while (msgIter.next()) {
 
         Message msg = msgIter.message();
+        if (verbose) msg.print(Rcpp::Rcout);
         Element response = msg.asElement();
 
         if(std::strcmp(response.name().string(),"BeqsResponse")) {
@@ -164,11 +165,12 @@ CharacterMatrix processResponseEvent(Event event,SEXP PiTDate_)
 // Simpler interface with std::vector<std::string> thanks to Rcpp::Attributes
 // [[Rcpp::export]]
 SEXP beqs_Impl(SEXP con_,
-              std::string screenName,
-              std::string screenType_,
-              SEXP Group_,
-              SEXP PiTDate_,
-              SEXP languageId_) {
+               std::string screenName,
+               std::string screenType_,
+               SEXP Group_,
+               SEXP PiTDate_,
+               SEXP languageId_,
+               bool verbose=false) { // verbose mode false = default
 
     //Rprintf("=======BEQS============ \n");
 
@@ -202,6 +204,7 @@ SEXP beqs_Impl(SEXP con_,
         override1.setElement("value", Rcpp::as<std::string>(PiTDate_).c_str());
     }
 
+    if (verbose) Rcpp::Rcout <<"Sending Request: " << request << std::endl;
     session->sendRequest(request);
 
     CharacterMatrix ans;
@@ -211,10 +214,12 @@ SEXP beqs_Impl(SEXP con_,
     while (!done) {
         Event event = session->nextEvent();
         if (event.eventType() == Event::PARTIAL_RESPONSE) {
-            ans = processResponseEvent(event,PiTDate_);
+            if (verbose) Rcpp::Rcout << "Processing Partial Response" << std::endl;
+            ans = processResponseEvent(event, PiTDate_, verbose);
         }
         else if (event.eventType() == Event::RESPONSE) {
-            ans = processResponseEvent(event,PiTDate_);
+            if (verbose) Rcpp::Rcout << "Processing Response" << std::endl;
+            ans = processResponseEvent(event, PiTDate_, verbose);
             done = true;
         } else {
             MessageIterator msgIter(event);

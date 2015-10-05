@@ -43,10 +43,11 @@
 ##' beqs("Global Oil Companies YTD Return","GLOBAL","GERMAN","GENERAL")
 ##' beqs("Global Oil Companies YTD Return","GLOBAL","ENGLISH","GENERAL","20150930")
 ##' }
-beqs <- function(screenName, screenType="GLOBAL",languageID=NULL, Group=NULL, PiTDate=NULL, con=defaultConnection()) {
+beqs <- function(screenName, screenType="GLOBAL", languageID=NULL,
+                 Group=NULL, PiTDate=NULL, verbose=FALSE, con=defaultConnection()) {
 
 
-    res <- beqs_Impl(con, screenName, screenType, Group, PiTDate,languageID)
+    res <- beqs_Impl(con, screenName, screenType, Group, PiTDate, languageID, verbose)
     if (typeof(res)=="list" && length(res)==1) {
         res <- res[[1]]
     }
