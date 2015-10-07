@@ -2,8 +2,7 @@
 //
 //  beqs.cpp -- "Bloomberg EQS" query function for the BLP API
 //
-//  Copyright (C) 2013  Whit Armstrong
-//  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel and John Laing
 //
 //  This file is part of Rblpapi
 //
@@ -20,6 +19,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
+// TODO: Date, Datetime, Int (?), ... results
 
 #include <vector>
 #include <string>
@@ -53,128 +53,99 @@ using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 
+Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
 
+    MessageIterator msgIter(event); 			// create message iterator 
+    if (!msgIter.next()) throw std::logic_error("Not a valid MessageIterator.");
 
-string ToString(size_t sz) {
+    Message msg = msgIter.message(); 			// get message 
+    if (verbose) msg.print(Rcpp::Rcout);
+    
+    Element response = msg.asElement(); 		// view as element
+    if (response.name().string() == "BeqsResponse") throw std::logic_error("Not a valid EQSDataResponse.");
 
-    stringstream ss;
+    Element data = msg.getElement("data"); 		// get data payload, extract field with display units 
+    Element fieldDisplayUnits = data.getElement("fieldDisplayUnits");
+    if (verbose) fieldDisplayUnits.print(Rcpp::Rcout);
 
-    ss << sz;
+    int cols = fieldDisplayUnits.numElements(); 	// copy display units into column names 
+    std::vector<std::string> colnames(cols);
+    for (int i=0; i<cols; i++) {
+        colnames[i] = fieldDisplayUnits.getElement(i).name().string();
+    }
+          
+    Rcpp::List lst(cols);       			// Rcpp 'List' container of given number of columns 
 
-    return ss.str();
-}
+    Element results = data.getElement("securityData"); 	// get security data payload == actual result set
+    int rows = results.numValues();                     // total number of rows in result set
+    if (verbose) results.print(Rcpp::Rcout);
 
-CharacterMatrix processResponseEvent(Event event, SEXP PiTDate_, const bool verbose) {
+    response = results.getValueAsElement(0); 		// pick first element to infer types 
+    data = response.getElement("fieldData");       	// get data payload of first elemnt
+    if (verbose) data.print(Rcpp::Rcout);
 
-    std::string PiTDate;
-    if(PiTDate_ == R_NilValue) {
-        PiTDate  = "NA";
-    } else {
-        PiTDate = Rcpp::as<std::string>(PiTDate_).c_str();
+    for (int i=0; i<cols; i++) { 			// loop over first data set, and infer types 
+        Element val = data.getElement(colnames[i].c_str());
+        if (val.datatype() == BLPAPI_DATATYPE_STRING) { 
+            lst[i] = Rcpp::CharacterVector(rows); 	  
+        } else if (val.datatype() == BLPAPI_DATATYPE_FLOAT64) {
+            lst[i] = Rcpp::NumericVector(rows);
+        } else {                  			// fallback 
+            lst[i] = Rcpp::CharacterVector(rows);
+        }
     }
 
-    MessageIterator msgIter(event);
-    CharacterMatrix ans;
+    for (int i = 0; i < rows; i++) { 			// now process data 
 
-    while (msgIter.next()) {
+        Element elem = results.getValueAsElement(i); 	// extract i-th element 
+        Element data = elem.getElement("fieldData");    // extract its data payload
+        if (verbose) data.print(Rcpp::Rcout);
 
-        Message msg = msgIter.message();
-        if (verbose) msg.print(Rcpp::Rcout);
-        Element response = msg.asElement();
+        for (int j = 0; j < cols; j++) { 		// over all columns 
 
-        if(std::strcmp(response.name().string(),"BeqsResponse")) {
-            throw std::logic_error("Not a valid EQSDataResponse.");
-        }
-
-        Element data = msg.getElement("data");
-        Element fieldDisplayUnits = data.getElement("fieldDisplayUnits");
-        Element securities = data.getElement("securityData");
-
-        size_t iCols = fieldDisplayUnits.numElements();
-        size_t iRows = securities.numValues();
-
-        CharacterMatrix m( iRows, iCols+1 );
-        CharacterVector rownames(iRows);
-        CharacterVector colnames(iCols+1);
-
-        std::string * fieldsArray;
-        fieldsArray = new std::string [iCols];
-
-        // Map fields
-        colnames[0]="Date";
-
-        // Headers
-        for (size_t j = 0; j < iCols; ++j) {
-            fieldsArray[j] = fieldDisplayUnits.getElement(j).name().string();
-            colnames[j+1] = fieldDisplayUnits.getElement(j).name().string();
-        }
-
-        for (size_t i = 0; i < iRows ; ++i) {
-
-            Element security = securities.getValueAsElement(i);
-            Element fieldData = security.getElement("fieldData");
-
-            // Set the first column as Date
-            if(std::strcmp(PiTDate.c_str(),"NA")==0) {
-                m(i,0) = NA_STRING;
-            } else {
-                m(i,0) = PiTDate.c_str();
-            }
-
-            // Set Rownames
-            rownames[i]=ToString(i+1);
-
-            //   For each returned security, check if data is available
-            for (size_t j = 0; j < iCols;++j){
-
-                if (fieldData.hasElement(fieldsArray[j].c_str()))
-                {
-                    Element datapoint = fieldData.getElement(fieldsArray[j].c_str());
-
-                    if ( fieldsArray[j] == "Ticker")
-                    {
-                        std::string TickerValue =datapoint.getValueAsString();
-                        TickerValue += " Equity";
-                        m(i,j+1) = TickerValue;
-                    }
-                    else
-                    {
+            if (data.hasElement(colnames[j].c_str())) { // assign, if present, to proper column and type
+                Element datapoint = data.getElement(colnames[j].c_str());
+                if (datapoint.datatype() == BLPAPI_DATATYPE_STRING) {
+                    Rcpp::CharacterVector v = lst[j];
+                    if (colnames[j] == "Ticker") {
+                        std::string tickerValue = datapoint.getValueAsString() + std::string(" Equity");
+                        v[i] = tickerValue;
+                    } else {
                         std::string sValue = datapoint.getValueAsString();
-                        m(i,j+1) = sValue;
+                        v[i] = sValue;
                     }
-
-                }
-                else
-                {
-                    //   Insert alternative value here as below
-                    m(i,j+1) = NA_STRING;
+                    lst[j] = v;
+                } else if (datapoint.datatype() == BLPAPI_DATATYPE_FLOAT64) {
+                    Rcpp::NumericVector v = lst[j];
+                    v[i] = datapoint.getValueAsFloat64();
+                    lst[j] = v;
+                } else {
+                    Rcpp::CharacterVector v = lst[j];
+                    std::string sValue = datapoint.getValueAsString();
+                    v[i] = sValue;
+                    lst[j] = v;
                 }
             }
         }
-
-        List dimnms = List::create(rownames,colnames);
-        m.attr("dimnames") = dimnms;
-        ans=m;
-
     }
-    return wrap(ans);
+    
+    lst.attr("names") = colnames;
+    Rcpp::DataFrame df(lst);
+    return df;
 }
 
 
 
-// Simpler interface with std::vector<std::string> thanks to Rcpp::Attributes
 // [[Rcpp::export]]
-SEXP beqs_Impl(SEXP con_,
-               std::string screenName,
-               std::string screenType_,
-               SEXP Group_,
-               SEXP PiTDate_,
-               SEXP languageId_,
-               bool verbose=false) { // verbose mode false = default
+DataFrame beqs_Impl(SEXP con,
+                    std::string screenName,
+                    std::string screenType,
+                    std::string group,
+                    std::string pitdate,
+                    std::string languageId,
+                    bool verbose=false) { 
 
-    //Rprintf("=======BEQS============ \n");
-
-    Session* session = reinterpret_cast<Session*>(checkExternalPointer(con_,"blpapi::Session*"));
+    Session* session = reinterpret_cast<Session*>(checkExternalPointer(con, "blpapi::Session*"));
 
     const std::string rdsrv = "//blp/refdata";
     if (!session->openService(rdsrv.c_str())) {
@@ -184,30 +155,28 @@ SEXP beqs_Impl(SEXP con_,
     Service refDataService = session->getService(rdsrv.c_str());
     Request request = refDataService.createRequest("BeqsRequest");
 
-
     request.set("screenName", screenName.c_str());
-    request.set("screenType",screenType_.c_str());
+    request.set("screenType", screenType.c_str());
 
-    if (Group_ != R_NilValue) {
-        request.set ("Group", Rcpp::as<std::string>(Group_).c_str());
+    if (group != "") {
+        request.set ("Group", group.c_str());
     }
 
-    if (languageId_ != R_NilValue) {
-        request.set ("languageId", Rcpp::as<std::string>(languageId_).c_str());
+    if (languageId != "") {
+        request.set ("languageId", languageId.c_str());
     }
-
 
     Element overrides = request.getElement("overrides");
     Element override1 = overrides.appendElement();
     override1.setElement("fieldId", "PiTDate");
-    if(PiTDate_ != R_NilValue) {
-        override1.setElement("value", Rcpp::as<std::string>(PiTDate_).c_str());
+    if (pitdate != "") {
+        override1.setElement("value", pitdate.c_str());
     }
 
     if (verbose) Rcpp::Rcout <<"Sending Request: " << request << std::endl;
     session->sendRequest(request);
 
-    CharacterMatrix ans;
+    DataFrame ans;
 
     // Wait for events from Session
     bool done = false;
@@ -215,11 +184,10 @@ SEXP beqs_Impl(SEXP con_,
         Event event = session->nextEvent();
         if (event.eventType() == Event::PARTIAL_RESPONSE) {
             if (verbose) Rcpp::Rcout << "Processing Partial Response" << std::endl;
-            ans = processResponseEvent(event, PiTDate_, verbose);
-        }
-        else if (event.eventType() == Event::RESPONSE) {
+            ans = processResponseEvent(event, verbose);
+        } else if (event.eventType() == Event::RESPONSE) {
             if (verbose) Rcpp::Rcout << "Processing Response" << std::endl;
-            ans = processResponseEvent(event, PiTDate_, verbose);
+            ans = processResponseEvent(event, verbose);
             done = true;
         } else {
             MessageIterator msgIter(event);
@@ -235,7 +203,6 @@ SEXP beqs_Impl(SEXP con_,
         }
     }
 
-
-return wrap(ans);
+    return ans;
 
 }

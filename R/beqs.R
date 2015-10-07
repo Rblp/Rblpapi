@@ -22,34 +22,43 @@
 ##' EQS Data) queries
 ##'
 ##' @title Run 'Bloomberg EQS' Queries
-##' @param screenName A character string with the name of the screen to execute.
-##'  It can be a user defined EQS screen or one of the Bloomberg Example screens on EQS
+##' @param screenName A character string with the name of the screen
+##' to execute.  It can be a user defined EQS screen or one of the
+##' Bloomberg Example screens on EQS
 ##' @param screenType A character string of value PRIVATE or GLOBAL
 ##' Use PRIVATE for user-defined EQS screen.
 ##' Use GLOBAL for Bloomberg EQS screen.
-##' @param languageID An optional character string with the EQS language
-##' @param Group An optional character string with the Screen folder name as defined in EQS
-##' @param PiTDate A character string with the Point in Time Date of the screen to execute.
-##' Format = "YYYYMMDD"
+##' @param language An optional character string with the EQS language
+##' @param group An optional character string with the Screen folder
+##' name as defined in EQS
+##' @param date An optional date object with the Point in Time Date
+##' of the screen to execute.
+##' @param verbose A boolean indicating whether verbose operation is
+##' desired, defaults to \sQuote{FALSE}.
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.
-##' @return A matrix with requested EQS data
-##' @author Whit Armstrong, Dirk Eddelbuettel
+##' @return A data frame object with the requested EQS data
+##' @author Rademeyer Vermaak and Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{
+##' beqs("Global Oil Companies YTD Return")
 ##' beqs("Global Oil Companies YTD Return","GLOBAL")
 ##' beqs("Global Oil Companies YTD Return","GLOBAL","GERMAN")
 ##' beqs("Global Oil Companies YTD Return","GLOBAL","GERMAN","GENERAL")
 ##' beqs("Global Oil Companies YTD Return","GLOBAL","ENGLISH","GENERAL","20150930")
 ##' }
-beqs <- function(screenName, screenType="GLOBAL", languageID=NULL,
-                 Group=NULL, PiTDate=NULL, verbose=FALSE, con=defaultConnection()) {
+beqs <- function(screenName,
+                 screenType="GLOBAL",
+                 language="",
+                 group="",
+                 date=NULL,
+                 verbose=FALSE,
+                 con=defaultConnection()) {
 
-
-    res <- beqs_Impl(con, screenName, screenType, Group, PiTDate, languageID, verbose)
-    if (typeof(res)=="list" && length(res)==1) {
-        res <- res[[1]]
-    }
+    datestr <- if (is.null(date)) "" else format(date, "%Y%m%d")
+    res <- beqs_Impl(con, screenName, screenType, group,
+                     datestr, language, verbose)
+    if (!is.null(date)) res <- data.frame(pitDate=date, res)
     res
 }
