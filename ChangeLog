@@ -1,3 +1,7 @@
+2015-10-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/beqs.R: Always return the date as the first column
+
 2015-10-05  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Rolled (dev) Version and Date

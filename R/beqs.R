@@ -38,7 +38,8 @@
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.
-##' @return A data frame object with the requested EQS data
+##' @return A data frame object with the date in the first column and
+##' and the requested EQS data in the remaining columns.
 ##' @author Rademeyer Vermaak and Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{
@@ -59,6 +60,7 @@ beqs <- function(screenName,
     datestr <- if (is.null(date)) "" else format(date, "%Y%m%d")
     res <- beqs_Impl(con, screenName, screenType, group,
                      datestr, language, verbose)
-    if (!is.null(date)) res <- data.frame(pitDate=date, res)
+    if (is.null(date)) date <- Sys.Date()
+    res <- data.frame(date=date, res)
     res
 }
