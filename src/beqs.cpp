@@ -97,7 +97,11 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
                 } else if (val.datatype() == BLPAPI_DATATYPE_FLOAT64) {
                     lst[i] = Rcpp::NumericVector(rows, NA_REAL);
                     chk[i] = true;
-                } else {                  			// fallback 
+                } else if (val.datatype() == BLPAPI_DATATYPE_DATE) {
+                    lst[i] = Rcpp::DateVector(rows);
+                    chk[i] = true;
+                } else {                  			// fallback
+                    Rcpp::Rcout << "Seeing type " << val.datatype() << std::endl;
                     lst[i] = Rcpp::CharacterVector(rows, R_NaString);
                     chk[i] = true;
                 }
@@ -128,6 +132,10 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
                 } else if (datapoint.datatype() == BLPAPI_DATATYPE_FLOAT64) {
                     Rcpp::NumericVector v = lst[j];
                     v[i] = datapoint.getValueAsFloat64();
+                    lst[j] = v;
+                } else if (datapoint.datatype() == BLPAPI_DATATYPE_DATE) {
+                    Rcpp::DateVector v = lst[j];
+                    v[i] = Rcpp::Date(datapoint.getValueAsString());
                     lst[j] = v;
                 } else {
                     Rcpp::CharacterVector v = lst[j];
