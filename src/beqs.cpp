@@ -101,7 +101,7 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
                     lst[i] = Rcpp::DateVector(rows);
                     chk[i] = true;
                 } else {                  			// fallback
-                    Rcpp::Rcout << "Seeing type " << val.datatype() << std::endl;
+                    //Rcpp::Rcout << "Seeing type " << val.datatype() << std::endl;
                     lst[i] = Rcpp::CharacterVector(rows, R_NaString);
                     chk[i] = true;
                 }
