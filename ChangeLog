@@ -1,3 +1,10 @@
+2015-10-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/beqs.cpp: More robust identification of column types,
+	as well as presetting of result columns with NA values
+
+	* src/beqs.cpp: Support 'Date' types in return
+
 2015-10-11  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/beqs.R: Always return the date as the first column

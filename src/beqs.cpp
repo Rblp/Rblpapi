@@ -75,23 +75,37 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
     }
           
     Rcpp::List lst(cols);       			// Rcpp 'List' container of given number of columns 
-
+    Rcpp::LogicalVector chk(cols, false);
+    
     Element results = data.getElement("securityData"); 	// get security data payload == actual result set
     int rows = results.numValues();                     // total number of rows in result set
     if (verbose) results.print(Rcpp::Rcout);
+    if (verbose) Rcpp::Rcout << rows << " Rows expected" << std::endl;
 
-    response = results.getValueAsElement(0); 		// pick first element to infer types 
-    data = response.getElement("fieldData");       	// get data payload of first elemnt
-    if (verbose) data.print(Rcpp::Rcout);
+    for (int j = 0; j < min(rows, 25); j++) { 		// look at up to twenty-five rows to infer types
+        response = results.getValueAsElement(j); 	// pick j-th element to infer types 
+        data = response.getElement("fieldData");       	// get data payload of first elemnt
+        if (verbose) data.print(Rcpp::Rcout);
 
-    for (int i=0; i<cols; i++) { 			// loop over first data set, and infer types 
-        Element val = data.getElement(colnames[i].c_str());
-        if (val.datatype() == BLPAPI_DATATYPE_STRING) { 
-            lst[i] = Rcpp::CharacterVector(rows); 	  
-        } else if (val.datatype() == BLPAPI_DATATYPE_FLOAT64) {
-            lst[i] = Rcpp::NumericVector(rows);
-        } else {                  			// fallback 
-            lst[i] = Rcpp::CharacterVector(rows);
+        for (int i=0; i<cols; i++) { 			// loop over first data set, and infer types
+            if (!chk(i) &&                              // column has not been set yet
+                data.hasElement(colnames[i].c_str())) {
+                Element val = data.getElement(colnames[i].c_str());
+                if (val.datatype() == BLPAPI_DATATYPE_STRING) { 
+                    lst[i] = Rcpp::CharacterVector(rows, R_NaString);
+                    chk[i] = true;
+                } else if (val.datatype() == BLPAPI_DATATYPE_FLOAT64) {
+                    lst[i] = Rcpp::NumericVector(rows, NA_REAL);
+                    chk[i] = true;
+                } else if (val.datatype() == BLPAPI_DATATYPE_DATE) {
+                    lst[i] = Rcpp::DateVector(rows);
+                    chk[i] = true;
+                } else {                  			// fallback
+                    //Rcpp::Rcout << "Seeing type " << val.datatype() << std::endl;
+                    lst[i] = Rcpp::CharacterVector(rows, R_NaString);
+                    chk[i] = true;
+                }
+            } 
         }
     }
 
@@ -118,6 +132,10 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
                 } else if (datapoint.datatype() == BLPAPI_DATATYPE_FLOAT64) {
                     Rcpp::NumericVector v = lst[j];
                     v[i] = datapoint.getValueAsFloat64();
+                    lst[j] = v;
+                } else if (datapoint.datatype() == BLPAPI_DATATYPE_DATE) {
+                    Rcpp::DateVector v = lst[j];
+                    v[i] = Rcpp::Date(datapoint.getValueAsString());
                     lst[j] = v;
                 } else {
                     Rcpp::CharacterVector v = lst[j];
@@ -167,9 +185,9 @@ DataFrame beqs_Impl(SEXP con,
     }
 
     Element overrides = request.getElement("overrides");
-    Element override1 = overrides.appendElement();
-    override1.setElement("fieldId", "PiTDate");
     if (pitdate != "") {
+        Element override1 = overrides.appendElement();
+        override1.setElement("fieldId", "PiTDate");
         override1.setElement("value", pitdate.c_str());
     }
 
