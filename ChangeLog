@@ -1,3 +1,7 @@
+2015-10-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Version 0.3.1
+
 2015-10-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/beqs.cpp: More robust identification of column types,
