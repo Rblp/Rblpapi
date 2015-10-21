@@ -1,7 +1,7 @@
 Package: Rblpapi
-Title: R Interface to BBG
-Version: 0.3.0.3
-Date: 2015-10-04
+Title: R Interface to Bloomberg
+Version: 0.3.1
+Date: 2015-10-19
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Author: Whit Armstrong, Dirk Eddelbuettel and John Laing
 Imports: Rcpp (>= 0.11.0), utils
@@ -9,7 +9,8 @@ Suggests: fts, xts, zoo, knitr
 VignetteBuilder: knitr
 LazyLoad: yes
 LinkingTo: Rcpp, BH
-Description: An R Interface to the BBG service is provided via the Blp API.
-SystemRequirements: A valid BBG installation. API headers and dynamic library
- are downloaded from <https://github.com/Rblp/blp> during the build step.
+Description: An R Interface to Bloomberg is provided via the Blp API.
+SystemRequirements: A valid Bloomberg installation. API headers and dynamic
+ library are downloaded from <https://github.com/Rblp/blp> during the build
+ step. See <http://www.bloomberglabs.com/api/> for API documentation.
 License: file LICENSE
