@@ -21,18 +21,19 @@ Use GLOBAL for Bloomberg EQS screen.}
 \item{group}{An optional character string with the Screen folder
 name as defined in EQS}
 
-\item{date}{An optional date object with the Point in Time Date
+\item{date}{An optional Date object with the \sQuote{point in time} date
 of the screen to execute.}
 
 \item{verbose}{A boolean indicating whether verbose operation is
-desired, defaults to \sQuote{FALSE}}
+desired, defaults to \sQuote{FALSE}.}
 
 \item{con}{A connection object as created by a \code{blpConnect}
 call, and retrieved via the internal function
 \code{defaultConnection}.}
 }
 \value{
-A data frame object with the requested EQS data
+A data frame object with the date in the first column and
+and the requested EQS data in the remaining columns.
 }
 \description{
 This function uses the Bloomberg API to retrieve 'beqs' (Bloomberg
@@ -41,10 +42,10 @@ EQS Data) queries
 \examples{
 \dontrun{
 beqs("Global Oil Companies YTD Return")
-beqs("Global Oil Companies YTD Return","GLOBAL")
-beqs("Global Oil Companies YTD Return","GLOBAL","GERMAN")
-beqs("Global Oil Companies YTD Return","GLOBAL","GERMAN","GENERAL")
-beqs("Global Oil Companies YTD Return","GLOBAL","ENGLISH","GENERAL","20150930")
+beqs("Global Oil Companies YTD Return", "GLOBAL")
+beqs("Global Oil Companies YTD Return", "GLOBAL", "GERMAN")
+beqs("Global Oil Companies YTD Return", "GLOBAL", "GERMAN", "GENERAL")
+beqs("Global Oil Companies YTD Return", "GLOBAL", "ENGLISH", "GENERAL", as.Date("2015-09-30"))
 }
 }
 \author{
