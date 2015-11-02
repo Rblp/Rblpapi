@@ -37,3 +37,7 @@ getTicks_Impl <- function(con, security, eventType, startDateTime, endDateTime, 
     .Call('Rblpapi_getTicks_Impl', PACKAGE = 'Rblpapi', con, security, eventType, startDateTime, endDateTime, verbose)
 }
 
+subscribe_Impl <- function(con_, securities, fields, options_, identity_) {
+    .Call('Rblpapi_subscribe_Impl', PACKAGE = 'Rblpapi', con_, securities, fields, options_, identity_)
+}
+
