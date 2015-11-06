@@ -219,7 +219,7 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
                 }
                 ans["event.type"] = it->second;
                 ans["topic"] = topic;
-                ans["payload"] = recursiveParse(msg.asElement());
+                ans["data"] = recursiveParse(msg.asElement());
 
                 Rcpp::checkUserInterrupt();
             }
