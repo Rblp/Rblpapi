@@ -4,6 +4,13 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
+\section{Changes in Rblpapi version 0.3.2 (2015-12-31)}{
+  \itemize{
+    \item Both \code{getTicks()} and \code{getBars()} now check the
+    start and end times for proper \code{Datetime} class.
+  }
+}
+
 \section{Changes in Rblpapi version 0.3.1 (2015-10-19)}{
   \itemize{
     \item Added \code{beqs()} to run Bloomberg Equity Screen Search,

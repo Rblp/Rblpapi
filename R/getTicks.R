@@ -52,6 +52,9 @@ getTicks <- function(security,
                      tz = Sys.getenv("TZ", unset="UTC"),
                      con = defaultConnection()) {
 
+    if (!inherits(startTime, "POSIXt") || !inherits(endTime, "POSIXt")) {
+        stop("startTime and endTime must be Datetime objects", call.=FALSE)
+    }
     fmt <- "%Y-%m-%dT%H:%M:%S"
     startUTC <- format(startTime, fmt, tz="UTC")
     endUTC <- format(endTime, fmt, tz="UTC")

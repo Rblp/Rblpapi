@@ -1,3 +1,8 @@
+2015-11-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/getBars.R: Check startTime and endTime for Datetime type
+	* R/getTicks.R: Ditto
+
 2015-10-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Version 0.3.1
