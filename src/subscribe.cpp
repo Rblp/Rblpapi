@@ -47,15 +47,111 @@ using BloombergLP::blpapi::Event;
 using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
+using BloombergLP::blpapi::DatetimeParts;
 
 const std::map<Event::EventType,std::string> BlpapiEventToString { {Event::ADMIN,"ADMIN"},{Event::SESSION_STATUS,"SESSION_STATUS"},{Event::SUBSCRIPTION_STATUS,"SUBSCRIPTION_STATUS"},{Event::REQUEST_STATUS,"REQUEST_STATUS"},{Event::RESPONSE,"RESPONSE"},{Event::PARTIAL_RESPONSE,"PARTIAL_RESPONSE"},{Event::SUBSCRIPTION_DATA,"SUBSCRIPTION_DATA"},{Event::SERVICE_STATUS,"SERVICE_STATUS"},{Event::TIMEOUT,"TIMEOUT"},{Event::AUTHORIZATION_STATUS,"AUTHORIZATION_STATUS"},{Event::RESOLUTION_STATUS,"RESOLUTION_STATUS"},{Event::TOPIC_STATUS,"TOPIC_STATUS"},{Event::TOKEN_STATUS,"TOKEN_STATUS"},{Event::REQUEST,"REQUEST"},{Event::UNKNOWN,"UNKNOWN"} };
+
+SEXP eleToLogical(const Element& e) {
+    Rcpp::LogicalVector ans(e.numValues());
+    for(size_t i = 0; i < e.numValues(); ++i) {
+        ans[i] = e.getValueAsBool(i);
+    }
+    return Rcpp::wrap(ans);
+}
+
+SEXP eleToString(const Element& e) {
+    Rcpp::StringVector ans(e.numValues());
+    for(size_t i = 0; i < e.numValues(); ++i) {
+        ans[i] = e.getValueAsString(i);
+    }
+    return Rcpp::wrap(ans);
+}
+
+SEXP eleToDouble(const Element& e) {
+    Rcpp::NumericVector ans(e.numValues());
+    for(size_t i = 0; i < e.numValues(); ++i) {
+        ans[i] = e.getValueAsFloat64(i);
+    }
+    return Rcpp::wrap(ans);
+}
+
+SEXP eleToInt(const Element& e) {
+    Rcpp::IntegerVector ans(e.numValues());
+    for(size_t i = 0; i < e.numValues(); ++i) {
+        ans[i] = e.getValueAsInt32(i);
+    }
+    return Rcpp::wrap(ans);
+}
+
+SEXP eleToDate(const Element& e) {
+    Rcpp::DateVector ans(e.numValues());
+    for(size_t i = 0; i < e.numValues(); ++i) {
+        ans[i] = bbgDateToJulianDate(e.getValueAsDatetime(i));
+    }
+    return Rcpp::wrap(ans);
+}
+
+SEXP eleToDatetime(const Element& e) {
+
+    // sometimes bbg uses BLPAPI_DATATYPE_DATETIME for timestamps w/ no day/month/year attribues
+    if(e.getValueAsDatetime().hasParts(DatetimeParts::DATE)) {
+        Rcpp::DatetimeVector ans(e.numValues());
+        for(size_t i = 0; i < e.numValues(); ++i) {
+            ans[i] = bbgDatetimeToPOSIX(e.getValueAsDatetime(i));
+        }
+        return Rcpp::wrap(ans);
+    } else {
+        return eleToString(e);
+    }
+}
+
+SEXP eleToArray(const Element& e) {
+    if(e.isNull()) { R_NilValue; }
+    SEXP ans;
+    switch(e.datatype()) {
+    case BLPAPI_DATATYPE_BOOL:
+        return eleToLogical(e);
+    case BLPAPI_DATATYPE_CHAR:
+        return eleToString(e);
+    case BLPAPI_DATATYPE_BYTE:
+        return R_NilValue;
+    case BLPAPI_DATATYPE_INT32:
+        return eleToInt(e);
+    case BLPAPI_DATATYPE_INT64:
+        return R_NilValue;
+    case BLPAPI_DATATYPE_FLOAT32:
+    case BLPAPI_DATATYPE_FLOAT64:
+        return eleToDouble(e);
+    case BLPAPI_DATATYPE_STRING:
+        return eleToString(e);
+    case BLPAPI_DATATYPE_BYTEARRAY:
+        return R_NilValue;
+    case BLPAPI_DATATYPE_DATE:
+        return eleToDate(e);
+    case BLPAPI_DATATYPE_TIME:
+        return eleToString(e);
+    case BLPAPI_DATATYPE_DECIMAL:
+        return eleToDouble(e);
+    case BLPAPI_DATATYPE_DATETIME:
+        return eleToDatetime(e);
+    case BLPAPI_DATATYPE_ENUMERATION:
+        return eleToString(e);
+    case BLPAPI_DATATYPE_SEQUENCE:
+        return eleToString(e);
+    case BLPAPI_DATATYPE_CHOICE:
+        return eleToString(e);
+    case BLPAPI_DATATYPE_CORRELATION_ID:
+        return eleToString(e);
+     default:
+        return R_NilValue;
+    }
+}
 
 SEXP recursiveParse(const Element& e) {
     if(e.numElements()) {
         Rcpp::List ans(e.numElements());
         Rcpp::StringVector names(e.numElements());
         for(size_t i = 0; i < e.numElements(); ++i) {
-            //std::cout << "************: " << e.getElement(i).name().string() << std::endl;
             names(i) = e.getElement(i).name().string();
             ans[i] = recursiveParse(e.getElement(i));
         }
@@ -64,12 +160,9 @@ SEXP recursiveParse(const Element& e) {
     } else {
         if(e.numValues()==0) {
             return R_NilValue;
+        } else {
+            return eleToArray(e);
         }
-        Rcpp::StringVector ans(e.numValues());
-        for(size_t i = 0; i < e.numValues(); ++i) {
-            ans[i] = e.getValueAsString();
-        }
-        return Rcpp::wrap(ans);
     }
 }
 
@@ -110,8 +203,6 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
         session->subscribe(subscriptions);
     }
 
-    int d_eventCount(0), d_maxEvents(10);
-
     while (true) {
         Event event = session->nextEvent();
         MessageIterator msgIter(event);
@@ -124,14 +215,13 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
                 Rcpp::List ans;
                 auto it = BlpapiEventToString.find(event.eventType());
                 if(it==BlpapiEventToString.end()) {
-                    // throw
+                    throw Rcpp::exception("Unknown event type.");
                 }
                 ans["event.type"] = it->second;
                 ans["topic"] = topic;
                 ans["payload"] = recursiveParse(msg.asElement());
-                if(++d_eventCount >= d_maxEvents) {
-                    return Rcpp::wrap(ans);
-                }
+
+                Rcpp::checkUserInterrupt();
             }
         }
     }
