@@ -17,8 +17,8 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
-subscribe <- function(securities, fields, options=NULL, identity=NULL, con=defaultConnection()) {
+subscribe <- function(securities, fields, fun, options=NULL, identity=NULL, con=defaultConnection()) {
     if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
-    subscribe_Impl(con, securities, fields, options, identity)
+    subscribe_Impl(con, securities, fields, fun, options, identity)
 }
 

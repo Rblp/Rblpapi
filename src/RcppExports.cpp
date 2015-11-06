@@ -145,17 +145,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // subscribe_Impl
-SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields, SEXP options_, SEXP identity_);
-RcppExport SEXP Rblpapi_subscribe_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP options_SEXP, SEXP identity_SEXP) {
+SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields, Rcpp::Function fun, SEXP options_, SEXP identity_);
+RcppExport SEXP Rblpapi_subscribe_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP funSEXP, SEXP options_SEXP, SEXP identity_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< SEXP >::type con_(con_SEXP);
     Rcpp::traits::input_parameter< std::vector<std::string> >::type securities(securitiesSEXP);
     Rcpp::traits::input_parameter< std::vector<std::string> >::type fields(fieldsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Function >::type fun(funSEXP);
     Rcpp::traits::input_parameter< SEXP >::type options_(options_SEXP);
     Rcpp::traits::input_parameter< SEXP >::type identity_(identity_SEXP);
-    __result = Rcpp::wrap(subscribe_Impl(con_, securities, fields, options_, identity_));
+    __result = Rcpp::wrap(subscribe_Impl(con_, securities, fields, fun, options_, identity_));
     return __result;
 END_RCPP
 }

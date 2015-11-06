@@ -167,7 +167,7 @@ SEXP recursiveParse(const Element& e) {
 }
 
 // [[Rcpp::export]]
-SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields,
+SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields, Rcpp::Function fun,
                     SEXP options_, SEXP identity_) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
@@ -205,6 +205,7 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
 
     while (true) {
         Event event = session->nextEvent();
+        Rcpp::checkUserInterrupt();
         MessageIterator msgIter(event);
         while (msgIter.next()) {
             Message msg = msgIter.message();
@@ -220,8 +221,8 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
                 ans["event.type"] = it->second;
                 ans["topic"] = topic;
                 ans["data"] = recursiveParse(msg.asElement());
-
-                Rcpp::checkUserInterrupt();
+                // call user function
+                fun(ans);
             }
         }
     }
