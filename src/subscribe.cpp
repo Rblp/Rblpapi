@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 #include <string>
 #include <blpapi_defs.h>
 #include <blpapi_correlationid.h>
@@ -46,6 +47,31 @@ using BloombergLP::blpapi::Event;
 using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
+
+const std::map<Event::EventType,std::string> BlpapiEventToString { {Event::ADMIN,"ADMIN"},{Event::SESSION_STATUS,"SESSION_STATUS"},{Event::SUBSCRIPTION_STATUS,"SUBSCRIPTION_STATUS"},{Event::REQUEST_STATUS,"REQUEST_STATUS"},{Event::RESPONSE,"RESPONSE"},{Event::PARTIAL_RESPONSE,"PARTIAL_RESPONSE"},{Event::SUBSCRIPTION_DATA,"SUBSCRIPTION_DATA"},{Event::SERVICE_STATUS,"SERVICE_STATUS"},{Event::TIMEOUT,"TIMEOUT"},{Event::AUTHORIZATION_STATUS,"AUTHORIZATION_STATUS"},{Event::RESOLUTION_STATUS,"RESOLUTION_STATUS"},{Event::TOPIC_STATUS,"TOPIC_STATUS"},{Event::TOKEN_STATUS,"TOKEN_STATUS"},{Event::REQUEST,"REQUEST"},{Event::UNKNOWN,"UNKNOWN"} };
+
+SEXP recursiveParse(const Element& e) {
+    if(e.numElements()) {
+        Rcpp::List ans(e.numElements());
+        Rcpp::StringVector names(e.numElements());
+        for(size_t i = 0; i < e.numElements(); ++i) {
+            //std::cout << "************: " << e.getElement(i).name().string() << std::endl;
+            names(i) = e.getElement(i).name().string();
+            ans[i] = recursiveParse(e.getElement(i));
+        }
+        ans.attr("names") = names;
+        return Rcpp::wrap(ans);
+    } else {
+        if(e.numValues()==0) {
+            return R_NilValue;
+        }
+        Rcpp::StringVector ans(e.numValues());
+        for(size_t i = 0; i < e.numValues(); ++i) {
+            ans[i] = e.getValueAsString();
+        }
+        return Rcpp::wrap(ans);
+    }
+}
 
 // [[Rcpp::export]]
 SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields,
@@ -91,15 +117,22 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
         MessageIterator msgIter(event);
         while (msgIter.next()) {
             Message msg = msgIter.message();
+            const char *topic = (char *)msg.correlationId().asPointer();
             if (event.eventType() == Event::SUBSCRIPTION_STATUS ||
                 event.eventType() == Event::SUBSCRIPTION_DATA) {
-                const char *topic = (char *)msg.correlationId().asPointer();
-                std::cout << topic << " - ";
+
+                Rcpp::List ans;
+                auto it = BlpapiEventToString.find(event.eventType());
+                if(it==BlpapiEventToString.end()) {
+                    // throw
+                }
+                ans["event.type"] = it->second;
+                ans["topic"] = topic;
+                ans["payload"] = recursiveParse(msg.asElement());
+                if(++d_eventCount >= d_maxEvents) {
+                    return Rcpp::wrap(ans);
+                }
             }
-            msg.print(std::cout) << std::endl;
-        }
-        if (event.eventType() == Event::SUBSCRIPTION_DATA) {
-            if (++d_eventCount >= d_maxEvents) break;
         }
     }
     return R_NilValue;
