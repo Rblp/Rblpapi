@@ -51,6 +51,10 @@
 ##' add the length of the bar interval to time value from Bloomberg to
 ##' obtain the time at the end of the interval.
 ##' @author Dirk Eddelbuettel
+##' @examples
+##' \dontrun{
+##'   getBars("ES1 Index")
+##' }
 getBars <- function(security,
                     eventType = "TRADE",
                     barInterval=60,     		# in minutes
@@ -62,6 +66,9 @@ getBars <- function(security,
                     tz = Sys.getenv("TZ", unset="UTC"),
                     con = defaultConnection()) {
 
+    if (!inherits(startTime, "POSIXt") || !inherits(endTime, "POSIXt")) {
+        stop("startTime and endTime must be Datetime objects", call.=FALSE)
+    }
     fmt <- "%Y-%m-%dT%H:%M:%S"
     startUTC <- format(startTime, fmt, tz="UTC")
     endUTC <- format(endTime, fmt, tz="UTC")
