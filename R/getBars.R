@@ -51,6 +51,10 @@
 ##' add the length of the bar interval to time value from Bloomberg to
 ##' obtain the time at the end of the interval.
 ##' @author Dirk Eddelbuettel
+##' @examples
+##' \dontrun{
+##'   getBars("ES1 Index")
+##' }
 getBars <- function(security,
                     eventType = "TRADE",
                     barInterval=60,     		# in minutes

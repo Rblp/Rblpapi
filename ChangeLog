@@ -1,7 +1,11 @@
 2015-11-06  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/getBars.R: Check startTime and endTime for Datetime type
+	* R/getBars.R: Check startTime and endTime for Datetime type;
+	added example section to manual page
 	* R/getTicks.R: Ditto
+
+	* man/getBars.Rd: Added simple example from vignette
+	* man/getTicks.Rd: Ditto
 
 2015-10-18  Dirk Eddelbuettel  <edd@debian.org>
 

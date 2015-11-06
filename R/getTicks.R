@@ -43,6 +43,10 @@
 ##' \sQuote{POSIXct} object), \sQuote{values} and \sQuote{sizes}, or
 ##' an object of the type selected in \code{returnAs}.
 ##' @author Dirk Eddelbuettel
+##' @examples
+##' \dontrun{
+##'   getTicks("ES1 Index")
+##' }
 getTicks <- function(security,
                      eventType = "TRADE",
                      startTime = Sys.time()-60*60,
