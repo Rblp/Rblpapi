@@ -47,4 +47,6 @@ void setNames(SEXP x, std::vector<std::string>& names);
 void addFakeRownames(SEXP x, R_len_t n);
 
 Rcpp::NumericVector createPOSIXtVector(const std::vector<double> & ticks, const std::string tz="UTC");
+std::string vectorToCSVString(const std::vector<std::string>& vec);
+
 #endif // BLPAPI_UTILS_H

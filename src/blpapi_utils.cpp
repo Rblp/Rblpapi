@@ -411,3 +411,13 @@ Rcpp::NumericVector createPOSIXtVector(const std::vector<double> & ticks,
     return pt;
 }
 
+std::string vectorToCSVString(const std::vector<std::string>& vec) {
+  if(vec.empty()) {
+    return std::string();
+  } else {
+    std::ostringstream oss;
+    std::copy(vec.begin(), vec.end()-1,std::ostream_iterator<std::string>(oss, ","));
+    oss << vec.back();
+    return oss.str();
+  }
+}
