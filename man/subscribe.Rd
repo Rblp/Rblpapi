@@ -33,7 +33,9 @@ This function uses the Bloomberg API to stream live market data
 }
 \examples{
 \dontrun{
-  subscribe(c("/ticker/TYZ5 Comdty","/cusip/912810RE0@BGN"),fields=c("LAST_PRICE","BID","ASK"),function(x) print(x$data))
+  subscribe(securities=c("/ticker/TYZ5 Comdty","/cusip/912810RE0@BGN"),
+            fields=c("LAST_PRICE","BID","ASK"),
+            fun=function(x) print(x$data))
 }
 }
 \author{
