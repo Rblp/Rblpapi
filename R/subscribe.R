@@ -36,7 +36,9 @@
 ##' @author Whit Armstrong
 ##' @examples
 ##' \dontrun{
-##'   subscribe(c("/ticker/TYZ5 Comdty","/cusip/912810RE0@BGN"),fields=c("LAST_PRICE","BID","ASK"),function(x) print(x$data))
+##'   subscribe(securities=c("/ticker/TYZ5 Comdty","/cusip/912810RE0@BGN"),
+##'             fields=c("LAST_PRICE","BID","ASK"),
+##'             fun=function(x) print(x$data))
 ##' }
 subscribe <- function(securities, fields, fun, options=NULL, identity=NULL, con=defaultConnection()) {
     if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
