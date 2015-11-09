@@ -12,5 +12,6 @@ export(blpConnect,
        fieldSearch,
        getBars,
        getMultipleTicks,
-       getTicks
+       getTicks,
+       subscribe
        )
