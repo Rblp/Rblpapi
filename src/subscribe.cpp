@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 //
-//  subscribe.cpp -- "Bloomberg Data Point" query function for the BLP API
+//  subscribe.cpp -- market data subscription function for the BLP API
 //
 //  Copyright (C) 2015  Whit Armstrong
 //
