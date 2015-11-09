@@ -17,6 +17,27 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
+
+##' This function uses the Bloomberg API to stream live market data
+##'
+##' @title Subscribe to streaming market data
+##' @param securities A character vector with security symbols in
+##' Bloomberg notation.
+##' @param fields A character vector with Bloomberg query fields.
+##' @param fun An R function to be called on the subscription data.
+##' @param options An optional named character vector with option
+##' values. Each field must have both a name (designating the option
+##' being set) as well as a value.
+##' @param identity An optional identity object.
+##' @param con A connection object as created by a \code{blpConnect}
+##' call, and retrieved via the internal function
+##' \code{defaultConnection}.
+##' @return This function always returns NULL.
+##' @author Whit Armstrong
+##' @examples
+##' \dontrun{
+##'   subscribe(c("/ticker/TYZ5 Comdty","/cusip/912810RE0@BGN"),fields=c("LAST_PRICE","BID","ASK"),function(x) print(x$data))
+##' }
 subscribe <- function(securities, fields, fun, options=NULL, identity=NULL, con=defaultConnection()) {
     if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
     subscribe_Impl(con, securities, fields, fun, options, identity)
