@@ -31,14 +31,25 @@ This function always returns NULL.
 \description{
 This function uses the Bloomberg API to stream live market data
 }
+\details{
+The subscribe function allows one to subscribe to streaming market
+quotes.
+
+Full detials of the subscription string can be found in the
+header file blpapi_subscriptionlist.h at the following link:
+http://static.bloomberglabs.com/api/cpp/doc/3.8/blpapi__subscriptionlist_8h_source.html
+}
 \examples{
 \dontrun{
-  subscribe(securities=c("/ticker/TYZ5 Comdty","/cusip/912810RE0@BGN"),
+  subscribe(securities=c("TYZ5 Comdty","/cusip/912810RE0@BGN"),
             fields=c("LAST_PRICE","BID","ASK"),
             fun=function(x) print(x$data))
 }
 }
 \author{
 Whit Armstrong
+}
+\references{
+http://static.bloomberglabs.com/api/cpp/doc/3.8
 }
 

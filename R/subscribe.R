@@ -21,6 +21,13 @@
 ##' This function uses the Bloomberg API to stream live market data
 ##'
 ##' @title Subscribe to streaming market data
+##' @details
+##' The subscribe function allows one to subscribe to streaming market
+##' quotes.
+##'
+##' Full detials of the subscription string can be found in the
+##' header file blpapi_subscriptionlist.h at the following link:
+##' http://static.bloomberglabs.com/api/cpp/doc/3.8/blpapi__subscriptionlist_8h_source.html
 ##' @param securities A character vector with security symbols in
 ##' Bloomberg notation.
 ##' @param fields A character vector with Bloomberg query fields.
@@ -33,10 +40,11 @@
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.
 ##' @return This function always returns NULL.
+##' @references http://static.bloomberglabs.com/api/cpp/doc/3.8
 ##' @author Whit Armstrong
 ##' @examples
 ##' \dontrun{
-##'   subscribe(securities=c("/ticker/TYZ5 Comdty","/cusip/912810RE0@BGN"),
+##'   subscribe(securities=c("TYZ5 Comdty","/cusip/912810RE0@BGN"),
 ##'             fields=c("LAST_PRICE","BID","ASK"),
 ##'             fun=function(x) print(x$data))
 ##' }
