@@ -1,3 +1,8 @@
+2015-11-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/getBars.cpp: Also return value-traded per bar
+	* R/getBars.R: Document additional return column
+
 2015-11-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/getBars.R: Check startTime and endTime for Datetime type;
