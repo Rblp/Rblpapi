@@ -45,8 +45,8 @@ call, and retrieved via the internal function
 A numeric matrix with elements \sQuote{time} (as a
 \sQuote{POSIXct} object), \sQuote{open}, \sQuote{high},
 \sQuote{low}, \sQuote{close}, \sQuote{numEvents}, \sQuote{volume},
-or an object of the type selected in \code{returnAs}. Note that
-the \sQuote{time} value is adjusted: Bloomberg returns the
+\sQuote{value} or an object of the type selected in \code{returnAs}. 
+Note that the \sQuote{time} value is adjusted: Bloomberg returns the
 \emph{opening} time of the bar interval, whereas financial studies
 typically refer to the most recent timestamp. For this reason we
 add the length of the bar interval to time value from Bloomberg to

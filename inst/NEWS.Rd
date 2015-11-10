@@ -8,6 +8,8 @@
   \itemize{
     \item Both \code{getTicks()} and \code{getBars()} now check the
     start and end times for proper \code{Datetime} class.
+    \item The \code{getBars()} function now also return the
+    \sQuote{value traded} (request of \ghit{89}).
   }
 }
 
