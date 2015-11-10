@@ -35,9 +35,9 @@ This function uses the Bloomberg API to stream live market data
 The subscribe function allows one to subscribe to streaming market
 quotes.
 
-Full detials of the subscription string can be found in the
-header file blpapi_subscriptionlist.h at the following link:
-http://static.bloomberglabs.com/api/cpp/doc/3.8/blpapi__subscriptionlist_8h_source.html
+Full detials of the subscription string can be found in the header
+file
+\href{http://static.bloomberglabs.com/api/cpp/doc/3.8/blpapi__subscriptionlist_8h_source.html}{blpapi_subscriptionlist.h}.
 }
 \examples{
 \dontrun{

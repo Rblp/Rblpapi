@@ -25,9 +25,10 @@
 ##' The subscribe function allows one to subscribe to streaming market
 ##' quotes.
 ##'
-##' Full detials of the subscription string can be found in the
-##' header file blpapi_subscriptionlist.h at the following link:
-##' http://static.bloomberglabs.com/api/cpp/doc/3.8/blpapi__subscriptionlist_8h_source.html
+##' Full detials of the subscription string can be found in the header
+##' file
+##' \href{http://static.bloomberglabs.com/api/cpp/doc/3.8/blpapi__subscriptionlist_8h_source.html}{blpapi_subscriptionlist.h}.
+##' 
 ##' @param securities A character vector with security symbols in
 ##' Bloomberg notation.
 ##' @param fields A character vector with Bloomberg query fields.
