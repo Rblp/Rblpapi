@@ -43,13 +43,13 @@ http://static.bloomberglabs.com/api/cpp/doc/3.8/blpapi__subscriptionlist_8h_sour
 \dontrun{
   subscribe(securities=c("TYZ5 Comdty","/cusip/912810RE0@BGN"),
             fields=c("LAST_PRICE","BID","ASK"),
-            fun=function(x) print(x$data))
+            fun=function(x) print(str(x$data)))
 }
 }
 \author{
 Whit Armstrong
 }
 \references{
-http://static.bloomberglabs.com/api/cpp/doc/3.8
+\url{http://static.bloomberglabs.com/api/cpp/doc/3.8}
 }
 
