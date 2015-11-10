@@ -3,7 +3,7 @@
 	* src/getBars.cpp: Also return value-traded per bar
 	* R/getBars.R: Document additional return column
 
-2015-11-09  Whit Armstromh  <armstrong.whit@gmail.com>
+2015-11-09  Whit Armstrong  <armstrong.whit@gmail.com>
 
 	* src/subscribe.cpp: Finalize live subscription
 	* R/subscribe.R: Idem
@@ -18,7 +18,7 @@
 	* man/getBars.Rd: Added simple example from vignette
 	* man/getTicks.Rd: Ditto
 
-2015-11-02  Whit Armstromh  <armstrong.whit@gmail.com>
+2015-11-02  Whit Armstrong  <armstrong.whit@gmail.com>
 
 	* src/subscribe.cpp: Begginning of live subscription
 
