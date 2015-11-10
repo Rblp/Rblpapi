@@ -40,13 +40,13 @@
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.
 ##' @return This function always returns NULL.
-##' @references http://static.bloomberglabs.com/api/cpp/doc/3.8
+##' @references \url{http://static.bloomberglabs.com/api/cpp/doc/3.8}
 ##' @author Whit Armstrong
 ##' @examples
 ##' \dontrun{
 ##'   subscribe(securities=c("TYZ5 Comdty","/cusip/912810RE0@BGN"),
 ##'             fields=c("LAST_PRICE","BID","ASK"),
-##'             fun=function(x) print(x$data))
+##'             fun=function(x) print(str(x$data)))
 ##' }
 subscribe <- function(securities, fields, fun, options=NULL, identity=NULL, con=defaultConnection()) {
     if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
