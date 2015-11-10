@@ -6,6 +6,8 @@
 
 \section{Changes in Rblpapi version 0.3.2 (2015-12-31)}{
   \itemize{
+    \item A new \code{subscribe()} function supports live data
+  subscription for a set of tickers and fields (\ghpr{88}).
     \item Both \code{getTicks()} and \code{getBars()} now check the
     start and end times for proper \code{Datetime} class.
     \item The \code{getBars()} function now also return the
