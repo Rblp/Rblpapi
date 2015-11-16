@@ -14,4 +14,4 @@ SystemRequirements: A valid Bloomberg installation. API headers and dynamic
  library are downloaded from <https://github.com/Rblp/blp> during the build
  step. See <http://www.bloomberglabs.com/api/> for API documentation.
 License: file LICENSE
-RoxygenNote: 5.0.0
+RoxygenNote: 5.0.1
