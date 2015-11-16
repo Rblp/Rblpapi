@@ -5,3 +5,4 @@
 ^deprecated
 ^blp
 ^inst/blp
+src/Makevars
