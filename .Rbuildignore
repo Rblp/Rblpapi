@@ -5,5 +5,5 @@
 ^deprecated
 ^blp
 ^inst/blp
-src/Makevars
+src/Makevars$
 .Rhistory
