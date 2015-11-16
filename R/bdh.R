@@ -53,7 +53,7 @@
 ##'   ## example for an options field: request monthly data; see section A.2.4 of
 ##'   ##  http://www.bloomberglabs.com/content/uploads/sites/2/2014/07/blpapi-developers-guide-2.54.pdf
 ##'   ## for more 
-##'   opt <- c("periodicityAdjustment"="MONTHLY")
+##'   opt <- c("periodicitySelection"="MONTHLY")
 ##'   bdh("SPY US Equity", c("PX_LAST", "VOLUME"),
 ##'       start.date=Sys.Date()-31*6, options=opt)
 ##' 
