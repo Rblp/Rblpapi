@@ -22,6 +22,11 @@
 
 	* src/subscribe.cpp: Begginning of live subscription
 
+2015-10-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/beqs.R: Correct Date use in example section
+	* man/beqs.Rd: Ditto
+
 2015-10-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Version 0.3.1
