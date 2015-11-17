@@ -8,3 +8,5 @@
 local/
 blp/
 inst/include/
+src/Makevars
+.Rhistory

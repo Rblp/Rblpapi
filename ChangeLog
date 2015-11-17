@@ -1,7 +1,35 @@
+2015-11-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/getBars.cpp: Also return value-traded per bar
+	* R/getBars.R: Document additional return column
+
+2015-11-09  Whit Armstrong  <armstrong.whit@gmail.com>
+
+	* src/subscribe.cpp: Finalize live subscription
+	* R/subscribe.R: Idem
+	* man/subsribe.Rd: Idem
+
+2015-11-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/getBars.R: Check startTime and endTime for Datetime type;
+	added example section to manual page
+	* R/getTicks.R: Ditto
+
+	* man/getBars.Rd: Added simple example from vignette
+	* man/getTicks.Rd: Ditto
+
+2015-11-02  Whit Armstrong  <armstrong.whit@gmail.com>
+
+	* src/subscribe.cpp: Begginning of live subscription
+
 2015-10-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/beqs.R: Correct Date use in example section
 	* man/beqs.Rd: Ditto
+
+2015-10-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Version 0.3.1
 
 2015-10-16  Dirk Eddelbuettel  <edd@debian.org>
 

@@ -79,6 +79,7 @@ namespace {
     const bbg::Name SESSION_TERMINATED("SessionTerminated");
     const bbg::Name CATEGORY("category");
     //const bbg::Name MESSAGE("message"); // for some reason this does not compile
+    const bbg::Name VALUE("value");
 }
 
 struct Bars {
@@ -89,16 +90,17 @@ struct Bars {
     std::vector<double> close;
     std::vector<int> numEvents;
     std::vector<double> volume;   // instread of long long
+    std::vector<double> value;   // instread of long long
 };
 
-void processMessage(bbg::Message &msg, Bars &bars, 
+void processMessage(bbg::Message &msg, Bars &bars,
                     const int barInterval, const bool verbose) {
     bbg::Element data = msg.getElement(BAR_DATA).getElement(BAR_TICK_DATA);
     int numBars = data.numValues();
     if (verbose) {
         Rcpp::Rcout <<"Response contains " << numBars << " bars" << std::endl;
         Rcpp::Rcout <<"Datetime\t\tOpen\t\tHigh\t\tLow\t\tClose" <<
-            "\t\tNumEvents\tVolume" << std::endl;
+            "\t\tNumEvents\tVolume\t\tV" << std::endl;
     }
     for (int i = 0; i < numBars; ++i) {
         bbg::Element bar = data.getValueAsElement(i);
@@ -112,6 +114,7 @@ void processMessage(bbg::Message &msg, Bars &bars,
         double close = bar.getElementAsFloat64(CLOSE);
         int numEvents = bar.getElementAsInt32(NUM_EVENTS);
         long long volume = bar.getElementAsInt64(VOLUME);
+        double value = bar.getElementAsFloat64(VALUE);
 
         if (verbose) {
             Rcpp::Rcout.setf(std::ios::fixed, std::ios::floatfield);
@@ -124,19 +127,21 @@ void processMessage(bbg::Message &msg, Bars &bars,
                         << close <<  "\t\t"
                         << numEvents <<  "\t\t"
                         << std::noshowpoint
-                        << volume << std::endl;
+                        << volume << "\t\t"
+                        << value << std::endl;
         }
-        bars.time.push_back(bbgDatetimeToUTC(time)); 
+        bars.time.push_back(bbgDatetimeToUTC(time));
         bars.open.push_back(open);
         bars.high.push_back(high);
         bars.low.push_back(low);
         bars.close.push_back(close);
         bars.numEvents.push_back(numEvents);
         bars.volume.push_back(volume);
+        bars.value.push_back(value);
     }
 }
 
-void processResponseEvent(bbg::Event &event, Bars &bars, 
+void processResponseEvent(bbg::Event &event, Bars &bars,
                           const int barInterval, const bool verbose) {
     bbg::MessageIterator msgIter(event);
     while (msgIter.next()) {
@@ -214,7 +219,8 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
                                    Rcpp::Named("low")       = bars.low,
                                    Rcpp::Named("close")     = bars.close,
                                    Rcpp::Named("numEvents") = bars.numEvents,
-                                   Rcpp::Named("volume")    = bars.volume);
+                                   Rcpp::Named("volume")    = bars.volume,
+                                   Rcpp::Named("value")     = bars.value);
 
 }
 
