@@ -1,3 +1,13 @@
+2015-11-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure (download): Use R to download instead of curl as the
+	latter fails to follow redirect links on e.g. OS X
+
+	* DESCRIPTION: Add Depends: on R (>= 3.2.2) for https support, also
+	roll Date and Version
+
+	* src/beqs.cpp: Make g++-5.2 happy and use std::strcmp
+
 2015-11-09  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/getBars.cpp: Also return value-traded per bar
