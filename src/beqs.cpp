@@ -62,7 +62,8 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
     if (verbose) msg.print(Rcpp::Rcout);
     
     Element response = msg.asElement(); 		// view as element
-    if (response.name().string() == "BeqsResponse") throw std::logic_error("Not a valid EQSDataResponse.");
+    if (std::strcmp(response.name().string(), "BeqsResponse") == 0)
+        throw std::logic_error("Not a valid EQSDataResponse.");
 
     Element data = msg.getElement("data"); 		// get data payload, extract field with display units 
     Element fieldDisplayUnits = data.getElement("fieldDisplayUnits");
