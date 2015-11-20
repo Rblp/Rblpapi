@@ -59,9 +59,11 @@ fi
 
 ## helper function to not rely on curl which at least on OS X fails to follow redirects
 download() {
+    Rscript -e 'capabilities()'
     url=${1}
     file=$(basename ${url})
-    ${R_HOME}/bin/Rscript -e "download.file(\"${url}\", \"${file}\", quiet=TRUE)"
+    ${R_HOME}/bin/Rscript -e "download.file(\"${url}\", \"${file}\", quiet=FALSE)"
+    ls -l ${file}
 }
 
 ## Get and install header files
