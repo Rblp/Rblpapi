@@ -1,3 +1,15 @@
+2015-11-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure (download): Use R to download instead of curl as the
+	latter fails to follow redirect links on e.g. OS X -- but only when
+	we have capabilities()[["libcurl"]] or else fall back to curl
+
+	* src/beqs.cpp: Make g++-5.2 happy and use std::strcmp
+
+	* .travis.yml (after_failure): Add new target to get more output
+
+	* DESCRIPTION: Roll Date and Version
+
 2015-11-09  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/getBars.cpp: Also return value-traded per bar
