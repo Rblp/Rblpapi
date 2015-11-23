@@ -84,7 +84,7 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
     if (verbose) results.print(Rcpp::Rcout);
     if (verbose) Rcpp::Rcout << rows << " Rows expected" << std::endl;
 
-    for (int j = 0; j < rows; j++) { 		// look at up to twenty-five rows to infer types
+    for (int j = 0; j < rows; j++) { 		// look at all rows to infer types, break if all found
         response = results.getValueAsElement(j); 	// pick j-th element to infer types
         data = response.getElement("fieldData");       	// get data payload of first elemnt
         if (verbose) data.print(Rcpp::Rcout);
@@ -112,14 +112,12 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
             all_chk = all_chk and chk[i];
         }
 
-        // if all_chk == TRUE then break
         if(all_chk){
             break;
         }
     }
 
-    // Check if any columns have not been checked successfully - these will all be fallback NA then
-    if(!all_chk){
+    if(!all_chk){               // Check if any columns have not been checked successfully - these will all set to fallback NA
         for (int i=0; i<cols; i++) {
             if(!chk[i]){
                 lst[i] = Rcpp::CharacterVector(rows, R_NaString);
@@ -127,8 +125,6 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
             }
         }
     }
-
-
 
     for (int i = 0; i < rows; i++) { 			// now process data
 
