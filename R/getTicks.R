@@ -32,7 +32,7 @@
 ##' desired, defaults to \sQuote{FALSE}
 ##' @param returnAs A character variable describing the type of return
 ##' object; currently supported are \sQuote{matrix} (also the default),
-##' \sQuote{fts}, \sQuote{xts} and \sQuote{zoo}  
+##' \sQuote{fts}, \sQuote{xts} and \sQuote{zoo}
 ##' @param tz A character variable with the desired local timezone,
 ##' defaulting to the value \sQuote{TZ} environment variable, and
 ##' \sQuote{UTC} if unset
@@ -74,16 +74,6 @@ getTicks <- function(security,
                   zoo    = zoo::zoo(res[,-(1:2)], order.by=res[,1]),
                   res)                         # fallback is also matrix
     return(res)   # to return visibly
-
-    ## commented out option
-    
-    ##' @param setCondCodes A boolean indicating whether to return any
-    ##' ticks with condition codes, associated with extraordinary trading
-    ##' and quoting circumstances, defaults to \sQuote{FALSE}. This is
-    ##' similar to setting \code{CondCodes = S} and \code{QRM = S} in
-    ##' Excel API
-
-    ##  setCondCodes = FALSE,
 
 }
 
@@ -148,11 +138,11 @@ getMultipleTicks <- function(security,
         ## Use na.locf to carry bid, ask, .. forward, but do not use trade column
         ind <- !grepl("trade", colnames(x))
         x[,ind] <- zoo::na.locf(x[,ind])
-        
+
         zoo::index(x) <- trunc(zoo::index(x)) # truncated time stamp down to seconds
         return(x)
-    } 
-        
+    }
+
     return(res)
 
 }

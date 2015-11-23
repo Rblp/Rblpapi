@@ -1,3 +1,19 @@
+2015-11-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/beqs.cpp: Correct comparison for response type
+
+2015-11-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure (download): Use R to download instead of curl as the
+	latter fails to follow redirect links on e.g. OS X -- but only when
+	we have capabilities()[["libcurl"]] or else fall back to curl
+
+	* src/beqs.cpp: Make g++-5.2 happy and use std::strcmp
+
+	* .travis.yml (after_failure): Add new target to get more output
+
+	* DESCRIPTION: Roll Date and Version
+
 2015-11-09  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/getBars.cpp: Also return value-traded per bar
@@ -21,6 +37,11 @@
 2015-11-02  Whit Armstrong  <armstrong.whit@gmail.com>
 
 	* src/subscribe.cpp: Begginning of live subscription
+
+2015-10-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/beqs.R: Correct Date use in example section
+	* man/beqs.Rd: Ditto
 
 2015-10-18  Dirk Eddelbuettel  <edd@debian.org>
 

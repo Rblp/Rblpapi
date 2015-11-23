@@ -32,10 +32,8 @@ fi
 sysname=$(${R_HOME}/bin/Rscript -e 'cat(Sys.info()["sysname"])')
 if [ ${sysname} == "Linux" ]; then
     platform="linux"
-    download="wget -q"
 elif [ ${sysname} == "Darwin" ]; then
     platform="osx"
-    download="curl -s -k -L -O"
 else
     echo "Unsupported platform: $sysname"
     echo "Check http://www.bloomberglabs.com/api/libraries/ for possible support first."
@@ -47,11 +45,11 @@ fi
 rpath=$(${R_HOME}/bin/Rscript -e 'cat(file.path(.libPaths()[1], "Rblpapi", "blp"))')
 arch=$(uname -m)
 if [ "${arch}" = "x86_64" ]; then
-    echo "Setting up compilation for 64-bit system on ${platform}"
+    echo "Setting up compilation for a ${platform} 64-bit system"
     sed -e"s/@config@/blpapi3_64/" -e"s|@rpath@|"${rpath}"|" src/Makevars.in > src/Makevars
     flavour="64"
 elif [ "${arch}" = "i686" ]; then
-    echo "Setting up compilation for 32-bit system on ${platform}"
+    echo "Setting up compilation for a ${platform} 32-bit system"
     sed -e"s/@config@/blpapi3_32/" -e"s|@rpath@|"${rpath}"|" src/Makevars.in > src/Makevars
     flavour="32"
 else
@@ -59,12 +57,26 @@ else
     exit -1
 fi
 
+## helper function to not rely on curl which at least on OS X fails to follow redirects
+download() {
+    url=${1}
+    ## sadly, for Travis we cannot rely on R as it lacks libcurl
+    libcurl=$(${R_HOME}/bin/Rscript -e 'cat(capabilities()[["libcurl"]])')
+    ## so when we have libcurl in R, use it -- else fall back to curl
+    if [ ${libcurl} == "TRUE" ]; then
+        file=$(basename ${url})
+        ${R_HOME}/bin/Rscript -e "download.file(\"${url}\", \"${file}\", quiet=TRUE)"
+    else
+        curl -s -k -L -O ${url}
+    fi
+}
+
 ## Get and install header files
 cwd=$(pwd)
 mkdir -p blp/${platform}
 cd blp/${platform}
 if [ ! -f blpHeaders.tar.gz ]; then
-    ${download} https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz
+    download https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz
     tar xfz blpHeaders.tar.gz -C ../../inst
 fi
 cd ${cwd}
@@ -73,7 +85,7 @@ cd ${cwd}
 mkdir -p inst/blp
 cd blp/${platform}
 if [ ! -f blpLibrary.tar.gz ]; then
-    ${download} https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
+    download https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
     tar xfz blpLibrary.tar.gz -C ../../inst/blp/ libblpapi3_${flavour}.so
 fi
 cd ${cwd}

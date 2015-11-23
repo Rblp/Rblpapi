@@ -35,12 +35,6 @@ defaulting to the value \sQuote{TZ} environment variable, and
 \item{con}{A connection object as created by a \code{blpConnect}
 call, and retrieved via the internal function
 \code{defaultConnection}.}
-
-\item{setCondCodes}{A boolean indicating whether to return any
-ticks with condition codes, associated with extraordinary trading
-and quoting circumstances, defaults to \sQuote{FALSE}. This is
-similar to setting \code{CondCodes = S} and \code{QRM = S} in
-Excel API}
 }
 \value{
 A numeric matrix with elements \sQuote{time}, (as a
