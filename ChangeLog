@@ -1,3 +1,7 @@
+2015-11-23  Rademeyer Vermaak  <csrvermaak@hotmail.com>
+
+	* src/beqs.cpp: More robust handling of empty return columns
+
 2015-11-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/beqs.cpp: Correct comparison for response type
