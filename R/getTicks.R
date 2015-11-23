@@ -43,6 +43,10 @@
 ##' \sQuote{POSIXct} object), \sQuote{values} and \sQuote{sizes}, or
 ##' an object of the type selected in \code{returnAs}.
 ##' @author Dirk Eddelbuettel
+##' @examples
+##' \dontrun{
+##'   getTicks("ES1 Index")
+##' }
 getTicks <- function(security,
                      eventType = "TRADE",
                      startTime = Sys.time()-60*60,
@@ -52,6 +56,9 @@ getTicks <- function(security,
                      tz = Sys.getenv("TZ", unset="UTC"),
                      con = defaultConnection()) {
 
+    if (!inherits(startTime, "POSIXt") || !inherits(endTime, "POSIXt")) {
+        stop("startTime and endTime must be Datetime objects", call.=FALSE)
+    }
     fmt <- "%Y-%m-%dT%H:%M:%S"
     startUTC <- format(startTime, fmt, tz="UTC")
     endUTC <- format(endTime, fmt, tz="UTC")
