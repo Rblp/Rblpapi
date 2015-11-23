@@ -77,7 +77,7 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
 
     Rcpp::List lst(cols);       			// Rcpp 'List' container of given number of columns
     Rcpp::LogicalVector chk(cols, false);
-    bool all_chk;
+    bool allgood;
 
     Element results = data.getElement("securityData"); 	// get security data payload == actual result set
     int rows = results.numValues();                     // total number of rows in result set
@@ -89,7 +89,7 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
         data = response.getElement("fieldData");       	// get data payload of first elemnt
         if (verbose) data.print(Rcpp::Rcout);
 
-        all_chk=true;
+        allgood = true;
         for (int i=0; i<cols; i++) { 			// loop over first data set, and infer types
             if (!chk(i) &&                              // column has not been set yet
                 data.hasElement(colnames[i].c_str())) {
@@ -109,18 +109,18 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
                     chk[i] = true;
                 }
             }
-            all_chk = all_chk and chk[i];
+            allgood = allgood and chk[i];
         }
 
-        if(all_chk){
+        if (allgood) {
             break;
         }
     }
 
-    if(!all_chk){               // Check if any columns have not been checked successfully - these will all set to fallback NA
+    if (!allgood) {               // Check if any columns have not been checked successfully - these will all set to fallback NA
         for (int i=0; i<cols; i++) {
-            if(!chk[i]){
-                lst[i] = Rcpp::CharacterVector(rows, R_NaString);
+            if (!chk[i]) {
+                lst[i] = Rcpp::NumericVector(rows, NA_REAL);
                 chk[i] = true;
             }
         }
