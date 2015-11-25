@@ -162,6 +162,7 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
                              std::string startDateTime,
                              std::string endDateTime,
                              bool gapFillInitialBar=false,
+                             bool adjustmentFollowDPDF=true,
                              bool verbose=false) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
@@ -183,6 +184,7 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
     request.set("startDateTime", startDateTime.c_str());
     request.set("endDateTime", endDateTime.c_str());
     request.set("gapFillInitialBar", gapFillInitialBar);
+    request.set("adjustmentFollowDPDF", adjustmentFollowDPDF);
 
     if (verbose) Rcpp::Rcout <<"Sending Request: " << request << std::endl;
     session->sendRequest(request);
