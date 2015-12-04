@@ -29,7 +29,9 @@
 ##' to one hour before current time
 ##' @param endTime A Datetime object with the end time, defaults
 ##' to current time
-##' @param gapFillInitialBar A boolean indicating whether the initial bar is to be filled, defaults to \sQuote{FALSE}
+##' @param options An optional named character vector with option
+##' values. Each field must have both a name (designating the option
+##' being set) as well as a value.
 ##' @param verbose A boolean indicating whether verbose operation is
 ##' desired, defaults to \sQuote{FALSE}
 ##' @param returnAs A character variable describing the type of return
