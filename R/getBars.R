@@ -29,7 +29,9 @@
 ##' to one hour before current time
 ##' @param endTime A Datetime object with the end time, defaults
 ##' to current time
-##' @param gapFillInitialBar A boolean indicating whether the initial bar is to be filled, defaults to \sQuote{FALSE}
+##' @param options An optional named character vector with option
+##' values. Each field must have both a name (designating the option
+##' being set) as well as a value.
 ##' @param verbose A boolean indicating whether verbose operation is
 ##' desired, defaults to \sQuote{FALSE}
 ##' @param returnAs A character variable describing the type of return
@@ -44,7 +46,7 @@
 ##' @return A numeric matrix with elements \sQuote{time} (as a
 ##' \sQuote{POSIXct} object), \sQuote{open}, \sQuote{high},
 ##' \sQuote{low}, \sQuote{close}, \sQuote{numEvents}, \sQuote{volume},
-##' \sQuote{value} or an object of the type selected in \code{returnAs}. 
+##' \sQuote{value} or an object of the type selected in \code{returnAs}.
 ##' Note that the \sQuote{time} value is adjusted: Bloomberg returns the
 ##' \emph{opening} time of the bar interval, whereas financial studies
 ##' typically refer to the most recent timestamp. For this reason we
@@ -60,7 +62,7 @@ getBars <- function(security,
                     barInterval=60,     		# in minutes
                     startTime = Sys.time()-60*60*6,
                     endTime = Sys.time(),
-                    gapFillInitialBar = FALSE,
+                    options = NULL,
                     verbose = FALSE,
                     returnAs = getOption("blpType", "matrix"),
                     tz = Sys.getenv("TZ", unset="UTC"),
@@ -73,10 +75,10 @@ getBars <- function(security,
     startUTC <- format(startTime, fmt, tz="UTC")
     endUTC <- format(endTime, fmt, tz="UTC")
     res <- getBars_Impl(con, security, eventType, barInterval,
-                        startUTC, endUTC, gapFillInitialBar, verbose)
+                        startUTC, endUTC, options, verbose)
 
     attr(res[,1], "tzone") <- tz
-    
+
     res <- switch(returnAs,
                   matrix = res,                # default is matrix
                   fts    = fts::fts(res[,1], res[,-1]),

@@ -6,9 +6,9 @@
 \usage{
 getBars(security, eventType = "TRADE", barInterval = 60,
   startTime = Sys.time() - 60 * 60 * 6, endTime = Sys.time(),
-  gapFillInitialBar = FALSE, verbose = FALSE,
-  returnAs = getOption("blpType", "matrix"), tz = Sys.getenv("TZ", unset =
-  "UTC"), con = defaultConnection())
+  options = NULL, verbose = FALSE, returnAs = getOption("blpType",
+  "matrix"), tz = Sys.getenv("TZ", unset = "UTC"),
+  con = defaultConnection())
 }
 \arguments{
 \item{security}{A character variable describing a valid security ticker}
@@ -24,7 +24,9 @@ to one hour before current time}
 \item{endTime}{A Datetime object with the end time, defaults
 to current time}
 
-\item{gapFillInitialBar}{A boolean indicating whether the initial bar is to be filled, defaults to \sQuote{FALSE}}
+\item{options}{An optional named character vector with option
+values. Each field must have both a name (designating the option
+being set) as well as a value.}
 
 \item{verbose}{A boolean indicating whether verbose operation is
 desired, defaults to \sQuote{FALSE}}
@@ -45,7 +47,7 @@ call, and retrieved via the internal function
 A numeric matrix with elements \sQuote{time} (as a
 \sQuote{POSIXct} object), \sQuote{open}, \sQuote{high},
 \sQuote{low}, \sQuote{close}, \sQuote{numEvents}, \sQuote{volume},
-\sQuote{value} or an object of the type selected in \code{returnAs}. 
+\sQuote{value} or an object of the type selected in \code{returnAs}.
 Note that the \sQuote{time} value is adjusted: Bloomberg returns the
 \emph{opening} time of the bar interval, whereas financial studies
 typically refer to the most recent timestamp. For this reason we
