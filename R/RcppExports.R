@@ -29,8 +29,8 @@ fieldSearch_Impl <- function(con, searchterm, excludeterm) {
     .Call('Rblpapi_fieldSearch_Impl', PACKAGE = 'Rblpapi', con, searchterm, excludeterm)
 }
 
-getBars_Impl <- function(con, security, eventType, barInterval, startDateTime, endDateTime, options_, verbose = FALSE) {
-    .Call('Rblpapi_getBars_Impl', PACKAGE = 'Rblpapi', con, security, eventType, barInterval, startDateTime, endDateTime, options_, verbose)
+getBars_Impl <- function(con, security, eventType, barInterval, startDateTime, endDateTime, options, verbose = FALSE) {
+    .Call('Rblpapi_getBars_Impl', PACKAGE = 'Rblpapi', con, security, eventType, barInterval, startDateTime, endDateTime, options, verbose)
 }
 
 getTicks_Impl <- function(con, security, eventType, startDateTime, endDateTime, verbose = FALSE) {
