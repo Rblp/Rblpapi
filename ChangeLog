@@ -1,3 +1,10 @@
+2015-12-04  Anonymous  <joel23888@users.noreply.github.com>
+
+	* src/getBars.cpp: Changed to support a single options vector with
+	named elements.
+	* R/getBars.R: Idem
+	* man/getBars.Rd: Corresponding manual page update
+
 2015-11-23  Rademeyer Vermaak  <csrvermaak@hotmail.com>
 
 	* src/beqs.cpp: More robust handling of empty return columns

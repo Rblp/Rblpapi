@@ -15,6 +15,9 @@
     \item The \code{beqs()} function is now more robust with respect to
     empty return columns (PR \ghpr{100} by Rademeyer fixing ticket
     \ghit{99}).
+    \item The \code{getBars()} function now uses a single (named) vector
+    \code{options} to pass optional values to the underlying function
+    (PR \ghpr{105} updating PR \ghpr{48} and fixing \ghit{47}). 
   }
 }
 
