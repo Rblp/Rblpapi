@@ -161,7 +161,7 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
                              int barInterval,
                              std::string startDateTime,
                              std::string endDateTime,
-                             SEXP options_,
+                             Rcpp::Nullable<Rcpp::CharacterVector> options,
                              bool verbose=false) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
@@ -182,7 +182,9 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
 
     request.set("startDateTime", startDateTime.c_str());
     request.set("endDateTime", endDateTime.c_str());
-    if(options_ != R_NilValue) { appendOptionsToRequest(request,options_); }
+    if (options.isNotNull()) {
+        appendOptionsToRequest(request, options);
+    }
 
     if (verbose) Rcpp::Rcout <<"Sending Request: " << request << std::endl;
     session->sendRequest(request);
