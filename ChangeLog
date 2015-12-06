@@ -5,6 +5,10 @@
 	* R/getBars.R: Idem
 	* man/getBars.Rd: Corresponding manual page update
 
+2015-11-23  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/beqs.cpp: Minor postprocessing and cleanup
+
 2015-11-23  Rademeyer Vermaak  <csrvermaak@hotmail.com>
 
 	* src/beqs.cpp: More robust handling of empty return columns
@@ -24,6 +28,10 @@
 	* .travis.yml (after_failure): Add new target to get more output
 
 	* DESCRIPTION: Roll Date and Version
+
+2015-11-16  Rademeyer Vermaak  <csrvermaak@hotmail.com>
+
+	* src/bdh.R: Correct example
 
 2015-11-09  Dirk Eddelbuettel  <edd@debian.org>
 

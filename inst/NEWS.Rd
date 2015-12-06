@@ -14,7 +14,8 @@
     start and end times for proper \code{Datetime} class.
     \item The \code{getBars()} function now also return the
     \sQuote{value traded} (request of \ghit{89}).
-    \item The \code{bdh} example was corrected (PR \ghpr{93} by Rademeyer).
+    \item An error in the documentation for \code{bdh} was corrected (PR
+    \ghpr{93} by Rademeyer closing \ghit{85}).
     \item The \code{beqs()} function is now more robust with respect to
     empty return columns (PR \ghpr{100} by Rademeyer fixing ticket
     \ghit{99}).
