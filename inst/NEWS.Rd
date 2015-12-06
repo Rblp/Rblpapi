@@ -4,7 +4,7 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
-\section{Changes in Rblpapi version 0.3.2 (2015-12-31)}{
+\section{Changes in Rblpapi version 0.3.2 (2015-12-06)}{
   \itemize{
     \item A new \code{subscribe()} function supports live data
     subscription for a set of tickers and fields (\ghpr{88}).

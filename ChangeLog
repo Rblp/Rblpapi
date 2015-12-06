@@ -1,3 +1,7 @@
+2015-12-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Version 0.3.2
+
 2015-12-04  Anonymous  <joel23888@users.noreply.github.com>
 
 	* src/getBars.cpp: Changed to support a single options vector with
