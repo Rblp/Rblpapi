@@ -65,7 +65,7 @@ download() {
     ## so when we have libcurl in R, use it -- else fall back to curl
     if [ ${libcurl} == "TRUE" ]; then
         file=$(basename ${url})
-        ${R_HOME}/bin/Rscript -e "download.file(\"${url}\", \"${file}\", quiet=TRUE)"
+        ${R_HOME}/bin/Rscript -e "download.file(\"${url}\", \"${file}\", quiet=TRUE, method='libcurl')"
     else
         curl -s -k -L -O ${url}
     fi
