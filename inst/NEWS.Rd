@@ -4,6 +4,13 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
+\section{Changes in Rblpapi version 0.3.3 (2016-01-31)}{
+  \itemize{
+    \item \code{configure} adds a missing \code{method="libcurl"}
+    options (PR \ghpr{109} by Martin Bel).
+  }
+}
+
 \section{Changes in Rblpapi version 0.3.2 (2015-12-06)}{
   \itemize{
     \item A new \code{subscribe()} function supports live data

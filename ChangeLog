@@ -1,3 +1,7 @@
+2015-12-07  Martin Bel  <belmartin@outlook.com>
+
+	* configure: Add 'method="libcurl"' to download.file call
+
 2015-12-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Version 0.3.2
