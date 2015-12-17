@@ -97,6 +97,20 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// bsrch_Impl
+DataFrame bsrch_Impl(SEXP con, std::string domain, std::string limit, bool verbose);
+RcppExport SEXP Rblpapi_bsrch_Impl(SEXP conSEXP, SEXP domainSEXP, SEXP limitSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type con(conSEXP);
+    Rcpp::traits::input_parameter< std::string >::type domain(domainSEXP);
+    Rcpp::traits::input_parameter< std::string >::type limit(limitSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    __result = Rcpp::wrap(bsrch_Impl(con, domain, limit, verbose));
+    return __result;
+END_RCPP
+}
 // fieldSearch_Impl
 Rcpp::DataFrame fieldSearch_Impl(SEXP con, std::string searchterm, std::string excludeterm);
 RcppExport SEXP Rblpapi_fieldSearch_Impl(SEXP conSEXP, SEXP searchtermSEXP, SEXP excludetermSEXP) {
