@@ -25,6 +25,10 @@ blpConnect_Impl <- function(host, port) {
     .Call('Rblpapi_blpConnect_Impl', PACKAGE = 'Rblpapi', host, port)
 }
 
+bsrch_Impl <- function(con, domain, limit, verbose = FALSE) {
+    .Call('Rblpapi_bsrch_Impl', PACKAGE = 'Rblpapi', con, domain, limit, verbose)
+}
+
 fieldSearch_Impl <- function(con, searchterm, excludeterm) {
     .Call('Rblpapi_fieldSearch_Impl', PACKAGE = 'Rblpapi', con, searchterm, excludeterm)
 }
