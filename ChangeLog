@@ -1,3 +1,9 @@
+2015-12-17  Morgan Williams <wmorgan85@gmail.com>
+
+	* src/bsrch.cpp: Initial version of BSRCH functionality
+	* R/bsrch.R: R side of new bsrch() function
+	* man/bsrch.Rd: Manual page for bsrch()
+
 2015-12-07  Martin Bel  <belmartin@outlook.com>
 
 	* configure: Add 'method="libcurl"' to download.file call

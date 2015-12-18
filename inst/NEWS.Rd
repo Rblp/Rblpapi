@@ -8,6 +8,8 @@
   \itemize{
     \item \code{configure} adds a missing \code{method="libcurl"}
     options (PR \ghpr{109} by Martin Bel).
+    \item New function \code{bsrch()} adds basic search functionality
+    (PR \ghpr{111} by Morgan Williams fixing ticket \ghit{82}).
   }
 }
 
