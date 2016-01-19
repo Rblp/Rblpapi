@@ -1,6 +1,6 @@
-The Rblpapi package contains only code that is copyright by Whit Armstrong,
-Dirk Eddelbuettel, and John Laing, and released under the terms of the GNU
-General Public License, Version 3 ("GPL-3").
+The Rblpapi source package contains only code that is copyright by Whit
+Armstrong, Dirk Eddelbuettel, and John Laing, and released under the terms of
+the GNU General Public License, Version 3 ("GPL-3").
 
 The Rblpapi package builds against code released (as binary library files and
 corresponding header files which are downloaded during the build step) by
