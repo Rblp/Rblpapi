@@ -28,7 +28,7 @@ call, and retrieved via the internal function
 \code{defaultConnection}.}
 }
 \value{
-A list with as a entries as there are entries in
+A list with as many entries as there are entries in
 \code{securities}; each list contains a data.frame with one row
 per observations and as many columns as entries in
 \code{fields}. If the list is of length one, it is collapsed into
@@ -40,7 +40,10 @@ Data Set) queries
 }
 \examples{
 \dontrun{
+  ## simple query
   bds("GOOG US Equity", "TOP_20_HOLDERS_PUBLIC_FILINGS")
+  ## example of using overrides
+  overrd <- c("START_DT"="20150101", "END_DT"="20160101")
 }
 }
 \author{
