@@ -175,6 +175,7 @@ void populateDfRow(SEXP ans, R_len_t row_index, Element& e) {
   }
 }
 
+// deprecated
 SEXP allocateDataFrameColumn(int fieldT, size_t n) {
   SEXP ans;
 
