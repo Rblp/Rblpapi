@@ -203,3 +203,26 @@ Rcpp::List allocateDataFrame(size_t nrows, const vector<string>& colnames, const
   }
   return ans;
 }
+
+
+// [[Rcpp::export]]
+Rcpp::List fieldInfo_Impl(SEXP con_, std::vector<std::string> fields) {
+
+  Session* session = 
+    reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
+
+  // get the field info
+  std::vector<FieldInfo> fldinfos(getFieldTypes(session, fields));
+  std::vector<std::string> colnames {"id","mnemonic","datatype","ftype"};
+  std::vector<RblpapiT> res_types(4,RblpapiT::String);
+  Rcpp::List res(allocateDataFrame(fields, colnames, res_types));
+  R_len_t i(0);
+  for(auto f : fldinfos) {
+    SET_STRING_ELT(res[0],i,Rf_mkChar(f.id.c_str()));
+    SET_STRING_ELT(res[1],i,Rf_mkChar(f.mnemonic.c_str()));
+    SET_STRING_ELT(res[2],i,Rf_mkChar(f.datatype.c_str()));
+    SET_STRING_ELT(res[3],i,Rf_mkChar(f.ftype.c_str()));
+    ++i;
+  }
+  return res;
+}

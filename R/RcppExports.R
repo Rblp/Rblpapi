@@ -37,6 +37,10 @@ getBars_Impl <- function(con, security, eventType, barInterval, startDateTime, e
     .Call('Rblpapi_getBars_Impl', PACKAGE = 'Rblpapi', con, security, eventType, barInterval, startDateTime, endDateTime, options, verbose)
 }
 
+fieldInfo_Impl <- function(con_, fields) {
+    .Call('Rblpapi_fieldInfo_Impl', PACKAGE = 'Rblpapi', con_, fields)
+}
+
 getTicks_Impl <- function(con, security, eventType, startDateTime, endDateTime, verbose = FALSE) {
     .Call('Rblpapi_getTicks_Impl', PACKAGE = 'Rblpapi', con, security, eventType, startDateTime, endDateTime, verbose)
 }
