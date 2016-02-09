@@ -186,3 +186,20 @@ Rcpp::List allocateDataFrame(const vector<string>& rownames, const vector<string
   }
   return ans;
 }
+
+Rcpp::List allocateDataFrame(size_t nrows, const vector<string>& colnames, const vector<RblpapiT>& coltypes) {
+
+  if(colnames.size() != coltypes.size()) {
+    throw std::logic_error("colnames size inconsistent with column types size.");
+  }
+
+  Rcpp::List ans(colnames.size());
+  ans.attr("class") = "data.frame";
+  ans.attr("names") = colnames;
+  Rcpp::IntegerVector rnms(nrows); std::iota(rnms.begin(), rnms.end(), 1);
+  ans.attr("row.names") = rnms;
+  for(size_t i = 0; i < colnames.size(); ++i) {
+    ans[i] = allocateDataFrameColumn(coltypes[i], nrows);
+  }
+  return ans;
+}
