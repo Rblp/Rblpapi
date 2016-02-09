@@ -50,3 +50,4 @@ SEXP allocateDataFrameColumn(RblpapiT rblpapitype, const size_t n);
 FieldInfo getFieldType(BloombergLP::blpapi::Session *session, BloombergLP::blpapi::Service& fieldInfoService, const std::string& field);
 std::vector<FieldInfo> getFieldTypes(BloombergLP::blpapi::Session *session,const std::vector<std::string> &fields);
 Rcpp::List allocateDataFrame(const std::vector<std::string>& rownames, const std::vector<std::string>& colnames, std::vector<RblpapiT>& coltypes);
+Rcpp::List allocateDataFrame(size_t nrows, const std::vector<std::string>& colnames, const std::vector<RblpapiT>& coltypes);

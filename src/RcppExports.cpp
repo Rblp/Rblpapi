@@ -19,7 +19,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // bdh_Impl
-SEXP bdh_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields, std::string start_date_, SEXP end_date_, SEXP options_, SEXP overrides_, SEXP identity_);
+Rcpp::List bdh_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields, std::string start_date_, SEXP end_date_, SEXP options_, SEXP overrides_, SEXP identity_);
 RcppExport SEXP Rblpapi_bdh_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP start_date_SEXP, SEXP end_date_SEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP identity_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
