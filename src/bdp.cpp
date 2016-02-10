@@ -45,7 +45,7 @@ using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 
-void getBDPResult(Event& event, Rcpp::List& res, std::vector<std::string> colnames) {
+void getBDPResult(Event& event, Rcpp::List& res, const std::vector<std::string>& securities, const std::vector<std::string>& colnames) {
     MessageIterator msgIter(event);
     if (!msgIter.next()) {
         throw std::logic_error("Not a valid MessageIterator.");
@@ -61,6 +61,11 @@ void getBDPResult(Event& event, Rcpp::List& res, std::vector<std::string> colnam
     for (size_t i = 0; i < securityData.numValues(); ++i) {
         Element this_security = securityData.getValueAsElement(i);
         size_t row_index = this_security.getElement("sequenceNumber").getValueAsInt32();
+
+        // check that the seqNum matches the order of the securities vector (it's a grave error to screw this up)
+        if(securities[row_index].compare(this_security.getElementAsString("security"))!=0) {
+            throw std::logic_error("mismatched Security sequence, please report a bug.");
+        }
         Element fieldData = this_security.getElement("fieldData");
         for(size_t j = 0; j < fieldData.numElements(); ++j) {
             Element e = fieldData.getElement(j);
@@ -108,7 +113,7 @@ Rcpp::List bdp_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
         switch (event.eventType()) {
         case Event::RESPONSE:
         case Event::PARTIAL_RESPONSE:
-            getBDPResult(event, res, fields);
+            getBDPResult(event, res, securities, fields);
             break;
         default:
             MessageIterator msgIter(event);
