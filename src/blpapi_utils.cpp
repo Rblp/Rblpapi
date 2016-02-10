@@ -396,14 +396,6 @@ LazyFrameIteratorT assertColumnDefined(LazyFrameT& lazy_frame, BloombergLP::blpa
   return iter;
 }
 
-void setNames(SEXP x, std::vector<std::string>& names) {
-  SEXP names_ = PROTECT(Rf_allocVector(STRSXP, names.size()));
-  for(size_t i = 0; i < names.size(); ++i) {
-    SET_STRING_ELT(names_,i,Rf_mkChar(names[i].c_str()));
-  }
-  Rf_setAttrib(x, R_NamesSymbol, names_); UNPROTECT(1);
-}
-
 Rcpp::NumericVector createPOSIXtVector(const std::vector<double> & ticks, 
                                        const std::string tz) {
     Rcpp::NumericVector pt(ticks.begin(), ticks.end());

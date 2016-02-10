@@ -43,7 +43,6 @@ SEXP buildDataFrame(std::vector<std::string>& rownames, LazyFrameT& m);
 LazyFrameIteratorT assertColumnDefined(LazyFrameT& lazy_frame, BloombergLP::blpapi::Element& e, size_t n);
 void addDateClass(SEXP x);
 void addPosixClass(SEXP x);
-void setNames(SEXP x, std::vector<std::string>& names);
 void addFakeRownames(SEXP x, R_len_t n);
 
 Rcpp::NumericVector createPOSIXtVector(const std::vector<double> & ticks, const std::string tz="UTC");
