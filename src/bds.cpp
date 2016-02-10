@@ -39,11 +39,47 @@ using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 
-SEXP bulkArrayToDf(Element& fieldData) {
+
+Rcpp::List buildDataFrame(LazyFrameT& m) {
+    Rcpp::List ans(m.size());
+    ans.attr("class") = "data.frame";
+    if(m.empty()) { return ans; }
+
+    size_t nrows(Rf_length(m.begin()->second));
+    Rcpp::IntegerVector rnms(nrows); std::iota(rnms.begin(), rnms.end(), 1);
+    ans.attr("row.names") = rnms;
+
+    R_len_t i(0);
+    std::vector<std::string> colnames(m.size());
+    for(const auto &v : m) {
+        colnames[i] = v.first;
+        ans[i] = v.second;
+        ++i;
+    }
+    ans.attr("names") = colnames;
+    // all columns are now safe
+    UNPROTECT(m.size());
+
+    return ans;
+}
+
+LazyFrameIteratorT assertColumnDefined(LazyFrameT& lazy_frame, BloombergLP::blpapi::Element& e, size_t n) {
+  LazyFrameIteratorT iter = lazy_frame.find(e.name().string());
+
+  // insert only if not present
+  if(iter == lazy_frame.end()) {
+    // allocateDataFrameColumn calls PROTECT when SEXP is allocated
+    SEXP column = allocateDataFrameColumn(e.datatype(), n);
+    iter = lazy_frame.insert(lazy_frame.begin(),std::pair<std::string,SEXP>(e.name().string(),column));
+  }
+
+  return iter;
+}
+
+Rcpp::List bulkArrayToDf(Element& fieldData) {
     if(fieldData.numValues()==0) {
         return R_NilValue;
     }
-
     LazyFrameT lazy_frame;
     for(size_t i = 0; i < fieldData.numValues(); ++i) {
         Element row = fieldData.getValueAsElement(i);
@@ -53,10 +89,10 @@ SEXP bulkArrayToDf(Element& fieldData) {
             populateDfRow(iter->second,i,e);
         }
     }
-    return buildDataFrame(lazy_frame,true);
+    return buildDataFrame(lazy_frame);
 }
 
-SEXP BulkDataResponseToDF(Event& event, std::string& requested_field) {
+Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field) {
     MessageIterator msgIter(event);
     if(!msgIter.next()) {
         throw std::logic_error("Not a valid MessageIterator.");
@@ -70,7 +106,7 @@ SEXP BulkDataResponseToDF(Event& event, std::string& requested_field) {
     }
     Element securityData = response.getElement("securityData");
 
-    SEXP ans = PROTECT(Rf_allocVector(VECSXP, securityData.numValues()));
+    Rcpp::List ans(securityData.numValues());
     std::vector<std::string> ans_names(securityData.numValues());
 
     for(size_t i = 0; i < securityData.numValues(); ++i) {
@@ -78,22 +114,20 @@ SEXP BulkDataResponseToDF(Event& event, std::string& requested_field) {
         ans_names[i] = this_security.getElementAsString("security");
         Element fieldData = this_security.getElement("fieldData");
         if(!fieldData.hasElement(requested_field.c_str())) {
-            SET_VECTOR_ELT(ans,i,R_NilValue);
+            ans[i] = R_NilValue;
         } else {
-            Element this_field = fieldData.getElement(requested_field.c_str());
-            SET_VECTOR_ELT(ans,i,bulkArrayToDf(this_field));
+            Element e = fieldData.getElement(requested_field.c_str());
+            ans[i] = bulkArrayToDf(e);
         }
     }
-    
-    //FIXME: setListNames(ans,ans_names);
-    UNPROTECT(1);
+    ans.attr("names") = ans_names;
     return ans;
 }
 
 // only allow one field for bds in contrast to bdp
 // [[Rcpp::export]]
-SEXP bds_Impl(SEXP con_, std::vector<std::string> securities, 
-              std::string field, SEXP options_, SEXP overrides_, SEXP identity_) {
+Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities, 
+                    std::string field, SEXP options_, SEXP overrides_, SEXP identity_) {
 
     Session* session = 
         reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
@@ -116,13 +150,12 @@ SEXP bds_Impl(SEXP con_, std::vector<std::string> securities,
     
     sendRequestWithIdentity(session, request, identity_);
 
-    SEXP ans = R_NilValue;      // to keep -pedantic happy
     while (true) {
         Event event = session->nextEvent();
         switch (event.eventType()) {
         case Event::RESPONSE:
         case Event::PARTIAL_RESPONSE:
-            ans = BulkDataResponseToDF(event,field);
+            return BulkDataResponseToDF(event,field);
             break;
         default:
             MessageIterator msgIter(event);
@@ -133,6 +166,5 @@ SEXP bds_Impl(SEXP con_, std::vector<std::string> securities,
         }
         if (event.eventType() == Event::RESPONSE) { break; }
     }
-
-    return ans;
+    return R_NilValue;
 }

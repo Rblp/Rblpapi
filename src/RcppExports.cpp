@@ -53,7 +53,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // bds_Impl
-SEXP bds_Impl(SEXP con_, std::vector<std::string> securities, std::string field, SEXP options_, SEXP overrides_, SEXP identity_);
+Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities, std::string field, SEXP options_, SEXP overrides_, SEXP identity_);
 RcppExport SEXP Rblpapi_bds_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldSEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP identity_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
