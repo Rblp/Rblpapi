@@ -181,7 +181,7 @@ void populateDfRow(SEXP ans, R_len_t row_index, Element& e) {
   }
 }
 
-// deprecated
+// deprecated -- still neede by BDS
 SEXP allocateDataFrameColumn(int fieldT, size_t n) {
   SEXP ans;
 
@@ -246,73 +246,6 @@ SEXP allocateDataFrameColumn(int fieldT, size_t n) {
   default:
     throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
   }
-  return ans;
-}
-
-void addFakeRownames(SEXP x, R_len_t n) {
-  SEXP rownames = PROTECT(Rf_allocVector(INTSXP,n));
-  for(R_len_t i = 0; i < n; ++i) INTEGER(rownames)[i] = i+1;
-  Rf_setAttrib(x,Rf_install("row.names"),rownames);
-  UNPROTECT(1); // rownames
-}
-
-SEXP buildDataFrame(LazyFrameT& m, bool add_fake_rownames, bool date_column_first) {
-  if(m.empty()) { return R_NilValue; }
-  SEXP ans = PROTECT(Rf_allocVector(VECSXP, m.size()));
-
-  SEXP klass = PROTECT(Rf_allocVector(STRSXP, 1));
-  SET_STRING_ELT(klass, 0, Rf_mkChar("data.frame"));
-  Rf_classgets(ans,klass); UNPROTECT(1); // klass
-
-  if(add_fake_rownames) {
-    addFakeRownames(ans,Rf_length(m.begin()->second));
-  }
-
-  SEXP colnames = PROTECT(Rf_allocVector(STRSXP, m.size()));
-
-  // reset date_column_first to false if 'date' column not present
-  if(date_column_first && m.find(std::string("date"))==m.end()) {
-    date_column_first = false;
-  }
-
-  int i(0);
-  if(date_column_first) {
-    SET_STRING_ELT(colnames,i,Rf_mkChar("date"));
-    SET_VECTOR_ELT(ans,i,m["date"]);
-    ++i;
-
-    for (const auto &v : m) {
-      if(v.first != "date") {
-        SET_STRING_ELT(colnames,i,Rf_mkChar(v.first.c_str()));
-        SET_VECTOR_ELT(ans,i,v.second);
-        ++i;
-      }
-    }
-
-  } else {
-    for (const auto &v : m) {
-      SET_STRING_ELT(colnames,i,Rf_mkChar(v.first.c_str()));
-      SET_VECTOR_ELT(ans,i,v.second);
-      ++i;
-    }
-  }
-  Rf_setAttrib(ans, R_NamesSymbol, colnames); UNPROTECT(1); // colnames
-
-  // all columns are now safe
-  UNPROTECT(m.size());
-
-  UNPROTECT(1); // ans
-  return ans;
-}
-
-SEXP buildDataFrame(std::vector<std::string>& rownames, LazyFrameT& m) {
-  SEXP ans = PROTECT(buildDataFrame(m,false));
-  SEXP rownames_ = PROTECT(Rf_allocVector(STRSXP, rownames.size()));
-  int j(0);
-  for(const auto &v : rownames) { SET_STRING_ELT(rownames_,j++,Rf_mkChar(v.c_str())); }
-  Rf_setAttrib(ans, Rf_install("row.names"), rownames_); UNPROTECT(1); // rownames_
-
-  UNPROTECT(1); // ans
   return ans;
 }
 
@@ -387,19 +320,6 @@ void sendRequestWithIdentity(Session* session, Request& request, SEXP identity_)
   } else {
     session->sendRequest(request);
   }
-}
-
-LazyFrameIteratorT assertColumnDefined(LazyFrameT& lazy_frame, BloombergLP::blpapi::Element& e, size_t n) {
-  LazyFrameIteratorT iter = lazy_frame.find(e.name().string());
-
-  // insert only if not present
-  if(iter == lazy_frame.end()) {
-    // allocateDataFrameColumn calls PROTECT when SEXP is allocated
-    SEXP column = allocateDataFrameColumn(e.datatype(), n);
-    iter = lazy_frame.insert(lazy_frame.begin(),std::pair<std::string,SEXP>(e.name().string(),column));
-  }
-
-  return iter;
 }
 
 Rcpp::NumericVector createPOSIXtVector(const std::vector<double> & ticks, 

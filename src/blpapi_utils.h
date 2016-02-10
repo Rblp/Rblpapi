@@ -41,12 +41,8 @@ void sendRequestWithIdentity(BloombergLP::blpapi::Session* session, BloombergLP:
 
 void populateDfRow(SEXP ans, R_len_t row_index, BloombergLP::blpapi::Element& e);
 SEXP allocateDataFrameColumn(int fieldT, size_t n);
-SEXP buildDataFrame(LazyFrameT& m, bool add_fake_rownames = false, bool date_column_first = false);
-SEXP buildDataFrame(std::vector<std::string>& rownames, LazyFrameT& m);
-LazyFrameIteratorT assertColumnDefined(LazyFrameT& lazy_frame, BloombergLP::blpapi::Element& e, size_t n);
 void addDateClass(SEXP x);
 void addPosixClass(SEXP x);
-void addFakeRownames(SEXP x, R_len_t n);
 
 Rcpp::NumericVector createPOSIXtVector(const std::vector<double> & ticks, const std::string tz="UTC");
 std::string vectorToCSVString(const std::vector<std::string>& vec);
