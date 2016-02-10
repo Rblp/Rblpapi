@@ -18,8 +18,7 @@
 ##  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
 
-##' This function uses the Bloomberg API to retrieve 'bdp' (Bloomberg
-##' Data Point) queries
+##' This function uses the Bloomberg API to retrieve fieldInfo
 ##'
 ##' @title Run 'Bloomberg Field Data' Queries
 ##' @param fields A character vector with Bloomberg query fields.
@@ -33,7 +32,7 @@
 ##' \dontrun{
 ##'   field.info(c("PX_LAST", "VOLUME"))
 ##' }
-field.info <- function(fields, con=defaultConnection()) {
+fieldInfo <- function(fields, con=defaultConnection()) {
     if (any(duplicated(fields))) stop("Duplicated fields submitted.", call.=FALSE)
     fieldInfo_Impl(con, fields)
 }
