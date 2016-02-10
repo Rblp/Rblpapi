@@ -31,7 +31,6 @@
 #include <blpapi_element.h>
 #include <Rcpp.h>
 #include <blpapi_utils.h>
-#include <getFieldInfo.h>
 
 using BloombergLP::blpapi::Session;
 using BloombergLP::blpapi::Service;

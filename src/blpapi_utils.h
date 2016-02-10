@@ -15,16 +15,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>. //
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef BLPAPI_UTILS_H
-#define BLPAPI_UTILS_H
+#pragma once
 
 #include <string>
 #include <vector>
 #include <map>
+#include <blpapi_session.h>
+#include <blpapi_service.h>
+#include <blpapi_request.h>
+#include <blpapi_event.h>
+#include <blpapi_message.h>
+#include <blpapi_element.h>
 #include <Rcpp.h>
-
-typedef std::map<std::string,SEXP> LazyFrameT;
-typedef std::map<std::string,SEXP>::iterator LazyFrameIteratorT;
+#include <rblpapi_types.h>
 
 void* checkExternalPointer(SEXP xp_, const char* valid_tag);
 const int bbgDateToJulianDate(const BloombergLP::blpapi::Datetime& bbg_date);
@@ -48,4 +51,9 @@ void addFakeRownames(SEXP x, R_len_t n);
 Rcpp::NumericVector createPOSIXtVector(const std::vector<double> & ticks, const std::string tz="UTC");
 std::string vectorToCSVString(const std::vector<std::string>& vec);
 
-#endif // BLPAPI_UTILS_H
+RblpapiT fieldInfoToRblpapiT(const std::string& datatype, const std::string& ftype);
+SEXP allocateDataFrameColumn(RblpapiT rblpapitype, const size_t n);
+FieldInfo getFieldType(BloombergLP::blpapi::Session *session, BloombergLP::blpapi::Service& fieldInfoService, const std::string& field);
+std::vector<FieldInfo> getFieldTypes(BloombergLP::blpapi::Session *session,const std::vector<std::string> &fields);
+Rcpp::List allocateDataFrame(const std::vector<std::string>& rownames, const std::vector<std::string>& colnames, std::vector<RblpapiT>& coltypes);
+Rcpp::List allocateDataFrame(size_t nrows, const std::vector<std::string>& colnames, const std::vector<RblpapiT>& coltypes);

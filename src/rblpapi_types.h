@@ -17,12 +17,13 @@
 
 #pragma once
 
-#include <string>
 #include <vector>
-#include <blpapi_session.h>
-#include <blpapi_request.h>
+#include <map>
+#include <string>
 #include <Rcpp.h>
 
+typedef std::map<std::string,SEXP> LazyFrameT;
+typedef std::map<std::string,SEXP>::iterator LazyFrameIteratorT;
 
 class FieldInfo {
 public:
@@ -31,7 +32,6 @@ public:
   std::string datatype;
   std::string ftype;
 };
-
 
 // Bloomberg types
 enum class DatatypeT {Bool,Datetime,Double,Int32,Int64,String};
@@ -43,11 +43,3 @@ const std::map<std::string, DatatypeT> stringToDatatypeT {
 
 // our types
 enum class RblpapiT {Integer,Double,Logical,Date,Datetime,String,Unknown};
-
-
-RblpapiT fieldInfoToRblpapiT(const std::string& datatype, const std::string& ftype);
-SEXP allocateDataFrameColumn(RblpapiT rblpapitype, const size_t n);
-FieldInfo getFieldType(BloombergLP::blpapi::Session *session, BloombergLP::blpapi::Service& fieldInfoService, const std::string& field);
-std::vector<FieldInfo> getFieldTypes(BloombergLP::blpapi::Session *session,const std::vector<std::string> &fields);
-Rcpp::List allocateDataFrame(const std::vector<std::string>& rownames, const std::vector<std::string>& colnames, std::vector<RblpapiT>& coltypes);
-Rcpp::List allocateDataFrame(size_t nrows, const std::vector<std::string>& colnames, const std::vector<RblpapiT>& coltypes);
