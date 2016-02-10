@@ -142,6 +142,18 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// fieldInfo_Impl
+Rcpp::List fieldInfo_Impl(SEXP con_, std::vector<std::string> fields);
+RcppExport SEXP Rblpapi_fieldInfo_Impl(SEXP con_SEXP, SEXP fieldsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type con_(con_SEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type fields(fieldsSEXP);
+    __result = Rcpp::wrap(fieldInfo_Impl(con_, fields));
+    return __result;
+END_RCPP
+}
 // getTicks_Impl
 Rcpp::DataFrame getTicks_Impl(SEXP con, std::string security, std::vector<std::string> eventType, std::string startDateTime, std::string endDateTime, bool verbose);
 RcppExport SEXP Rblpapi_getTicks_Impl(SEXP conSEXP, SEXP securitySEXP, SEXP eventTypeSEXP, SEXP startDateTimeSEXP, SEXP endDateTimeSEXP, SEXP verboseSEXP) {
