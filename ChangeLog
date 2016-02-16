@@ -1,3 +1,22 @@
+2016-02-10  Whit Armstrong  <armstrong.whit@gmail.com>
+
+	* src/bdp.cpp: check order of bbg response matches user reqeust order
+	* src/blpapi_utils.cpp: move new util functions out of getFieldInfo.cpp
+	* src/bds.cpp: move all LazyFrame related functions here
+
+2016-02-09  Whit Armstrong  <armstrong.whit@gmail.com>
+
+	* src/getFieldInfo.cpp: add overloaded allocateDataFrame using nrows (no rownames)
+	* src/bdh.cpp: drop LazyFrame, preallocate result using getFieldTypes
+	* R/fieldInfo.R: add fieldInfo function
+
+2016-02-06  Whit Armstrong  <armstrong.whit@gmail.com>
+
+	* src/bdp.cpp: drop LazyFrame, preallocate result using getFieldTypes
+	* R/fieldInfo.R: new function 'fieldInfo'
+	* src/getFieldInfo.cpp: cpp implementation for 'fieldInfo' function
+
+
 2016-02-05  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/bds.R: Add example of overrides use with bds()
