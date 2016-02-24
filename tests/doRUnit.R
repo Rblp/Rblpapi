@@ -41,7 +41,7 @@ testSuite <- defineTestSuite(name="Rblpapi Unit Tests",
 
 ## if an option is set, we run tests. otherwise we don't.
 ## recall that we DO need a working Bloomberg connection...
-if (TRUE || getOption("blpUnitTests", FALSE)) {
+if (getOption("blpUnitTests", FALSE)) {
 
     ## without this, we get (or used to get) unit test failures
     Sys.setenv("R_TESTS"="")
