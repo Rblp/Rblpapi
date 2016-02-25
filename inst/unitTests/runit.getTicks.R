@@ -21,31 +21,31 @@
 
 if (.runThisTest) {
 
-    test.getBarsAsMatrix <- function() {
+    test.getTicksAsMatrix <- function() {
 
-        res <- getBars("ES1 Index", returnAs="matrix")
+        res <- getTicks("ES1 Index", returnAs="matrix")
 
         checkTrue(inherits(res, "data.frame"),
                   msg = "checking return type")
 
-        checkTrue(dim(res)[1] > 3, msg = "check return of at least three rows")
-        checkTrue(dim(res)[2] == 8, msg = "check return of eight columns")
+        checkTrue(dim(res)[1] > 10, msg = "check return of at least ten rows")
+        checkTrue(dim(res)[2] == 3, msg = "check return of three columns")
 
-        checkTrue(all(c("times", "open", "high", "low", "close") %in% colnames(res)),
+        checkTrue(all(c("times", "value", "size") %in% colnames(res)),
                   msg = "check column names")
     }
 
     test.getBarsAsXts <- function() {
 
-        res <- getBars("ES1 Index", returnAs="xts")
+        res <- getTicks("ES1 Index", returnAs="xts")
 
         checkTrue(inherits(res, "xts"),
                   msg = "checking return type")
 
-        checkTrue(dim(res)[1] > 3, msg = "check return of at least three rows")
-        checkTrue(dim(res)[2] == 7, msg = "check return of seven columns")
+        checkTrue(dim(res)[1] > 10, msg = "check return of at least ten rows")
+        checkTrue(dim(res)[2] == 2, msg = "check return of two columns")
 
-        checkTrue(all(c("open", "high", "low", "close") %in% colnames(res)),
+        checkTrue(all(c("value", "size") %in% colnames(res)),
                   msg = "check column names")
 
     }
