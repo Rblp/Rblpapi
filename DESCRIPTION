@@ -1,11 +1,11 @@
 Package: Rblpapi
 Title: R Interface to Bloomberg
-Version: 0.3.2.2
-Date: 2015-12-18
+Version: 0.3.2.3
+Date: 2016-02-24
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Author: Whit Armstrong, Dirk Eddelbuettel and John Laing
 Imports: Rcpp (>= 0.11.0), utils
-Suggests: fts, xts, zoo, knitr
+Suggests: fts, xts, zoo, knitr, RUnit
 VignetteBuilder: knitr
 LazyLoad: yes
 LinkingTo: Rcpp, BH

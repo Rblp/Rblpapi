@@ -1,3 +1,13 @@
+2016-02-24  Dirk Eddelbuettel  <deddelbuettel@ketchumtrading.com>
+
+	* DESCRIPTION (Suggests): Added RUnit
+	* .travis.yml: Idem (though tests are skipped at Travis)
+
+	* tests/doRUnit.R: Unit test wrapper using RUnit
+
+	* inst/unitTests/runit.getBars.R: Two new test functions for
+	getBars() as a start; requires ~/.R/rblpapiOptions.R with options()
+
 2016-02-10  Whit Armstrong  <armstrong.whit@gmail.com>
 
 	* src/bdp.cpp: check order of bbg response matches user reqeust order
