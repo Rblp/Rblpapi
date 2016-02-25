@@ -39,8 +39,7 @@ void appendOverridesToRequest(BloombergLP::blpapi::Request& request, SEXP overri
 void createStandardRequest(BloombergLP::blpapi::Request& request,const std::vector<std::string>& securities,const std::vector<std::string>& fields,SEXP options_,SEXP overrides_);
 void sendRequestWithIdentity(BloombergLP::blpapi::Session* session, BloombergLP::blpapi::Request& request, SEXP identity_);
 
-void populateDfRow(SEXP ans, R_len_t row_index, BloombergLP::blpapi::Element& e);
-SEXP allocateDataFrameColumn(int fieldT, size_t n);
+void populateDfRow(SEXP ans, R_len_t row_index, const BloombergLP::blpapi::Element& e, RblpapiT rblpapitype);
 void addDateClass(SEXP x);
 void addPosixClass(SEXP x);
 

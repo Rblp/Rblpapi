@@ -128,127 +128,6 @@ void addPosixClass(SEXP x) {
   UNPROTECT(1); //r_posix_class
 }
 
-void populateDfRow(SEXP ans, R_len_t row_index, Element& e) {
-  if(e.isNull()) { return; }
-
-  switch(e.datatype()) {
-  case BLPAPI_DATATYPE_BOOL:
-    LOGICAL(ans)[row_index] = e.getValueAsBool(); break;
-  case BLPAPI_DATATYPE_CHAR:
-    SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString())); break;
-  case BLPAPI_DATATYPE_BYTE:
-    throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
-    break;
-  case BLPAPI_DATATYPE_INT32:
-    INTEGER(ans)[row_index] = e.getValueAsInt32(); break;
-  case BLPAPI_DATATYPE_INT64:
-    if(static_cast<double>(e.getValueAsInt64()) > static_cast<double>(std::numeric_limits<int>::max())) {
-      REprintf("BLPAPI_DATATYPE_INT64 exceeds max int value on this system (assigning std::numeric_limits<int>::max()).");
-      INTEGER(ans)[row_index] = std::numeric_limits<int>::max();
-    } else {
-      INTEGER(ans)[row_index] = static_cast<int>(e.getValueAsInt64()); break;
-    }
-    break;
-  case BLPAPI_DATATYPE_FLOAT32:
-    REAL(ans)[row_index] = e.getValueAsFloat32(); break;
-  case BLPAPI_DATATYPE_FLOAT64:
-    REAL(ans)[row_index] = e.getValueAsFloat64(); break;
-  case BLPAPI_DATATYPE_STRING:
-    SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString())); break;
-  case BLPAPI_DATATYPE_BYTEARRAY:
-    throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY."); break;
-  case BLPAPI_DATATYPE_DATE:
-    INTEGER(ans)[row_index] = bbgDateToJulianDate(e.getValueAsDatetime()); break;
-  case BLPAPI_DATATYPE_TIME:
-    //FIXME: separate out time later
-    REAL(ans)[row_index] = bbgDateToPOSIX(e.getValueAsDatetime()); break;
-  case BLPAPI_DATATYPE_DECIMAL:
-    REAL(ans)[row_index] = e.getValueAsFloat64(); break;
-  case BLPAPI_DATATYPE_DATETIME:
-    //REAL(ans)[row_index] = bbgDateToPOSIX(e.getValueAsDatetime()); break;
-    REAL(ans)[row_index] = bbgDatetimeToPOSIX(e.getValueAsDatetime()); break;
-  case BLPAPI_DATATYPE_ENUMERATION:
-    //throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
-    SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString())); break;
-  case BLPAPI_DATATYPE_SEQUENCE:
-    throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
-  case BLPAPI_DATATYPE_CHOICE:
-    throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_CHOICE.");
-  case BLPAPI_DATATYPE_CORRELATION_ID:
-    INTEGER(ans)[row_index] = e.getValueAsInt32(); break;
-  default:
-    throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
-  }
-}
-
-// deprecated -- still neede by BDS
-SEXP allocateDataFrameColumn(int fieldT, size_t n) {
-  SEXP ans;
-
-  switch(fieldT) {
-  case BLPAPI_DATATYPE_BOOL:
-    ans = PROTECT(Rf_allocVector(LGLSXP,n));
-    std::fill(LOGICAL(ans),LOGICAL(ans)+n,NA_LOGICAL);
-    break;
-  case BLPAPI_DATATYPE_CHAR:
-    ans = PROTECT(Rf_allocVector(STRSXP,n));
-    break;
-  case BLPAPI_DATATYPE_BYTE:
-    throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
-    break;
-  case BLPAPI_DATATYPE_INT32:
-  case BLPAPI_DATATYPE_INT64:
-    ans = PROTECT(Rf_allocVector(INTSXP, n));
-    std::fill(INTEGER(ans),INTEGER(ans)+n,NA_INTEGER);
-    break;
-  case BLPAPI_DATATYPE_FLOAT32:
-  case BLPAPI_DATATYPE_FLOAT64:
-    ans = PROTECT(Rf_allocVector(REALSXP,n));
-    std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
-    break;
-  case BLPAPI_DATATYPE_STRING:
-    ans = PROTECT(Rf_allocVector(STRSXP,n)); break;
-  case BLPAPI_DATATYPE_BYTEARRAY:
-    throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
-    break;
-  case BLPAPI_DATATYPE_DATE:
-    ans = PROTECT(Rf_allocVector(INTSXP, n));
-    addDateClass(ans);
-    std::fill(INTEGER(ans),INTEGER(ans)+n,NA_INTEGER);
-    break;
-  case BLPAPI_DATATYPE_TIME:
-    //FIXME: separate out time later
-    ans = PROTECT(Rf_allocVector(REALSXP,n));
-    addPosixClass(ans);
-    std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
-    break;
-  case BLPAPI_DATATYPE_DECIMAL:
-    ans = PROTECT(Rf_allocVector(REALSXP,n));
-    std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
-    break;
-  case BLPAPI_DATATYPE_DATETIME:
-    ans = PROTECT(Rf_allocVector(REALSXP,n));
-    addPosixClass(ans);
-    std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
-    break;
-  case BLPAPI_DATATYPE_ENUMERATION:
-    ans = PROTECT(Rf_allocVector(STRSXP,n));
-    break;
-  case BLPAPI_DATATYPE_SEQUENCE:
-    throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
-    break;
-  case BLPAPI_DATATYPE_CHOICE:
-    throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_CHOICE.");
-    break;
-  case BLPAPI_DATATYPE_CORRELATION_ID:
-    ans = PROTECT(Rf_allocVector(INTSXP, n));
-    break;
-  default:
-    throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
-  }
-  return ans;
-}
-
 void appendOptionsToRequest(Request& request, SEXP options_) {
   if(options_== R_NilValue) { return; }
   Rcpp::CharacterVector options(options_);
@@ -319,6 +198,29 @@ void sendRequestWithIdentity(Session* session, Request& request, SEXP identity_)
     session->sendRequest(request,*ip);
   } else {
     session->sendRequest(request);
+  }
+}
+
+void populateDfRow(SEXP ans, R_len_t row_index, const Element& e, RblpapiT rblpapitype) {
+  // the vectors are already initialized to NAs
+  // so no need to set as NA here
+  if(e.isNull()) { return; }
+
+  switch(rblpapitype) {
+  case RblpapiT::Logical:
+    LOGICAL(ans)[row_index] = e.getValueAsBool(); break;
+  case RblpapiT::Integer:
+    INTEGER(ans)[row_index] = e.getValueAsInt32(); break;
+  case RblpapiT::Double:
+    REAL(ans)[row_index] = e.getValueAsFloat64(); break;
+  case RblpapiT::Date:
+    INTEGER(ans)[row_index] = bbgDateToJulianDate(e.getValueAsDatetime()); break;
+  case RblpapiT::Datetime:
+    REAL(ans)[row_index] = bbgDateToPOSIX(e.getValueAsDatetime()); break;
+  case RblpapiT::String:
+    SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString())); break;
+  default: // try to convert it as a string
+    SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString())); break;
   }
 }
 

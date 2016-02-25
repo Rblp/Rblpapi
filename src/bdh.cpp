@@ -81,7 +81,7 @@ Rcpp::List HistoricalDataResponseToDF(Event& event, const std::vector<std::strin
             auto it = std::find(fields.begin(),fields.end(),e.name().string());
             if(it==fields.end()) { throw std::logic_error("Unexpected field returned."); }
             int colindex = std::distance(fields.begin(),it);
-            populateDfRow(res[colindex], i, e);
+            populateDfRow(res[colindex], i, e, rtypes[colindex]);
         }
     }
     return res;
