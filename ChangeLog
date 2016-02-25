@@ -1,4 +1,11 @@
-2016-02-24  Dirk Eddelbuettel  <deddelbuettel@ketchumtrading.com>
+2016-02-25  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.getTicks.R: Two new test functions
+
+	* tests/doRUnit.R: Improved setup logic
+	* inst/unitTests/runit.getBars.R: Simplified setup
+
+2016-02-24  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Suggests): Added RUnit
 	* .travis.yml: Idem (though tests are skipped at Travis)
