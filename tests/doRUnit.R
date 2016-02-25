@@ -31,6 +31,9 @@
 stopifnot(require(RUnit, quietly=TRUE))
 stopifnot(require(Rblpapi, quietly=TRUE))
 
+connectionParameterFile <- "~/.R/rblpapiOptions.R"
+if (file.exists(connectionParameterFile)) source(connectionParameterFile)
+
 ## Set a seed to make the test deterministic
 set.seed(42)
 
