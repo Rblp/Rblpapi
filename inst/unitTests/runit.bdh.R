@@ -20,16 +20,6 @@
 
 .runThisTest <- Sys.getenv("RunRblpapiUnitTests") == "yes"
 
-.setUp <- function() {
-    connectionParameterFile <- "~/.R/rblpapiOptions.R"
-    if (file.exists(connectionParameterFile)) {
-        source(connectionParameterFile)
-        Rblpapi::blpConnect()
-    } else {
-        .runThisTest <- FALSE
-    }
-}
-
 if (.runThisTest) {
 
     test.bdhColumnTypes <- function() {
