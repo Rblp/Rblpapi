@@ -44,7 +44,7 @@ using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 
-void getBDPResult(Event& event, Rcpp::List& res, const std::vector<std::string>& securities, const std::vector<std::string>& colnames) {
+void getBDPResult(Event& event, Rcpp::List& res, const std::vector<std::string>& securities, const std::vector<std::string>& colnames, const std::vector<RblpapiT>& rtypes) {
     MessageIterator msgIter(event);
     if (!msgIter.next()) {
         throw std::logic_error("Not a valid MessageIterator.");
@@ -73,7 +73,7 @@ void getBDPResult(Event& event, Rcpp::List& res, const std::vector<std::string>&
                 throw std::logic_error(std::string("column is not expected: ") + e.name().string());
             }
             size_t col_index = std::distance(colnames.begin(),col_iter);
-            populateDfRow(res[col_index],row_index,e);
+            populateDfRow(res[col_index],row_index,e,rtypes[col_index]);
         }
     }
 }
@@ -112,7 +112,7 @@ Rcpp::List bdp_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
         switch (event.eventType()) {
         case Event::RESPONSE:
         case Event::PARTIAL_RESPONSE:
-            getBDPResult(event, res, securities, fields);
+            getBDPResult(event, res, securities, fields, rtypes);
             break;
         default:
             MessageIterator msgIter(event);
