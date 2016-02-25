@@ -44,9 +44,6 @@ if (.runThisTest) {
 
         checkTrue(all(c("LAST_PRICE","PX_VOLUME","SECURITY_DES") %in% colnames(res)),
                   msg = "check column names")
-
-        checkTrue(TRUE==FALSE, msg = "bdp: force failure")
-
     }
 
 }
