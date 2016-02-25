@@ -270,8 +270,9 @@ RblpapiT fieldInfoToRblpapiT(const std::string& datatype, const std::string& fty
   case DatatypeT::Datetime:
     if(ftype=="Date") {
       return RblpapiT::Date;
-    } else if(ftype=="Time") {
-      return RblpapiT::Datetime;
+    } else {
+      // ftype in ("Time","DateOrTime")
+      return RblpapiT::String;
     }
     break;
   default:
