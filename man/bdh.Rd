@@ -6,7 +6,7 @@
 \usage{
 bdh(securities, fields, start.date, end.date = NULL,
   include.non.trading.days = FALSE, options = NULL, overrides = NULL,
-  identity = NULL, con = defaultConnection())
+  verbose = FALSE, identity = NULL, con = defaultConnection())
 }
 \arguments{
 \item{securities}{A character vector with security symbols in
@@ -29,6 +29,9 @@ being set) as well as a value.}
 \item{overrides}{An optional named character vector with override
 values. Each field must have both a name (designating the override
 being set) as well as a value.}
+
+\item{verbose}{A boolean indicating whether verbose operation is
+desired, defaults to \sQuote{FALSE}}
 
 \item{identity}{An optional identity object.}
 
@@ -53,7 +56,7 @@ Data History) queries
 
   ## example for an options field: request monthly data; see section A.2.4 of
   ##  http://www.bloomberglabs.com/content/uploads/sites/2/2014/07/blpapi-developers-guide-2.54.pdf
-  ## for more 
+  ## for more
   opt <- c("periodicitySelection"="MONTHLY")
   bdh("SPY US Equity", c("PX_LAST", "VOLUME"),
       start.date=Sys.Date()-31*6, options=opt)

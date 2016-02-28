@@ -1,3 +1,15 @@
+2016-02-28  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/bdh.cpp (bdh_Impl): Support boolean option verbose
+	* R/bdh.R (bdh): Idem
+	* man/bdh.Rd (bdh): Idem
+
+2016-02-28  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/bds.cpp (bds_Impl): Support boolean option verbose
+	* R/bds.R (bds): Idem
+	* man/bds.Rd (bds): Idem
+
 2016-02-25  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/unitTests/runit.getTicks.R: Two new test functions

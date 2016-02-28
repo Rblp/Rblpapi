@@ -57,7 +57,8 @@ std::string getSecurityName(Event& event) {
     return ans;
 }
 
-Rcpp::List HistoricalDataResponseToDF(Event& event, const std::vector<std::string>& fields, const std::vector<RblpapiT>& rtypes) {
+Rcpp::List HistoricalDataResponseToDF(Event& event, const std::vector<std::string>& fields,
+                                      const std::vector<RblpapiT>& rtypes, bool verbose=FALSE) {
     MessageIterator msgIter(event);
     if (!msgIter.next()) {
         throw std::logic_error("Not a valid MessageIterator.");
@@ -65,7 +66,8 @@ Rcpp::List HistoricalDataResponseToDF(Event& event, const std::vector<std::strin
 
     Message msg = msgIter.message();
     Element response = msg.asElement();
-    if(std::strcmp(response.name().string(),"HistoricalDataResponse")) {
+    if (verbose) response.print(std::cout);
+    if (std::strcmp(response.name().string(),"HistoricalDataResponse")) {
         throw std::logic_error("Not a valid HistoricalDataResponse.");
     }
     Element securityData = response.getElement("securityData");
@@ -93,7 +95,8 @@ Rcpp::List bdh_Impl(SEXP con_,
                     std::vector<std::string> securities,
                     std::vector<std::string> fields,
                     std::string start_date_, SEXP end_date_,
-                    SEXP options_, SEXP overrides_, SEXP identity_) {
+                    SEXP options_, SEXP overrides_,
+                    bool verbose, SEXP identity_) {
 
     Session* session = 
         reinterpret_cast<Session*>(checkExternalPointer(con_,"blpapi::Session*"));
@@ -140,7 +143,7 @@ Rcpp::List bdh_Impl(SEXP con_,
         case Event::RESPONSE:
         case Event::PARTIAL_RESPONSE:
             ans_names.push_back(getSecurityName(event));
-            ans[i++] = HistoricalDataResponseToDF(event,fields,rtypes);
+            ans[i++] = HistoricalDataResponseToDF(event, fields, rtypes, verbose);
             break;
         default:
             MessageIterator msgIter(event);
