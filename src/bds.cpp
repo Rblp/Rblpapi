@@ -2,8 +2,8 @@
 //
 //  bds.cpp -- "Bloomberg Data Set" query function for the BLP API
 //
-//  Copyright (C) 2013  Whit Armstrong
-//  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2013         Whit Armstrong
+//  Copyright (C) 2015 - 2016  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -221,7 +221,7 @@ Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field, bool
 
     Message msg = msgIter.message();
     Element response = msg.asElement();
-    if (verbose) response.print(std::cout);
+    if (verbose) response.print(Rcpp::Rcout);
     if(std::strcmp(response.name().string(),"ReferenceDataResponse")) {
         throw std::logic_error("Not a valid ReferenceDataResponse.");
     }

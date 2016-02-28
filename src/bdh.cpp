@@ -66,7 +66,7 @@ Rcpp::List HistoricalDataResponseToDF(Event& event, const std::vector<std::strin
 
     Message msg = msgIter.message();
     Element response = msg.asElement();
-    if (verbose) response.print(std::cout);
+    if (verbose) response.print(Rcpp::Rcout);
     if (std::strcmp(response.name().string(),"HistoricalDataResponse")) {
         throw std::logic_error("Not a valid HistoricalDataResponse.");
     }
