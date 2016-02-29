@@ -42,11 +42,13 @@
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.
-##' @return A list with as a entries as there are entries in
+##' @return A list with as a many entries as there are entries in
 ##' \code{securities}; each list contains a data.frame with one row
 ##' per observations and as many columns as entries in
 ##' \code{fields}. If the list is of length one, it is collapsed into
-##' a single data frame.
+##' a single data frame. Note that the order of securities returned
+##' is determined by the backend and may be different from the order
+##' of securities in the \code{securities} field.
 ##' @author Whit Armstrong and Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{
