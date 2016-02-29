@@ -31,6 +31,8 @@
 ##' @param overrides An optional named character vector with override
 ##' values. Each field must have both a name (designating the override
 ##' being set) as well as a value.
+##' @param verbose A boolean indicating whether verbose operation is
+##' desired, defaults to \sQuote{FALSE}
 ##' @param identity An optional identity object.
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
@@ -50,9 +52,10 @@
 ##    bds("CPI YOY Index","ECO_RELEASE_DT_LIST", overrides = overrd)
 ##' }
 bds <- function(securities, fields, options=NULL,
-                overrides=NULL, identity=NULL, con=defaultConnection()) {
+                overrides=NULL, verbose=FALSE,
+                identity=NULL, con=defaultConnection()) {
     if (length(securities)!=1L) stop("more than one security submitted.", call.=FALSE)
-    res <- bds_Impl(con, securities, fields, options, overrides, identity)
+    res <- bds_Impl(con, securities, fields, options, overrides, verbose, identity)
     if (typeof(res)=="list" && length(res)==1) {
         res <- res[[1]]
     }

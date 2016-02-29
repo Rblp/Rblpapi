@@ -4,7 +4,7 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
-\section{Changes in Rblpapi version 0.3.3 (2016-01-31)}{
+\section{Changes in Rblpapi version 0.3.3 (2016-03-31)}{
   \itemize{
     \item \code{configure} adds a missing \code{method="libcurl"}
     options (PR \ghpr{109} by Martin Bel).
@@ -12,6 +12,8 @@
     (PR \ghpr{111} by Morgan Williams fixing ticket \ghit{82}).
     \item The \code{bds()} help page now shows an example using an
     \code{overrides} argument.
+    \item The \code{bdh} and \code{bds} functions now support an option
+    \code{verbose}. 
   }
 }
 

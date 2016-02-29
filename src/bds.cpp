@@ -2,8 +2,8 @@
 //
 //  bds.cpp -- "Bloomberg Data Set" query function for the BLP API
 //
-//  Copyright (C) 2013  Whit Armstrong
-//  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2013         Whit Armstrong
+//  Copyright (C) 2015 - 2016  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -213,7 +213,7 @@ Rcpp::List bulkArrayToDf(Element& fieldData) {
     return buildDataFrame(lazy_frame);
 }
 
-Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field) {
+Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field, bool verbose) {
     MessageIterator msgIter(event);
     if(!msgIter.next()) {
         throw std::logic_error("Not a valid MessageIterator.");
@@ -221,7 +221,7 @@ Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field) {
 
     Message msg = msgIter.message();
     Element response = msg.asElement();
-    //response.print(std::cout);
+    if (verbose) response.print(Rcpp::Rcout);
     if(std::strcmp(response.name().string(),"ReferenceDataResponse")) {
         throw std::logic_error("Not a valid ReferenceDataResponse.");
     }
@@ -248,7 +248,8 @@ Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field) {
 // only allow one field for bds in contrast to bdp
 // [[Rcpp::export]]
 Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities, 
-                    std::string field, SEXP options_, SEXP overrides_, SEXP identity_) {
+                    std::string field, SEXP options_, SEXP overrides_,
+                    bool verbose, SEXP identity_) {
 
     Session* session = 
         reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
@@ -276,7 +277,7 @@ Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
         switch (event.eventType()) {
         case Event::RESPONSE:
         case Event::PARTIAL_RESPONSE:
-            return BulkDataResponseToDF(event,field);
+            return BulkDataResponseToDF(event, field, verbose);
             break;
         default:
             MessageIterator msgIter(event);

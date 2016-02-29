@@ -36,6 +36,8 @@
 ##' @param overrides An optional named character vector with override
 ##' values. Each field must have both a name (designating the override
 ##' being set) as well as a value.
+##' @param verbose A boolean indicating whether verbose operation is
+##' desired, defaults to \sQuote{FALSE}
 ##' @param identity An optional identity object.
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
@@ -52,15 +54,15 @@
 ##'
 ##'   ## example for an options field: request monthly data; see section A.2.4 of
 ##'   ##  http://www.bloomberglabs.com/content/uploads/sites/2/2014/07/blpapi-developers-guide-2.54.pdf
-##'   ## for more 
+##'   ## for more
 ##'   opt <- c("periodicitySelection"="MONTHLY")
 ##'   bdh("SPY US Equity", c("PX_LAST", "VOLUME"),
 ##'       start.date=Sys.Date()-31*6, options=opt)
-##' 
+##'
 ##' }
 bdh <- function(securities, fields, start.date, end.date=NULL,
-                include.non.trading.days=FALSE, options=NULL, overrides=NULL, identity=NULL,
-                con=defaultConnection()) {
+                include.non.trading.days=FALSE, options=NULL, overrides=NULL,
+                verbose=FALSE, identity=NULL, con=defaultConnection()) {
     if (!class(start.date) == "Date") stop("start.date must be a Date object", call.=FALSE)
     start.date <- format(start.date, format="%Y%m%d")
     if (!is.null(end.date)) {
@@ -73,7 +75,8 @@ bdh <- function(securities, fields, start.date, end.date=NULL,
                                names=c("nonTradingDayFillOption", "nonTradingDayFillMethod")))
     }
 
-    res <- bdh_Impl(con, securities, fields, start.date, end.date, options, overrides, identity)
+    res <- bdh_Impl(con, securities, fields, start.date, end.date, options, overrides,
+                    verbose, identity)
     if (typeof(res)=="list" && length(res)==1) {
         res <- res[[1]]
     }
