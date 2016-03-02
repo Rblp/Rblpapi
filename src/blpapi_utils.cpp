@@ -37,6 +37,7 @@ using BloombergLP::blpapi::Service;
 using BloombergLP::blpapi::Request;
 using BloombergLP::blpapi::Identity;
 using BloombergLP::blpapi::Datetime;
+using BloombergLP::blpapi::DatetimeParts;
 using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Event;
 using BloombergLP::blpapi::Message;
@@ -67,6 +68,9 @@ void* checkExternalPointer(SEXP xp_, const char* valid_tag) {
 }
 
 const int bbgDateToJulianDate(const Datetime& bbg_date) {
+  if(bbg_date.hasParts(DatetimeParts::TIME)) {
+    throw std::logic_error("Attempt to convert a Datetime with time parts set to a Julian Date.");
+  }
   const boost::gregorian::date r_epoch(1970,1,1);
   boost::gregorian::date bbg_boost_date(bbg_date.year(),bbg_date.month(),bbg_date.day());
   boost::gregorian::date_period dp(r_epoch,bbg_boost_date);
@@ -74,6 +78,13 @@ const int bbgDateToJulianDate(const Datetime& bbg_date) {
 }
 
 const int bbgDateToJulianDate(const double yyyymmdd_date) {
+  if(yyyymmdd_date < 0) {
+    throw std::logic_error("Attempt to convert a negative double value to a Julian Date.");
+  }
+  if(trunc(yyyymmdd_date)!=yyyymmdd_date) {
+    throw std::logic_error("Attempt to convert a double value with time parts set to a Julian Date.");
+  }
+
   const boost::gregorian::date r_epoch(1970,1,1);
   const int year = static_cast<int>(yyyymmdd_date/1.0e4);
   const int month = static_cast<int>(yyyymmdd_date/1.0e2) % 100;
