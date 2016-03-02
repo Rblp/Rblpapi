@@ -31,6 +31,7 @@
 
 void* checkExternalPointer(SEXP xp_, const char* valid_tag);
 const int bbgDateToJulianDate(const BloombergLP::blpapi::Datetime& bbg_date);
+const int bbgDateToJulianDate(const double yyyymmdd_date);
 const double bbgDateToPOSIX(const BloombergLP::blpapi::Datetime& bbg_date);
 const double bbgDatetimeToPOSIX(const BloombergLP::blpapi::Datetime& dt);
 const double bbgDatetimeToUTC(const BloombergLP::blpapi::Datetime& dt);
