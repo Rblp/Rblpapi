@@ -67,9 +67,9 @@ void* checkExternalPointer(SEXP xp_, const char* valid_tag) {
   return R_ExternalPtrAddr(xp_);
 }
 
-const int bbgDateToJulianDate(const Datetime& bbg_date) {
+const int bbgDateToRDate(const Datetime& bbg_date) {
   if(bbg_date.hasParts(DatetimeParts::TIME)) {
-    throw std::logic_error("Attempt to convert a Datetime with time parts set to a Julian Date.");
+    throw std::logic_error("Attempt to convert a Datetime with time parts set to an R Date.");
   }
   const boost::gregorian::date r_epoch(1970,1,1);
   boost::gregorian::date bbg_boost_date(bbg_date.year(),bbg_date.month(),bbg_date.day());
@@ -77,12 +77,12 @@ const int bbgDateToJulianDate(const Datetime& bbg_date) {
   return static_cast<int>(dp.length().days());
 }
 
-const int bbgDateToJulianDate(const double yyyymmdd_date) {
+const int bbgDateToRDate(const double yyyymmdd_date) {
   if(yyyymmdd_date < 0) {
-    throw std::logic_error("Attempt to convert a negative double value to a Julian Date.");
+    throw std::logic_error("Attempt to convert a negative double value to an R Date.");
   }
   if(trunc(yyyymmdd_date)!=yyyymmdd_date) {
-    throw std::logic_error("Attempt to convert a double value with time parts set to a Julian Date.");
+    throw std::logic_error("Attempt to convert a double value with time parts set to an R Date.");
   }
 
   const boost::gregorian::date r_epoch(1970,1,1);
@@ -237,8 +237,8 @@ void populateDfRow(SEXP ans, R_len_t row_index, const Element& e, RblpapiT rblpa
   case RblpapiT::Date:
     // handle the case of BBG passing down dates as double in YYYYMMDD format
     INTEGER(ans)[row_index] = e.datatype()==BLPAPI_DATATYPE_FLOAT32 || e.datatype()==BLPAPI_DATATYPE_FLOAT64 ?
-      bbgDateToJulianDate(e.getValueAsFloat64()) :
-      bbgDateToJulianDate(e.getValueAsDatetime());
+      bbgDateToRDate(e.getValueAsFloat64()) :
+      bbgDateToRDate(e.getValueAsDatetime());
     break;
   case RblpapiT::Datetime:
     REAL(ans)[row_index] = bbgDateToPOSIX(e.getValueAsDatetime()); break;
