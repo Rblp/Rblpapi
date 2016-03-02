@@ -69,7 +69,7 @@ void populateDfRowBDS(SEXP ans, R_len_t row_index, Element& e) {
   case BLPAPI_DATATYPE_BYTEARRAY:
     throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY."); break;
   case BLPAPI_DATATYPE_DATE:
-    INTEGER(ans)[row_index] = bbgDateToJulianDate(e.getValueAsDatetime()); break;
+    INTEGER(ans)[row_index] = bbgDateToRDate(e.getValueAsDatetime()); break;
   case BLPAPI_DATATYPE_TIME:
     //FIXME: separate out time later
     REAL(ans)[row_index] = bbgDateToPOSIX(e.getValueAsDatetime()); break;
