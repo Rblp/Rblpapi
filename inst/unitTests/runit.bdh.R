@@ -37,4 +37,21 @@ if (.runThisTest) {
 
     }
 
+    test.bdhDateAsDouble <- function() {
+
+        res <- bdh("DOENUSCH Index","ECO_RELEASE_DT",start.date=as.Date('2016-02-01'),end.date=as.Date('2016-02-29'))
+
+        checkTrue(inherits(res, "data.frame"),
+                  msg = "checking return type")
+
+        checkTrue(dim(res)[2] == 2,
+                  msg = "check return of two cols")
+
+        checkTrue(all(c("date","ECO_RELEASE_DT") %in% colnames(res)),
+                  msg = "check column names")
+
+        col.types <- unique(unlist(lapply(res,class)))
+        checkTrue(length(col.types)==1L && col.types=="Date",
+                  msg = "check column types == 'Date'")
+    }
 }
