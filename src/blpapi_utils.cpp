@@ -73,6 +73,16 @@ const int bbgDateToJulianDate(const Datetime& bbg_date) {
   return static_cast<int>(dp.length().days());
 }
 
+const int bbgDateToJulianDate(const double yyyymmdd_date) {
+  const boost::gregorian::date r_epoch(1970,1,1);
+  const int year = static_cast<int>(yyyymmdd_date/1.0e4);
+  const int month = static_cast<int>(yyyymmdd_date/1.0e2) % 100;
+  const int day = static_cast<int>(yyyymmdd_date) % 100;
+  boost::gregorian::date bbg_boost_date(year,month,day);
+  boost::gregorian::date_period dp(r_epoch,bbg_boost_date);
+  return static_cast<int>(dp.length().days());
+}
+
 const double bbgDateToPOSIX(const Datetime& bbg_date) {
   boost::gregorian::date bbg_boost_date(bbg_date.year(),bbg_date.month(),bbg_date.day());
   struct tm tm_time(to_tm(bbg_boost_date));
@@ -214,7 +224,11 @@ void populateDfRow(SEXP ans, R_len_t row_index, const Element& e, RblpapiT rblpa
   case RblpapiT::Double:
     REAL(ans)[row_index] = e.getValueAsFloat64(); break;
   case RblpapiT::Date:
-    INTEGER(ans)[row_index] = bbgDateToJulianDate(e.getValueAsDatetime()); break;
+    // handle the case of BBG passing down dates as double in YYYYMMDD format
+    INTEGER(ans)[row_index] = e.datatype()==BLPAPI_DATATYPE_FLOAT32 || e.datatype()==BLPAPI_DATATYPE_FLOAT64 ?
+      bbgDateToJulianDate(e.getValueAsFloat64()) :
+      bbgDateToJulianDate(e.getValueAsDatetime());
+    break;
   case RblpapiT::Datetime:
     REAL(ans)[row_index] = bbgDateToPOSIX(e.getValueAsDatetime()); break;
   case RblpapiT::String:
