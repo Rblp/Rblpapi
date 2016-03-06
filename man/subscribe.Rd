@@ -37,7 +37,7 @@ quotes.
 
 Full detials of the subscription string can be found in the header
 file
-\href{http://static.bloomberglabs.com/api/cpp/doc/3.8/blpapi__subscriptionlist_8h_source.html}{blpapi_subscriptionlist.h}.
+\href{http://bloomberg.github.io/blpapi-docs/cpp/3.8/blpapi__subscriptionlist_8h.html}{blpapi_subscriptionlist.h}.
 }
 \examples{
 \dontrun{

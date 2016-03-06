@@ -1,3 +1,11 @@
+2016-03-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/subscribe.R: Correct URL of referenced Doxygen file to below
+	bloomberg.github.io/blpapi-docs/cpp/3.8/
+
+	* inst/NEWS.Rd: Filled some missing entries from the last few weeks
+	* ChangeLog: Idem
+
 2016-03-02  Whit Armstrong  <armstrong.whit@gmail.com>
 
 	* src/blpapi_utils.cpp: New Date conversion function bbgDateToRDate
