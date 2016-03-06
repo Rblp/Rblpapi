@@ -6,6 +6,9 @@
 	* inst/NEWS.Rd: Filled some missing entries from the last few weeks
 	* ChangeLog: Idem
 
+	* inst/unitTests/runit.getTicks.R: Add simple correction for start
+	and end times to avoid getting tripped by a weekend
+
 2016-03-02  Whit Armstrong  <armstrong.whit@gmail.com>
 
 	* src/blpapi_utils.cpp: New Date conversion function bbgDateToRDate

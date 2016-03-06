@@ -23,7 +23,12 @@ if (.runThisTest) {
 
     test.getTicksAsMatrix <- function() {
 
-        res <- getTicks("ES1 Index", returnAs="matrix")
+        isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
+        
+        res <- getTicks("ES1 Index",
+                        startTime=Sys.time() - isweekend*49*60*60,
+                        endTime=Sys.time() - isweekend*48*60*60,
+                        returnAs="matrix")
 
         checkTrue(inherits(res, "data.frame"),
                   msg = "checking return type")
@@ -37,7 +42,12 @@ if (.runThisTest) {
 
     test.getBarsAsXts <- function() {
 
-        res <- getTicks("ES1 Index", returnAs="xts")
+        isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
+
+        res <- getTicks("ES1 Index",
+                        startTime=Sys.time() - isweekend*49*60*60,
+                        endTime=Sys.time() - isweekend*48*60*60,
+                        returnAs="xts")
 
         checkTrue(inherits(res, "xts"),
                   msg = "checking return type")
