@@ -37,6 +37,7 @@ using BloombergLP::blpapi::Service;
 using BloombergLP::blpapi::Request;
 using BloombergLP::blpapi::Identity;
 using BloombergLP::blpapi::Datetime;
+using BloombergLP::blpapi::DatetimeParts;
 using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Event;
 using BloombergLP::blpapi::Message;
@@ -66,9 +67,29 @@ void* checkExternalPointer(SEXP xp_, const char* valid_tag) {
   return R_ExternalPtrAddr(xp_);
 }
 
-const int bbgDateToJulianDate(const Datetime& bbg_date) {
+const int bbgDateToRDate(const Datetime& bbg_date) {
+  if(bbg_date.hasParts(DatetimeParts::TIME)) {
+    throw std::logic_error("Attempt to convert a Datetime with time parts set to an R Date.");
+  }
   const boost::gregorian::date r_epoch(1970,1,1);
   boost::gregorian::date bbg_boost_date(bbg_date.year(),bbg_date.month(),bbg_date.day());
+  boost::gregorian::date_period dp(r_epoch,bbg_boost_date);
+  return static_cast<int>(dp.length().days());
+}
+
+const int bbgDateToRDate(const double yyyymmdd_date) {
+  if(yyyymmdd_date < 0) {
+    throw std::logic_error("Attempt to convert a negative double value to an R Date.");
+  }
+  if(trunc(yyyymmdd_date)!=yyyymmdd_date) {
+    throw std::logic_error("Attempt to convert a double value with time parts set to an R Date.");
+  }
+
+  const boost::gregorian::date r_epoch(1970,1,1);
+  const int year = static_cast<int>(yyyymmdd_date/1.0e4);
+  const int month = static_cast<int>(yyyymmdd_date/1.0e2) % 100;
+  const int day = static_cast<int>(yyyymmdd_date) % 100;
+  boost::gregorian::date bbg_boost_date(year,month,day);
   boost::gregorian::date_period dp(r_epoch,bbg_boost_date);
   return static_cast<int>(dp.length().days());
 }
@@ -214,7 +235,11 @@ void populateDfRow(SEXP ans, R_len_t row_index, const Element& e, RblpapiT rblpa
   case RblpapiT::Double:
     REAL(ans)[row_index] = e.getValueAsFloat64(); break;
   case RblpapiT::Date:
-    INTEGER(ans)[row_index] = bbgDateToJulianDate(e.getValueAsDatetime()); break;
+    // handle the case of BBG passing down dates as double in YYYYMMDD format
+    INTEGER(ans)[row_index] = e.datatype()==BLPAPI_DATATYPE_FLOAT32 || e.datatype()==BLPAPI_DATATYPE_FLOAT64 ?
+      bbgDateToRDate(e.getValueAsFloat64()) :
+      bbgDateToRDate(e.getValueAsDatetime());
+    break;
   case RblpapiT::Datetime:
     REAL(ans)[row_index] = bbgDateToPOSIX(e.getValueAsDatetime()); break;
   case RblpapiT::String:

@@ -86,7 +86,7 @@ SEXP eleToInt(const Element& e) {
 SEXP eleToDate(const Element& e) {
     Rcpp::DateVector ans(e.numValues());
     for(size_t i = 0; i < e.numValues(); ++i) {
-        ans[i] = bbgDateToJulianDate(e.getValueAsDatetime(i));
+        ans[i] = bbgDateToRDate(e.getValueAsDatetime(i));
     }
     return Rcpp::wrap(ans);
 }
