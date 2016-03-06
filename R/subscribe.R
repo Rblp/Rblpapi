@@ -41,7 +41,7 @@
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.
 ##' @return This function always returns NULL.
-##' @references \url{http://static.bloomberglabs.com/api/cpp/doc/3.8}
+##' @references \url{http://bloomberg.github.io/blpapi-docs/cpp/3.8}
 ##' @author Whit Armstrong
 ##' @examples
 ##' \dontrun{

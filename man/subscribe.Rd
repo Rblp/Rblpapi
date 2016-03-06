@@ -50,6 +50,6 @@ file
 Whit Armstrong
 }
 \references{
-\url{http://static.bloomberglabs.com/api/cpp/doc/3.8}
+\url{http://bloomberg.github.io/blpapi-docs/cpp/3.8}
 }
 
