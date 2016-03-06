@@ -1,3 +1,9 @@
+2016-03-02  Whit Armstrong  <armstrong.whit@gmail.com>
+
+	* src/blpapi_utils.cpp: New Date conversion function bbgDateToRDate
+
+	* inst/unitTests/runit.bdh.R: Additional Date conversion tests
+
 2016-02-29  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/bdh.R: Clarify in help page that order of securities in return
