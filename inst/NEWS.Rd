@@ -10,10 +10,19 @@
     options (PR \ghpr{109} by Martin Bel).
     \item New function \code{bsrch()} adds basic search functionality
     (PR \ghpr{111} by Morgan Williams fixing ticket \ghit{82}).
+    \item The licensing status of the Rblpapi source package was
+    clarified (PR \ghpr{119}).
     \item The \code{bds()} help page now shows an example using an
-    \code{overrides} argument.
+    \code{overrides} argument (PR \ghpr{121}).
+    \item A new function \code{fieldInfo} was added, and field
+    information is used in \code{bdh} and \code{bdp} (PRs \ghpr{122},
+    \ghpr{123}, \ghpr{125}, and \ghpr{127}).
+    \item The \code{bdp} function now checks the order (PR \ghpr{126}).
+    \item Unit testing was added (PRs \ghpr{129} and \ghpr{131}).
+    \item Data retrieval is now smarter about the types returned from
+    Bloomberg (PR \ghpr{132} and \ghpr{133}; and \ghpr{141} and \ghpr{142}).
     \item The \code{bdh} and \code{bds} functions now support an option
-    \code{verbose}. 
+    \code{verbose} (PRs \ghpr{138}).
   }
 }
 

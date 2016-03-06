@@ -68,7 +68,6 @@
 	* R/fieldInfo.R: new function 'fieldInfo'
 	* src/getFieldInfo.cpp: cpp implementation for 'fieldInfo' function
 
-
 2016-02-05  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/bds.R: Add example of overrides use with bds()
