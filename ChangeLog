@@ -15,6 +15,18 @@
 	* R/bds.R (bds): Idem
 	* man/bds.Rd (bds): Idem
 
+2016-02-25  Whit Armstrong  <armstrong.whit@gmail.com>
+
+	* src/blpapi_utils.cpp: New populateDfRow using new RblpapiT parameter
+	* src/bdh.cpp: New RblpapiT parameter to match types
+	* src/bdp.cpp: Idem
+	* src/bds.cpp: Moved legacy populateDfRow here as populateDfRowBDS
+
+	* src/blpapi_utils.cpp: Add default to DatetypeT::Datetime
+
+	* inst/unitTests/runit.bdh.R: New unit test
+	* inst/unitTests/runit.bdp.R: Idem
+
 2016-02-25  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/unitTests/runit.getTicks.R: Two new test functions
