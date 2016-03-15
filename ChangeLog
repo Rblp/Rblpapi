@@ -1,3 +1,7 @@
+2016-03-14  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version): Release 0.3.3
+
 2016-03-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/subscribe.R: Correct URL of referenced Doxygen file to below
