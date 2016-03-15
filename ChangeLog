@@ -1,6 +1,8 @@
-2016-03-14  Dirk Eddelbuettel  <edd@debian.org>
+2016-03-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): Release 0.3.3
+
+	* README.md: Use canonical CRAN URL
 
 2016-03-06  Dirk Eddelbuettel  <edd@debian.org>
 

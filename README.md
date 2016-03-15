@@ -1,5 +1,5 @@
 
-## Rblpapi [![Build Status](https://travis-ci.org/Rblp/Rblpapi.svg)](https://travis-ci.org/Rblp/Rblpapi) [![Package-License](http://img.shields.io/badge/license-GPL%20%28%3E=%203%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-3.0.html) [![LibraryLicense](https://img.shields.io/badge/license-License.txt-yellow.svg?style=flat)](https://raw.githubusercontent.com/Rblp/Rblpapi/master/inst/License.txt) [![CRAN](http://www.r-pkg.org/badges/version/Rblpapi)](http://cran.rstudio.com/package=Rblpapi) [![Downloads](http://cranlogs.r-pkg.org/badges/Rblpapi?color=brightgreen)](http://www.r-pkg.org/pkg/Rblpapi)
+## Rblpapi [![Build Status](https://travis-ci.org/Rblp/Rblpapi.svg)](https://travis-ci.org/Rblp/Rblpapi) [![Package-License](http://img.shields.io/badge/license-GPL%20%28%3E=%203%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-3.0.html) [![LibraryLicense](https://img.shields.io/badge/license-License.txt-yellow.svg?style=flat)](https://raw.githubusercontent.com/Rblp/Rblpapi/master/inst/License.txt) [![CRAN](http://www.r-pkg.org/badges/version/Rblpapi)](http://cran.r-project.org/package=Rblpapi) [![Downloads](http://cranlogs.r-pkg.org/badges/Rblpapi?color=brightgreen)](http://www.r-pkg.org/pkg/Rblpapi)
 
 R Access to Bloomberg API
 
