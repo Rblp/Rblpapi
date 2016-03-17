@@ -4,6 +4,13 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
+\section{Changes in Rblpapi version 0.3.4 (2016-06-30)}{
+  \itemize{
+    \item The internal header \code{Rblpapi_types.h} was renamed from a
+    lower-cased variant to conform with Rcpp Attributes best practices.
+  }
+}
+
 \section{Changes in Rblpapi version 0.3.3 (2016-03-14)}{
   \itemize{
     \item \code{configure} adds a missing \code{method="libcurl"}
