@@ -10,5 +10,6 @@
 local/
 blp/
 inst/include/
+inst/libs
 src/Makevars
 .Rhistory
