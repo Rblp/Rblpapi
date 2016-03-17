@@ -4,6 +4,8 @@
 *.rc
 *.o
 *.so
+*.dll
+.RData
 .Rproj.user
 local/
 blp/
