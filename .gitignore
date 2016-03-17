@@ -4,9 +4,12 @@
 *.rc
 *.o
 *.so
+*.dll
+.RData
 .Rproj.user
 local/
 blp/
 inst/include/
+inst/libs
 src/Makevars
 .Rhistory
