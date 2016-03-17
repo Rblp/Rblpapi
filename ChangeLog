@@ -1,3 +1,9 @@
+2016-03-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/Rblpapi_types.h: Renamed from rblpapi_types.h as Rcpp
+	Attributes prefers a properly capitalized package name here
+	* src/blpapi_utils.h: Corresponding update in include
+
 2016-03-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): Release 0.3.3

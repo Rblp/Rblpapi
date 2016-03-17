@@ -27,7 +27,7 @@
 #include <blpapi_message.h>
 #include <blpapi_element.h>
 #include <Rcpp.h>
-#include <rblpapi_types.h>
+#include <Rblpapi_types.h>
 
 void* checkExternalPointer(SEXP xp_, const char* valid_tag);
 const int bbgDateToRDate(const BloombergLP::blpapi::Datetime& bbg_date);
