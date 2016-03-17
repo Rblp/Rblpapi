@@ -4,8 +4,8 @@
 \alias{bdp}
 \title{Run 'Bloomberg Data Point' Queries}
 \usage{
-bdp(securities, fields, options = NULL, overrides = NULL, identity = NULL,
-  con = defaultConnection())
+bdp(securities, fields, options = NULL, overrides = NULL, verbose = FALSE,
+  identity = NULL, con = defaultConnection())
 }
 \arguments{
 \item{securities}{A character vector with security symbols in
@@ -20,6 +20,9 @@ being set) as well as a value.}
 \item{overrides}{An optional named character vector with override
 values. Each field must have both a name (designating the override
 being set) as well as a value.}
+
+\item{verbose}{A boolean indicating whether verbose operation is
+desired, defaults to \sQuote{FALSE}}
 
 \item{identity}{An optional identity object.}
 

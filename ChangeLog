@@ -1,3 +1,9 @@
+2016-03-17  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/bdp.cpp (bdp_Impl): Support boolean option verbose
+	* R/bdp.R (bdp): Idem
+	* man/bdp.Rd (bdp): Idem
+
 2016-03-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/Rblpapi_types.h: Renamed from rblpapi_types.h as Rcpp

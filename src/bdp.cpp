@@ -2,8 +2,8 @@
 //
 //  bdp.cpp -- "Bloomberg Data Point" query function for the BLP API
 //
-//  Copyright (C) 2013  Whit Armstrong
-//  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2013         Whit Armstrong
+//  Copyright (C) 2015 - 2016  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -44,14 +44,14 @@ using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 
-void getBDPResult(Event& event, Rcpp::List& res, const std::vector<std::string>& securities, const std::vector<std::string>& colnames, const std::vector<RblpapiT>& rtypes) {
+void getBDPResult(Event& event, Rcpp::List& res, const std::vector<std::string>& securities, const std::vector<std::string>& colnames, const std::vector<RblpapiT>& rtypes, bool verbose) {
     MessageIterator msgIter(event);
     if (!msgIter.next()) {
         throw std::logic_error("Not a valid MessageIterator.");
     }
     Message msg = msgIter.message();
-    //msg.asElement().print(std::cout);
     Element response = msg.asElement();
+    if (verbose) response.print(Rcpp::Rcout);
     if (std::strcmp(response.name().string(),"ReferenceDataResponse")) {
         throw std::logic_error("Not a valid ReferenceDataResponse.");
     }
@@ -82,7 +82,7 @@ void getBDPResult(Event& event, Rcpp::List& res, const std::vector<std::string>&
 //
 // [[Rcpp::export]]
 Rcpp::List bdp_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields,
-                    SEXP options_, SEXP overrides_, SEXP identity_) {
+                    SEXP options_, SEXP overrides_, bool verbose, SEXP identity_) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     Session* session = 
@@ -112,7 +112,7 @@ Rcpp::List bdp_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
         switch (event.eventType()) {
         case Event::RESPONSE:
         case Event::PARTIAL_RESPONSE:
-            getBDPResult(event, res, securities, fields, rtypes);
+            getBDPResult(event, res, securities, fields, rtypes, verbose);
             break;
         default:
             MessageIterator msgIter(event);
