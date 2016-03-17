@@ -24,9 +24,9 @@ if (.runThisTest) {
     test.getTicksAsMatrix <- function() {
 
         isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
-        
+
         res <- getTicks("ES1 Index",
-                        startTime=Sys.time() - isweekend*49*60*60,
+                        startTime=Sys.time() - isweekend*48*60*60 - 60*60,
                         endTime=Sys.time() - isweekend*48*60*60,
                         returnAs="matrix")
 
@@ -45,7 +45,7 @@ if (.runThisTest) {
         isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
 
         res <- getTicks("ES1 Index",
-                        startTime=Sys.time() - isweekend*49*60*60,
+                        startTime=Sys.time() - isweekend*48*60*60 - 60*60,
                         endTime=Sys.time() - isweekend*48*60*60,
                         returnAs="xts")
 
