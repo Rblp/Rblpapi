@@ -8,6 +8,8 @@
   \itemize{
     \item The internal header \code{Rblpapi_types.h} was renamed from a
     lower-cased variant to conform with Rcpp Attributes best practices.
+    \item The \code{bdp} function now also supports an option
+    \code{verbose} (PRs \ghpr{149}).
   }
 }
 

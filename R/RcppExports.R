@@ -9,8 +9,8 @@ bdh_Impl <- function(con_, securities, fields, start_date_, end_date_, options_,
     .Call('Rblpapi_bdh_Impl', PACKAGE = 'Rblpapi', con_, securities, fields, start_date_, end_date_, options_, overrides_, verbose, identity_)
 }
 
-bdp_Impl <- function(con_, securities, fields, options_, overrides_, identity_) {
-    .Call('Rblpapi_bdp_Impl', PACKAGE = 'Rblpapi', con_, securities, fields, options_, overrides_, identity_)
+bdp_Impl <- function(con_, securities, fields, options_, overrides_, verbose, identity_) {
+    .Call('Rblpapi_bdp_Impl', PACKAGE = 'Rblpapi', con_, securities, fields, options_, overrides_, verbose, identity_)
 }
 
 bds_Impl <- function(con_, securities, field, options_, overrides_, verbose, identity_) {

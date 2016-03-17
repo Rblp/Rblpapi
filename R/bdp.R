@@ -1,6 +1,6 @@
 
 ##
-##  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel and John Laing
+##  Copyright (C) 2015 - 2016  Whit Armstrong and Dirk Eddelbuettel and John Laing
 ##
 ##  This file is part of Rblpapi
 ##
@@ -31,6 +31,8 @@
 ##' @param overrides An optional named character vector with override
 ##' values. Each field must have both a name (designating the override
 ##' being set) as well as a value.
+##' @param verbose A boolean indicating whether verbose operation is
+##' desired, defaults to \sQuote{FALSE}
 ##' @param identity An optional identity object.
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
@@ -45,8 +47,9 @@
 ##'   ##  using overrides (cf https://github.com/Rblp/Rblpapi/issues/67)
 ##'   bdp("EN00 Index", "MLI_OAS", overrides=c(MLI_DATE="20150831"))
 ##' }
-bdp <- function(securities, fields, options=NULL, overrides=NULL, identity=NULL, con=defaultConnection()) {
+bdp <- function(securities, fields, options=NULL, overrides=NULL,
+                verbose=FALSE, identity=NULL, con=defaultConnection()) {
     if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
-    bdp_Impl(con, securities, fields, options, overrides, identity)
+    bdp_Impl(con, securities, fields, options, overrides, verbose, identity)
 }
 
