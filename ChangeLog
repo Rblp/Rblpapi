@@ -1,3 +1,8 @@
+2016-03-17	John Laing	<john.laing@gmail.com>
+
+	* src/Rblpapi_types.h: Replace Double with Float
+	* src/blpapi_utils.cpp: Idem
+
 2016-03-17  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/bdp.cpp (bdp_Impl): Support boolean option verbose
