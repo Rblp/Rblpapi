@@ -34,12 +34,12 @@ public:
 };
 
 // Bloomberg types
-enum class DatatypeT {Bool,Datetime,Double,Int32,Int64,String};
+enum class DatatypeT {Bool,Datetime,Double,Float,Int32,Int64,String};
 
 // mapping string->DatatypeT
 const std::map<std::string, DatatypeT> stringToDatatypeT {
-  {"Bool",DatatypeT::Bool},{"Datetime",DatatypeT::Datetime},{"Double",DatatypeT::Double},{"Int32",DatatypeT::Int32},{"Int64",DatatypeT::Int64},{"String",DatatypeT::String}
+  {"Bool",DatatypeT::Bool},{"Datetime",DatatypeT::Datetime},{"Double",DatatypeT::Double},{"Float",DatatypeT::Float},{"Int32",DatatypeT::Int32},{"Int64",DatatypeT::Int64},{"String",DatatypeT::String}
 };
 
 // our types
-enum class RblpapiT {Integer,Double,Logical,Date,Datetime,String,Unknown};
+enum class RblpapiT {Integer,Double,Float,Logical,Date,Datetime,String,Unknown};

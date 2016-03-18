@@ -24,16 +24,22 @@ if (.runThisTest) {
 
     test.bdpColumnTypes <- function() {
 
-        res <- bdp(c("TYA Comdty","ES1 Index"), c("LAST_PRICE","PX_VOLUME","SECURITY_DES"))
+        cols <- c("LAST_PRICE","PX_VOLUME","SECURITY_DES", "BID_YIELD")
+        res <- bdp(c("TYA Comdty","ES1 Index"), cols)
 
         checkTrue(inherits(res, "data.frame"),
                   msg = "checking return type")
 
         checkTrue(dim(res)[1] == 2, msg = "check return of two rows")
-        checkTrue(dim(res)[2] == 3, msg = "check return of two cols")
+        checkTrue(dim(res)[2] == 4, msg = "check return of four cols")
 
-        checkTrue(all(c("LAST_PRICE","PX_VOLUME","SECURITY_DES") %in% colnames(res)),
-                  msg = "check column names")
+        checkTrue(all(cols == colnames(res)), msg = "check column names")
+
+        checkTrue(all(fieldInfo(cols)$datatype == c("Double", "Int32", "String", "Float")),
+                  msg="check fieldInfo matches expectations")
+
+        checkTrue(all(sapply(res, class) == c("numeric", "integer", "character", "numeric")),
+                  msg="check column classes match fieldInfo")
     }
 
 }
