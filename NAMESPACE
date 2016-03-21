@@ -4,6 +4,7 @@ import(Rcpp)
 importFrom(utils, "object.size", "packageDescription")
 export(blpConnect,
        blpDisconnect,
+       defaultConnection,
        blpAuthenticate,
        bdp,
        bdh,

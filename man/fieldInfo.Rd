@@ -22,7 +22,7 @@ This function uses the Bloomberg API to retrieve fieldInfo
 }
 \examples{
 \dontrun{
-  field.info(c("PX_LAST", "VOLUME"))
+  fieldInfo(c("PX_LAST", "VOLUME"))
 }
 }
 \author{
