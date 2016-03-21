@@ -25,7 +25,7 @@ is otherwise terminated.
 }
 \examples{
 \dontrun{
-  blpDiscnnect(con)  
+  blpDisconnect(con)
 }
 }
 \author{

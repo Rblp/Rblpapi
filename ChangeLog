@@ -1,3 +1,12 @@
+2016-03-21  John Laing  <john.laing@gmail.com>
+
+	* R/blpDisconnect.R: Fix typo
+	* R/fieldInfo.R: Idem
+	* man/blpDisconnect.Rd: Idem
+	* man/fieldInfo.Rd: Idem
+
+	* inst/unitTests/runit.examples.R: Run examples as unit test
+
 2016-03-18  John Laing  <john.laing@gmail.com>
 
 	* src/Rblpapi_types.h: Add Float type, same behavior as Double

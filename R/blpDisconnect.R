@@ -32,7 +32,7 @@
 ##' @author Whit Armstrong and Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{
-##'   blpDiscnnect(con)  
+##'   blpDisconnect(con)
 ##' }
 blpDisconnect <- function(con) {
     # do nothing, just return a simple test
