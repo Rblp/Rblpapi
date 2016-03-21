@@ -30,7 +30,7 @@
 ##' @author Whit Armstrong and Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{
-##'   field.info(c("PX_LAST", "VOLUME"))
+##'   fieldInfo(c("PX_LAST", "VOLUME"))
 ##' }
 fieldInfo <- function(fields, con=defaultConnection()) {
     if (any(duplicated(fields))) stop("Duplicated fields submitted.", call.=FALSE)
