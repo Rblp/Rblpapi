@@ -22,9 +22,9 @@
 ##' Data Set) queries
 ##'
 ##' @title Run 'Bloomberg Data Set' Queries
-##' @param securities A character vector with security symbols in
+##' @param security A character value with a single security symbol in
 ##' Bloomberg notation.
-##' @param fields A character string with a single Bloomberg query field.
+##' @param field A character string with a single Bloomberg query field.
 ##' @param options An optional named character vector with option
 ##' values. Each field must have both a name (designating the option
 ##' being set) as well as a value.
@@ -49,13 +49,16 @@
 ##'   bds("GOOG US Equity", "TOP_20_HOLDERS_PUBLIC_FILINGS")
 ##'   ## example of using overrides
 ##'   overrd <- c("START_DT"="20150101", "END_DT"="20160101")
-##    bds("CPI YOY Index","ECO_RELEASE_DT_LIST", overrides = overrd)
+##'   bds("CPI YOY Index","ECO_RELEASE_DT_LIST", overrides = overrd)
 ##' }
-bds <- function(securities, fields, options=NULL,
+bds <- function(security, field, options=NULL,
                 overrides=NULL, verbose=FALSE,
                 identity=NULL, con=defaultConnection()) {
-    if (length(securities)!=1L) stop("more than one security submitted.", call.=FALSE)
-    res <- bds_Impl(con, securities, fields, options, overrides, verbose, identity)
+    if (length(security) != 1L)
+        stop("more than one security submitted.", call.=FALSE)
+    if (length(field) != 1L)
+        stop("more than one field submitted.", call.=FALSE)
+    res <- bds_Impl(con, security, field, options, overrides, verbose, identity)
     if (typeof(res)=="list" && length(res)==1) {
         res <- res[[1]]
     }

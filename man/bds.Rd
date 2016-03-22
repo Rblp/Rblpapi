@@ -4,14 +4,14 @@
 \alias{bds}
 \title{Run 'Bloomberg Data Set' Queries}
 \usage{
-bds(securities, fields, options = NULL, overrides = NULL, verbose = FALSE,
+bds(security, field, options = NULL, overrides = NULL, verbose = FALSE,
   identity = NULL, con = defaultConnection())
 }
 \arguments{
-\item{securities}{A character vector with security symbols in
+\item{security}{A character value with a single security symbol in
 Bloomberg notation.}
 
-\item{fields}{A character string with a single Bloomberg query field.}
+\item{field}{A character string with a single Bloomberg query field.}
 
 \item{options}{An optional named character vector with option
 values. Each field must have both a name (designating the option
@@ -47,6 +47,7 @@ Data Set) queries
   bds("GOOG US Equity", "TOP_20_HOLDERS_PUBLIC_FILINGS")
   ## example of using overrides
   overrd <- c("START_DT"="20150101", "END_DT"="20160101")
+  bds("CPI YOY Index","ECO_RELEASE_DT_LIST", overrides = overrd)
 }
 }
 \author{
