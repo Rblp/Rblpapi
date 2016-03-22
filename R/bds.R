@@ -56,6 +56,8 @@ bds <- function(security, field, options=NULL,
                 identity=NULL, con=defaultConnection()) {
     if (length(security) != 1L)
         stop("more than one security submitted.", call.=FALSE)
+    if (length(field) != 1L)
+        stop("more than one field submitted.", call.=FALSE)
     res <- bds_Impl(con, security, field, options, overrides, verbose, identity)
     if (typeof(res)=="list" && length(res)==1) {
         res <- res[[1]]
