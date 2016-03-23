@@ -11,6 +11,9 @@
 	* man/bsrch.Rd: Idem
 	* man/fieldSearch.Rd: Idem
 
+	* R/bdh.R: Additional example using options and overrides (to
+	retrieve quarterly sales estimates)
+
 2016-03-22  John Laing  <john.laing@gmail.com>
 
 	* src/blpapi_utils.cpp: Add Integer64 type using REAL storage
