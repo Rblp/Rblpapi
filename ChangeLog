@@ -1,3 +1,16 @@
+2016-03-23  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version): Rolled minor version
+
+	* R/beqs.R: More restrained output from \example(..., run.dontrun=TRUE)
+	* R/bsrch.R: Idem
+	* R/fieldSearch.R: Idem
+	* R/getTicks.R: Idem
+	* man/beqs.Rd: Idem
+	* man/beqs.Rd: Idem
+	* man/bsrch.Rd: Idem
+	* man/fieldSearch.Rd: Idem
+
 2016-03-22  John Laing  <john.laing@gmail.com>
 
 	* src/blpapi_utils.cpp: Add Integer64 type using REAL storage

@@ -1,6 +1,6 @@
 
 ##
-##  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel and John Laing
+##  Copyright (C) 2015 - 2016  Whit Armstrong and Dirk Eddelbuettel and John Laing
 ##
 ##  This file is part of Rblpapi
 ##
@@ -37,8 +37,8 @@
 ##' @author Morgan Williams and Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{
-##' bsrch("COMDTY:NGFLOW")
-##' bsrch("COMDTY:VESSELS")
+##' head(bsrch("COMDTY:NGFLOW"), 20)
+##' head(bsrch("COMDTY:VESSELS"), 20)
 ##' }
 bsrch <- function(domain,
                  limit="",

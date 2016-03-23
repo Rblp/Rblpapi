@@ -31,8 +31,8 @@ SRCH Data) queries
 }
 \examples{
 \dontrun{
-bsrch("COMDTY:NGFLOW")
-bsrch("COMDTY:VESSELS")
+head(bsrch("COMDTY:NGFLOW"), 20)
+head(bsrch("COMDTY:VESSELS"), 20)
 }
 }
 \author{

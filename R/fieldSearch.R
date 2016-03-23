@@ -1,6 +1,6 @@
 
 ##
-##  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel and John Laing
+##  Copyright (C) 2015 - 2016  Whit Armstrong and Dirk Eddelbuettel and John Laing
 ##
 ##  This file is part of Rblpapi
 ##
@@ -37,8 +37,7 @@
 ##'
 ##' @examples
 ##' \dontrun{
-##'   con <- blpConnect()
-##'   res <- fieldSearch("vwap")
+##'   head(fieldSearch("vwap"), 20)
 ##' }
 ##'
 fieldSearch <- function(searchterm, excludeterm="Static", con=defaultConnection()) {

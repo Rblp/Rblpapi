@@ -26,8 +26,7 @@ search term.
 }
 \examples{
 \dontrun{
-  con <- blpConnect()
-  res <- fieldSearch("vwap")
+  head(fieldSearch("vwap"), 20)
 }
 
 }
