@@ -1,3 +1,8 @@
+2016-03-22  John Laing  <john.laing@gmail.com>
+
+	* src/blpapi_utils.cpp: Add Integer64 type using REAL storage
+	* src/Rblpapi_types.h: Idem
+
 2016-03-22  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/bds.R (bds): Correct docs to state single security and field

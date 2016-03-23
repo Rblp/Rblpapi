@@ -42,4 +42,4 @@ const std::map<std::string, DatatypeT> stringToDatatypeT {
 };
 
 // our types
-enum class RblpapiT {Integer,Double,Float,Logical,Date,Datetime,String,Unknown};
+enum class RblpapiT {Integer,Integer64,Double,Float,Logical,Date,Datetime,String,Unknown};
