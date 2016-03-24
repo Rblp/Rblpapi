@@ -1,6 +1,6 @@
 
 ##
-##  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel and John Laing
+##  Copyright (C) 2015 - 2016  Whit Armstrong and Dirk Eddelbuettel and John Laing
 ##
 ##  This file is part of Rblpapi
 ##
@@ -43,11 +43,11 @@
 ##' @author Rademeyer Vermaak and Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{
-##' beqs("Global Oil Companies YTD Return")
-##' beqs("Global Oil Companies YTD Return", "GLOBAL")
-##' beqs("Global Oil Companies YTD Return", "GLOBAL", "GERMAN")
-##' beqs("Global Oil Companies YTD Return", "GLOBAL", "GERMAN", "GENERAL")
-##' beqs("Global Oil Companies YTD Return", "GLOBAL", "ENGLISH", "GENERAL", as.Date("2015-09-30"))
+##' head(beqs("Global Oil Companies YTD Return"), 20)
+##' head(beqs("Global Oil Companies YTD Return", "GLOBAL"), 20)
+##' head(beqs("Global Oil Companies YTD Return", "GLOBAL", "GERMAN"), 20)
+##' head(beqs("Global Oil Companies YTD Return", "GLOBAL", "GERMAN", "GENERAL"), 20)
+##' head(beqs("Global Oil Companies YTD Return", "GLOBAL", "ENGLISH", "GENERAL", as.Date("2015-09-30")), 20)
 ##' }
 beqs <- function(screenName,
                  screenType="GLOBAL",

@@ -46,7 +46,9 @@ This function uses the Bloomberg API to retrieve ticks for the requested securit
 }
 \examples{
 \dontrun{
-  getTicks("ES1 Index")
+  res <- getTicks("ES1 Index")
+  str(res)
+  head(res, 20)
 }
 }
 \author{

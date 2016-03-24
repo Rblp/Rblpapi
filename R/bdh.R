@@ -1,6 +1,6 @@
 
 ##
-##  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel and John Laing
+##  Copyright (C) 2015 - 2016  Whit Armstrong and Dirk Eddelbuettel and John Laing
 ##
 ##  This file is part of Rblpapi
 ##
@@ -61,6 +61,11 @@
 ##'   bdh("SPY US Equity", c("PX_LAST", "VOLUME"),
 ##'       start.date=Sys.Date()-31*6, options=opt)
 ##'
+##'   ## example for options and overrides
+##'   opt <- c("periodicitySelection" = "QUARTERLY")
+##'   ovrd <- c("BEST_FPERIOD_OVERRIDE"="1GQ")
+##'   bdh("IBM US Equity", "BEST_SALES", start.date=Sys.Date()-365.25*4,
+##'       options=opt, overrides=ovrd)
 ##' }
 bdh <- function(securities, fields, start.date, end.date=NULL,
                 include.non.trading.days=FALSE, options=NULL, overrides=NULL,
