@@ -25,6 +25,53 @@ blpConnect_Impl <- function(host, port) {
     .Call('Rblpapi_blpConnect_Impl', PACKAGE = 'Rblpapi', host, port)
 }
 
+#' This function retrieves the version string of the Bloomberg API.
+#'
+#' Note that formatting of the returned string is described as
+#' \sQuote{unspecified} by API documentation
+#' @title Get Bloomberg library and run-time version
+#' @return A string (with unspecified format) containing the version
+#' of the Blpapi runtime library.
+#' @author Dirk Eddelbuettel
+#' @seealso \code{getHeaderVersion}, \code{getRuntimeVersion}
+#' @examples
+#' \dontrun{
+#'    getVersionIdentifier()
+#' }
+getVersionIdentifier <- function() {
+    .Call('Rblpapi_getVersionIdentifier', PACKAGE = 'Rblpapi')
+}
+
+#' This function retrieves the version of Bloomberg API headers.
+#'
+#' @title Get Bloomberg library header version
+#' @return A string with four dot-separated values for major, minor,
+#' pathch and build version of the headers.
+#' @author Dirk Eddelbuettel
+#' @seealso \code{getRuntimeVersion}
+#' @examples
+#' \dontrun{
+#'    getHeaderVersion()
+#' }
+getHeaderVersion <- function() {
+    .Call('Rblpapi_getHeaderVersion', PACKAGE = 'Rblpapi')
+}
+
+#' This function retrieves the version of Bloomberg API run-time.
+#'
+#' @title Get Bloomberg library run-time version
+#' @return A string with four dot-separated values for major, minor,
+#' pathch and build version of the run-time library.
+#' @author Dirk Eddelbuettel
+#' @seealso \code{getHeaderVersion}
+#' @examples
+#' \dontrun{
+#'    getRuntimeVersion()
+#' }
+getRuntimeVersion <- function() {
+    .Call('Rblpapi_getRuntimeVersion', PACKAGE = 'Rblpapi')
+}
+
 bsrch_Impl <- function(con, domain, limit, verbose = FALSE) {
     .Call('Rblpapi_bsrch_Impl', PACKAGE = 'Rblpapi', con, domain, limit, verbose)
 }

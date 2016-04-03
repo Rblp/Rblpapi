@@ -1,3 +1,15 @@
+2016-04-03  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version): Rolled minor version
+
+	* src/blpVersion.cpp (getVersionIdentifier, getHeaderVersion),
+	(getRunTimeVersion):  New helper functions to identify API versions
+	* man/getHeaderVersion.Rd: New manual page
+	* man/getRuntimeVersion.Rd: Ditto
+	* man/getVersionIdentifier.Rd: Ditto
+
+	* R/init.R (.onAttach): In verbose mode, show package and API version.
+
 2016-03-23  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): Rolled minor version
