@@ -1,3 +1,7 @@
+2016-04-04  Dirk Eddelbuettel  <deddelbuettel@ketchumtrading.com>
+
+	* NAMESPACE: Import utils::packageVersion now used in .onAttach
+
 2016-04-03  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): Rolled minor version
