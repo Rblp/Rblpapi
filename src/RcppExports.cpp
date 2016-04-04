@@ -101,6 +101,36 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// getVersionIdentifier
+std::string getVersionIdentifier();
+RcppExport SEXP Rblpapi_getVersionIdentifier() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(getVersionIdentifier());
+    return __result;
+END_RCPP
+}
+// getHeaderVersion
+std::string getHeaderVersion();
+RcppExport SEXP Rblpapi_getHeaderVersion() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(getHeaderVersion());
+    return __result;
+END_RCPP
+}
+// getRuntimeVersion
+std::string getRuntimeVersion();
+RcppExport SEXP Rblpapi_getRuntimeVersion() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(getRuntimeVersion());
+    return __result;
+END_RCPP
+}
 // bsrch_Impl
 DataFrame bsrch_Impl(SEXP con, std::string domain, std::string limit, bool verbose);
 RcppExport SEXP Rblpapi_bsrch_Impl(SEXP conSEXP, SEXP domainSEXP, SEXP limitSEXP, SEXP verboseSEXP) {

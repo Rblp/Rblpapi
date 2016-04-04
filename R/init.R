@@ -1,6 +1,6 @@
 
 ##
-##  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel and John Laing
+##  Copyright (C) 2015 - 2016  Whit Armstrong and Dirk Eddelbuettel and John Laing
 ##
 ##  This file is part of Rblpapi
 ##
@@ -21,12 +21,16 @@
 .pkgenv <- new.env(parent=emptyenv())
 
 .onAttach <- function(libname, pkgname) {
+    packageStartupMessage(paste0("Rblpapi version ", packageVersion("Rblpapi"),
+                                 " using Blpapi headers ", getHeaderVersion(),
+                                 " and run-time ", getRuntimeVersion(), "."))
+    packageStartupMessage(paste0("Please respect the Bloomberg licensing agreement ",
+                                 "and terms of service."))
+    
     if (getOption("blpAutoConnect", FALSE)) {
         con <- blpConnect()
         if (getOption("blpVerbose", FALSE)) {
-            packageStartupMessage(paste0("Created and stored default connection object ",
-                                         "for Rblpapi version ",
-                                         packageDescription("Rblpapi")$Version, "."))
+            packageStartupMessage("Created and stored default connection object.")
         }
     } else {
         con <- NULL
