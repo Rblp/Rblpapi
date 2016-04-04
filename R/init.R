@@ -21,13 +21,11 @@
 .pkgenv <- new.env(parent=emptyenv())
 
 .onAttach <- function(libname, pkgname) {
-    if (getOption("blpVerbose", FALSE)) {
-        packageStartupMessage(paste0("Rblpapi version ", packageVersion("Rblpapi"),
-                                     " using Blpapi headers ", getHeaderVersion(),
-                                     " and run-time ", getRuntimeVersion(), "."))
-        packageStartupMessage(paste0("Please respect the Bloomberg licensing agreement ",
-                                     "and terms of service."))
-    }                              
+    packageStartupMessage(paste0("Rblpapi version ", packageVersion("Rblpapi"),
+                                 " using Blpapi headers ", getHeaderVersion(),
+                                 " and run-time ", getRuntimeVersion(), "."))
+    packageStartupMessage(paste0("Please respect the Bloomberg licensing agreement ",
+                                 "and terms of service."))
     
     if (getOption("blpAutoConnect", FALSE)) {
         con <- blpConnect()
