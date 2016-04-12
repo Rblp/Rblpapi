@@ -49,6 +49,8 @@
 ##' a single data frame. Note that the order of securities returned
 ##' is determined by the backend and may be different from the order
 ##' of securities in the \code{securities} field.
+##' @seealso For historical futures series, see \sQuote{DOCS #2072138 <GO>}
+##' on the Bloomberg terminal about selecting different rolling conventions.
 ##' @author Whit Armstrong and Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{

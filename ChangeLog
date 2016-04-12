@@ -1,4 +1,9 @@
-2016-04-04  Dirk Eddelbuettel  <deddelbuettel@ketchumtrading.com>
+2016-04-12  Dirk Eddelbuettel  <edd@debian.org>
+
+        * R/bdh.R: Added note about 'DOCS #2072138 <GO>' on rolling futures
+	* man/bdh.Rd: Ditto
+
+2016-04-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* NAMESPACE: Import utils::packageVersion now used in .onAttach
 
