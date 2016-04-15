@@ -101,16 +101,6 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// getVersionIdentifier
-std::string getVersionIdentifier();
-RcppExport SEXP Rblpapi_getVersionIdentifier() {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    __result = Rcpp::wrap(getVersionIdentifier());
-    return __result;
-END_RCPP
-}
 // getHeaderVersion
 std::string getHeaderVersion();
 RcppExport SEXP Rblpapi_getHeaderVersion() {

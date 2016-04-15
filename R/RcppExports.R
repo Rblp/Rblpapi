@@ -25,23 +25,6 @@ blpConnect_Impl <- function(host, port) {
     .Call('Rblpapi_blpConnect_Impl', PACKAGE = 'Rblpapi', host, port)
 }
 
-#' This function retrieves the version string of the Bloomberg API.
-#'
-#' Note that formatting of the returned string is described as
-#' \sQuote{unspecified} by API documentation
-#' @title Get Bloomberg library and run-time version
-#' @return A string (with unspecified format) containing the version
-#' of the Blpapi runtime library.
-#' @author Dirk Eddelbuettel
-#' @seealso \code{getHeaderVersion}, \code{getRuntimeVersion}
-#' @examples
-#' \dontrun{
-#'    getVersionIdentifier()
-#' }
-getVersionIdentifier <- function() {
-    .Call('Rblpapi_getVersionIdentifier', PACKAGE = 'Rblpapi')
-}
-
 #' This function retrieves the version of Bloomberg API headers.
 #'
 #' @title Get Bloomberg library header version
