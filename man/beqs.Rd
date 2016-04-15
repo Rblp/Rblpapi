@@ -45,7 +45,8 @@ head(beqs("Global Oil Companies YTD Return"), 20)
 head(beqs("Global Oil Companies YTD Return", "GLOBAL"), 20)
 head(beqs("Global Oil Companies YTD Return", "GLOBAL", "GERMAN"), 20)
 head(beqs("Global Oil Companies YTD Return", "GLOBAL", "GERMAN", "GENERAL"), 20)
-head(beqs("Global Oil Companies YTD Return", "GLOBAL", "ENGLISH", "GENERAL", as.Date("2015-09-30")), 20)
+head(beqs("Global Oil Companies YTD Return", "GLOBAL", "ENGLISH", "GENERAL",
+          as.Date("2015-09-30")), 20)
 }
 }
 \author{

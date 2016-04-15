@@ -24,27 +24,28 @@
 
 using BloombergLP::blpapi::VersionInfo;
 
-//' This function retrieves the version string of the Bloomberg API.
-//'
-//' Note that formatting of the returned string is described as
-//' \sQuote{unspecified} by API documentation
-//' @title Get Bloomberg library and run-time version
-//' @return A string (with unspecified format) containing the version
-//' of the Blpapi runtime library.
-//' @author Dirk Eddelbuettel
-//' @seealso \code{getHeaderVersion}, \code{getRuntimeVersion}
-//' @examples
-//' \dontrun{
-//'    getVersionIdentifier()
-//' }
-// [[Rcpp::export]]
-std::string getVersionIdentifier() {
-    // Return a string containing a sequence of printable ascii characters
-    // (with values from 0x20 to 0x7e, inclusive) identifying the version
-    // of the blpapi runtime library.  The format of this string is
-    // unspecified.
-    return VersionInfo::versionIdentifier();
-}
+// ' This function retrieves the version string of the Bloomberg API.
+// '
+// ' Note that formatting of the returned string is described as
+// ' \sQuote{unspecified} by API documentation
+// ' @title Get Bloomberg library and run-time version
+// ' @return A string (with unspecified format) containing the version
+// ' of the Blpapi runtime library.
+// ' @author Dirk Eddelbuettel
+// ' @seealso \code{getHeaderVersion}, \code{getRuntimeVersion}
+// ' @examples
+// ' \dontrun{
+// '    getVersionIdentifier()
+// ' }
+// [ [ Rcpp::export ] ]
+// std::string getVersionIdentifier() {
+//     // Return a string containing a sequence of printable ascii characters
+//     // (with values from 0x20 to 0x7e, inclusive) identifying the version
+//     // of the blpapi runtime library.  The format of this string is
+//     // unspecified.
+//     //return VersionInfo::versionIdentifier();
+//     return std::string(blpapi_getVersionIdentifier());
+// }
 
 //' This function retrieves the version of Bloomberg API headers.
 //'
@@ -59,14 +60,21 @@ std::string getVersionIdentifier() {
 //' }
 // [[Rcpp::export]]
 std::string getHeaderVersion() {
-    VersionInfo vi = VersionInfo::headerVersion();
-    //Rcpp::Rcout << vi << std::endl;
+    // VersionInfo vi = VersionInfo::headerVersion();
+    // //Rcpp::Rcout << vi << std::endl;
+    // char txt[128];
+    // snprintf(txt, 127, "%d.%d.%d.%d",
+    //          vi.majorVersion(),
+    //          vi.minorVersion(),
+    //          vi.patchVersion(),
+    //          vi.buildVersion());
+
     char txt[128];
     snprintf(txt, 127, "%d.%d.%d.%d",
-             vi.majorVersion(),
-             vi.minorVersion(),
-             vi.patchVersion(),
-             vi.buildVersion());
+             BLPAPI_VERSION_MAJOR,
+             BLPAPI_VERSION_MINOR,
+             BLPAPI_VERSION_PATCH,
+             BLPAPI_VERSION_BUILD);
     return std::string(txt);
 }
 
@@ -83,13 +91,19 @@ std::string getHeaderVersion() {
 //' }
 // [[Rcpp::export]]
 std::string getRuntimeVersion() {
-    VersionInfo vi = VersionInfo::runtimeVersion();
-    //Rcpp::Rcout << vi << std::endl;
+    // VersionInfo vi = VersionInfo::runtimeVersion();
+    // //Rcpp::Rcout << vi << std::endl;
+    // char txt[128];
+    // snprintf(txt, 127, "%d.%d.%d.%d",
+    //          vi.majorVersion(),
+    //          vi.minorVersion(),
+    //          vi.patchVersion(),
+    //          vi.buildVersion());
+
+    int major, minor, patch, build;
+    blpapi_getVersionInfo(&major, &minor, &patch, &build);
     char txt[128];
     snprintf(txt, 127, "%d.%d.%d.%d",
-             vi.majorVersion(),
-             vi.minorVersion(),
-             vi.patchVersion(),
-             vi.buildVersion());
+             major, minor, patch, build);
     return std::string(txt);
 }

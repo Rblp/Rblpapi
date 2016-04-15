@@ -1,3 +1,14 @@
+2016-04-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version): Rolled minor version
+
+	* src/blpVersion.cpp (getHeaderVersion): Use more defensive
+	implementation not reyling on VersionInfo class
+	* src/blpVersion.cpp (getRuntimeVersion): Ditto
+
+	* src/blpVersion.cpp (getVersionIdentifier): Disabled as not in
+	currently used Windows setup, and not used in startup message
+
 2016-04-12  Dirk Eddelbuettel  <edd@debian.org>
 
         * R/bdh.R: Added note about 'DOCS #2072138 <GO>' on rolling futures
