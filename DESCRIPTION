@@ -10,9 +10,11 @@ VignetteBuilder: knitr
 LazyLoad: yes
 LinkingTo: Rcpp, BH
 Description: An R Interface to Bloomberg is provided via the Blp API.
-SystemRequirements: A valid Bloomberg installation. API headers and dynamic
- library are downloaded from <https://github.com/Rblp/blp> during the build
- step. See <http://bloomberg.github.io/blpapi-docs/cpp/3.8> as well as
- <http://www.bloomberglabs.com/api/> for API documentation.
+SystemRequirements: A valid Bloomberg installation. The API headers and
+ dynamic library are downloaded from <https://github.com/Rblp/blp> during
+ the build step. See <http://bloomberg.github.io/blpapi-docs/cpp/3.8> as 
+ as <http://www.bloomberglabs.com/api/> for API documentation. A compiler
+ recent enough for (at least partial) C++11 support; g++-4.6.* or later
+ should be sufficient and g++-4.9.* or later is preferred.
 License: file LICENSE
 RoxygenNote: 5.0.1
