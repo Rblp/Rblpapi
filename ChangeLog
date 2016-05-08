@@ -1,3 +1,7 @@
+2016-05-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version): Release 0.3.4
+
 2016-04-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (SystemRequirements): Clarify need for C++11 compiler

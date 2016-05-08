@@ -4,12 +4,22 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
-\section{Changes in Rblpapi version 0.3.4 (2016-06-30)}{
+\section{Changes in Rblpapi version 0.3.4 (2016-05-08)}{
   \itemize{
-    \item The internal header \code{Rblpapi_types.h} was renamed from a
-    lower-cased variant to conform with Rcpp Attributes best practices.
+    \item On startup, the API versions of both the headers and the
+    runtime are displayed (PR \ghpr{161} and \ghpr{165}).
+    \item Documentation about extended futures roll notation was added
+    to the \code{bdh} manul page.
+    \item Additional examples for overrides where added to \code{bdh}
+    (PR \ghpr{158}).
+    \item Internal code changes make retrieval of data in
+    \sQuote{unusual} variable types more robust (PRs \ghpr{157} and \ghpr{153})
+    \item General improvements and fixes to documentation (PR \ghpr{156})
     \item The \code{bdp} function now also supports an option
-    \code{verbose} (PRs \ghpr{149}).
+    \code{verbose} (PR \ghpr{149}).
+    \item The internal header \code{Rblpapi_types.h} was renamed from a
+    lower-cased variant to conform with Rcpp Attributes best
+    practices (PR \ghpr{145}).
   }
 }
 
