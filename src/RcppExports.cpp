@@ -72,6 +72,23 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// portfolio_Impl
+Rcpp::List portfolio_Impl(SEXP con_, std::vector<std::string> securities, std::string field, SEXP options_, SEXP overrides_, bool verbose, SEXP identity_);
+RcppExport SEXP Rblpapi_portfolio_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldSEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP verboseSEXP, SEXP identity_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type con_(con_SEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type securities(securitiesSEXP);
+    Rcpp::traits::input_parameter< std::string >::type field(fieldSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type options_(options_SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type overrides_(overrides_SEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type identity_(identity_SEXP);
+    __result = Rcpp::wrap(portfolio_Impl(con_, securities, field, options_, overrides_, verbose, identity_));
+    return __result;
+END_RCPP
+}
 // beqs_Impl
 DataFrame beqs_Impl(SEXP con, std::string screenName, std::string screenType, std::string group, std::string pitdate, std::string languageId, bool verbose);
 RcppExport SEXP Rblpapi_beqs_Impl(SEXP conSEXP, SEXP screenNameSEXP, SEXP screenTypeSEXP, SEXP groupSEXP, SEXP pitdateSEXP, SEXP languageIdSEXP, SEXP verboseSEXP) {
