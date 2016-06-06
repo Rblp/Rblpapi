@@ -17,8 +17,8 @@ bds_Impl <- function(con_, securities, field, options_, overrides_, verbose, ide
     .Call('Rblpapi_bds_Impl', PACKAGE = 'Rblpapi', con_, securities, field, options_, overrides_, verbose, identity_)
 }
 
-portfolio_Impl <- function(con_, securities, field, options_, overrides_, verbose, identity_) {
-    .Call('Rblpapi_portfolio_Impl', PACKAGE = 'Rblpapi', con_, securities, field, options_, overrides_, verbose, identity_)
+getPortfolio_Impl <- function(con_, securities, field, options_, overrides_, verbose, identity_) {
+    .Call('Rblpapi_getPortfolio_Impl', PACKAGE = 'Rblpapi', con_, securities, field, options_, overrides_, verbose, identity_)
 }
 
 beqs_Impl <- function(con, screenName, screenType, group, pitdate, languageId, verbose = FALSE) {

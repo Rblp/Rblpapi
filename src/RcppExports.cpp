@@ -72,9 +72,9 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// portfolio_Impl
-Rcpp::List portfolio_Impl(SEXP con_, std::vector<std::string> securities, std::string field, SEXP options_, SEXP overrides_, bool verbose, SEXP identity_);
-RcppExport SEXP Rblpapi_portfolio_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldSEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP verboseSEXP, SEXP identity_SEXP) {
+// getPortfolio_Impl
+Rcpp::List getPortfolio_Impl(SEXP con_, std::vector<std::string> securities, std::string field, SEXP options_, SEXP overrides_, bool verbose, SEXP identity_);
+RcppExport SEXP Rblpapi_getPortfolio_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldSEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP verboseSEXP, SEXP identity_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -85,7 +85,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< SEXP >::type overrides_(overrides_SEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
     Rcpp::traits::input_parameter< SEXP >::type identity_(identity_SEXP);
-    __result = Rcpp::wrap(portfolio_Impl(con_, securities, field, options_, overrides_, verbose, identity_));
+    __result = Rcpp::wrap(getPortfolio_Impl(con_, securities, field, options_, overrides_, verbose, identity_));
     return __result;
 END_RCPP
 }

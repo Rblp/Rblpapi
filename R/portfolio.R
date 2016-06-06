@@ -44,14 +44,14 @@
 ##' @author John Laing
 ## TODO: examples. Do global portfolios exist so that examples will
 ##       work for everyone? Otherwise I don't know how to do this.
-portfolio <- function(security, field, options=NULL, overrides=NULL,
+getPortfolio <- function(security, field, options=NULL, overrides=NULL,
                       verbose=FALSE, identity=NULL,
                       con=defaultConnection()) {
     if (length(security) != 1L)
         stop("more than one security submitted.", call.=FALSE)
     if (length(field) != 1L)
         stop("more than one field submitted.", call.=FALSE)
-    res <- portfolio_Impl(con, security, field, options, overrides, verbose, identity)
+    res <- getPortfolio_Impl(con, security, field, options, overrides, verbose, identity)
     if (typeof(res)=="list" && length(res)==1) {
         res <- res[[1]]
     }

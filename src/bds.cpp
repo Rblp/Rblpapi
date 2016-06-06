@@ -292,7 +292,7 @@ Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
 }
 
 // [[Rcpp::export]]
-Rcpp::List portfolio_Impl(SEXP con_, std::vector<std::string> securities,
+Rcpp::List getPortfolio_Impl(SEXP con_, std::vector<std::string> securities,
                     std::string field, SEXP options_, SEXP overrides_,
                     bool verbose, SEXP identity_) {
 
