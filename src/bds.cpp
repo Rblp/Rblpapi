@@ -213,7 +213,7 @@ Rcpp::List bulkArrayToDf(Element& fieldData) {
     return buildDataFrame(lazy_frame);
 }
 
-Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field, bool verbose) {
+Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field, std::string response_type, bool verbose) {
     MessageIterator msgIter(event);
     if(!msgIter.next()) {
         throw std::logic_error("Not a valid MessageIterator.");
@@ -222,8 +222,8 @@ Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field, bool
     Message msg = msgIter.message();
     Element response = msg.asElement();
     if (verbose) response.print(Rcpp::Rcout);
-    if(std::strcmp(response.name().string(),"ReferenceDataResponse")) {
-        throw std::logic_error("Not a valid ReferenceDataResponse.");
+    if(std::strcmp(response.name().string(),response_type.c_str())) {
+        throw std::logic_error("Not a valid " + response_type + ".");
     }
     Element securityData = response.getElement("securityData");
 
@@ -247,11 +247,11 @@ Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field, bool
 
 // only allow one field for bds in contrast to bdp
 // [[Rcpp::export]]
-Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities, 
+Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
                     std::string field, SEXP options_, SEXP overrides_,
                     bool verbose, SEXP identity_) {
 
-    Session* session = 
+    Session* session =
         reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
 
     std::vector<std::string> field_types;
@@ -269,7 +269,7 @@ Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
     request.getElement("fields").appendValue(field.c_str());
     appendOptionsToRequest(request,options_);
     appendOverridesToRequest(request,overrides_);
-    
+
     sendRequestWithIdentity(session, request, identity_);
 
     while (true) {
@@ -277,7 +277,52 @@ Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
         switch (event.eventType()) {
         case Event::RESPONSE:
         case Event::PARTIAL_RESPONSE:
-            return BulkDataResponseToDF(event, field, verbose);
+            return BulkDataResponseToDF(event, field, "ReferenceDataResponse", verbose);
+            break;
+        default:
+            MessageIterator msgIter(event);
+            while (msgIter.next()) {
+                Message msg = msgIter.message();
+                //FIXME:: capture messages here for debugging
+            }
+        }
+        if (event.eventType() == Event::RESPONSE) { break; }
+    }
+    return R_NilValue;
+}
+
+// [[Rcpp::export]]
+Rcpp::List getPortfolio_Impl(SEXP con_, std::vector<std::string> securities,
+                    std::string field, SEXP options_, SEXP overrides_,
+                    bool verbose, SEXP identity_) {
+
+    Session* session =
+        reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
+
+    std::vector<std::string> field_types;
+
+    const std::string rdsrv = "//blp/refdata";
+    if (!session->openService(rdsrv.c_str())) {
+        Rcpp::stop("Failed to open " + rdsrv);
+    }
+
+    Service refDataService = session->getService(rdsrv.c_str());
+    Request request = refDataService.createRequest("PortfolioDataRequest");
+    for (size_t i = 0; i < securities.size(); i++) {
+        request.getElement("securities").appendValue(securities[i].c_str());
+    }
+    request.getElement("fields").appendValue(field.c_str());
+    appendOptionsToRequest(request,options_);
+    appendOverridesToRequest(request,overrides_);
+
+    sendRequestWithIdentity(session, request, identity_);
+
+    while (true) {
+        Event event = session->nextEvent();
+        switch (event.eventType()) {
+        case Event::RESPONSE:
+        case Event::PARTIAL_RESPONSE:
+            return BulkDataResponseToDF(event, field, "PortfolioDataResponse", verbose);
             break;
         default:
             MessageIterator msgIter(event);
