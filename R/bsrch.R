@@ -38,12 +38,12 @@
 ##' @examples
 ##' \dontrun{
 ##' head(bsrch("COMDTY:NGFLOW"), 20)
-##' head(bsrch("COMDTY:VESSELS"), 20)
+##' head(bsrch("COMDTY:VESSEL"), 20)
 ##' }
 bsrch <- function(domain,
-                 limit="",
-                 verbose=FALSE,
-                 con=defaultConnection()) {
+                  limit="",
+                  verbose=FALSE,
+                  con=defaultConnection()) {
 
     res <- bsrch_Impl(con, domain, limit, verbose)
     res
