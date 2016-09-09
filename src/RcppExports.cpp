@@ -211,6 +211,23 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// getTicks2_Impl
+Rcpp::DataFrame getTicks2_Impl(SEXP con, std::string security, std::vector<std::string> eventType, std::string startDateTime, std::string endDateTime, bool setCondCodes, bool verbose);
+RcppExport SEXP Rblpapi_getTicks2_Impl(SEXP conSEXP, SEXP securitySEXP, SEXP eventTypeSEXP, SEXP startDateTimeSEXP, SEXP endDateTimeSEXP, SEXP setCondCodesSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type con(conSEXP);
+    Rcpp::traits::input_parameter< std::string >::type security(securitySEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type eventType(eventTypeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type startDateTime(startDateTimeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type endDateTime(endDateTimeSEXP);
+    Rcpp::traits::input_parameter< bool >::type setCondCodes(setCondCodesSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    __result = Rcpp::wrap(getTicks2_Impl(con, security, eventType, startDateTime, endDateTime, setCondCodes, verbose));
+    return __result;
+END_RCPP
+}
 // subscribe_Impl
 SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields, Rcpp::Function fun, SEXP options_, SEXP identity_);
 RcppExport SEXP Rblpapi_subscribe_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP funSEXP, SEXP options_SEXP, SEXP identity_SEXP) {
