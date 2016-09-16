@@ -1,3 +1,10 @@
+2016-09-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/getTicks.R (getTicks): Support data.table return; set use of
+	condition code if data.table or data.frame returned
+
+	* src/getTicks.cpp: Re-enable condition codes
+
 2016-09-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Suggests): Added data.table()

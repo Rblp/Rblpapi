@@ -58,21 +58,19 @@ getTicks <- function(security,
                      tz = Sys.getenv("TZ", unset="UTC"),
                      con = defaultConnection()) {
 
+    match.arg(returnAs, c("data.frame", "fts", "xts", "zoo", "data.table"))
     if (!inherits(startTime, "POSIXt") || !inherits(endTime, "POSIXt")) {
         stop("startTime and endTime must be Datetime objects", call.=FALSE)
     }
     fmt <- "%Y-%m-%dT%H:%M:%S"
     startUTC <- format(startTime, fmt, tz="UTC")
     endUTC <- format(endTime, fmt, tz="UTC")
-    res <- getTicks_Impl(con, security, eventType, startUTC, endUTC, verbose)
+    res <- getTicks_Impl(con, security, eventType, startUTC, endUTC,
+                         setCondCode = returnAs %in% c("data.frame", "data.table"),
+                         verbose)
 
     attr(res[,1], "tzone") <- tz
 
-    makeDataTable <- function(df) {
-        newdt <- data.table::data.table(date=data.table::as.IDate(df[,1]),
-                                        time=data.table::as.ITime(df[,1]),
-                                        df[, -1])
-    }
 
     ## return data, but omit event type which is character type
     res <- switch(returnAs,
@@ -80,7 +78,9 @@ getTicks <- function(security,
                   fts        = fts::fts(res[,1], res[,-(1:2)]),
                   xts        = xts::xts(res[,-(1:2)], order.by=res[,1]),
                   zoo        = zoo::zoo(res[,-(1:2)], order.by=res[,1]),
-                  data.table = makeDataTable(res),
+                  data.table = data.table::data.table(date=data.table::as.IDate(res[,1]),
+                                                      time=data.table::as.ITime(res[,1]),
+                                                      res[, -1]),
                   res)                         # fallback also data.frame
     return(res)   # to return visibly
 

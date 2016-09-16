@@ -196,8 +196,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // getTicks_Impl
-Rcpp::DataFrame getTicks_Impl(SEXP con, std::string security, std::vector<std::string> eventType, std::string startDateTime, std::string endDateTime, bool verbose);
-RcppExport SEXP Rblpapi_getTicks_Impl(SEXP conSEXP, SEXP securitySEXP, SEXP eventTypeSEXP, SEXP startDateTimeSEXP, SEXP endDateTimeSEXP, SEXP verboseSEXP) {
+Rcpp::DataFrame getTicks_Impl(SEXP con, std::string security, std::vector<std::string> eventType, std::string startDateTime, std::string endDateTime, bool setCondCodes, bool verbose);
+RcppExport SEXP Rblpapi_getTicks_Impl(SEXP conSEXP, SEXP securitySEXP, SEXP eventTypeSEXP, SEXP startDateTimeSEXP, SEXP endDateTimeSEXP, SEXP setCondCodesSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -206,8 +206,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::vector<std::string> >::type eventType(eventTypeSEXP);
     Rcpp::traits::input_parameter< std::string >::type startDateTime(startDateTimeSEXP);
     Rcpp::traits::input_parameter< std::string >::type endDateTime(endDateTimeSEXP);
+    Rcpp::traits::input_parameter< bool >::type setCondCodes(setCondCodesSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(getTicks_Impl(con, security, eventType, startDateTime, endDateTime, verbose));
+    rcpp_result_gen = Rcpp::wrap(getTicks_Impl(con, security, eventType, startDateTime, endDateTime, setCondCodes, verbose));
     return rcpp_result_gen;
 END_RCPP
 }

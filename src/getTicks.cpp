@@ -88,7 +88,7 @@ struct Ticks {
     std::vector<std::string> type;     // string field to save quote type
     std::vector<double> value;
     std::vector<double> size;
-    //std::vector<std::string> conditionCode;
+    std::vector<std::string> conditionCode;
 };
 
 void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
@@ -104,13 +104,13 @@ void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
         std::string type = item.getElementAsString(TYPE);
         double value = item.getElementAsFloat64(VALUE);
         int size = item.getElementAsInt32(TICK_SIZE);
-        // std::string conditionCode;
-        // if (item.hasElement(COND_CODE)) {
-        //     conditionCode = item.getElementAsString(COND_CODE);
-        // }
-        // else {
-        //     conditionCode = "";
-        // }
+        std::string conditionCode;
+        if (item.hasElement(COND_CODE)) {
+            conditionCode = item.getElementAsString(COND_CODE);
+        }
+        else {
+            conditionCode = "";
+        }
         if (verbose) {
             Rcpp::Rcout.setf(std::ios::fixed, std::ios::floatfield);
             Rcpp::Rcout << time.month() << '/' << time.day() << '/' << time.year()
@@ -119,14 +119,14 @@ void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
                         << type << "\t\t"
                         << value << "\t\t"
                         << size << "\t\t"
-                        //<< conditionCode
+                        << conditionCode
                         << std::endl;
         }
         ticks.time.push_back(bbgDatetimeToUTC(time));
         ticks.type.push_back(type);    // since verbose mode is saving tick type, push into newly defined type vector in ticks
         ticks.value.push_back(value);
         ticks.size.push_back(size);
-        //ticks.conditionCode.push_back(conditionCode);
+        ticks.conditionCode.push_back(conditionCode);
     }
 }
 
@@ -148,8 +148,8 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
                               std::vector<std::string> eventType,
                               std::string startDateTime,
                               std::string endDateTime,
+                              bool setCondCodes=true,  
                               bool verbose=false) {
-                              //bool setCondCodes=false) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     bbg::Session* session =
@@ -173,8 +173,8 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
     
     // remember to expose this to R function later. hardcoded for now.
     // also remember additional conditionCode field available to save if set to true
-    // request.set("includeConditionCodes", setCondCodes);
-    // request.set("includeNonPlottableEvents", setCondCodes);
+    request.set("includeConditionCodes", setCondCodes);
+    request.set("includeNonPlottableEvents", setCondCodes);
 
     request.set("startDateTime", startDateTime.c_str());
     request.set("endDateTime", endDateTime.c_str());
@@ -211,8 +211,8 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
     return Rcpp::DataFrame::create(Rcpp::Named("times") = createPOSIXtVector(ticks.time),
                                    Rcpp::Named("type") = ticks.type, 
                                    Rcpp::Named("value") = ticks.value,
-                                   Rcpp::Named("size")  = ticks.size); 
-    	                           //Rcpp::Named("conditionCode") = ticks.conditionCode);
+                                   Rcpp::Named("size")  = ticks.size, 
+    	                           Rcpp::Named("conditionCode") = ticks.conditionCode);
 
 }
 
