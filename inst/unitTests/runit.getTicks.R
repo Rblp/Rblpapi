@@ -21,20 +21,20 @@
 
 if (.runThisTest) {
 
-    test.getTicksAsMatrix <- function() {
+    test.getTicksAsDataFrame <- function() {
 
         isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
 
         res <- getTicks("ES1 Index",
                         startTime=Sys.time() - isweekend*48*60*60 - 60*60,
                         endTime=Sys.time() - isweekend*48*60*60,
-                        returnAs="matrix")
+                        returnAs="data.frame")
 
         checkTrue(inherits(res, "data.frame"),
                   msg = "checking return type")
 
         checkTrue(dim(res)[1] > 10, msg = "check return of at least ten rows")
-        checkTrue(dim(res)[2] == 3, msg = "check return of three columns")
+        checkTrue(dim(res)[2] == 5, msg = "check return of five columns")
 
         checkTrue(all(c("times", "value", "size") %in% colnames(res)),
                   msg = "check column names")
@@ -59,4 +59,24 @@ if (.runThisTest) {
                   msg = "check column names")
 
     }
+
+    test.getTicksAsDataTable <- function() {
+
+        isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
+
+        res <- getTicks("ES1 Index",
+                        startTime=Sys.time() - isweekend*48*60*60 - 60*60,
+                        endTime=Sys.time() - isweekend*48*60*60,
+                        returnAs="data.table")
+
+        checkTrue(inherits(res, "data.table"),
+                  msg = "checking return type")
+
+        checkTrue(dim(res)[1] > 10, msg = "check return of at least ten rows")
+        checkTrue(dim(res)[2] == 6, msg = "check return of six columns")
+
+        checkTrue(all(c("date", "time", "type", "value", "size", "conditionCode") %in% colnames(res)),
+                  msg = "check column names")
+    }
+
 }
