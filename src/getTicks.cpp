@@ -88,7 +88,7 @@ struct Ticks {
     std::vector<std::string> type;     // string field to save quote type
     std::vector<double> value;
     std::vector<double> size;
-    std::vector<std::string> conditionCode;
+    //std::vector<std::string> conditionCode;
 };
 
 void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
@@ -104,13 +104,13 @@ void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
         std::string type = item.getElementAsString(TYPE);
         double value = item.getElementAsFloat64(VALUE);
         int size = item.getElementAsInt32(TICK_SIZE);
-        std::string conditionCode;
-        if (item.hasElement(COND_CODE)) {
-            conditionCode = item.getElementAsString(COND_CODE);
-        }
-        else {
-            conditionCode = "";
-        }
+        // std::string conditionCode;
+        // if (item.hasElement(COND_CODE)) {
+        //     conditionCode = item.getElementAsString(COND_CODE);
+        // }
+        // else {
+        //     conditionCode = "";
+        // }
         if (verbose) {
             Rcpp::Rcout.setf(std::ios::fixed, std::ios::floatfield);
             Rcpp::Rcout << time.month() << '/' << time.day() << '/' << time.year()
@@ -119,14 +119,14 @@ void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
                         << type << "\t\t"
                         << value << "\t\t"
                         << size << "\t\t"
-                        << conditionCode
+                        //<< conditionCode
                         << std::endl;
         }
         ticks.time.push_back(bbgDatetimeToUTC(time));
         ticks.type.push_back(type);    // since verbose mode is saving tick type, push into newly defined type vector in ticks
         ticks.value.push_back(value);
         ticks.size.push_back(size);
-        ticks.conditionCode.push_back(conditionCode);
+        //ticks.conditionCode.push_back(conditionCode);
     }
 }
 
@@ -144,12 +144,12 @@ void processResponseEvent(bbg::Event &event, Ticks &ticks, const bool verbose) {
 
 // [[Rcpp::export]]
 Rcpp::DataFrame getTicks_Impl(SEXP con,
-                              std::string security,
-                              std::vector<std::string> eventType,
-                              std::string startDateTime,
-                              std::string endDateTime,
-                              bool verbose=false) { // verbose mode false = default
-    //bool setCondCodes=false,
+                             std::string security,
+                             std::vector<std::string> eventType,
+                             std::string startDateTime,
+                             std::string endDateTime,
+                             bool verbose=false) { // verbose mode false = default
+                             //bool setCondCodes=false,
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     bbg::Session* session =
@@ -170,7 +170,7 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
     for (size_t i = 0; i < eventType.size(); i++) {
         eventTypes.appendValue(eventType[i].c_str());
     }
-
+    
     // remember to expose this to R function later. hardcoded for now.
     // also remember additional conditionCode field available to save if set to true
     // request.set("includeConditionCodes", setCondCodes);
@@ -209,85 +209,10 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
     }
 
     return Rcpp::DataFrame::create(Rcpp::Named("times") = createPOSIXtVector(ticks.time),
-                                   Rcpp::Named("type") = ticks.type,
+                                   Rcpp::Named("type") = ticks.type, 
                                    Rcpp::Named("value") = ticks.value,
                                    Rcpp::Named("size")  = ticks.size);
-    //Rcpp::Named("conditionCode") = ticks.conditionCode);
-
-}
-
-// [[Rcpp::export]]
-Rcpp::DataFrame getTicks2_Impl(SEXP con,
-                              std::string security,
-                              std::vector<std::string> eventType,
-                              std::string startDateTime,
-                              std::string endDateTime,
-                              bool setCondCodes=false,
-                              bool verbose=false) { // verbose mode false = default
-
-
-    // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
-    bbg::Session* session =
-        reinterpret_cast<bbg::Session*>(checkExternalPointer(con,"blpapi::Session*"));
-
-    if (!session->openService("//blp/refdata")) {
-        Rcpp::stop("Failed to open //blp/refdata");
-    }
-
-    bbg::Service refDataService = session->getService("//blp/refdata");
-    bbg::Request request = refDataService.createRequest("IntradayTickRequest");
-
-    // only one security/eventType per request
-    request.set("security", security.c_str());
-
-    bbg::Element eventTypes = request.getElement("eventTypes");
-    //eventTypes.appendValue(eventType[0].c_str());   // could generalize to vector of even
-    for (size_t i = 0; i < eventType.size(); i++) {
-        eventTypes.appendValue(eventType[i].c_str());
-    }
-
-    // remember to expose this to R function later. hardcoded for now.
-    // also remember additional conditionCode field available to save if set to true
-    request.set("includeConditionCodes", setCondCodes);
-    request.set("includeNonPlottableEvents", setCondCodes);
-
-    request.set("startDateTime", startDateTime.c_str());
-    request.set("endDateTime", endDateTime.c_str());
-
-    if (verbose) Rcpp::Rcout <<"Sending Request: " << request << std::endl;
-    session->sendRequest(request);
-
-    Ticks ticks;
-
-    // eventLoop
-    bool done = false;
-    while (!done) {
-        bbg::Event event = session->nextEvent();
-        if (event.eventType() == bbg::Event::PARTIAL_RESPONSE) {
-            if (verbose) Rcpp::Rcout << "Processing Partial Response" << std::endl;
-            processResponseEvent(event, ticks, verbose);
-        } else if (event.eventType() == bbg::Event::RESPONSE) {
-            if (verbose) Rcpp::Rcout << "Processing Response" << std::endl;
-            processResponseEvent(event, ticks, verbose);
-            done = true;
-        } else {
-            bbg::MessageIterator msgIter(event);
-            while (msgIter.next()) {
-                bbg::Message msg = msgIter.message();
-                if (event.eventType() == bbg::Event::SESSION_STATUS) {
-                    if (msg.messageType() == SESSION_TERMINATED) {
-                        done = true;
-                    }
-                }
-            }
-        }
-    }
-
-    return Rcpp::DataFrame::create(Rcpp::Named("times") = createPOSIXtVector(ticks.time),
-                                   Rcpp::Named("type") = ticks.type,
-                                   Rcpp::Named("value") = ticks.value,
-                                   Rcpp::Named("size")  = ticks.size,
-                                   Rcpp::Named("conditionCode") = ticks.conditionCode);
+    	                           //Rcpp::Named("conditionCode") = ticks.conditionCode);
 
 }
 
