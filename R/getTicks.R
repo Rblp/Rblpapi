@@ -75,9 +75,9 @@ getTicks <- function(security,
     ## return data, but omit event type which is character type
     res <- switch(returnAs,
                   data.frame = res,            # default is data.frame
-                  fts        = fts::fts(res[,1], res[,-(1:2)]),
-                  xts        = xts::xts(res[,-(1:2)], order.by=res[,1]),
-                  zoo        = zoo::zoo(res[,-(1:2)], order.by=res[,1]),
+                  fts        = fts::fts(res[,1], res[,-(1:2,5)]),
+                  xts        = xts::xts(res[,-(1:2,5)], order.by=res[,1]),
+                  zoo        = zoo::zoo(res[,-(1:2,5)], order.by=res[,1]),
                   data.table = data.table::data.table(date=data.table::as.IDate(res[,1]),
                                                       time=data.table::as.ITime(res[,1]),
                                                       res[, -1]),
