@@ -54,7 +54,7 @@ getTicks <- function(security,
                      startTime = Sys.time()-60*60,
                      endTime = Sys.time(),
                      verbose = FALSE,
-                     returnAs = getOption("blpType", "matrix"),
+                     returnAs = getOption("blpType", "data.frame"),
                      tz = Sys.getenv("TZ", unset="UTC"),
                      con = defaultConnection()) {
 
@@ -68,13 +68,20 @@ getTicks <- function(security,
 
     attr(res[,1], "tzone") <- tz
 
+    makeDataTable <- function(df) {
+        newdt <- data.table::data.table(date=data.table::as.IDate(df[,1]),
+                                        time=data.table::as.ITime(df[,1]),
+                                        df[, -1])
+    }
+
     ## return data, but omit event type which is character type
     res <- switch(returnAs,
-                  matrix = res[,-2],           # default is matrix
-                  fts    = fts::fts(res[,1], res[,-(1:2)]),
-                  xts    = xts::xts(res[,-(1:2)], order.by=res[,1]),
-                  zoo    = zoo::zoo(res[,-(1:2)], order.by=res[,1]),
-                  res)                         # fallback is also matrix
+                  data.frame = res[,-2],       # default is data.frame
+                  fts        = fts::fts(res[,1], res[,-(1:2)]),
+                  xts        = xts::xts(res[,-(1:2)], order.by=res[,1]),
+                  zoo        = zoo::zoo(res[,-(1:2)], order.by=res[,1]),
+                  data.table = makeDataTable(res),
+                  res)                         # fallback also data.frame
     return(res)   # to return visibly
 
 }

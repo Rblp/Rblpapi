@@ -1,3 +1,10 @@
+2016-09-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Suggests): Added data.table()
+
+	* R/getTicks.R (getTicks): Corrected default return type to
+	data.frame, added support for new return type data.table
+
 2016-05-08  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): Release 0.3.4
