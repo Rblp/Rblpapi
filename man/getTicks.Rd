@@ -6,7 +6,7 @@
 \usage{
 getTicks(security, eventType = "TRADE", startTime = Sys.time() - 60 * 60,
   endTime = Sys.time(), verbose = FALSE, returnAs = getOption("blpType",
-  "matrix"), tz = Sys.getenv("TZ", unset = "UTC"),
+  "data.frame"), tz = Sys.getenv("TZ", unset = "UTC"),
   con = defaultConnection())
 }
 \arguments{
