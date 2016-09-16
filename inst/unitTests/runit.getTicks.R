@@ -25,7 +25,7 @@ if (.runThisTest) {
 
         isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
 
-        res <- getTicks("ES1 Index",
+        res <- getTicks("ESA Index",
                         startTime=Sys.time() - isweekend*48*60*60 - 60*60,
                         endTime=Sys.time() - isweekend*48*60*60,
                         returnAs="data.frame")
@@ -44,7 +44,7 @@ if (.runThisTest) {
 
         isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
 
-        res <- getTicks("ES1 Index",
+        res <- getTicks("ESA Index",
                         startTime=Sys.time() - isweekend*48*60*60 - 60*60,
                         endTime=Sys.time() - isweekend*48*60*60,
                         returnAs="xts")
@@ -64,7 +64,7 @@ if (.runThisTest) {
 
         isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
 
-        res <- getTicks("ES1 Index",
+        res <- getTicks("ESA Index",
                         startTime=Sys.time() - isweekend*48*60*60 - 60*60,
                         endTime=Sys.time() - isweekend*48*60*60,
                         returnAs="data.table")
