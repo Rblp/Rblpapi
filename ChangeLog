@@ -1,10 +1,15 @@
 2016-09-16  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/getTicks.cpp: Re-enable condition codes for data.{frame,table}
+	* src/getTicks.cpp: Re-enable condition codes for data.frame and
+	data.table
 
 	* R/getTicks.R (getTicks): Support data.table return; set use of
 	condition code if data.table or data.frame returned
 	* man/getTicks.Rd: Updated
+
+	* inst/unitTests/runit.getTicks.R (test.getTicksAsDataTable):
+	added, renamed other test function from getTicksAsMatrix to
+	getTicksAsDataFrame as it returned a data.frame
 
 2016-09-15  Dirk Eddelbuettel  <edd@debian.org>
 

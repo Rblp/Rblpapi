@@ -66,7 +66,7 @@ getTicks <- function(security,
     startUTC <- format(startTime, fmt, tz="UTC")
     endUTC <- format(endTime, fmt, tz="UTC")
     res <- getTicks_Impl(con, security, eventType, startUTC, endUTC,
-                         setCondCode = returnAs %in% c("data.frame", "data.table"),
+                         setCondCodes = returnAs %in% c("data.frame", "data.table"),
                          verbose)
 
     attr(res[,1], "tzone") <- tz
