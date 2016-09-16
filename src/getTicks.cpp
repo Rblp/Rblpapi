@@ -3,7 +3,7 @@
 //  getTicks.cpp -- a simple intraday tick retriever
 //
 //  Copyright (C) 2013         Whit Armstrong
-//  Copyright (C) 2014 - 2015  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2014 - 2016  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -144,12 +144,12 @@ void processResponseEvent(bbg::Event &event, Ticks &ticks, const bool verbose) {
 
 // [[Rcpp::export]]
 Rcpp::DataFrame getTicks_Impl(SEXP con,
-                             std::string security,
-                             std::vector<std::string> eventType,
-                             std::string startDateTime,
-                             std::string endDateTime,
-                             bool verbose=false) { // verbose mode false = default
-                             //bool setCondCodes=false,
+                              std::string security,
+                              std::vector<std::string> eventType,
+                              std::string startDateTime,
+                              std::string endDateTime,
+                              bool verbose=false) {
+                              //bool setCondCodes=false) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     bbg::Session* session =
@@ -211,7 +211,7 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
     return Rcpp::DataFrame::create(Rcpp::Named("times") = createPOSIXtVector(ticks.time),
                                    Rcpp::Named("type") = ticks.type, 
                                    Rcpp::Named("value") = ticks.value,
-                                   Rcpp::Named("size")  = ticks.size);
+                                   Rcpp::Named("size")  = ticks.size); 
     	                           //Rcpp::Named("conditionCode") = ticks.conditionCode);
 
 }
