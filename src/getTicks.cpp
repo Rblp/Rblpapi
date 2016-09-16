@@ -105,12 +105,7 @@ void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
         double value = item.getElementAsFloat64(VALUE);
         int size = item.getElementAsInt32(TICK_SIZE);
         std::string conditionCode;
-        if (item.hasElement(COND_CODE)) {
-            conditionCode = item.getElementAsString(COND_CODE);
-        }
-        else {
-            conditionCode = "";
-        }
+        conditionCode = (item.hasElement(COND_CODE)) ? item.getElementAsString(COND_CODE) : "";
         if (verbose) {
             Rcpp::Rcout.setf(std::ios::fixed, std::ios::floatfield);
             Rcpp::Rcout << time.month() << '/' << time.day() << '/' << time.year()
@@ -123,7 +118,7 @@ void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
                         << std::endl;
         }
         ticks.time.push_back(bbgDatetimeToUTC(time));
-        ticks.type.push_back(type);    // since verbose mode is saving tick type, push into newly defined type vector in ticks
+        ticks.type.push_back(type);    
         ticks.value.push_back(value);
         ticks.size.push_back(size);
         ticks.conditionCode.push_back(conditionCode);
@@ -166,16 +161,12 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
     request.set("security", security.c_str());
 
     bbg::Element eventTypes = request.getElement("eventTypes");
-    //eventTypes.appendValue(eventType[0].c_str());   // could generalize to vector of even
     for (size_t i = 0; i < eventType.size(); i++) {
         eventTypes.appendValue(eventType[i].c_str());
     }
     
-    // remember to expose this to R function later. hardcoded for now.
-    // also remember additional conditionCode field available to save if set to true
     request.set("includeConditionCodes", setCondCodes);
     request.set("includeNonPlottableEvents", setCondCodes);
-
     request.set("startDateTime", startDateTime.c_str());
     request.set("endDateTime", endDateTime.c_str());
 
@@ -212,7 +203,7 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
                                    Rcpp::Named("type") = ticks.type, 
                                    Rcpp::Named("value") = ticks.value,
                                    Rcpp::Named("size")  = ticks.size, 
-    	                           Rcpp::Named("conditionCode") = ticks.conditionCode);
+    	                           Rcpp::Named("condcode") = ticks.conditionCode);
 
 }
 
