@@ -18,6 +18,17 @@
 	* R/getTicks.R (getTicks): Corrected default return type to
 	data.frame, added support for new return type data.table
 
+2016-07-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/bsrch.R: Correct example to COMDTY:VESSEL
+	* man/bsrch.Rd: Ditto
+
+2016-06-06  John Laing  <john.laing@gmail.com>
+
+	* R/portfolio.R: New function getPortfolio to retrieve portfolio data
+	via bds()
+	* man/getPortfolio.R: Documentation for new function
+
 2016-05-08  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): Release 0.3.4
