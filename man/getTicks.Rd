@@ -41,7 +41,7 @@ Depending on the value of \sQuote{returnAs}, either a
 \sQuote{data.frame} or \sQuote{data.table} object also containing
 non-numerical information such as condition codes, or a time-indexed
 container of type \sQuote{fts}, \sQuote{xts} and \sQuote{zoo} with
-a numeric matrix.
+a numeric matrix containing only \sQuote{value} and \sQuote{size}.
 }
 \description{
 This function uses the Bloomberg API to retrieve ticks for the requested security.
