@@ -1,3 +1,9 @@
+2016-09-30  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/getTicks.R: Expanded help text to mention condition code and
+	possibility of multiple returns
+	* man/getTicks.Rd: Ditto
+
 2016-09-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/getTicks.cpp: Re-enable condition codes for data.frame and

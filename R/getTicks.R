@@ -20,6 +20,12 @@
 
 ##' This function uses the Bloomberg API to retrieve ticks for the requested security.
 ##'
+##' @note Bloomberg returns condition codes as well, and may return \emph{multiple
+##' observations for the same trade}. Eg for ES we can get \sQuote{AS} or
+##' \sQuote{AB} for aggressor buy or sell, \sQuote{OR} for an order participating in the
+##' matching event, or a \sQuote{TSUM} trade summary.  Note that this implies
+##' double-counting.  There may be an option for this in the API.
+##'
 ##' @title Get Ticks from Bloomberg
 ##' @param security A character variable describing a valid security ticker
 ##' @param eventType A character variable describing an event, default
@@ -31,21 +37,26 @@
 ##' @param verbose A boolean indicating whether verbose operation is
 ##' desired, defaults to \sQuote{FALSE}
 ##' @param returnAs A character variable describing the type of return
-##' object; currently supported are \sQuote{matrix} (also the default),
-##' \sQuote{fts}, \sQuote{xts} and \sQuote{zoo}
+##' object; currently supported are \sQuote{data.frame} (also the default),
+##' \sQuote{data.table}, \sQuote{fts}, \sQuote{xts} and \sQuote{zoo}
 ##' @param tz A character variable with the desired local timezone,
 ##' defaulting to the value \sQuote{TZ} environment variable, and
 ##' \sQuote{UTC} if unset
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.
-##' @return A numeric matrix with elements \sQuote{time}, (as a
-##' \sQuote{POSIXct} object), \sQuote{values} and \sQuote{sizes}, or
-##' an object of the type selected in \code{returnAs}.
+##' @return Depending on the value of \sQuote{returnAs}, either a
+##' \sQuote{data.frame} or \sQuote{data.table} object also containing
+##' non-numerical information such as condition codes, or a time-indexed
+##' container of type \sQuote{fts}, \sQuote{xts} and \sQuote{zoo} with
+##' a numeric matrix.
 ##' @author Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{
 ##'   res <- getTicks("ES1 Index")
+##'   str(res)
+##'   head(res, 20)
+##'   res <- getTicks("ES1 Index", returnAs="data.table")
 ##'   str(res)
 ##'   head(res, 20)
 ##' }
