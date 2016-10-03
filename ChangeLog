@@ -1,3 +1,8 @@
+2016-10-03  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/getBars.R: Updated comment on returned timestamp
+	* man/getBars.Rd: Ditto
+
 2016-09-30  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/getTicks.R: Expanded help text to mention condition code and

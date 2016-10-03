@@ -1,6 +1,6 @@
 
 ##
-##  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel and John Laing
+##  Copyright (C) 2015 - 2016  Whit Armstrong and Dirk Eddelbuettel and John Laing
 ##
 ##  This file is part of Rblpapi
 ##
@@ -49,9 +49,10 @@
 ##' \sQuote{value} or an object of the type selected in \code{returnAs}.
 ##' Note that the \sQuote{time} value is adjusted: Bloomberg returns the
 ##' \emph{opening} time of the bar interval, whereas financial studies
-##' typically refer to the most recent timestamp. For this reason we
-##' add the length of the bar interval to time value from Bloomberg to
-##' obtain the time at the end of the interval.
+##' typically refer to the most recent timestamp. Therefore, if one wants
+##' the timestamp associated with the end of the bar interval one should
+##' add the length of the bar interval to time value returned from Bloomberg
+##' to obtain the time at the end of the interval.
 ##' @author Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{
