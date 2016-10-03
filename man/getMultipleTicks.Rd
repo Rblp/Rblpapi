@@ -6,8 +6,8 @@
 \usage{
 getMultipleTicks(security, eventType = c("TRADE", "BID", "ASK"),
   startTime = Sys.time() - 60 * 60, endTime = Sys.time(), verbose = FALSE,
-  returnAs = getOption("blpType", "matrix"), tz = Sys.getenv("TZ", unset =
-  "UTC"), con = defaultConnection())
+  returnAs = getOption("blpType", "data.frame"), tz = Sys.getenv("TZ", unset
+  = "UTC"), con = defaultConnection())
 }
 \arguments{
 \item{security}{A character variable describing a valid security ticker}
@@ -25,9 +25,8 @@ to current time}
 desired, defaults to \sQuote{FALSE}}
 
 \item{returnAs}{A character variable describing the type of return
-object; the default is return a matrix with results as received;
-optionally a \sQuote{wide} \code{xts} object with merged data can
-be returned}
+object; currently supported are \sQuote{data.frame} (also the default)
+and \sQuote{data.table}}
 
 \item{tz}{A character variable with the desired local timezone,
 defaulting to the value \sQuote{TZ} environment variable, and
