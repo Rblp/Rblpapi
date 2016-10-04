@@ -4,6 +4,19 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
+\section{Changes in Rblpapi version 0.3.5 (2016-10-xx)}{
+  \itemize{
+    \item Add new function \code{getPortfolio} to retrieve portfolio data
+    via \code{bds} (John in \ghpr{176}) 
+    \item Extend \code{getTicks()} to (optionally) return non-numeric
+    data as part of \code{data.frame} or \code{data.table} (Dirk in
+    \ghpr{200})
+    \item Similarly extend \code{getMultipleTicks} (Dirk in \ghpr{202})
+    \item Correct statement on timestamp for \code{getBars} (Closes
+    issue \ghit{192})
+  }
+}
+
 \section{Changes in Rblpapi version 0.3.4 (2016-05-08)}{
   \itemize{
     \item On startup, the API versions of both the headers and the

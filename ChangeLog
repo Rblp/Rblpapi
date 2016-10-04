@@ -3,6 +3,8 @@
 	* R/getBars.R: Updated comment on returned timestamp
 	* man/getBars.Rd: Ditto
 
+	* inst/NEWS.Rd: Catching up with recent changes
+
 2016-09-30  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/getTicks.R: Expanded help text to mention condition code and
