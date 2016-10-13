@@ -1,3 +1,7 @@
+2016-10-13  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Correct license tag to say GPL-3 rather than GPL (>= 3)
+
 2016-10-03  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/getBars.R: Updated comment on returned timestamp
