@@ -4,7 +4,7 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
-\section{Changes in Rblpapi version 0.3.5 (2016-10-xx)}{
+\section{Changes in Rblpapi version 0.3.5 (2016-10-25)}{
   \itemize{
     \item Add new function \code{getPortfolio} to retrieve portfolio data
     via \code{bds} (John in \ghpr{176}) 
@@ -14,8 +14,8 @@
     \item Similarly extend \code{getMultipleTicks} (Dirk in \ghpr{202})
     \item Correct statement on timestamp for \code{getBars} (Closes
     issue \ghit{192})
-    \item Minor edits to a few files in order to please \code{R(-devel)
-      CMD check --as-cran}
+    \item Minor edits to a few files in order to either please
+    \code{R(-devel) CMD check --as-cran}, or update documentation
   }
 }
 

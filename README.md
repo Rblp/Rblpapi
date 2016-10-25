@@ -51,6 +51,15 @@ goog_ge_px <- bdp(securities = c("GOOG Equity","GE Equity"),
 
 Fully functional on Linux, OS X and Windows.
 
+### Installation
+
+The package is on [CRAN](https://cran.r-project.org) and can be installed as
+usual via
+
+```r
+install.packages("Rblpapi")
+```
+
 ### Authors
 
 Whit Armstrong, Dirk Eddelbuettel and John Laing

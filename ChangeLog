@@ -1,3 +1,7 @@
+2016-10-25  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.3.5
+
 2016-10-24  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Canonical URLs, switch to https
