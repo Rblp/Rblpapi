@@ -12,13 +12,13 @@ vignette: >
 ## Introduction
 
 The [Rblpapi package](https://github.com/Rblp/Rblpapi) connects the
-[R language and environment for statistical computing](http://www.r-project.org)
-to the [Bloomberg](http://www.bloomberg.com) services supported by the
-[official Bloomberg APIs](http://www.bloomberglabs.com/api/).
+[R language and environment for statistical computing](https://www.r-project.org)
+to the [Bloomberg](https://www.bloomberg.com) services supported by the
+[official Bloomberg APIs](https://www.bloomberglabs.com/api/).
 
 The [Rblpapi package](https://github.com/Rblp/Rblpapi) is provided in both
 source and binary (for Windows and OS X) via the
-[CRAN](http://cran.r-project.org) network for R.  Source code is available
+[CRAN](https://cran.r-project.org) network for R.  Source code is available
 [at the corresponding GitHub repo](https://github.com/Rblp/Rblpapi); the
 [blp repo](https://github.com/Rblp/blp) contains the Bloomberg API components
 required during the build.

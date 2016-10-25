@@ -1,3 +1,10 @@
+2016-10-24  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Canonical URLs, switch to https
+	* vignettes/rblpapi-intro.Rmd (vignette): Ditto
+
+	* DESCRIPTION: Edits for current R CMD check standards
+
 2016-10-13  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Correct license tag to say GPL-3 rather than GPL (>= 3)
