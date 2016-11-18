@@ -96,7 +96,8 @@ Rcpp::List bdh_Impl(SEXP con_,
                     std::vector<std::string> fields,
                     std::string start_date_, SEXP end_date_,
                     SEXP options_, SEXP overrides_,
-                    bool verbose, SEXP identity_) {
+                    bool verbose, SEXP identity_,
+                    bool int_as_double) {
 
     Session* session = 
         reinterpret_cast<Session*>(checkExternalPointer(con_,"blpapi::Session*"));
@@ -110,8 +111,10 @@ Rcpp::List bdh_Impl(SEXP con_,
     }
 
     // for bdh request all int fields as doubles b/c of implicit bbg conversion
-    std::transform(rtypes.begin(), rtypes.end(), rtypes.begin(),
-                   [](RblpapiT x) { return x == RblpapiT::Integer || x == RblpapiT::Integer64 ? RblpapiT::Double : x; });
+    if (int_as_double) {
+      std::transform(rtypes.begin(), rtypes.end(), rtypes.begin(),
+                     [](RblpapiT x) { return x == RblpapiT::Integer || x == RblpapiT::Integer64 ? RblpapiT::Double : x; });
+    }
 
     const std::string rdsrv = "//blp/refdata";
     if (!session->openService(rdsrv.c_str())) {

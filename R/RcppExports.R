@@ -5,8 +5,8 @@ authenticate_Impl <- function(con_, uuid_, ip_address_) {
     .Call('Rblpapi_authenticate_Impl', PACKAGE = 'Rblpapi', con_, uuid_, ip_address_)
 }
 
-bdh_Impl <- function(con_, securities, fields, start_date_, end_date_, options_, overrides_, verbose, identity_) {
-    .Call('Rblpapi_bdh_Impl', PACKAGE = 'Rblpapi', con_, securities, fields, start_date_, end_date_, options_, overrides_, verbose, identity_)
+bdh_Impl <- function(con_, securities, fields, start_date_, end_date_, options_, overrides_, verbose, identity_, int_as_double) {
+    .Call('Rblpapi_bdh_Impl', PACKAGE = 'Rblpapi', con_, securities, fields, start_date_, end_date_, options_, overrides_, verbose, identity_, int_as_double)
 }
 
 bdp_Impl <- function(con_, securities, fields, options_, overrides_, verbose, identity_) {

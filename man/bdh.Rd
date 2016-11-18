@@ -6,7 +6,8 @@
 \usage{
 bdh(securities, fields, start.date, end.date = NULL,
   include.non.trading.days = FALSE, options = NULL, overrides = NULL,
-  verbose = FALSE, identity = NULL, con = defaultConnection())
+  verbose = FALSE, identity = NULL, con = defaultConnection(),
+  int.as.double = getOption("blpIntAsDouble", FALSE))
 }
 \arguments{
 \item{securities}{A character vector with security symbols in
@@ -38,6 +39,10 @@ desired, defaults to \sQuote{FALSE}}
 \item{con}{A connection object as created by a \code{blpConnect}
 call, and retrieved via the internal function
 \code{defaultConnection}.}
+
+\item{int.as.double}{A boolean indicating whether integer fields should
+be retrieved as doubles instead. This option is a workaround for very
+large values which would overflow int32. Defaults to \sQuote{FALSE}}
 }
 \value{
 A list with as a many entries as there are entries in
