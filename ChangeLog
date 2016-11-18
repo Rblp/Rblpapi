@@ -5,6 +5,7 @@
 	* man/bdh.Rd: Ditto
 	* src/RcppExports.cpp: Ditto
 	* src/bdh.cpp: Ditto
+	* inst/unitTests/runit.bdh.R: Ditto
 
 2016-10-25  Dirk Eddelbuettel  <edd@debian.org>
 
