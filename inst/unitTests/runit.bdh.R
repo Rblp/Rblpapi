@@ -54,4 +54,15 @@ if (.runThisTest) {
         checkTrue(length(col.types)==1L && col.types=="Date",
                   msg = "check column types == 'Date'")
     }
+
+    test.bdhIntAsDouble <- function() {
+        checkException(bdh("SPX Index", "PX_VOLUME", as.Date("2000-12-14"), as.Date("2000-12-15")),
+                       msg = "check int overflow")
+
+        res <- bdh("SPX Index", "PX_VOLUME", as.Date("2000-12-14"), as.Date("2000-12-15"), int.as.double=TRUE)
+        checkTrue(!is.integer(res$PX_VOLUME),
+                  msg = "check volume is not integer")
+        checkTrue(is.numeric(res$PX_VOLUME),
+                  msg = "check volume is numeric")
+    }
 }

@@ -1,3 +1,12 @@
+2016-11-18  John Laing  <john.laing@gmail.com>
+
+	* R/bdh.R: Add option to use double for int32 and int64 field types in bdh
+	* R/RcppExports.R: Ditto
+	* man/bdh.Rd: Ditto
+	* src/RcppExports.cpp: Ditto
+	* src/bdh.cpp: Ditto
+	* inst/unitTests/runit.bdh.R: Ditto
+
 2016-10-25  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Release 0.3.5

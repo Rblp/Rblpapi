@@ -42,6 +42,9 @@
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.
+##' @param int.as.double A boolean indicating whether integer fields should
+##' be retrieved as doubles instead. This option is a workaround for very
+##' large values which would overflow int32. Defaults to \sQuote{FALSE}
 ##' @return A list with as a many entries as there are entries in
 ##' \code{securities}; each list contains a data.frame with one row
 ##' per observations and as many columns as entries in
@@ -71,7 +74,8 @@
 ##' }
 bdh <- function(securities, fields, start.date, end.date=NULL,
                 include.non.trading.days=FALSE, options=NULL, overrides=NULL,
-                verbose=FALSE, identity=NULL, con=defaultConnection()) {
+                verbose=FALSE, identity=NULL, con=defaultConnection(),
+                int.as.double=getOption("blpIntAsDouble", FALSE)) {
     if (!class(start.date) == "Date") stop("start.date must be a Date object", call.=FALSE)
     start.date <- format(start.date, format="%Y%m%d")
     if (!is.null(end.date)) {
@@ -85,7 +89,7 @@ bdh <- function(securities, fields, start.date, end.date=NULL,
     }
 
     res <- bdh_Impl(con, securities, fields, start.date, end.date, options, overrides,
-                    verbose, identity)
+                    verbose, identity, int.as.double)
     if (typeof(res)=="list" && length(res)==1) {
         res <- res[[1]]
     }

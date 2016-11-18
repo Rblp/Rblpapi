@@ -20,8 +20,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // bdh_Impl
-Rcpp::List bdh_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields, std::string start_date_, SEXP end_date_, SEXP options_, SEXP overrides_, bool verbose, SEXP identity_);
-RcppExport SEXP Rblpapi_bdh_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP start_date_SEXP, SEXP end_date_SEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP verboseSEXP, SEXP identity_SEXP) {
+Rcpp::List bdh_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields, std::string start_date_, SEXP end_date_, SEXP options_, SEXP overrides_, bool verbose, SEXP identity_, bool int_as_double);
+RcppExport SEXP Rblpapi_bdh_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP start_date_SEXP, SEXP end_date_SEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP verboseSEXP, SEXP identity_SEXP, SEXP int_as_doubleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -34,7 +34,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< SEXP >::type overrides_(overrides_SEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
     Rcpp::traits::input_parameter< SEXP >::type identity_(identity_SEXP);
-    rcpp_result_gen = Rcpp::wrap(bdh_Impl(con_, securities, fields, start_date_, end_date_, options_, overrides_, verbose, identity_));
+    Rcpp::traits::input_parameter< bool >::type int_as_double(int_as_doubleSEXP);
+    rcpp_result_gen = Rcpp::wrap(bdh_Impl(con_, securities, fields, start_date_, end_date_, options_, overrides_, verbose, identity_, int_as_double));
     return rcpp_result_gen;
 END_RCPP
 }
