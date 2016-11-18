@@ -109,6 +109,10 @@ Rcpp::List bdh_Impl(SEXP con_,
         rtypes.push_back(fieldInfoToRblpapiT(f.datatype,f.ftype));
     }
 
+    // for bdh request all int fields as doubles b/c of implicit bbg conversion
+    std::transform(rtypes.begin(), rtypes.end(), rtypes.begin(),
+                   [](RblpapiT x) { return x == RblpapiT::Integer || x == RblpapiT::Integer64 ? RblpapiT::Double : x; });
+
     const std::string rdsrv = "//blp/refdata";
     if (!session->openService(rdsrv.c_str())) {
         Rcpp::stop("Failed to open " + rdsrv);
