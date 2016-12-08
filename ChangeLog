@@ -1,3 +1,8 @@
+2016-12-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/bdp.R: Another overrides example (by Morgan on StackOverflow)
+	* man/bdp.Rd: Ditto
+
 2016-11-18  John Laing  <john.laing@gmail.com>
 
 	* R/bdh.R: Add option to use double for int32 and int64 field types in bdh

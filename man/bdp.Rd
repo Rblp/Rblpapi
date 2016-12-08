@@ -44,6 +44,10 @@ Data Point) queries
 
   ##  using overrides (cf https://github.com/Rblp/Rblpapi/issues/67)
   bdp("EN00 Index", "MLI_OAS", overrides=c(MLI_DATE="20150831"))
+
+  ##  another override example (cf http://stackoverflow.com/a/39373019/143305)
+  ovrd <- c("CALC_INTERVAL"="10Y", "MARKET_DATA_OVERRIDE"="PE_RATIO")
+  bdp("SPX Index", "INTERVAL_AVG", overrides=ovrd)
 }
 }
 \author{
