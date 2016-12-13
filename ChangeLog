@@ -1,3 +1,7 @@
+2016-12-13  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date):  Rolled to minor version 0.3.5.1
+
 2016-12-08  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/bdp.R: Another overrides example (by Morgan on StackOverflow)
