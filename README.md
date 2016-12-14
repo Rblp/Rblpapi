@@ -60,6 +60,15 @@ usual via
 install.packages("Rblpapi")
 ```
 
+Interim (source or binary) releases _may_ be also be made available through the
+[ghrr drat](http://ghrr.github.io/drat) repository as well and can be accessed via
+
+```r
+install.packages("drat")       # easier repo access + creation
+drat:::add("ghrr")             # make it known
+install.packages("Rblpapi")    # install it
+```
+
 ### Authors
 
 Whit Armstrong, Dirk Eddelbuettel and John Laing
