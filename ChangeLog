@@ -1,3 +1,7 @@
+2017-01-03  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (URL, BugReports): Add URLs 
+
 2016-12-14  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Mention ghrr drat in Installation section

@@ -16,5 +16,7 @@ SystemRequirements: A valid Bloomberg installation. The API headers and
  well as <http://www.bloomberglabs.com/api/> for API documentation. A 
  compiler recent enough for (at least partial) C++11 support; g++-4.6.* 
  or later should be sufficient and g++-4.9.* or later is preferred.
+URL: http://dirk.eddelbuettel.com/code/rblpapi.html, https://github.com/Rblp/Rblpapi
+BugReports: https://github.com/Rblp/Rblpapi/issues
 License: file LICENSE
 RoxygenNote: 5.0.1
