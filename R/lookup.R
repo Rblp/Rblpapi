@@ -44,12 +44,13 @@
 ##' @return A data.frame with two columns of the ticker and description of each
 ##' match.
 ##' @author Kevin Jin
-lookup <- function(query,
-                   yellowkey = c("none", "cmdt", "eqty", "muni", "prfd", "clnt", "mmkt",
-                                 "govt", "corp", "indx", "curr", "mtge"),
-                   language = c("none", "english", "kanji", "french", "german", "spanish",
-                                "portuguese", "italian", "chinese_trad", "korean", "chinese_simp",
-                                "none_1", "none_2", "none_3", "none_4", "none_5", "russian"),
+lookupSecurity <- function(query,
+                           yellowkey = c("none", "cmdt", "eqty", "muni", "prfd", "clnt", "mmkt",
+                                         "govt", "corp", "indx", "curr", "mtge"),
+                           language = c("none", "english", "kanji", "french", "german", "spanish",
+                                        "portuguese", "italian", "chinese_trad", "korean",
+                                        "chinese_simp", "none_1", "none_2", "none_3", "none_4",
+                                        "none_5", "russian"),
                    maxResults = 20,
                    verbose = FALSE,
                    con = defaultConnection()) {
