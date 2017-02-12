@@ -46,10 +46,9 @@ file
             fun=function(x) print(str(x$data)))
 }
 }
-\author{
-Whit Armstrong
-}
 \references{
 \url{http://bloomberg.github.io/blpapi-docs/cpp/3.8}
 }
-
+\author{
+Whit Armstrong
+}

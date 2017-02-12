@@ -32,4 +32,3 @@ message is shown.
 \author{
 Whit Armstrong and Dirk Eddelbuettel
 }
-

@@ -75,11 +75,10 @@ Data History) queries
       options=opt, overrides=ovrd)
 }
 }
-\author{
-Whit Armstrong and Dirk Eddelbuettel
-}
 \seealso{
 For historical futures series, see \sQuote{DOCS #2072138 <GO>}
 on the Bloomberg terminal about selecting different rolling conventions.
 }
-
+\author{
+Whit Armstrong and Dirk Eddelbuettel
+}

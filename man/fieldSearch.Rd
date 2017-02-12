@@ -33,4 +33,3 @@ search term.
 \author{
 Dirk Eddelbuettel
 }
-

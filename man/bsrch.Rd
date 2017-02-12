@@ -38,4 +38,3 @@ head(bsrch("COMDTY:VESSEL"), 20)
 \author{
 Morgan Williams and Dirk Eddelbuettel
 }
-

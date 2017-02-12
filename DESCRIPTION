@@ -19,4 +19,4 @@ SystemRequirements: A valid Bloomberg installation. The API headers and
 URL: http://dirk.eddelbuettel.com/code/rblpapi.html, https://github.com/Rblp/Rblpapi
 BugReports: https://github.com/Rblp/Rblpapi/issues
 License: file LICENSE
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

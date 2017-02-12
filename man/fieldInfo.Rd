@@ -28,4 +28,3 @@ This function uses the Bloomberg API to retrieve fieldInfo
 \author{
 Whit Armstrong and Dirk Eddelbuettel
 }
-

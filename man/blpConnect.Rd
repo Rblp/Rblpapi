@@ -49,4 +49,3 @@ explicitly create such an object.
 \author{
 Whit Armstrong and Dirk Eddelbuettel
 }
-

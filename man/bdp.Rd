@@ -53,4 +53,3 @@ Data Point) queries
 \author{
 Whit Armstrong and Dirk Eddelbuettel
 }
-
