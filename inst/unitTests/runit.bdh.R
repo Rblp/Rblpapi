@@ -29,7 +29,7 @@ if (.runThisTest) {
         checkTrue(inherits(res, "data.frame"),
                   msg = "checking return type")
 
-        checkTrue(dim(res)[1] > 5, msg = "check return of five rows")
+        checkTrue(dim(res)[1] >= 5, msg = "check return of five rows")
         checkTrue(dim(res)[2] == 4, msg = "check return of four cols")
 
         checkTrue(all(c("PX_LAST","OPEN_INT","FUT_CUR_GEN_TICKER") %in% colnames(res)),
