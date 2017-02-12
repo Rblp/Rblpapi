@@ -79,6 +79,10 @@ getTicks_Impl <- function(con, security, eventType, startDateTime, endDateTime, 
     .Call('Rblpapi_getTicks_Impl', PACKAGE = 'Rblpapi', con, security, eventType, startDateTime, endDateTime, setCondCodes, verbose)
 }
 
+lookup_Impl <- function(con, query, yellowKeyFilter = "YK_FILTER_NONE", languageOverride = "LANG_OVERRIDE_NONE", maxResults = 20L, verbose = FALSE) {
+    .Call('Rblpapi_lookup_Impl', PACKAGE = 'Rblpapi', con, query, yellowKeyFilter, languageOverride, maxResults, verbose)
+}
+
 subscribe_Impl <- function(con_, securities, fields, fun, options_, identity_) {
     .Call('Rblpapi_subscribe_Impl', PACKAGE = 'Rblpapi', con_, securities, fields, fun, options_, identity_)
 }

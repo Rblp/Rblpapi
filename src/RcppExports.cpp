@@ -213,6 +213,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// lookup_Impl
+Rcpp::DataFrame lookup_Impl(SEXP con, std::string query, std::string yellowKeyFilter, std::string languageOverride, int maxResults, bool verbose);
+RcppExport SEXP Rblpapi_lookup_Impl(SEXP conSEXP, SEXP querySEXP, SEXP yellowKeyFilterSEXP, SEXP languageOverrideSEXP, SEXP maxResultsSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type con(conSEXP);
+    Rcpp::traits::input_parameter< std::string >::type query(querySEXP);
+    Rcpp::traits::input_parameter< std::string >::type yellowKeyFilter(yellowKeyFilterSEXP);
+    Rcpp::traits::input_parameter< std::string >::type languageOverride(languageOverrideSEXP);
+    Rcpp::traits::input_parameter< int >::type maxResults(maxResultsSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(lookup_Impl(con, query, yellowKeyFilter, languageOverride, maxResults, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // subscribe_Impl
 SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields, Rcpp::Function fun, SEXP options_, SEXP identity_);
 RcppExport SEXP Rblpapi_subscribe_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP funSEXP, SEXP options_SEXP, SEXP identity_SEXP) {
