@@ -23,12 +23,12 @@
 ##' @title Look up symbol from Bloomberg
 ##' @param query A character variable describing the name of the company
 ##' @param yellowkey A character variable that restricts the asset classes
-##' to search in; one of \dQuoute{none}, \dQuote{cmdt}, \dQuote{eqty}, \dQuote{muni},
+##' to search in; one of \dQuote{none}, \dQuote{cmdt}, \dQuote{eqty}, \dQuote{muni},
 ##' \dQuote{prfd}, \dQuote{clnt}, \dQuote{mmkt}, \dQuote{govt}, \dQuote{corp},
 ##' \dQuote{indx}, \dQuote{curr}, \dQuote{mtge}.
 ##' @param language A character variable denoting the language that the
 ##' results will be translated in; one of \dQuote{NONE},
-##' \dquote{english}, \dQuote{kanji}, \dQuote{french},
+##' \dQuote{english}, \dQuote{kanji}, \dQuote{french},
 ##' \dQuote{german}, \dQuote{spanish}, \dQuote{portuguese},
 ##' \dQuote{italian}, \dQuote{chinese_trad}, \dQuote{korean},
 ##' \dQuote{chinese_simp}, \dQuote{none_1}, \dQuote{none_2},
@@ -38,6 +38,9 @@
 ##' the search length
 ##' @param verbose A boolean indicating whether verbose operation is
 ##' desired, defaults to \sQuote{FALSE}
+##' @param con A connection object as created by a \code{blpConnect}
+##' call, and retrieved via the internal function
+##' \code{defaultConnection}.
 ##' @return A data.frame with two columns of the ticker and description of each
 ##' match.
 ##' @author Kevin Jin
