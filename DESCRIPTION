@@ -1,7 +1,7 @@
 Package: Rblpapi
 Title: R Interface to 'Bloomberg'
-Version: 0.3.5.1
-Date: 2016-12-13
+Version: 0.3.5.2
+Date: 2017-02-12
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Author: Whit Armstrong, Dirk Eddelbuettel and John Laing
 Imports: Rcpp (>= 0.11.0), utils
@@ -19,4 +19,4 @@ SystemRequirements: A valid Bloomberg installation. The API headers and
 URL: http://dirk.eddelbuettel.com/code/rblpapi.html, https://github.com/Rblp/Rblpapi
 BugReports: https://github.com/Rblp/Rblpapi/issues
 License: file LICENSE
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

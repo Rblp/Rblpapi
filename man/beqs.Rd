@@ -52,4 +52,3 @@ head(beqs("Global Oil Companies YTD Return", "GLOBAL", "ENGLISH", "GENERAL",
 \author{
 Rademeyer Vermaak and Dirk Eddelbuettel
 }
-

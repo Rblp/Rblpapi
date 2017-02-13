@@ -28,4 +28,3 @@ This function authenticates against the the Bloomberg API
 \author{
 Whit Armstrong and Dirk Eddelbuettel
 }
-

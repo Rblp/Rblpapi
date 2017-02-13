@@ -28,6 +28,8 @@ if (.runThisTest) {
     ## also, don't touch subscription because it never quits:
     #  example(subscribe, package="Rblpapi", run.dontrun=TRUE)
 
+    isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
+
     test.bdhExamples <- function()
         example(bdh, package="Rblpapi", run.dontrun=TRUE)
 
@@ -53,8 +55,8 @@ if (.runThisTest) {
         example(fieldSearch, package="Rblpapi", run.dontrun=TRUE)
 
     test.getBarsExamples <- function()
-        example(getBars, package="Rblpapi", run.dontrun=TRUE)
+        if (!isweekend) example(getBars, package="Rblpapi", run.dontrun=TRUE) else TRUE
 
     test.getTicksExamples <- function()
-        example(getTicks, package="Rblpapi", run.dontrun=TRUE)
+        if (!isweekend) example(getTicks, package="Rblpapi", run.dontrun=TRUE) else TRUE
 }

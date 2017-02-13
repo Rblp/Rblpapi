@@ -43,4 +43,3 @@ This function uses the Bloomberg API to retrieve 'portfolio' queries
 \author{
 John Laing
 }
-

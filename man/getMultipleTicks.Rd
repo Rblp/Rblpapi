@@ -48,4 +48,3 @@ for the requested security.
 \author{
 Dirk Eddelbuettel
 }
-

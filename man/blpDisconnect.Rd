@@ -31,4 +31,3 @@ is otherwise terminated.
 \author{
 Whit Armstrong and Dirk Eddelbuettel
 }
-

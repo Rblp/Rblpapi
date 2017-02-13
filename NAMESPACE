@@ -18,5 +18,5 @@ export(blpConnect,
        getTicks,
        getPortfolio,
        subscribe,
-       lookup
+       lookupSecurity
        )

@@ -66,4 +66,3 @@ double-counting.  There may be an option for this in the API.
 \author{
 Dirk Eddelbuettel
 }
-

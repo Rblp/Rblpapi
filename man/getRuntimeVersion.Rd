@@ -18,10 +18,9 @@ This function retrieves the version of Bloomberg API run-time.
    getRuntimeVersion()
 }
 }
-\author{
-Dirk Eddelbuettel
-}
 \seealso{
 \code{getHeaderVersion}
 }
-
+\author{
+Dirk Eddelbuettel
+}

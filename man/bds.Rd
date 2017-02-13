@@ -53,4 +53,3 @@ Data Set) queries
 \author{
 Whit Armstrong and Dirk Eddelbuettel
 }
-

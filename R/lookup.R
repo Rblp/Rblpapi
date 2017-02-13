@@ -21,36 +21,50 @@
 ##' given the name of a company.
 ##'
 ##' @title Look up symbol from Bloomberg
-##' @param query A character variable describing the name of the company
-##' @param yellowKeyFilter A character variable that restricts the asset classes
-##' to search in; one of \dQuote{YK_FILTER_NONE}, \dQuote{YK_FILTER_CMDT},
-##' \dQuote{YK_FILTER_EQTY}, \dQuote{YK_FILTER_MUNI}, \dQuote{YK_FILTER_PRFD},
-##' \dQuote{YK_FILTER_CLNT}, \dQuote{YK_FILTER_MMKT}, \dQuote{YK_FILTER_GOVT},
-##' \dQuote{YK_FILTER_CORP}, \dQuote{YK_FILTER_INDX}, \dQuote{YK_FILTER_CURR},
-##' or \dQuote{YK_FILTER_MTGE}
-##' @param languageOverride A character variable denoting the language that the
-##' results will be translated in; one of \dQuote{LANG_OVERRIDE_NONE},
-##' \dQuote{LANG_OVERRIDE_ENGLISH}, \dQuote{LANG_OVERRIDE_KANJI},
-##' \dQuote{LANG_OVERRIDE_FRENCH}, \dQuote{LANG_OVERRIDE_GERMAN},
-##' \dQuote{LANG_OVERRIDE_SPANISH}, \dQuote{LANG_OVERRIDE_PORTUGUESE},
-##' \dQuote{LANG_OVERRIDE_ITALIAN}, \dQuote{LANG_OVERRIDE_CHINESE_TRAD},
-##' \dQuote{LANG_OVERRIDE_KOREAN}, \dQuote{LANG_OVERRIDE_CHINESE_SIMP},
-##' \dQuote{LANG_OVERRIDE_NONE_1}, \dQuote{LANG_OVERRIDE_NONE_2},
-##' \dQuote{LANG_OVERRIDE_NONE_3}, \dQuote{LANG_OVERRIDE_NONE_4},
-##' \dQuote{LANG_OVERRIDE_NONE_5}, \dQuote{LANG_OVERRIDE_RUSSIAN}
+##' @param query A character variable describing the name of the company; for
+##' certain queries a trailing space may help.
+##' @param yellowkey A character variable that restricts the asset classes
+##' to search in; one of \dQuote{none}, \dQuote{cmdt}, \dQuote{eqty}, \dQuote{muni},
+##' \dQuote{prfd}, \dQuote{clnt}, \dQuote{mmkt}, \dQuote{govt}, \dQuote{corp},
+##' \dQuote{indx}, \dQuote{curr}, \dQuote{mtge}.
+##' @param language A character variable denoting the language that the
+##' results will be translated in; one of \dQuote{NONE},
+##' \dQuote{english}, \dQuote{kanji}, \dQuote{french},
+##' \dQuote{german}, \dQuote{spanish}, \dQuote{portuguese},
+##' \dQuote{italian}, \dQuote{chinese_trad}, \dQuote{korean},
+##' \dQuote{chinese_simp}, \dQuote{none_1}, \dQuote{none_2},
+##' \dQuote{none_3}, \dQuote{none_4}, \dQuote{none_5},
+##' \dQuote{russian}
 ##' @param maxResults A integer variable containing a value by which to limit
 ##' the search length
 ##' @param verbose A boolean indicating whether verbose operation is
 ##' desired, defaults to \sQuote{FALSE}
+##' @param con A connection object as created by a \code{blpConnect}
+##' call, and retrieved via the internal function
+##' \code{defaultConnection}.
 ##' @return A data.frame with two columns of the ticker and description of each
 ##' match.
-##' @author Kevin Jin
-lookup <- function(query,
-                     yellowKeyFilter = "YK_FILTER_NONE",
-                     languageOverride = "LANG_OVERRIDE_NONE",
-                     maxResults = 20,
-                     verbose = FALSE,
-                     con = defaultConnection()) {
-    lookup_Impl(con, query, yellowKeyFilter, languageOverride, maxResults,
-                verbose)
+##' @author Kevin Jin and Dirk Eddelbuettel
+##' @examples \dontrun{
+##'   lookupSecurity("IBM")
+##'   lookupSecurity("IBM", maxResuls=1000)    # appears to be capped at 1000
+##'   lookupSecurity("IBM", "mtge")
+##'   lookupSecurity("IBM ", "mtge")           # trailing space affects query
+##' }
+lookupSecurity <- function(query,
+                           yellowkey = c("none", "cmdt", "eqty", "muni", "prfd", "clnt", "mmkt",
+                                         "govt", "corp", "indx", "curr", "mtge"),
+                           language = c("none", "english", "kanji", "french", "german", "spanish",
+                                        "portuguese", "italian", "chinese_trad", "korean",
+                                        "chinese_simp", "none_1", "none_2", "none_3", "none_4",
+                                        "none_5", "russian"),
+                   maxResults = 20,
+                   verbose = FALSE,
+                   con = defaultConnection()) {
+    yellowkey <- match.arg(yellowkey)
+    language <- match.arg(language)
+
+    yellowkey <- paste("YK", "FILTER", toupper(yellowkey), sep="_")
+    language <- paste("LANG", "OVERRIDE", toupper(language), sep="_")
+    lookup_Impl(con, query, yellowkey, language, maxResults, verbose)
 }

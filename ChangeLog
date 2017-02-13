@@ -1,6 +1,20 @@
+2017-02-12  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll minor version
+
+	* R/lookup.R (lookupSecurity): Renamed to lookupSecurity(), tweaks
+	to help page and argument handling
+	* man/lookupSecurity.Rd: Also renamed
+
+2017-02-12  Kevin Jin  <goldstar.kevin@gmail.com>
+
+	* R/lookup.R (lookup): New function to look up securities,
+	possibly filtered by yellow key and language (PR #216)
+	* man/lookup.Rd: Documentation
+
 2017-01-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (URL, BugReports): Add URLs 
+	* DESCRIPTION (URL, BugReports): Add URLs
 
 2016-12-14  Dirk Eddelbuettel  <edd@debian.org>
 

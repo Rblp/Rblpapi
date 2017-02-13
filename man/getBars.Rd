@@ -66,4 +66,3 @@ This function uses the Bloomberg API to retrieve bars for the requested security
 \author{
 Dirk Eddelbuettel
 }
-
