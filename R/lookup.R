@@ -21,7 +21,8 @@
 ##' given the name of a company.
 ##'
 ##' @title Look up symbol from Bloomberg
-##' @param query A character variable describing the name of the company
+##' @param query A character variable describing the name of the company; for
+##' certain queries a trailing space may help.
 ##' @param yellowkey A character variable that restricts the asset classes
 ##' to search in; one of \dQuote{none}, \dQuote{cmdt}, \dQuote{eqty}, \dQuote{muni},
 ##' \dQuote{prfd}, \dQuote{clnt}, \dQuote{mmkt}, \dQuote{govt}, \dQuote{corp},
@@ -43,7 +44,13 @@
 ##' \code{defaultConnection}.
 ##' @return A data.frame with two columns of the ticker and description of each
 ##' match.
-##' @author Kevin Jin
+##' @author Kevin Jin and Dirk Eddelbuettel
+##' @examples \dontrun{
+##'   lookupSecurity("IBM")
+##'   lookupSecurity("IBM", maxResuls=1000)    # appears to be capped at 1000
+##'   lookupSecurity("IBM", "mtge")
+##'   lookupSecurity("IBM ", "mtge")           # trailing space affects query
+##' }
 lookupSecurity <- function(query,
                            yellowkey = c("none", "cmdt", "eqty", "muni", "prfd", "clnt", "mmkt",
                                          "govt", "corp", "indx", "curr", "mtge"),

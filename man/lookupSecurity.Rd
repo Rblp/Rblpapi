@@ -12,7 +12,8 @@ lookupSecurity(query, yellowkey = c("none", "cmdt", "eqty", "muni", "prfd",
   verbose = FALSE, con = defaultConnection())
 }
 \arguments{
-\item{query}{A character variable describing the name of the company}
+\item{query}{A character variable describing the name of the company; for
+certain queries a trailing space may help.}
 
 \item{yellowkey}{A character variable that restricts the asset classes
 to search in; one of \dQuote{none}, \dQuote{cmdt}, \dQuote{eqty}, \dQuote{muni},
@@ -46,6 +47,14 @@ match.
 This function uses the Bloomberg API to look up tickers and descriptions
 given the name of a company.
 }
+\examples{
+\dontrun{
+  lookupSecurity("IBM")
+  lookupSecurity("IBM", maxResuls=1000)    # appears to be capped at 1000
+  lookupSecurity("IBM", "mtge")
+  lookupSecurity("IBM ", "mtge")           # trailing space affects query
+}
+}
 \author{
-Kevin Jin
+Kevin Jin and Dirk Eddelbuettel
 }
