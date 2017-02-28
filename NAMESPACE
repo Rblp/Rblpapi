@@ -1,22 +1,22 @@
-useDynLib(Rblpapi)
+useDynLib("Rblpapi", .registration=TRUE)
 
-import(Rcpp)
-importFrom(utils, "object.size", "packageVersion")
-export(blpConnect,
-       blpDisconnect,
-       defaultConnection,
-       blpAuthenticate,
-       bdp,
-       bdh,
-       bds,
-       beqs,
-       bsrch,
-       fieldSearch,
-       fieldInfo,
-       getBars,
-       getMultipleTicks,
-       getTicks,
-       getPortfolio,
-       subscribe,
-       lookupSecurity
+import("Rcpp")
+importFrom("utils", "object.size", "packageVersion")
+export("blpConnect",
+       "blpDisconnect",
+       "defaultConnection",
+       "blpAuthenticate",
+       "bdp",
+       "bdh",
+       "bds",
+       "beqs",
+       "bsrch",
+       "fieldSearch",
+       "fieldInfo",
+       "getBars",
+       "getMultipleTicks",
+       "getTicks",
+       "getPortfolio",
+       "subscribe",
+       "lookupSecurity"
        )
