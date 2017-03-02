@@ -73,9 +73,9 @@ if (.runThisTest) {
                   msg = "checking return type")
 
         checkTrue(dim(res)[1] > 10, msg = "check return of at least ten rows")
-        checkTrue(dim(res)[2] == 6, msg = "check return of six columns")
+        checkTrue(dim(res)[2] == 7, msg = "check return of seven columns")
 
-        checkTrue(all(c("date", "time", "type", "value", "size", "condcode") %in% colnames(res)),
+        checkTrue(all(c("pt", "date", "time", "type", "value", "size", "condcode") %in% colnames(res)),
                   msg = "check column names")
     }
 

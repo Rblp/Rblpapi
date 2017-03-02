@@ -89,9 +89,7 @@ getTicks <- function(security,
                   fts        = fts::fts(res[,1], res[,-c(1:2,5)]),
                   xts        = xts::xts(res[,-c(1:2,5)], order.by=res[,1]),
                   zoo        = zoo::zoo(res[,-c(1:2,5)], order.by=res[,1]),
-                  data.table = data.table::data.table(date=data.table::as.IDate(res[,1]),
-                                                      time=data.table::as.ITime(res[,1]),
-                                                      res[, -1]),
+                  data.table = asDataTable(res),
                   res)                         # fallback also data.frame
     return(res)   # to return visibly
 
@@ -141,9 +139,7 @@ getMultipleTicks <- function(security,
     attr(res[,1], "tzone") <- tz
 
     if (returnAs == "data.table") {
-        res <- data.table::data.table(date=data.table::as.IDate(res[,1]),
-                                      time=data.table::as.ITime(res[,1]),
-                                      res[, -1])
+        res <- asDataTable(res)
     }
 
     return(res)
