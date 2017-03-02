@@ -1,3 +1,10 @@
+2017-03-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/converters.R (asDataTable): New (unexported) helper function
+	* R/getBars.R (getBars): Use asDataTable()
+	* R/getTicks.R (getBars): Ditto
+ 	* inst/unitTests/runit.getTicks.R (test.getTicksAsDataTable): Adjusted
+
 2017-02-27  Dirk Eddelbuettel  <edd@debian.org>
 
 	* NAMESPACE (useDynLib): Add .registration=TRUE; some other edits

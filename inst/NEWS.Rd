@@ -17,6 +17,7 @@
     \item Minor edits to a few files in order to either please
     \code{R(-devel) CMD check --as-cran}, or update documentation
     \item Adding registration of routines are R 3.4.0 now desires.
+    \item Optional export as \code{data.table} is now more standardized.
   }
 }
 

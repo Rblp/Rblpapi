@@ -1,6 +1,5 @@
 
-##
-##  Copyright (C) 2015 - 2016  Whit Armstrong and Dirk Eddelbuettel and John Laing
+##  Copyright (C) 2015 - 2017  Whit Armstrong and Dirk Eddelbuettel and John Laing
 ##
 ##  This file is part of Rblpapi
 ##
@@ -36,7 +35,7 @@
 ##' desired, defaults to \sQuote{FALSE}
 ##' @param returnAs A character variable describing the type of return
 ##' object; currently supported are \sQuote{matrix} (also the default),
-##' \sQuote{fts}, \sQuote{xts} and \sQuote{zoo}
+##' \sQuote{fts}, \sQuote{xts}, \sQuote{zoo} and \sQuote{data.table}
 ##' @param tz A character variable with the desired local timezone,
 ##' defaulting to the value \sQuote{TZ} environment variable, and
 ##' \sQuote{UTC} if unset
@@ -69,6 +68,7 @@ getBars <- function(security,
                     tz = Sys.getenv("TZ", unset="UTC"),
                     con = defaultConnection()) {
 
+    match.arg(returnAs, c("matrix", "fts", "xts", "zoo", "data.table"))
     if (!inherits(startTime, "POSIXt") || !inherits(endTime, "POSIXt")) {
         stop("startTime and endTime must be Datetime objects", call.=FALSE)
     }
@@ -81,10 +81,11 @@ getBars <- function(security,
     attr(res[,1], "tzone") <- tz
 
     res <- switch(returnAs,
-                  matrix = res,                # default is matrix
-                  fts    = fts::fts(res[,1], res[,-1]),
-                  xts    = xts::xts(res[,-1], order.by=res[,1]),
-                  zoo    = zoo::zoo(res[,-1], order.by=res[,1]),
+                  matrix     = res,                # default is matrix
+                  fts        = fts::fts(res[,1], res[,-1]),
+                  xts        = xts::xts(res[,-1], order.by=res[,1]),
+                  zoo        = zoo::zoo(res[,-1], order.by=res[,1]),
+                  data.table = asDataTable(res),
                   res)                         # fallback is also matrix
     return(res)   # to return visibly
 }
