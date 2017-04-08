@@ -1,3 +1,9 @@
+2017-04-07  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll minor version
+	* src/bds.cpp (allocateDataFrameColumn): Use Rcpp::Shield<>
+	(buildDataFrame): No need to UNPROTECT
+
 2017-03-02  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/converters.R (asDataTable): New (unexported) helper function
