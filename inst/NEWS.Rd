@@ -17,8 +17,8 @@
     in \code{useDynLib} in \code{NAMESPACE} (Dirk in \ghpr{220})
     \item \code{getBars} and \code{getTicks} can now return
     \code{data.table} objects (Dirk in \ghpr{221})
-    \code \code{bds} has improved internal protect logic via
-    \code{Rcpp::Shield} 
+    \item \code{bds} has improved internal protect logic via
+    \code{Rcpp::Shield} (Dirk in \ghpr{222})
   }
 }
 
