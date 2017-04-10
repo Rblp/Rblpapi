@@ -1,4 +1,5 @@
-// -*- mode: C++; c-indent-level: 2; c-basic-offset: 2; tab-width: 8 -*-
+// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
+
 ///////////////////////////////////////////////////////////////////////////
 // Copyright (C) 2011  Whit Armstrong                                    //
 //                                                                       //
@@ -19,39 +20,16 @@
 #ifndef FINALIZERS_H
 #define FINALIZERS_H
 
+#include <Rcpp.h>
+
 typedef void(*finalizerT)(SEXP);
 
 template<typename T>
-void finalizeSEXP(SEXP p_) {
-  if(p_ == R_NilValue) {
-    return;
-  }
-
-  T* p = reinterpret_cast<T*>(R_ExternalPtrAddr(p_));
-  if(p) {
-    delete p;
-    R_ClearExternalPtr(p_);
-  }
-}
-
-/*
-  template<typename T>
-  void addExternalPoniter(SEXP x, T* p, finalizerT finalizer, const char* atty_name, const char* pname) {
-  SEXP p_;
-  PROTECT(p_ = R_MakeExternalPtr(reinterpret_cast<void*>(p),Rf_install(pname),R_NilValue));
-  R_RegisterCFinalizerEx(p_, finalizer, TRUE);
-  Rf_setAttrib(x, Rf_install(atty_name), p_);
-  UNPROTECT(1);
-  }
-*/
-
-template<typename T>
 SEXP createExternalPointer(T* p, finalizerT finalizer, const char* pname) {
-  SEXP p_;
-  PROTECT(p_ = R_MakeExternalPtr(reinterpret_cast<void*>(p),Rf_install(pname),R_NilValue));
-  R_RegisterCFinalizerEx(p_, finalizer, TRUE);
-  UNPROTECT(1);
-  return p_;
+    SEXP p_;
+    p_ = Rcpp::Shield<SEXP>(R_MakeExternalPtr(reinterpret_cast<void*>(p),Rf_install(pname),R_NilValue));
+    R_RegisterCFinalizerEx(p_, finalizer, TRUE);
+    return p_;
 }
 
 #endif // FINALIZERS_H

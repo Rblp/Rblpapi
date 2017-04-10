@@ -1,3 +1,10 @@
+2017-04-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/finalizers.h (createExternalPointer): Use Shield<>
+
+	* src/bds.cpp (allocateDataFrameColumn): Create directly from Rcpp vectors
+	* src/blpapi_utils.cpp (allocateDataFrameColumn): Ditto
+
 2017-04-07  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Roll minor version

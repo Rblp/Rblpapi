@@ -40,56 +40,67 @@ using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 
 void populateDfRowBDS(SEXP ans, R_len_t row_index, Element& e) {
-  if(e.isNull()) { return; }
+    if (e.isNull()) { return; }
 
-  switch(e.datatype()) {
-  case BLPAPI_DATATYPE_BOOL:
-    LOGICAL(ans)[row_index] = e.getValueAsBool(); break;
-  case BLPAPI_DATATYPE_CHAR:
-    SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString())); break;
-  case BLPAPI_DATATYPE_BYTE:
-    throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
-    break;
-  case BLPAPI_DATATYPE_INT32:
-    INTEGER(ans)[row_index] = e.getValueAsInt32(); break;
-  case BLPAPI_DATATYPE_INT64:
-    if(static_cast<double>(e.getValueAsInt64()) > static_cast<double>(std::numeric_limits<int>::max())) {
-      REprintf("BLPAPI_DATATYPE_INT64 exceeds max int value on this system (assigning std::numeric_limits<int>::max()).");
-      INTEGER(ans)[row_index] = std::numeric_limits<int>::max();
-    } else {
-      INTEGER(ans)[row_index] = static_cast<int>(e.getValueAsInt64()); break;
+    switch(e.datatype()) {
+    case BLPAPI_DATATYPE_BOOL:
+        LOGICAL(ans)[row_index] = e.getValueAsBool();
+        break;
+    case BLPAPI_DATATYPE_CHAR:
+        SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString()));
+        break;
+    case BLPAPI_DATATYPE_BYTE:
+        Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
+        break;
+    case BLPAPI_DATATYPE_INT32:
+        INTEGER(ans)[row_index] = e.getValueAsInt32();
+        break;
+    case BLPAPI_DATATYPE_INT64:
+        if (static_cast<double>(e.getValueAsInt64()) > static_cast<double>(std::numeric_limits<int>::max())) {
+            Rcpp::Rcerr << "BLPAPI_DATATYPE_INT64 exceeds max int value on this system (assigning std::numeric_limits<int>::max())." << std::endl;
+            INTEGER(ans)[row_index] = std::numeric_limits<int>::max();
+        } else {
+            INTEGER(ans)[row_index] = static_cast<int>(e.getValueAsInt64()); 
+        }
+        break;
+    case BLPAPI_DATATYPE_FLOAT32:
+        REAL(ans)[row_index] = e.getValueAsFloat32();
+        break;
+    case BLPAPI_DATATYPE_FLOAT64:
+        REAL(ans)[row_index] = e.getValueAsFloat64();
+        break;
+    case BLPAPI_DATATYPE_STRING:
+        SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString()));
+        break;
+    case BLPAPI_DATATYPE_BYTEARRAY:
+        Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
+        break;
+    case BLPAPI_DATATYPE_DATE:
+        INTEGER(ans)[row_index] = bbgDateToRDate(e.getValueAsDatetime());
+        break;
+    case BLPAPI_DATATYPE_TIME:
+        //FIXME: separate out time later
+        REAL(ans)[row_index] = bbgDateToPOSIX(e.getValueAsDatetime());
+        break;
+    case BLPAPI_DATATYPE_DECIMAL:
+        REAL(ans)[row_index] = e.getValueAsFloat64();
+        break;
+    case BLPAPI_DATATYPE_DATETIME:
+        //REAL(ans)[row_index] = bbgDateToPOSIX(e.getValueAsDatetime()); break;
+        REAL(ans)[row_index] = bbgDatetimeToPOSIX(e.getValueAsDatetime());
+        break;
+    case BLPAPI_DATATYPE_ENUMERATION:
+        //throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
+        SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString())); break;
+    case BLPAPI_DATATYPE_SEQUENCE:
+        Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
+    case BLPAPI_DATATYPE_CHOICE:
+        Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_CHOICE.");
+    case BLPAPI_DATATYPE_CORRELATION_ID:
+        INTEGER(ans)[row_index] = e.getValueAsInt32(); break;
+    default:
+        throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
     }
-    break;
-  case BLPAPI_DATATYPE_FLOAT32:
-    REAL(ans)[row_index] = e.getValueAsFloat32(); break;
-  case BLPAPI_DATATYPE_FLOAT64:
-    REAL(ans)[row_index] = e.getValueAsFloat64(); break;
-  case BLPAPI_DATATYPE_STRING:
-    SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString())); break;
-  case BLPAPI_DATATYPE_BYTEARRAY:
-    throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY."); break;
-  case BLPAPI_DATATYPE_DATE:
-    INTEGER(ans)[row_index] = bbgDateToRDate(e.getValueAsDatetime()); break;
-  case BLPAPI_DATATYPE_TIME:
-    //FIXME: separate out time later
-    REAL(ans)[row_index] = bbgDateToPOSIX(e.getValueAsDatetime()); break;
-  case BLPAPI_DATATYPE_DECIMAL:
-    REAL(ans)[row_index] = e.getValueAsFloat64(); break;
-  case BLPAPI_DATATYPE_DATETIME:
-    //REAL(ans)[row_index] = bbgDateToPOSIX(e.getValueAsDatetime()); break;
-    REAL(ans)[row_index] = bbgDatetimeToPOSIX(e.getValueAsDatetime()); break;
-  case BLPAPI_DATATYPE_ENUMERATION:
-    //throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
-    SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString())); break;
-  case BLPAPI_DATATYPE_SEQUENCE:
-    throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
-  case BLPAPI_DATATYPE_CHOICE:
-    throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_CHOICE.");
-  case BLPAPI_DATATYPE_CORRELATION_ID:
-    INTEGER(ans)[row_index] = e.getValueAsInt32(); break;
-  default:
-    throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
-  }
 }
 
 // deprecated -- still needed by BDS
@@ -98,66 +109,60 @@ SEXP allocateDataFrameColumn(int fieldT, size_t n) {
 
     switch(fieldT) {
     case BLPAPI_DATATYPE_BOOL:
-        ans = Rcpp::Shield<SEXP>(Rf_allocVector(LGLSXP,n));
-        std::fill(LOGICAL(ans),LOGICAL(ans)+n,NA_LOGICAL);
+        ans = Rcpp::LogicalVector(n, NA_LOGICAL);
         break;
     case BLPAPI_DATATYPE_CHAR:
-        ans = Rcpp::Shield<SEXP>(Rf_allocVector(STRSXP,n));
+        ans = Rcpp::StringVector(n);
         break;
     case BLPAPI_DATATYPE_BYTE:
-        throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
+        Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
         break;
     case BLPAPI_DATATYPE_INT32:
     case BLPAPI_DATATYPE_INT64:
-        ans = Rcpp::Shield<SEXP>(Rf_allocVector(INTSXP, n));
-        std::fill(INTEGER(ans),INTEGER(ans)+n,NA_INTEGER);
+        ans = Rcpp::IntegerVector(n, NA_INTEGER);
         break;
     case BLPAPI_DATATYPE_FLOAT32:
     case BLPAPI_DATATYPE_FLOAT64:
-        ans = Rcpp::Shield<SEXP>(Rf_allocVector(REALSXP,n));
-        std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
+        ans = Rcpp::NumericVector(n, NA_REAL);
         break;
     case BLPAPI_DATATYPE_STRING:
-        ans = Rcpp::Shield<SEXP>(Rf_allocVector(STRSXP,n)); break;
+        ans = Rcpp::StringVector(n);
+        break;
     case BLPAPI_DATATYPE_BYTEARRAY:
-        throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
+        Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
         break;
     case BLPAPI_DATATYPE_DATE:
-        ans = Rcpp::Shield<SEXP>(Rf_allocVector(INTSXP, n));
+        ans = Rcpp::IntegerVector(n, NA_INTEGER);
         addDateClass(ans);
-        std::fill(INTEGER(ans),INTEGER(ans)+n,NA_INTEGER);
         break;
     case BLPAPI_DATATYPE_TIME:
         //FIXME: separate out time later
-        ans = Rcpp::Shield<SEXP>(Rf_allocVector(REALSXP,n));
+        ans = Rcpp::NumericVector(n, NA_REAL);
         addPosixClass(ans);
-        std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
         break;
     case BLPAPI_DATATYPE_DECIMAL:
-        ans = Rcpp::Shield<SEXP>(Rf_allocVector(REALSXP,n));
-        std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
+        ans = Rcpp::NumericVector(n, NA_REAL);
         break;
     case BLPAPI_DATATYPE_DATETIME:
-        ans = Rcpp::Shield<SEXP>(Rf_allocVector(REALSXP,n));
+        ans = Rcpp::NumericVector(n, NA_REAL);
         addPosixClass(ans);
-        std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
         break;
     case BLPAPI_DATATYPE_ENUMERATION:
-        ans = Rcpp::Shield<SEXP>(Rf_allocVector(STRSXP,n));
+        ans = Rcpp::StringVector(n);
         break;
     case BLPAPI_DATATYPE_SEQUENCE:
-        throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
+        Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
         break;
     case BLPAPI_DATATYPE_CHOICE:
-        throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_CHOICE.");
+        Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_CHOICE.");
         break;
     case BLPAPI_DATATYPE_CORRELATION_ID:
-        ans = Rcpp::Shield<SEXP>(Rf_allocVector(INTSXP, n));
+        ans = Rcpp::IntegerVector(n);
         break;
     default:
-        throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
-  }
-  return ans;
+        Rcpp::stop("Unsupported datatype outside of api blpapi_DataType_t scope.");
+    }
+    return ans;
 }
 
 
@@ -183,14 +188,13 @@ Rcpp::List buildDataFrame(LazyFrameT& m) {
 }
 
 LazyFrameIteratorT assertColumnDefined(LazyFrameT& lazy_frame, BloombergLP::blpapi::Element& e, size_t n) {
-  LazyFrameIteratorT iter = lazy_frame.find(e.name().string());
+    LazyFrameIteratorT iter = lazy_frame.find(e.name().string());
 
-  // insert only if not present
-  if(iter == lazy_frame.end()) {
-    // allocateDataFrameColumn calls PROTECT when SEXP is allocated
-    SEXP column = allocateDataFrameColumn(e.datatype(), n);
-    iter = lazy_frame.insert(lazy_frame.begin(),std::pair<std::string,SEXP>(e.name().string(),column));
-  }
+    // insert only if not present
+    if (iter == lazy_frame.end()) {
+        SEXP column = allocateDataFrameColumn(e.datatype(), n);
+        iter = lazy_frame.insert(lazy_frame.begin(),std::pair<std::string,SEXP>(e.name().string(),column));
+    }
 
   return iter;
 }

@@ -1,19 +1,24 @@
-///////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2013  Whit Armstrong                                    //
-//                                                                       //
-// This program is free software: you can redistribute it and/or modify  //
-// it under the terms of the GNU General Public License as published by  //
-// the Free Software Foundation, either version 3 of the License, or     //
-// (at your option) any later version.                                   //
-//                                                                       //
-// This program is distributed in the hope that it will be useful,       //
-// but WITHOUT ANY WARRANTY; without even the implied warranty of        //
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         //
-// GNU General Public License for more details.                          //
-//                                                                       //
-// You should have received a copy of the GNU General Public License     //
-// along with this program.  If not, see <http://www.gnu.org/licenses/>. //
-///////////////////////////////////////////////////////////////////////////
+// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
+
+//  blpapi_utils -- helper functions for the BLP API
+//
+//  Copyright (C) 2013         Whit Armstrong
+//  Copyright (C) 2017 -       Whit Armstrong and Dirk Eddelbuettel
+//
+//  This file is part of Rblpapi
+//
+//  Rblpapi is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  Rblpapi is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <stdexcept>
 #include <string>
@@ -131,22 +136,19 @@ const double bbgDatetimeToUTC(const BloombergLP::blpapi::Datetime& dt) {
 }
 
 void addDateClass(SEXP x) {
-  // create and add dates class to dates object
-  SEXP r_dates_class;
-  PROTECT(r_dates_class = Rf_allocVector(STRSXP, 1));
-  SET_STRING_ELT(r_dates_class, 0, Rf_mkChar("Date"));
-  Rf_classgets(x, r_dates_class);
-  UNPROTECT(1); //r_dates_class
+    // create and add dates class to dates object
+    // cf Rcpp's inst/include/Rcpp/date_datetime/newDateVector.h
+    Rcpp::Shield<SEXP> dateclass(Rf_mkString("Date"));
+    Rf_setAttrib(x, R_ClassSymbol, dateclass);
 }
 
 void addPosixClass(SEXP x) {
-  // create and add dates class to dates object
-  SEXP r_posix_class;
-  PROTECT(r_posix_class = Rf_allocVector(STRSXP, 2));
-  SET_STRING_ELT(r_posix_class, 0, Rf_mkChar("POSIXct"));
-  SET_STRING_ELT(r_posix_class, 1, Rf_mkChar("POSIXt"));
-  Rf_classgets(x, r_posix_class);
-  UNPROTECT(1); //r_posix_class
+    // create and add dates class to dates object
+    // cf Rcpp's inst/include/Rcpp/date_datetime/newDatetimeVector.h
+    Rcpp::Shield<SEXP> datetimeclass(Rf_allocVector(STRSXP,2));
+    SET_STRING_ELT(datetimeclass, 0, Rf_mkChar("POSIXct"));
+    SET_STRING_ELT(datetimeclass, 1, Rf_mkChar("POSIXt"));
+    Rf_setAttrib(x, R_ClassSymbol, datetimeclass);
 }
 
 void appendOptionsToRequest(Request& request, SEXP options_) {
@@ -319,39 +321,36 @@ RblpapiT fieldInfoToRblpapiT(const std::string& datatype, const std::string& fty
 }
 
 SEXP allocateDataFrameColumn(RblpapiT rblpapitype, const size_t n) {
-  SEXP ans;
-  switch(rblpapitype) {
-  case RblpapiT::Logical:
-    ans = PROTECT(Rf_allocVector(LGLSXP,n));
-    std::fill(LOGICAL(ans),LOGICAL(ans)+n,NA_LOGICAL);
-    break;
-  case RblpapiT::Integer:
-    ans = PROTECT(Rf_allocVector(INTSXP, n));
-    std::fill(INTEGER(ans),INTEGER(ans)+n,NA_INTEGER);
-    break;
-  case RblpapiT::Integer64:
-  case RblpapiT::Double:
-  case RblpapiT::Float:
-    ans = PROTECT(Rf_allocVector(REALSXP,n));
-    std::fill(REAL(ans),REAL(ans)+n,NA_REAL);
-    break;
-  case RblpapiT::Date:
-    ans = PROTECT(Rf_allocVector(INTSXP,n));
-    std::fill(INTEGER(ans),INTEGER(ans)+n,NA_INTEGER);
-    addDateClass(ans);
-    break;
-  case RblpapiT::Datetime:
-    ans = PROTECT(Rf_allocVector(STRSXP,n));
-    break;
-  case RblpapiT::String:
-    ans = PROTECT(Rf_allocVector(STRSXP,n));
-    break;
-  default: // try to convert it as a string
-    ans = PROTECT(Rf_allocVector(STRSXP,n));
-    break;
-  }
-  UNPROTECT(1);
-  return ans;
+    SEXP ans;
+    switch(rblpapitype) {
+    case RblpapiT::Logical:
+        ans = Rcpp::LogicalVector(n, NA_LOGICAL);
+        break;
+    case RblpapiT::Integer:
+        ans = Rcpp::IntegerVector(n, NA_INTEGER);
+        break;
+    case RblpapiT::Integer64:
+    case RblpapiT::Double:
+    case RblpapiT::Float:
+        ans = Rcpp::NumericVector(n, NA_REAL);
+        break;
+    case RblpapiT::Date:
+        ans = Rcpp::IntegerVector(n, NA_INTEGER);
+        addDateClass(ans);
+        break;
+    case RblpapiT::Datetime:
+        // FIXME: string for datetime ?
+        // ans = PROTECT(Rf_allocVector(STRSXP,n));
+        ans = Rcpp::StringVector(n);
+        break;
+    case RblpapiT::String:
+        ans = Rcpp::StringVector(n);
+        break;
+    default: // try to convert it as a string
+        ans = Rcpp::StringVector(n);
+        break;
+    }
+    return ans;
 }
 
 FieldInfo getFieldType(Session *session, Service& fieldInfoService, const std::string& field) {
