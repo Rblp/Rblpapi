@@ -4,7 +4,7 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
-\section{Changes in Rblpapi version 0.3.6 (2017-xx-yy)}{
+\section{Changes in Rblpapi version 0.3.6 (2017-04-20)}{
   \itemize{
     \item \code{bdh} can now store in \code{double} preventing overflow
     (Whit and John in \ghpr{205} closing \ghit{163})

@@ -1,3 +1,7 @@
+2017-04-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.3.6
+
 2017-04-08  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/finalizers.h (createExternalPointer): Use Shield<>
