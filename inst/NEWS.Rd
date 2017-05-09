@@ -13,7 +13,7 @@
     optionally filtered by yellow key (Kevin Jin and Dirk in \ghpr{216}
     and \ghpr{217} closing \ghit{215})
     \item Added file \code{init.c} with calls to \code{R_registerRoutines()}
-    \code{and R_useDynamicSymbols()}; also use \code{.registration=TRUE}
+    and \code{R_useDynamicSymbols()}; also use \code{.registration=TRUE}
     in \code{useDynLib} in \code{NAMESPACE} (Dirk in \ghpr{220})
     \item \code{getBars} and \code{getTicks} can now return
     \code{data.table} objects (Dirk in \ghpr{221})

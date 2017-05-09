@@ -50,6 +50,12 @@
 ##'   lookupSecurity("IBM", maxResuls=1000)    # appears to be capped at 1000
 ##'   lookupSecurity("IBM", "mtge")
 ##'   lookupSecurity("IBM ", "mtge")           # trailing space affects query
+##'
+##'   ## modify the symbol column (cf issue ticket 215 at GitHub)
+##'   res <- lookupSecurity("IBM")
+##'   res[, "symbol"] <- sub(pattern="^(.+)<(.)(.+)>$", "\\1 \\U\\2\\E\\3",
+##'                          perl=TRUE, res[, "security"])
+##'   res
 ##' }
 lookupSecurity <- function(query,
                            yellowkey = c("none", "cmdt", "eqty", "muni", "prfd", "clnt", "mmkt",
@@ -58,9 +64,9 @@ lookupSecurity <- function(query,
                                         "portuguese", "italian", "chinese_trad", "korean",
                                         "chinese_simp", "none_1", "none_2", "none_3", "none_4",
                                         "none_5", "russian"),
-                   maxResults = 20,
-                   verbose = FALSE,
-                   con = defaultConnection()) {
+                           maxResults = 20,
+                           verbose = FALSE,
+                           con = defaultConnection()) {
     yellowkey <- match.arg(yellowkey)
     language <- match.arg(language)
 
