@@ -6,6 +6,10 @@ sudo: required
 
 dist: trusty
 
+env:
+  global:
+    - _R_CHECK_FORCE_SUGGESTS_=FALSE
+     
 before_install:
   - curl -OLs https://eddelbuettel.github.io/r-travis/run.sh && chmod 0755 run.sh
   # optionally add our launchpad repo, but not needed here
