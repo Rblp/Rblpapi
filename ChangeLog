@@ -1,3 +1,15 @@
+2017-05-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll minor version
+
+	* R/getTicks.R: Document limit of 140 days of intraday data
+	* man/getTicks.Rd: Idem
+
+	* R/lookup.R: Add regular expression example to extract symbol (cf #215)
+	* man/lookupSecurity.Rd: Idem
+
+	* .travis.yml: Switch to using run.sh for Travis CI
+
 2017-04-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Release 0.3.6

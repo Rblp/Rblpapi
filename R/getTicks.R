@@ -26,6 +26,9 @@
 ##' matching event, or a \sQuote{TSUM} trade summary.  Note that this implies
 ##' double-counting.  There may be an option for this in the API.
 ##'
+##' The Bloomberg API allows to retrieve up to 140 days of intra-day
+##' history relative to the current date.
+##'
 ##' @title Get Ticks from Bloomberg
 ##' @param security A character variable describing a valid security ticker
 ##' @param eventType A character variable describing an event, default

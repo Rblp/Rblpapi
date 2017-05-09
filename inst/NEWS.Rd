@@ -4,6 +4,14 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
+\section{Changes in Rblpapi version 0.3.7 (2017-xx-yy)}{
+  \itemize{
+    \item The 140 day limit for intra-day data histories is now
+    mentioned in the \code{getTicks} help.
+    \item The Travis CI script was updated to use \code{run.sh}.
+  }
+}
+
 \section{Changes in Rblpapi version 0.3.6 (2017-04-20)}{
   \itemize{
     \item \code{bdh} can now store in \code{double} preventing overflow
@@ -13,7 +21,7 @@
     optionally filtered by yellow key (Kevin Jin and Dirk in \ghpr{216}
     and \ghpr{217} closing \ghit{215})
     \item Added file \code{init.c} with calls to \code{R_registerRoutines()}
-    \code{and R_useDynamicSymbols()}; also use \code{.registration=TRUE}
+    and \code{R_useDynamicSymbols()}; also use \code{.registration=TRUE}
     in \code{useDynLib} in \code{NAMESPACE} (Dirk in \ghpr{220})
     \item \code{getBars} and \code{getTicks} can now return
     \code{data.table} objects (Dirk in \ghpr{221})

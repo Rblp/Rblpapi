@@ -53,6 +53,12 @@ given the name of a company.
   lookupSecurity("IBM", maxResuls=1000)    # appears to be capped at 1000
   lookupSecurity("IBM", "mtge")
   lookupSecurity("IBM ", "mtge")           # trailing space affects query
+
+  ## modify the symbol column (cf issue ticket 215 at GitHub)
+  res <- lookupSecurity("IBM")
+  res[, "symbol"] <- sub(pattern="^(.+)<(.)(.+)>$", "\\\\1 \\\\U\\\\2\\\\E\\\\3",
+                         perl=TRUE, res[, "security"])
+  res
 }
 }
 \author{

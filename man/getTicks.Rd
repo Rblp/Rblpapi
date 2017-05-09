@@ -52,6 +52,9 @@ observations for the same trade}. Eg for ES we can get \sQuote{AS} or
 \sQuote{AB} for aggressor buy or sell, \sQuote{OR} for an order participating in the
 matching event, or a \sQuote{TSUM} trade summary.  Note that this implies
 double-counting.  There may be an option for this in the API.
+
+The Bloomberg API allows to retrieve up to 140 days of intra-day
+history relative to the current date.
 }
 \examples{
 \dontrun{
