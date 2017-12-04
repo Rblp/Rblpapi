@@ -45,6 +45,8 @@
 ##' environment. This effectively frees users from having to
 ##' explicitly create such an object.
 ##' @author Whit Armstrong and Dirk Eddelbuettel
+##' @seealso Many SAPI and bPipe connections require authentication 
+##' via \code{blpAuthenticate} after \code{blpConnect}.
 ##' @examples
 ##' \dontrun{
 ##'   con <- blpConnect()   # adjust as needed
