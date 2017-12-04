@@ -27,9 +27,15 @@
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.
-##' @return Not sure. May just be the side effect of having the
-##' session authenticated.
+##' @return The returned object should be passed to subsequent data 
+##' calls via bdp(), bds(), etc.  
 ##' @author Whit Armstrong and Dirk Eddelbuettel
+##' @examples
+##' \dontrun{
+##' blpConnect(host=blpHost, port=blpPort)
+##' blpid <- blpAuthenticate(uuid=blpUUID, ip=blpIP_address)
+##' bdp("IBM US Equity", "NAME", identity=blpid)
+##' }
 
 blpAuthenticate <- function(uuid, host="localhost", ip.address, con=defaultConnection()) {
     if (missing(ip.address)) {
