@@ -9,6 +9,8 @@
     \item The 140 day limit for intra-day data histories is now
     mentioned in the \code{getTicks} help.
     \item The Travis CI script was updated to use \code{run.sh}.
+    \item The \code{install_name_tool} invocation under macOS was
+    corrected (@spennihana in \ghit{232})
   }
 }
 
