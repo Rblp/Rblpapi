@@ -106,8 +106,7 @@ SEXP eleToDatetime(const Element& e) {
 }
 
 SEXP eleToArray(const Element& e) {
-    if(e.isNull()) { R_NilValue; }
-    SEXP ans;
+    if(e.isNull()) { return R_NilValue; }
     switch(e.datatype()) {
     case BLPAPI_DATATYPE_BOOL:
         return eleToLogical(e);
