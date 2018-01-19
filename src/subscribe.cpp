@@ -188,9 +188,8 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
         options_collapsed = vectorToCSVString(options);
     }
 
-    for(const std::string& security : securities) {
-        CorrelationId cid(const_cast<void*>(reinterpret_cast<const void*>(&security)));
-        subscriptions.add(security.c_str(),fields_collapsed.c_str(),options_collapsed.c_str(),cid);
+    for(size_t i = 0; i < securities.size(); ++i) {
+        subscriptions.add(securities[i].c_str(),fields_collapsed.c_str(),options_collapsed.c_str(),CorrelationId(i));
     }
 
     // check if identity was passed, if so, use it
@@ -202,30 +201,34 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
         session->subscribe(subscriptions);
     }
 
-    while (true) {
-        Event event = session->nextEvent();
-        Rcpp::checkUserInterrupt();
-        MessageIterator msgIter(event);
-        while (msgIter.next()) {
-            Message msg = msgIter.message();
-            if (event.eventType() == Event::SUBSCRIPTION_STATUS ||
-                event.eventType() == Event::SUBSCRIPTION_DATA) {
+    try {
+        while (true) {
+            Event event = session->nextEvent();
+            Rcpp::checkUserInterrupt();
+            MessageIterator msgIter(event);
+            while (msgIter.next()) {
+                Message msg = msgIter.message();
+                if (event.eventType() == Event::SUBSCRIPTION_STATUS ||
+                    event.eventType() == Event::SUBSCRIPTION_DATA) {
 
-                Rcpp::List ans;
-                auto it = BlpapiEventToString.find(event.eventType());
-                if(it==BlpapiEventToString.end()) {
-                    throw Rcpp::exception("Unknown event type.");
+                    Rcpp::List ans;
+                    auto it = BlpapiEventToString.find(event.eventType());
+                    if(it==BlpapiEventToString.end()) {
+                        throw Rcpp::exception("Unknown event type.");
+                    }
+                    ans["event.type"] = it->second;
+                    size_t cid(msg.correlationId().asInteger());
+                    if(cid >= 0 && cid < securities.size()) {
+                        ans["topic"] = securities[cid];
+                    }
+                    ans["data"] = recursiveParse(msg.asElement());
+                    // call user function
+                    fun(ans);
                 }
-                ans["event.type"] = it->second;
-                std::string* sp = static_cast<std::string*>(msg.correlationId().asPointer());
-                if(sp >= &securities[0] && sp < &securities[securities.size()]) {
-                    ans["topic"] = *sp;
-                }
-                ans["data"] = recursiveParse(msg.asElement());
-                // call user function
-                fun(ans);
             }
         }
+    } catch (const Rcpp::internal::InterruptedException& e) {
+        session->unsubscribe(subscriptions);
     }
     return R_NilValue;
 }
