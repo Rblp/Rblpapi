@@ -217,9 +217,9 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
                     throw Rcpp::exception("Unknown event type.");
                 }
                 ans["event.type"] = it->second;
-                if(event.eventType() == Event::SUBSCRIPTION_DATA) {
-                    const std::string &topic = *static_cast<const std::string*>(msg.correlationId().asPointer());
-                    ans["topic"] = topic;
+                std::string* sp = static_cast<std::string*>(msg.correlationId().asPointer());
+                if(sp >= &securities[0] && sp < &securities[securities.size()]) {
+                    ans["topic"] = *sp;
                 }
                 ans["data"] = recursiveParse(msg.asElement());
                 // call user function
