@@ -189,7 +189,7 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
     }
 
     for(const std::string& security : securities) {
-        CorrelationId cid(reinterpret_cast<void*>(const_cast<char *>(security.c_str())));
+        CorrelationId cid(const_cast<void*>(reinterpret_cast<const void*>(&security)));
         subscriptions.add(security.c_str(),fields_collapsed.c_str(),options_collapsed.c_str(),cid);
     }
 
@@ -208,7 +208,6 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
         MessageIterator msgIter(event);
         while (msgIter.next()) {
             Message msg = msgIter.message();
-            const char *topic = (char *)msg.correlationId().asPointer();
             if (event.eventType() == Event::SUBSCRIPTION_STATUS ||
                 event.eventType() == Event::SUBSCRIPTION_DATA) {
 
@@ -218,7 +217,10 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
                     throw Rcpp::exception("Unknown event type.");
                 }
                 ans["event.type"] = it->second;
-                ans["topic"] = topic;
+                if(event.eventType() == Event::SUBSCRIPTION_DATA) {
+                    const std::string &topic = *static_cast<const std::string*>(msg.correlationId().asPointer());
+                    ans["topic"] = topic;
+                }
                 ans["data"] = recursiveParse(msg.asElement());
                 // call user function
                 fun(ans);
