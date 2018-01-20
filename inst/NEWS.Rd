@@ -4,13 +4,18 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
-\section{Changes in Rblpapi version 0.3.7 (2017-xx-yy)}{
+\section{Changes in Rblpapi version 0.3.7 (2018-01-20)}{
   \itemize{
     \item The 140 day limit for intra-day data histories is now
-    mentioned in the \code{getTicks} help.
-    \item The Travis CI script was updated to use \code{run.sh}.
+    mentioned in the \code{getTicks} help (Dirk in \ghpr{226} addressing
+    \ghit{215} and \ghit{225}).
+    \item The Travis CI script was updated to use \code{run.sh} (Dirk in \ghpr{226}).
     \item The \code{install_name_tool} invocation under macOS was
     corrected (@spennihana in \ghit{232})
+    \item The \code{blpAuthenticate} help page has additional examples
+    (@randomee in \ghpr{252}).
+    \item The \code{blpAuthenticate} code was updated and improved (Whit
+    in \ghpr{258} addressing \ghpr{257})
   }
 }
 
