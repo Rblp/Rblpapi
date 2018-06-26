@@ -68,6 +68,10 @@ Data History) queries
   bdh("SPY US Equity", c("PX_LAST", "VOLUME"),
       start.date=Sys.Date()-31*6, options=opt)
 
+  ## example for non-date start
+  bdh("SPY US Equity", c("PX_LAST", "VOLUME"),
+      start.date="-6CM", options=opt)
+
   ## example for options and overrides
   opt <- c("periodicitySelection" = "QUARTERLY")
   ovrd <- c("BEST_FPERIOD_OVERRIDE"="1GQ")
