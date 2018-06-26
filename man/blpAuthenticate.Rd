@@ -19,11 +19,18 @@ call, and retrieved via the internal function
 \code{defaultConnection}.}
 }
 \value{
-Not sure. May just be the side effect of having the
-session authenticated.
+The returned object should be passed to subsequent data 
+calls via bdp(), bds(), etc.
 }
 \description{
 This function authenticates against the the Bloomberg API
+}
+\examples{
+\dontrun{
+blpConnect(host=blpHost, port=blpPort)
+blpid <- blpAuthenticate(uuid=blpUUID, ip=blpIP_address)
+bdp("IBM US Equity", "NAME", identity=blpid)
+}
 }
 \author{
 Whit Armstrong and Dirk Eddelbuettel

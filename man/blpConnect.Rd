@@ -46,6 +46,10 @@ explicitly create such an object.
   con <- blpConnect()   # adjust as needed
 }
 }
+\seealso{
+Many SAPI and bPipe connections require authentication 
+via \code{blpAuthenticate} after \code{blpConnect}.
+}
 \author{
 Whit Armstrong and Dirk Eddelbuettel
 }
