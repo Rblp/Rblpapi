@@ -66,6 +66,10 @@
 ##'   bdh("SPY US Equity", c("PX_LAST", "VOLUME"),
 ##'       start.date=Sys.Date()-31*6, options=opt)
 ##'
+##'   ## example for non-date start
+##'   bdh("SPY US Equity", c("PX_LAST", "VOLUME"),
+##'       start.date="-6CM", options=opt)
+##'
 ##'   ## example for options and overrides
 ##'   opt <- c("periodicitySelection" = "QUARTERLY")
 ##'   ovrd <- c("BEST_FPERIOD_OVERRIDE"="1GQ")
@@ -76,8 +80,9 @@ bdh <- function(securities, fields, start.date, end.date=NULL,
                 include.non.trading.days=FALSE, options=NULL, overrides=NULL,
                 verbose=FALSE, identity=NULL, con=defaultConnection(),
                 int.as.double=getOption("blpIntAsDouble", FALSE)) {
-    if (!class(start.date) == "Date") stop("start.date must be a Date object", call.=FALSE)
-    start.date <- format(start.date, format="%Y%m%d")
+    if (class(start.date) == "Date") {
+        start.date <- format(start.date, format="%Y%m%d")
+    }
     if (!is.null(end.date)) {
         end.date <- format(end.date, format="%Y%m%d")
     }
