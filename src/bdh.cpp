@@ -138,6 +138,19 @@ Rcpp::List bdh_Impl(SEXP con_,
     // capture names in case they come back out of order
     std::vector<std::string> ans_names;
 
+    // in case of option returnRelativeDate=TRUE
+    // we need to add a field
+    if(options_ != R_NilValue) {
+      Rcpp::CharacterVector options(options_);
+      if (options.containsElementNamed("returnRelativeDate")) {
+        R_len_t ni = options.findName("returnRelativeDate");
+        if (options[ni] == "TRUE") {
+          fields.insert(fields.begin(),"RELATIVE_DATE");
+          rtypes.insert(rtypes.begin(),RblpapiT::String);
+        }
+      }
+    }
+
     // the date field was not part of the request
     // but we need to map it into the result
     // we always want it in the first position
