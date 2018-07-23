@@ -77,6 +77,10 @@ Data History) queries
   ovrd <- c("BEST_FPERIOD_OVERRIDE"="1GQ")
   bdh("IBM US Equity", "BEST_SALES", start.date=Sys.Date()-365.25*4,
       options=opt, overrides=ovrd)
+
+  ## example for returnRelativeDate option
+  opt <- c(periodicitySelection="YEARLY", periodicityAdjustment="FISCAL", returnRelativeDate=TRUE)
+  bdh("GLB ID Equity", "CUR_MKT_CAP", as.Date("1997-12-31"), as.Date("2017-12-31"), options=opt)
 }
 }
 \seealso{
