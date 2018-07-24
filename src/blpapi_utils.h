@@ -41,7 +41,6 @@ void createStandardRequest(BloombergLP::blpapi::Request& request,const std::vect
 void sendRequestWithIdentity(BloombergLP::blpapi::Session* session, BloombergLP::blpapi::Request& request, SEXP identity_);
 
 void populateDfRow(SEXP ans, R_len_t row_index, const BloombergLP::blpapi::Element& e, RblpapiT rblpapitype);
-void addDateClass(SEXP x);
 void addPosixClass(SEXP x);
 
 Rcpp::NumericVector createPOSIXtVector(const std::vector<double> & ticks, const std::string tz="UTC");

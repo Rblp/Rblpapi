@@ -135,13 +135,6 @@ const double bbgDatetimeToUTC(const BloombergLP::blpapi::Datetime& dt) {
   return x;
 }
 
-void addDateClass(SEXP x) {
-    // create and add dates class to dates object
-    // cf Rcpp's inst/include/Rcpp/date_datetime/newDateVector.h
-    Rcpp::Shield<SEXP> dateclass(Rf_mkString("Date"));
-    Rf_setAttrib(x, R_ClassSymbol, dateclass);
-}
-
 void addPosixClass(SEXP x) {
     // create and add dates class to dates object
     // cf Rcpp's inst/include/Rcpp/date_datetime/newDatetimeVector.h
