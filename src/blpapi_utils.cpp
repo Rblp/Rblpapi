@@ -242,7 +242,7 @@ void populateDfRow(SEXP ans, R_len_t row_index, const Element& e, RblpapiT rblpa
     REAL(ans)[row_index] = e.getValueAsFloat64(); break;
   case RblpapiT::Date:
     // handle the case of BBG passing down dates as double in YYYYMMDD format
-    INTEGER(ans)[row_index] = e.datatype()==BLPAPI_DATATYPE_FLOAT32 || e.datatype()==BLPAPI_DATATYPE_FLOAT64 ?
+    REAL(ans)[row_index] = e.datatype()==BLPAPI_DATATYPE_FLOAT32 || e.datatype()==BLPAPI_DATATYPE_FLOAT64 ?
       bbgDateToRDate(e.getValueAsFloat64()) :
       bbgDateToRDate(e.getValueAsDatetime());
     break;
@@ -335,8 +335,7 @@ SEXP allocateDataFrameColumn(RblpapiT rblpapitype, const size_t n) {
         ans = Rcpp::NumericVector(n, NA_REAL);
         break;
     case RblpapiT::Date:
-        ans = Rcpp::IntegerVector(n, NA_INTEGER);
-        addDateClass(ans);
+        ans = Rcpp::DateVector(n);
         break;
     case RblpapiT::Datetime:
         // FIXME: string for datetime ?
