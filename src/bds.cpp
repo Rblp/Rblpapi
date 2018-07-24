@@ -76,7 +76,7 @@ void populateDfRowBDS(SEXP ans, R_len_t row_index, Element& e) {
         Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
         break;
     case BLPAPI_DATATYPE_DATE:
-        INTEGER(ans)[row_index] = bbgDateToRDate(e.getValueAsDatetime());
+        REAL(ans)[row_index] = bbgDateToRDate(e.getValueAsDatetime());
         break;
     case BLPAPI_DATATYPE_TIME:
         //FIXME: separate out time later
@@ -132,8 +132,7 @@ SEXP allocateDataFrameColumn(int fieldT, size_t n) {
         Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
         break;
     case BLPAPI_DATATYPE_DATE:
-        ans = Rcpp::IntegerVector(n, NA_INTEGER);
-        addDateClass(ans);
+        ans = Rcpp::DateVector(n);
         break;
     case BLPAPI_DATATYPE_TIME:
         //FIXME: separate out time later
