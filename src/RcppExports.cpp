@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // authenticate_Impl
 SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_);
-RcppExport SEXP Rblpapi_authenticate_Impl(SEXP con_SEXP, SEXP uuid_SEXP, SEXP ip_address_SEXP) {
+RcppExport SEXP _Rblpapi_authenticate_Impl(SEXP con_SEXP, SEXP uuid_SEXP, SEXP ip_address_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -21,7 +21,7 @@ END_RCPP
 }
 // bdh_Impl
 Rcpp::List bdh_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields, std::string start_date_, SEXP end_date_, SEXP options_, SEXP overrides_, bool verbose, SEXP identity_, bool int_as_double);
-RcppExport SEXP Rblpapi_bdh_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP start_date_SEXP, SEXP end_date_SEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP verboseSEXP, SEXP identity_SEXP, SEXP int_as_doubleSEXP) {
+RcppExport SEXP _Rblpapi_bdh_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP start_date_SEXP, SEXP end_date_SEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP verboseSEXP, SEXP identity_SEXP, SEXP int_as_doubleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -41,7 +41,7 @@ END_RCPP
 }
 // bdp_Impl
 Rcpp::List bdp_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields, SEXP options_, SEXP overrides_, bool verbose, SEXP identity_);
-RcppExport SEXP Rblpapi_bdp_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP verboseSEXP, SEXP identity_SEXP) {
+RcppExport SEXP _Rblpapi_bdp_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP verboseSEXP, SEXP identity_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -58,7 +58,7 @@ END_RCPP
 }
 // bds_Impl
 Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities, std::string field, SEXP options_, SEXP overrides_, bool verbose, SEXP identity_);
-RcppExport SEXP Rblpapi_bds_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldSEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP verboseSEXP, SEXP identity_SEXP) {
+RcppExport SEXP _Rblpapi_bds_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldSEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP verboseSEXP, SEXP identity_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -75,7 +75,7 @@ END_RCPP
 }
 // getPortfolio_Impl
 Rcpp::List getPortfolio_Impl(SEXP con_, std::vector<std::string> securities, std::string field, SEXP options_, SEXP overrides_, bool verbose, SEXP identity_);
-RcppExport SEXP Rblpapi_getPortfolio_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldSEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP verboseSEXP, SEXP identity_SEXP) {
+RcppExport SEXP _Rblpapi_getPortfolio_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldSEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP verboseSEXP, SEXP identity_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -92,7 +92,7 @@ END_RCPP
 }
 // beqs_Impl
 DataFrame beqs_Impl(SEXP con, std::string screenName, std::string screenType, std::string group, std::string pitdate, std::string languageId, bool verbose);
-RcppExport SEXP Rblpapi_beqs_Impl(SEXP conSEXP, SEXP screenNameSEXP, SEXP screenTypeSEXP, SEXP groupSEXP, SEXP pitdateSEXP, SEXP languageIdSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _Rblpapi_beqs_Impl(SEXP conSEXP, SEXP screenNameSEXP, SEXP screenTypeSEXP, SEXP groupSEXP, SEXP pitdateSEXP, SEXP languageIdSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -109,7 +109,7 @@ END_RCPP
 }
 // blpConnect_Impl
 SEXP blpConnect_Impl(const std::string host, const int port);
-RcppExport SEXP Rblpapi_blpConnect_Impl(SEXP hostSEXP, SEXP portSEXP) {
+RcppExport SEXP _Rblpapi_blpConnect_Impl(SEXP hostSEXP, SEXP portSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -121,7 +121,7 @@ END_RCPP
 }
 // getHeaderVersion
 std::string getHeaderVersion();
-RcppExport SEXP Rblpapi_getHeaderVersion() {
+RcppExport SEXP _Rblpapi_getHeaderVersion() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -131,7 +131,7 @@ END_RCPP
 }
 // getRuntimeVersion
 std::string getRuntimeVersion();
-RcppExport SEXP Rblpapi_getRuntimeVersion() {
+RcppExport SEXP _Rblpapi_getRuntimeVersion() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -141,7 +141,7 @@ END_RCPP
 }
 // bsrch_Impl
 DataFrame bsrch_Impl(SEXP con, std::string domain, std::string limit, bool verbose);
-RcppExport SEXP Rblpapi_bsrch_Impl(SEXP conSEXP, SEXP domainSEXP, SEXP limitSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _Rblpapi_bsrch_Impl(SEXP conSEXP, SEXP domainSEXP, SEXP limitSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -155,7 +155,7 @@ END_RCPP
 }
 // fieldSearch_Impl
 Rcpp::DataFrame fieldSearch_Impl(SEXP con, std::string searchterm, std::string excludeterm);
-RcppExport SEXP Rblpapi_fieldSearch_Impl(SEXP conSEXP, SEXP searchtermSEXP, SEXP excludetermSEXP) {
+RcppExport SEXP _Rblpapi_fieldSearch_Impl(SEXP conSEXP, SEXP searchtermSEXP, SEXP excludetermSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -168,7 +168,7 @@ END_RCPP
 }
 // getBars_Impl
 Rcpp::DataFrame getBars_Impl(SEXP con, std::string security, std::string eventType, int barInterval, std::string startDateTime, std::string endDateTime, Rcpp::Nullable<Rcpp::CharacterVector> options, bool verbose);
-RcppExport SEXP Rblpapi_getBars_Impl(SEXP conSEXP, SEXP securitySEXP, SEXP eventTypeSEXP, SEXP barIntervalSEXP, SEXP startDateTimeSEXP, SEXP endDateTimeSEXP, SEXP optionsSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _Rblpapi_getBars_Impl(SEXP conSEXP, SEXP securitySEXP, SEXP eventTypeSEXP, SEXP barIntervalSEXP, SEXP startDateTimeSEXP, SEXP endDateTimeSEXP, SEXP optionsSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -186,7 +186,7 @@ END_RCPP
 }
 // fieldInfo_Impl
 Rcpp::List fieldInfo_Impl(SEXP con_, std::vector<std::string> fields);
-RcppExport SEXP Rblpapi_fieldInfo_Impl(SEXP con_SEXP, SEXP fieldsSEXP) {
+RcppExport SEXP _Rblpapi_fieldInfo_Impl(SEXP con_SEXP, SEXP fieldsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -198,7 +198,7 @@ END_RCPP
 }
 // getTicks_Impl
 Rcpp::DataFrame getTicks_Impl(SEXP con, std::string security, std::vector<std::string> eventType, std::string startDateTime, std::string endDateTime, bool setCondCodes, bool verbose);
-RcppExport SEXP Rblpapi_getTicks_Impl(SEXP conSEXP, SEXP securitySEXP, SEXP eventTypeSEXP, SEXP startDateTimeSEXP, SEXP endDateTimeSEXP, SEXP setCondCodesSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _Rblpapi_getTicks_Impl(SEXP conSEXP, SEXP securitySEXP, SEXP eventTypeSEXP, SEXP startDateTimeSEXP, SEXP endDateTimeSEXP, SEXP setCondCodesSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -215,7 +215,7 @@ END_RCPP
 }
 // lookup_Impl
 Rcpp::DataFrame lookup_Impl(SEXP con, std::string query, std::string yellowKeyFilter, std::string languageOverride, int maxResults, bool verbose);
-RcppExport SEXP Rblpapi_lookup_Impl(SEXP conSEXP, SEXP querySEXP, SEXP yellowKeyFilterSEXP, SEXP languageOverrideSEXP, SEXP maxResultsSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _Rblpapi_lookup_Impl(SEXP conSEXP, SEXP querySEXP, SEXP yellowKeyFilterSEXP, SEXP languageOverrideSEXP, SEXP maxResultsSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -231,7 +231,7 @@ END_RCPP
 }
 // subscribe_Impl
 SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields, Rcpp::Function fun, SEXP options_, SEXP identity_);
-RcppExport SEXP Rblpapi_subscribe_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP funSEXP, SEXP options_SEXP, SEXP identity_SEXP) {
+RcppExport SEXP _Rblpapi_subscribe_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP funSEXP, SEXP options_SEXP, SEXP identity_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -244,4 +244,29 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(subscribe_Impl(con_, securities, fields, fun, options_, identity_));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_Rblpapi_authenticate_Impl", (DL_FUNC) &_Rblpapi_authenticate_Impl, 3},
+    {"_Rblpapi_bdh_Impl", (DL_FUNC) &_Rblpapi_bdh_Impl, 10},
+    {"_Rblpapi_bdp_Impl", (DL_FUNC) &_Rblpapi_bdp_Impl, 7},
+    {"_Rblpapi_bds_Impl", (DL_FUNC) &_Rblpapi_bds_Impl, 7},
+    {"_Rblpapi_getPortfolio_Impl", (DL_FUNC) &_Rblpapi_getPortfolio_Impl, 7},
+    {"_Rblpapi_beqs_Impl", (DL_FUNC) &_Rblpapi_beqs_Impl, 7},
+    {"_Rblpapi_blpConnect_Impl", (DL_FUNC) &_Rblpapi_blpConnect_Impl, 2},
+    {"_Rblpapi_getHeaderVersion", (DL_FUNC) &_Rblpapi_getHeaderVersion, 0},
+    {"_Rblpapi_getRuntimeVersion", (DL_FUNC) &_Rblpapi_getRuntimeVersion, 0},
+    {"_Rblpapi_bsrch_Impl", (DL_FUNC) &_Rblpapi_bsrch_Impl, 4},
+    {"_Rblpapi_fieldSearch_Impl", (DL_FUNC) &_Rblpapi_fieldSearch_Impl, 3},
+    {"_Rblpapi_getBars_Impl", (DL_FUNC) &_Rblpapi_getBars_Impl, 8},
+    {"_Rblpapi_fieldInfo_Impl", (DL_FUNC) &_Rblpapi_fieldInfo_Impl, 2},
+    {"_Rblpapi_getTicks_Impl", (DL_FUNC) &_Rblpapi_getTicks_Impl, 7},
+    {"_Rblpapi_lookup_Impl", (DL_FUNC) &_Rblpapi_lookup_Impl, 6},
+    {"_Rblpapi_subscribe_Impl", (DL_FUNC) &_Rblpapi_subscribe_Impl, 6},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_Rblpapi(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }
