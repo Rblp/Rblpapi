@@ -1,3 +1,7 @@
+2018-09-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* .travis.yml: Minor update
+
 2018-07-25  Davis Vaughn  <mvaugh15@uncc.edu>
 
 	* src/init.c: Removed as content is in RcppExport.cpp
