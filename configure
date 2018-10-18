@@ -76,7 +76,7 @@ cwd=$(pwd)
 mkdir -p blp/${platform}
 cd blp/${platform}
 if [ ! -f blpHeaders.tar.gz ]; then
-    download https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz
+    download https://github.com/Rblp/blp/raw/experimental/headers/${platform}/blpHeaders.tar.gz
     tar xfz blpHeaders.tar.gz -C ../../inst
 fi
 cd ${cwd}
@@ -85,7 +85,7 @@ cd ${cwd}
 mkdir -p inst/blp
 cd blp/${platform}
 if [ ! -f blpLibrary.tar.gz ]; then
-    download https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
+    download https://github.com/Rblp/blp/raw/experimental/${platform}${flavour}/blpLibrary.tar.gz
     tar xfz blpLibrary.tar.gz -C ../../inst/blp/ libblpapi3_${flavour}.so
 fi
 cd ${cwd}
