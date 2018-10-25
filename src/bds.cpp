@@ -47,7 +47,7 @@ void populateDfRowBDS(SEXP ans, R_len_t row_index, Element& e) {
         LOGICAL(ans)[row_index] = e.getValueAsBool();
         break;
     case BLPAPI_DATATYPE_CHAR:
-        SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString()));
+        SET_STRING_ELT(ans,row_index,Rf_mkCharCE(e.getValueAsString(), CE_UTF8));
         break;
     case BLPAPI_DATATYPE_BYTE:
         Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
@@ -70,7 +70,7 @@ void populateDfRowBDS(SEXP ans, R_len_t row_index, Element& e) {
         REAL(ans)[row_index] = e.getValueAsFloat64();
         break;
     case BLPAPI_DATATYPE_STRING:
-        SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString()));
+        SET_STRING_ELT(ans,row_index,Rf_mkCharCE(e.getValueAsString(), CE_UTF8));
         break;
     case BLPAPI_DATATYPE_BYTEARRAY:
         Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
@@ -91,7 +91,7 @@ void populateDfRowBDS(SEXP ans, R_len_t row_index, Element& e) {
         break;
     case BLPAPI_DATATYPE_ENUMERATION:
         //throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
-        SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString())); break;
+        SET_STRING_ELT(ans,row_index,Rf_mkCharCE(e.getValueAsString(), CE_UTF8)); break;
     case BLPAPI_DATATYPE_SEQUENCE:
         Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
     case BLPAPI_DATATYPE_CHOICE:

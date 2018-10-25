@@ -39,10 +39,10 @@ Rcpp::List fieldInfo_Impl(SEXP con_, std::vector<std::string> fields) {
   Rcpp::List res(allocateDataFrame(fields, colnames, res_types));
   R_len_t i(0);
   for(auto f : fldinfos) {
-    SET_STRING_ELT(res[0],i,Rf_mkChar(f.id.c_str()));
-    SET_STRING_ELT(res[1],i,Rf_mkChar(f.mnemonic.c_str()));
-    SET_STRING_ELT(res[2],i,Rf_mkChar(f.datatype.c_str()));
-    SET_STRING_ELT(res[3],i,Rf_mkChar(f.ftype.c_str()));
+    SET_STRING_ELT(res[0],i,Rf_mkCharCE(f.id.c_str(), CE_UTF8));
+    SET_STRING_ELT(res[1],i,Rf_mkCharCE(f.mnemonic.c_str(), CE_UTF8));
+    SET_STRING_ELT(res[2],i,Rf_mkCharCE(f.datatype.c_str(), CE_UTF8));
+    SET_STRING_ELT(res[3],i,Rf_mkCharCE(f.ftype.c_str(), CE_UTF8));
     ++i;
   }
   return res;

@@ -242,13 +242,13 @@ void populateDfRow(SEXP ans, R_len_t row_index, const Element& e, RblpapiT rblpa
   case RblpapiT::Datetime:
     REAL(ans)[row_index] = bbgDateToPOSIX(e.getValueAsDatetime()); break;
   case RblpapiT::String:
-    SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString())); break;
+    SET_STRING_ELT(ans,row_index,Rf_mkCharCE(e.getValueAsString(), CE_UTF8)); break;
   default: // try to convert it as a string
-    SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString())); break;
+    SET_STRING_ELT(ans,row_index,Rf_mkCharCE(e.getValueAsString(), CE_UTF8)); break;
   }
 }
 
-Rcpp::NumericVector createPOSIXtVector(const std::vector<double> & ticks, 
+Rcpp::NumericVector createPOSIXtVector(const std::vector<double> & ticks,
                                        const std::string tz) {
     Rcpp::NumericVector pt(ticks.begin(), ticks.end());
     pt.attr("class") = Rcpp::CharacterVector::create("POSIXct", "POSIXt");
