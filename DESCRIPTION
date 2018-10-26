@@ -1,6 +1,6 @@
 Package: Rblpapi
 Title: R Interface to 'Bloomberg'
-Version: 0.3.8
+Version: 0.3.8.1
 Date: 2018-01-20
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Author: Whit Armstrong, Dirk Eddelbuettel and John Laing
