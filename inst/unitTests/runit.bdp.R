@@ -42,4 +42,9 @@ if (.runThisTest) {
                   msg="check column classes match fieldInfo")
     }
 
+    test.naDate <- function() {
+        res <- bdp("BBG006YQMFQ5", "ISSUE_DT")
+        checkTrue(is.na(res$ISSUE_DT), msg="checking NA date value")
+    }
+
 }
