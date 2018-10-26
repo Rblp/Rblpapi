@@ -1,3 +1,15 @@
+2018-10-25  John Laing  <john.laing@gmail.com>
+
+	* DESCRIPTION (Date): Roll date
+	* inst/unitTests/runit.bdp.R: Add test for NA date fix
+
+2018-10-25  Xianying Tan  <shrektan@126.com>
+
+	* DESCRIPTION (Version): New minor version
+	* src/getFieldInfo.cpp: Use UTF-8 encoding
+	* src/bds.cpp: Use UTF-8 encoding and initialize Date vector with NA
+	* src/blpapi_utils.cpp: Idem
+
 2018-09-02  Dirk Eddelbuettel  <edd@debian.org>
 
 	* .travis.yml: Minor update
