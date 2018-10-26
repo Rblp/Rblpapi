@@ -328,7 +328,8 @@ SEXP allocateDataFrameColumn(RblpapiT rblpapitype, const size_t n) {
         ans = Rcpp::NumericVector(n, NA_REAL);
         break;
     case RblpapiT::Date:
-        ans = Rcpp::DateVector(n);
+        ans = Rcpp::NumericVector(n, NA_REAL);
+        ans = Rcpp::DateVector(ans);
         break;
     case RblpapiT::Datetime:
         // FIXME: string for datetime ?

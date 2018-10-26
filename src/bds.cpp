@@ -132,7 +132,8 @@ SEXP allocateDataFrameColumn(int fieldT, size_t n) {
         Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
         break;
     case BLPAPI_DATATYPE_DATE:
-        ans = Rcpp::DateVector(n);
+        ans = Rcpp::NumericVector(n, NA_REAL);
+        ans = Rcpp::DateVector(ans);
         break;
     case BLPAPI_DATATYPE_TIME:
         //FIXME: separate out time later
