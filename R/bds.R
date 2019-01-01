@@ -53,7 +53,7 @@
 ##' }
 bds <- function(security, field, options=NULL,
                 overrides=NULL, verbose=FALSE,
-                identity=NULL, con=defaultConnection()) {
+                identity=defaultAuthentication(), con=defaultConnection()) {
     if (length(security) != 1L)
         stop("more than one security submitted.", call.=FALSE)
     if (length(field) != 1L)

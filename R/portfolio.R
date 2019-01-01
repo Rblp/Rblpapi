@@ -45,7 +45,7 @@
 ## TODO: examples. Do global portfolios exist so that examples will
 ##       work for everyone? Otherwise I don't know how to do this.
 getPortfolio <- function(security, field, options=NULL, overrides=NULL,
-                      verbose=FALSE, identity=NULL,
+                      verbose=FALSE, identity=defaultAuthentication(),
                       con=defaultConnection()) {
     if (length(security) != 1L)
         stop("more than one security submitted.", call.=FALSE)

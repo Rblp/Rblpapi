@@ -32,8 +32,15 @@
         if (getOption("blpVerbose", FALSE)) {
             packageStartupMessage("Created and stored default connection object.")
         }
+        if (getOption("blpAutoAuthenticate", FALSE)) {
+            blpAuth <- blpAuthenticate()
+            if (getOption("blpVerbose", FALSE)) {
+                packageStartupMessage("Created and stored default authentication object.")
+            }
+        }
     } else {
         con <- NULL
     }
     assign("con", con, envir=.pkgenv)
+    assign("blpAuth", blpAuth, envir=.pkgenv)
 }

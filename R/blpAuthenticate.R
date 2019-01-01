@@ -27,24 +27,38 @@
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.
-##' @return The returned object should be passed to subsequent data 
-##' calls via bdp(), bds(), etc.  
+##' @return In the \code{default=TRUE} case nothing is returned, and
+##' this authentication is automatically used for all future calls which
+##' omit the \code{identity} argument. Otherwise an authentication object is
+##' returned which is required by all the accessor functions in the
+##' package. (e.g. \code{bdp()} \code{bds()} \code{getPortfolio()} 
 ##' @author Whit Armstrong and Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{
 ##' blpConnect(host=blpHost, port=blpPort)
+##' blpAuthenticate(uuid=blpUUID, ip=blpIP_address)
+##' bdp("IBM US Equity", "NAME")
+##'
 ##' blpid <- blpAuthenticate(uuid=blpUUID, ip=blpIP_address)
 ##' bdp("IBM US Equity", "NAME", identity=blpid)
 ##' }
 
-blpAuthenticate <- function(uuid, host="localhost", ip.address, con=defaultConnection()) {
-    if (missing(ip.address)) {
-        ## Linux only ?
-        cmd.res <- system(paste("host",host), intern=TRUE,
-                          ignore.stdout=FALSE, ignore.stderr=FALSE,wait=TRUE)
-        ip.address <- strsplit(cmd.res,"address ")[[1]][2]
-    }
-    authenticate_Impl(con, as.character(uuid), ip.address)
+blpAuthenticate <- function(uuid=getOption("uuid"),
+                            host=getOption("blpHost", "localhost"),
+                            ip.address=getOption("blpIP", "localhost"),
+                            con=defaultConnection(),
+                            default=TRUE) {
+    ## Doesn't make sense that the SAPI/Bpipe server would be localhost.
+    ##   or at least it's uncommon enough that it should not be the default.
+    ## if (missing(ip.address)) {
+    ##     ## Linux only ?
+    ##     cmd.res <- system(paste("host",host), intern=TRUE,
+    ##                       ignore.stdout=FALSE, ignore.stderr=FALSE,wait=TRUE)
+    ##     ip.address <- strsplit(cmd.res,"address ")[[1]][2]
+    ## }
+
+    blpAuth <- authenticate_Impl(con, as.character(uuid), ip.address)
+    if (default) .pkgenv$blpAuth <- blpAuth else return(blpAuth)
 }
 
 #### TODO: rename to just 'authenticate' ?
