@@ -26,20 +26,22 @@
                                  " and run-time ", getRuntimeVersion(), "."))
     packageStartupMessage(paste0("Please respect the Bloomberg licensing agreement ",
                                  "and terms of service."))
-    
+
     if (getOption("blpAutoConnect", FALSE)) {
         con <- blpConnect()
         if (getOption("blpVerbose", FALSE)) {
             packageStartupMessage("Created and stored default connection object.")
         }
-        if (getOption("blpAutoAuthenticate", FALSE)) {
-            blpAuth <- blpAuthenticate()
-            if (getOption("blpVerbose", FALSE)) {
-                packageStartupMessage("Created and stored default authentication object.")
-            }
-        }
     } else {
         con <- NULL
+    }
+    if (getOption("blpAutoAuthenticate", FALSE)) {
+        blpAuth <- blpAuthenticate()
+        if (getOption("blpVerbose", FALSE)) {
+            packageStartupMessage("Created and stored default authentication object.")
+        }
+    } else {
+        blpAuth <- NULL
     }
     assign("con", con, envir=.pkgenv)
     assign("blpAuth", blpAuth, envir=.pkgenv)
