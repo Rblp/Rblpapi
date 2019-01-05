@@ -51,7 +51,8 @@ which will connect to the Bloomberg backend. Default values for the IP
 address (127.0.0.1) and port (8194) are used and can be overridden both as
 function arguments and via global options `blpHost` and `blpPort`.  Moreover,
 if option `blpAutoConnect` is set to `TRUE`, this connection is done at
-package load.
+package load.  Additionally, if `blpAutoAuthenticate` is true, blpAuthenticate()
+will be called at package load.
 
 The resulting connection object is stored in a per-package environment providing
 a default value.  If needed it can be overridden in each accessor function.

@@ -82,7 +82,7 @@
 ##' }
 bdh <- function(securities, fields, start.date, end.date=NULL,
                 include.non.trading.days=FALSE, options=NULL, overrides=NULL,
-                verbose=FALSE, identity=NULL, con=defaultConnection(),
+                verbose=FALSE, identity=defaultAuthentication(), con=defaultConnection(),
                 int.as.double=getOption("blpIntAsDouble", FALSE)) {
     if (class(start.date) == "Date") {
         start.date <- format(start.date, format="%Y%m%d")

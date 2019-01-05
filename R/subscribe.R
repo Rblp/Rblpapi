@@ -49,7 +49,7 @@
 ##'             fields=c("LAST_PRICE","BID","ASK"),
 ##'             fun=function(x) print(str(x$data)))
 ##' }
-subscribe <- function(securities, fields, fun, options=NULL, identity=NULL, con=defaultConnection()) {
+subscribe <- function(securities, fields, fun, options=NULL, identity=defaultAuthentication(), con=defaultConnection()) {
     if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
     subscribe_Impl(con, securities, fields, fun, options, identity)
 }
