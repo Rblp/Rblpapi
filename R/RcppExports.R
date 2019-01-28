@@ -5,6 +5,10 @@ authenticate_Impl <- function(con_, uuid_, ip_address_) {
     .Call(`_Rblpapi_authenticate_Impl`, con_, uuid_, ip_address_)
 }
 
+authenticateWithApp_Impl <- function(con_) {
+    .Call(`_Rblpapi_authenticateWithApp_Impl`, con_)
+}
+
 bdh_Impl <- function(con_, securities, fields, start_date_, end_date_, options_, overrides_, verbose, identity_, int_as_double) {
     .Call(`_Rblpapi_bdh_Impl`, con_, securities, fields, start_date_, end_date_, options_, overrides_, verbose, identity_, int_as_double)
 }
@@ -27,6 +31,10 @@ beqs_Impl <- function(con, screenName, screenType, group, pitdate, languageId, v
 
 blpConnect_Impl <- function(host, port) {
     .Call(`_Rblpapi_blpConnect_Impl`, host, port)
+}
+
+blpConnectWithApp_Impl <- function(host, port, app_name) {
+    .Call(`_Rblpapi_blpConnectWithApp_Impl`, host, port, app_name)
 }
 
 #' This function retrieves the version of Bloomberg API headers.
