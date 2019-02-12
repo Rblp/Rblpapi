@@ -29,8 +29,8 @@
 ##' @author Alfred Kanzler
 ##' @examples
 ##' \dontrun{
-##' blpConnect(host=blpHost, port=blpPort, app_name=blpAppName)
-##' blpid <- blpAuthenticate(con)
+##' blpConnectWithApp(host=blpHost, port=blpPort, app_name=blpAppName)
+##' blpid <- blpAuthenticateWithApp(con)
 ##' bdp("IBM US Equity", "NAME", identity=blpid)
 ##' }
 

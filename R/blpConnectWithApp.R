@@ -55,7 +55,7 @@
 ##' via \code{blpAuthenticateWithApp} after \code{blpConnectWithApp}.
 ##' @examples
 ##' \dontrun{
-##'   con <- blpConnectWithApp()   # adjust as needed
+##'   con <- blpConnectWithApp(host = blpHost, port=blpPort app_name=blpAppName)   # adjust as needed
 ##' }
 blpConnectWithApp <- function(host=getOption("blpHost", "localhost"),
                        port=getOption("blpPort", 8194L),
