@@ -47,7 +47,7 @@ void populateDfRowBDS(SEXP ans, R_len_t row_index, Element& e) {
         LOGICAL(ans)[row_index] = e.getValueAsBool();
         break;
     case BLPAPI_DATATYPE_CHAR:
-        SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString()));
+        SET_STRING_ELT(ans,row_index,Rf_mkCharCE(e.getValueAsString(), CE_UTF8));
         break;
     case BLPAPI_DATATYPE_BYTE:
         Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_BYTE.");
@@ -70,13 +70,13 @@ void populateDfRowBDS(SEXP ans, R_len_t row_index, Element& e) {
         REAL(ans)[row_index] = e.getValueAsFloat64();
         break;
     case BLPAPI_DATATYPE_STRING:
-        SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString()));
+        SET_STRING_ELT(ans,row_index,Rf_mkCharCE(e.getValueAsString(), CE_UTF8));
         break;
     case BLPAPI_DATATYPE_BYTEARRAY:
         Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
         break;
     case BLPAPI_DATATYPE_DATE:
-        INTEGER(ans)[row_index] = bbgDateToRDate(e.getValueAsDatetime());
+        REAL(ans)[row_index] = bbgDateToRDate(e.getValueAsDatetime());
         break;
     case BLPAPI_DATATYPE_TIME:
         //FIXME: separate out time later
@@ -91,7 +91,7 @@ void populateDfRowBDS(SEXP ans, R_len_t row_index, Element& e) {
         break;
     case BLPAPI_DATATYPE_ENUMERATION:
         //throw std::logic_error("Unsupported datatype: BLPAPI_DATATYPE_ENUMERATION.");
-        SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString())); break;
+        SET_STRING_ELT(ans,row_index,Rf_mkCharCE(e.getValueAsString(), CE_UTF8)); break;
     case BLPAPI_DATATYPE_SEQUENCE:
         Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_SEQUENCE.");
     case BLPAPI_DATATYPE_CHOICE:
@@ -132,8 +132,8 @@ SEXP allocateDataFrameColumn(int fieldT, size_t n) {
         Rcpp::stop("Unsupported datatype: BLPAPI_DATATYPE_BYTEARRAY.");
         break;
     case BLPAPI_DATATYPE_DATE:
-        ans = Rcpp::IntegerVector(n, NA_INTEGER);
-        addDateClass(ans);
+        ans = Rcpp::NumericVector(n, NA_REAL);
+        ans = Rcpp::DateVector(ans);
         break;
     case BLPAPI_DATATYPE_TIME:
         //FIXME: separate out time later

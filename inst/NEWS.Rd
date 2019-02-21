@@ -4,6 +4,21 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
+\section{Changes in Rblpapi version 0.3.10 (2019-xx-yy)}{
+  \itemize{
+    \item The \code{start.date} format for \code{bdh} now allows character
+    values with relative date expressions (John in \ghpr{267}) fixing
+    \ghit{266}). 
+    \item Relative date values are allowed in return (John in \ghpr{269}
+    fixing \ghit{268}).
+    \item The \code{Rcpp::DateVector} class is used instead of a local
+    date vector class (John in \ghpr{273}).
+    \item The file \code{src/init.c} is now redundant and removed as
+    updated registration is in \code{src/RcppExports.cpp} (Davis Vaugh
+    in \ghpr{275} fixing \ghit{274}).
+  }
+}
+
 \section{Changes in Rblpapi version 0.3.9 (2019-02-20)}{
   \itemize{
     \item Add 'StagedInstall: no' to DESCRIPTION to accomodate R 3.6.0.

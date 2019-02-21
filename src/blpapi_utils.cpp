@@ -135,13 +135,6 @@ const double bbgDatetimeToUTC(const BloombergLP::blpapi::Datetime& dt) {
   return x;
 }
 
-void addDateClass(SEXP x) {
-    // create and add dates class to dates object
-    // cf Rcpp's inst/include/Rcpp/date_datetime/newDateVector.h
-    Rcpp::Shield<SEXP> dateclass(Rf_mkString("Date"));
-    Rf_setAttrib(x, R_ClassSymbol, dateclass);
-}
-
 void addPosixClass(SEXP x) {
     // create and add dates class to dates object
     // cf Rcpp's inst/include/Rcpp/date_datetime/newDatetimeVector.h
@@ -242,20 +235,20 @@ void populateDfRow(SEXP ans, R_len_t row_index, const Element& e, RblpapiT rblpa
     REAL(ans)[row_index] = e.getValueAsFloat64(); break;
   case RblpapiT::Date:
     // handle the case of BBG passing down dates as double in YYYYMMDD format
-    INTEGER(ans)[row_index] = e.datatype()==BLPAPI_DATATYPE_FLOAT32 || e.datatype()==BLPAPI_DATATYPE_FLOAT64 ?
+    REAL(ans)[row_index] = e.datatype()==BLPAPI_DATATYPE_FLOAT32 || e.datatype()==BLPAPI_DATATYPE_FLOAT64 ?
       bbgDateToRDate(e.getValueAsFloat64()) :
       bbgDateToRDate(e.getValueAsDatetime());
     break;
   case RblpapiT::Datetime:
     REAL(ans)[row_index] = bbgDateToPOSIX(e.getValueAsDatetime()); break;
   case RblpapiT::String:
-    SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString())); break;
+    SET_STRING_ELT(ans,row_index,Rf_mkCharCE(e.getValueAsString(), CE_UTF8)); break;
   default: // try to convert it as a string
-    SET_STRING_ELT(ans,row_index,Rf_mkChar(e.getValueAsString())); break;
+    SET_STRING_ELT(ans,row_index,Rf_mkCharCE(e.getValueAsString(), CE_UTF8)); break;
   }
 }
 
-Rcpp::NumericVector createPOSIXtVector(const std::vector<double> & ticks, 
+Rcpp::NumericVector createPOSIXtVector(const std::vector<double> & ticks,
                                        const std::string tz) {
     Rcpp::NumericVector pt(ticks.begin(), ticks.end());
     pt.attr("class") = Rcpp::CharacterVector::create("POSIXct", "POSIXt");
@@ -335,8 +328,8 @@ SEXP allocateDataFrameColumn(RblpapiT rblpapitype, const size_t n) {
         ans = Rcpp::NumericVector(n, NA_REAL);
         break;
     case RblpapiT::Date:
-        ans = Rcpp::IntegerVector(n, NA_INTEGER);
-        addDateClass(ans);
+        ans = Rcpp::NumericVector(n, NA_REAL);
+        ans = Rcpp::DateVector(ans);
         break;
     case RblpapiT::Datetime:
         // FIXME: string for datetime ?

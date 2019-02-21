@@ -2,31 +2,31 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 authenticate_Impl <- function(con_, uuid_, ip_address_) {
-    .Call('Rblpapi_authenticate_Impl', PACKAGE = 'Rblpapi', con_, uuid_, ip_address_)
+    .Call(`_Rblpapi_authenticate_Impl`, con_, uuid_, ip_address_)
 }
 
 bdh_Impl <- function(con_, securities, fields, start_date_, end_date_, options_, overrides_, verbose, identity_, int_as_double) {
-    .Call('Rblpapi_bdh_Impl', PACKAGE = 'Rblpapi', con_, securities, fields, start_date_, end_date_, options_, overrides_, verbose, identity_, int_as_double)
+    .Call(`_Rblpapi_bdh_Impl`, con_, securities, fields, start_date_, end_date_, options_, overrides_, verbose, identity_, int_as_double)
 }
 
 bdp_Impl <- function(con_, securities, fields, options_, overrides_, verbose, identity_) {
-    .Call('Rblpapi_bdp_Impl', PACKAGE = 'Rblpapi', con_, securities, fields, options_, overrides_, verbose, identity_)
+    .Call(`_Rblpapi_bdp_Impl`, con_, securities, fields, options_, overrides_, verbose, identity_)
 }
 
 bds_Impl <- function(con_, securities, field, options_, overrides_, verbose, identity_) {
-    .Call('Rblpapi_bds_Impl', PACKAGE = 'Rblpapi', con_, securities, field, options_, overrides_, verbose, identity_)
+    .Call(`_Rblpapi_bds_Impl`, con_, securities, field, options_, overrides_, verbose, identity_)
 }
 
 getPortfolio_Impl <- function(con_, securities, field, options_, overrides_, verbose, identity_) {
-    .Call('Rblpapi_getPortfolio_Impl', PACKAGE = 'Rblpapi', con_, securities, field, options_, overrides_, verbose, identity_)
+    .Call(`_Rblpapi_getPortfolio_Impl`, con_, securities, field, options_, overrides_, verbose, identity_)
 }
 
 beqs_Impl <- function(con, screenName, screenType, group, pitdate, languageId, verbose = FALSE) {
-    .Call('Rblpapi_beqs_Impl', PACKAGE = 'Rblpapi', con, screenName, screenType, group, pitdate, languageId, verbose)
+    .Call(`_Rblpapi_beqs_Impl`, con, screenName, screenType, group, pitdate, languageId, verbose)
 }
 
 blpConnect_Impl <- function(host, port) {
-    .Call('Rblpapi_blpConnect_Impl', PACKAGE = 'Rblpapi', host, port)
+    .Call(`_Rblpapi_blpConnect_Impl`, host, port)
 }
 
 #' This function retrieves the version of Bloomberg API headers.
@@ -41,7 +41,7 @@ blpConnect_Impl <- function(host, port) {
 #'    getHeaderVersion()
 #' }
 getHeaderVersion <- function() {
-    .Call('Rblpapi_getHeaderVersion', PACKAGE = 'Rblpapi')
+    .Call(`_Rblpapi_getHeaderVersion`)
 }
 
 #' This function retrieves the version of Bloomberg API run-time.
@@ -56,34 +56,34 @@ getHeaderVersion <- function() {
 #'    getRuntimeVersion()
 #' }
 getRuntimeVersion <- function() {
-    .Call('Rblpapi_getRuntimeVersion', PACKAGE = 'Rblpapi')
+    .Call(`_Rblpapi_getRuntimeVersion`)
 }
 
 bsrch_Impl <- function(con, domain, limit, verbose = FALSE) {
-    .Call('Rblpapi_bsrch_Impl', PACKAGE = 'Rblpapi', con, domain, limit, verbose)
+    .Call(`_Rblpapi_bsrch_Impl`, con, domain, limit, verbose)
 }
 
 fieldSearch_Impl <- function(con, searchterm, excludeterm) {
-    .Call('Rblpapi_fieldSearch_Impl', PACKAGE = 'Rblpapi', con, searchterm, excludeterm)
+    .Call(`_Rblpapi_fieldSearch_Impl`, con, searchterm, excludeterm)
 }
 
 getBars_Impl <- function(con, security, eventType, barInterval, startDateTime, endDateTime, options, verbose = FALSE) {
-    .Call('Rblpapi_getBars_Impl', PACKAGE = 'Rblpapi', con, security, eventType, barInterval, startDateTime, endDateTime, options, verbose)
+    .Call(`_Rblpapi_getBars_Impl`, con, security, eventType, barInterval, startDateTime, endDateTime, options, verbose)
 }
 
 fieldInfo_Impl <- function(con_, fields) {
-    .Call('Rblpapi_fieldInfo_Impl', PACKAGE = 'Rblpapi', con_, fields)
+    .Call(`_Rblpapi_fieldInfo_Impl`, con_, fields)
 }
 
 getTicks_Impl <- function(con, security, eventType, startDateTime, endDateTime, setCondCodes = TRUE, verbose = FALSE) {
-    .Call('Rblpapi_getTicks_Impl', PACKAGE = 'Rblpapi', con, security, eventType, startDateTime, endDateTime, setCondCodes, verbose)
+    .Call(`_Rblpapi_getTicks_Impl`, con, security, eventType, startDateTime, endDateTime, setCondCodes, verbose)
 }
 
 lookup_Impl <- function(con, query, yellowKeyFilter = "YK_FILTER_NONE", languageOverride = "LANG_OVERRIDE_NONE", maxResults = 20L, verbose = FALSE) {
-    .Call('Rblpapi_lookup_Impl', PACKAGE = 'Rblpapi', con, query, yellowKeyFilter, languageOverride, maxResults, verbose)
+    .Call(`_Rblpapi_lookup_Impl`, con, query, yellowKeyFilter, languageOverride, maxResults, verbose)
 }
 
 subscribe_Impl <- function(con_, securities, fields, fun, options_, identity_) {
-    .Call('Rblpapi_subscribe_Impl', PACKAGE = 'Rblpapi', con_, securities, fields, fun, options_, identity_)
+    .Call(`_Rblpapi_subscribe_Impl`, con_, securities, fields, fun, options_, identity_)
 }
 
