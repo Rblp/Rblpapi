@@ -36,7 +36,7 @@ elif [ ${sysname} == "Darwin" ]; then
     platform="osx"
 else
     echo "Unsupported platform: $sysname"
-    echo "Check http://www.bloomberglabs.com/api/libraries/ for possible support first."
+    echo "Check https://www.bloomberg.com/professional/support/api-library/ for possible support first."
     echo "Contributions welcome, see https://github.com/Rblp/blp for integration with Rblapi."
     exit -1
 fi

@@ -1,6 +1,14 @@
-2019-02-20  Dirk Eddelbuettel  <edd@debian.org>
+2019-02-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): New release 0.3.9
+
+	* vignettes/rblpapi-intro.Rmd (vignette): Updated (old) API download
+	URL to new location
+	* DESCRIPTION: Idem
+	* README.md: Idem
+	* configure: Idem
+
+2019-02-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Set 'StagedInstall: no' to accomidate R 3.6.0
 
