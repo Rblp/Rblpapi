@@ -14,7 +14,7 @@ vignette: >
 The [Rblpapi package](https://github.com/Rblp/Rblpapi) connects the
 [R language and environment for statistical computing](https://www.r-project.org)
 to the [Bloomberg](https://www.bloomberg.com) services supported by the
-[official Bloomberg APIs](https://www.bloomberglabs.com/api/).
+[official Bloomberg APIs](https://www.bloomberg.com/professional/support/api-library/).
 
 The [Rblpapi package](https://github.com/Rblp/Rblpapi) is provided in both
 source and binary (for Windows and OS X) via the
@@ -146,7 +146,7 @@ directories `src/`, `R/`, ...) is released under the
 
 All code retrieved from the [blp](https://github.com/Rblp/blp) repository
 during build is released by Bloomberg, available at the
-[BloombergLabs API](http://www.bloomberglabs.com/api/libraries/) site
+[Bloomberg API](https://www.bloomberg.com/professional/support/api-library/) site
 and released under the license included below.
 
 ```

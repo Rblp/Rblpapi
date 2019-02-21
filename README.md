@@ -6,8 +6,8 @@ R Access to Bloomberg API
 ### Background
 
 Rblpapi provides R with access to data and calculations from Bloomberg
-Finance L.P. via the [API libraries](https://www.bloomberglabs.com/api/libraries/) provided by
-Bloomberg at [Bloomberg Labs](https://www.bloomberglabs.com).
+Finance L.P. via the [API libraries](https://www.bloomberg.com/professional/support/api-library/) provided by
+Bloomberg.
  
 
 ### Requirements
