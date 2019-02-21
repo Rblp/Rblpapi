@@ -7,3 +7,4 @@
 ^inst/blp
 src/Makevars$
 .Rhistory
+^.*\.tar\.gz$
