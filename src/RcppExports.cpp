@@ -19,17 +19,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// authenticateWithApp_Impl
-SEXP authenticateWithApp_Impl(SEXP con_);
-RcppExport SEXP _Rblpapi_authenticateWithApp_Impl(SEXP con_SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type con_(con_SEXP);
-    rcpp_result_gen = Rcpp::wrap(authenticateWithApp_Impl(con_));
-    return rcpp_result_gen;
-END_RCPP
-}
 // bdh_Impl
 Rcpp::List bdh_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields, std::string start_date_, SEXP end_date_, SEXP options_, SEXP overrides_, bool verbose, SEXP identity_, bool int_as_double);
 RcppExport SEXP _Rblpapi_bdh_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldsSEXP, SEXP start_date_SEXP, SEXP end_date_SEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP verboseSEXP, SEXP identity_SEXP, SEXP int_as_doubleSEXP) {
@@ -119,27 +108,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // blpConnect_Impl
-SEXP blpConnect_Impl(const std::string host, const int port);
-RcppExport SEXP _Rblpapi_blpConnect_Impl(SEXP hostSEXP, SEXP portSEXP) {
+SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_);
+RcppExport SEXP _Rblpapi_blpConnect_Impl(SEXP hostSEXP, SEXP portSEXP, SEXP app_name_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const std::string >::type host(hostSEXP);
     Rcpp::traits::input_parameter< const int >::type port(portSEXP);
-    rcpp_result_gen = Rcpp::wrap(blpConnect_Impl(host, port));
-    return rcpp_result_gen;
-END_RCPP
-}
-// blpConnectWithApp_Impl
-SEXP blpConnectWithApp_Impl(const std::string host, const int port, const std::string app_name);
-RcppExport SEXP _Rblpapi_blpConnectWithApp_Impl(SEXP hostSEXP, SEXP portSEXP, SEXP app_nameSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const std::string >::type host(hostSEXP);
-    Rcpp::traits::input_parameter< const int >::type port(portSEXP);
-    Rcpp::traits::input_parameter< const std::string >::type app_name(app_nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(blpConnectWithApp_Impl(host, port, app_name));
+    Rcpp::traits::input_parameter< SEXP >::type app_name_(app_name_SEXP);
+    rcpp_result_gen = Rcpp::wrap(blpConnect_Impl(host, port, app_name_));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -272,14 +249,12 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_Rblpapi_authenticate_Impl", (DL_FUNC) &_Rblpapi_authenticate_Impl, 3},
-    {"_Rblpapi_authenticateWithApp_Impl", (DL_FUNC) &_Rblpapi_authenticateWithApp_Impl, 1},
     {"_Rblpapi_bdh_Impl", (DL_FUNC) &_Rblpapi_bdh_Impl, 10},
     {"_Rblpapi_bdp_Impl", (DL_FUNC) &_Rblpapi_bdp_Impl, 7},
     {"_Rblpapi_bds_Impl", (DL_FUNC) &_Rblpapi_bds_Impl, 7},
     {"_Rblpapi_getPortfolio_Impl", (DL_FUNC) &_Rblpapi_getPortfolio_Impl, 7},
     {"_Rblpapi_beqs_Impl", (DL_FUNC) &_Rblpapi_beqs_Impl, 7},
-    {"_Rblpapi_blpConnect_Impl", (DL_FUNC) &_Rblpapi_blpConnect_Impl, 2},
-    {"_Rblpapi_blpConnectWithApp_Impl", (DL_FUNC) &_Rblpapi_blpConnectWithApp_Impl, 3},
+    {"_Rblpapi_blpConnect_Impl", (DL_FUNC) &_Rblpapi_blpConnect_Impl, 3},
     {"_Rblpapi_getHeaderVersion", (DL_FUNC) &_Rblpapi_getHeaderVersion, 0},
     {"_Rblpapi_getRuntimeVersion", (DL_FUNC) &_Rblpapi_getRuntimeVersion, 0},
     {"_Rblpapi_bsrch_Impl", (DL_FUNC) &_Rblpapi_bsrch_Impl, 4},

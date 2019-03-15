@@ -8,18 +8,21 @@ blpAuthenticate(uuid, host = "localhost", ip.address,
   con = defaultConnection())
 }
 \arguments{
-\item{uuid}{A character variable with a unique user id token}
+\item{uuid}{A character variable with a unique user id token. If this
+is missing the function will attempt to connect to bpipe using the connection. It
+is assumed that an app_name was set. See blpConnect() for app_name information}
 
 \item{host}{A character variable with a hostname, defaults to 'localhost'}
 
 \item{ip.address}{An optional character variable with an IP address}
 
 \item{con}{A connection object as created by a \code{blpConnect}
-call, and retrieved via the internal function
+call, and retrieved via the internal function. This is the only required
+argument to authenticate a bpipe connection with a app_name.
 \code{defaultConnection}.}
 }
 \value{
-The returned object should be passed to subsequent data 
+The returned object should be passed to subsequent data
 calls via bdp(), bds(), etc.
 }
 \description{
