@@ -4,10 +4,8 @@ import("Rcpp")
 importFrom("utils", "object.size", "packageVersion")
 export("blpConnect",
        "blpDisconnect",
-       "blpConnectWithApp",
        "defaultConnection",
        "blpAuthenticate",
-       "authenticateWithApp",
        "bdp",
        "bdh",
        "bds",
