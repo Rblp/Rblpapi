@@ -4,6 +4,7 @@
 //
 //  Copyright (C) 2013  Whit Armstrong
 //  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettelp
+//  Copyright (C) 2019  Whit Armstrong, Dirk Eddelbuettel and Alfred Kanzler
 //
 //  This file is part of Rblpapi
 //
@@ -55,7 +56,7 @@ static void identityFinalizer(SEXP identity_) {
 
 Identity* authenticateWithId(SEXP con_, SEXP uuid_, SEXP ip_address_) {
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
-    Session* session = 
+    Session* session =
         reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
 
     if (uuid_ == R_NilValue || ip_address_ == R_NilValue) {
@@ -126,10 +127,9 @@ Identity* authenticateWithApp(SEXP con_) {
             MessageIterator msgIter(event);
             while(msgIter.next()) {
                 Message msg = msgIter.message();
-                if(msg.messageType() == "TokenGenerationSuccess") {
+                if (msg.messageType() == "TokenGenerationSuccess") {
                     token = msg.getElementAsString("token");
-                }
-                else if(msg.messageType() == "TokenGenerationFailure") {
+                } else if(msg.messageType() == "TokenGenerationFailure") {
                     Rcpp::stop("Failed to generate token");
                 }
             }
@@ -147,41 +147,37 @@ Identity* authenticateWithApp(SEXP con_) {
             bool message_found = false;
             while(!message_found) {
                 Event event = session->nextEvent(100000);
-                if(event.eventType() == Event::RESPONSE ||
+                if (event.eventType() == Event::RESPONSE ||
                    event.eventType() == Event::REQUEST_STATUS ||
                    event.eventType() == Event::PARTIAL_RESPONSE) {
                     MessageIterator msgIter(event);
-                    while(msgIter.next()) {
+                    while (msgIter.next()) {
                         Message msg = msgIter.message();
-                        if(msg.messageType() == "AuthorizationSuccess") {
+                        if (msg.messageType() == "AuthorizationSuccess") {
                             message_found = true;
-                        }
-                        else {
+                        } else {
                             Rcpp::stop(">>> Failed to Authorize");
                         }
                     }
-                }
-                else if(event.eventType() == Event::TIMEOUT) {
+                } else if(event.eventType() == Event::TIMEOUT) {
                     Rcpp::stop("Timed out trying to authorize");
                 }
             }
-        }
-        else {
+        } else {
             Rcpp::stop("Generated token was empty");
         }
     }
     return identity_p;
 }
 
-// Simpler interface 
+// Simpler interface
 //
 // [[Rcpp::export]]
 SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_) {
     Identity* identity_p = NULL;
-    if(uuid_ == R_NilValue) {
+    if (uuid_ == R_NilValue) {
         identity_p = authenticateWithApp(con_);
-    } 
-    else {
+    } else {
         identity_p = authenticateWithId(con_, uuid_, ip_address_);
     }
     if(identity_p == NULL) { Rcpp::stop("Identity pointer is null\n"); }

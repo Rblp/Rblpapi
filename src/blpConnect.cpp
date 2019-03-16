@@ -4,6 +4,7 @@
 //
 //  Copyright (C) 2013  Whit Armstrong
 //  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2019  Whit Armstrong, Dirk Eddelbuettel and Alfred Kanzler
 //
 //  This file is part of Rblpapi
 //
@@ -64,23 +65,21 @@ Session* blpConnectNoApp(const std::string host, const int port) {
     if (!sp->start()) {
         Rcpp::stop("Failed to start session without an app.\n");
     }
-    
+
     return sp;
 }
 
 // [[Rcpp::export]]
 SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_) {
     Session* sp = NULL;
-    if(app_name_ == NULL) {
+    if (app_name_ == NULL) {
         sp = blpConnectNoApp(host, port);
-    }
-    else {
+    } else {
         std::string app_name = Rcpp::as<std::string>(app_name_);
         sp = blpConnectWithApp(host, port, app_name);
     }
-    if(sp == NULL) { 
+    if (sp == NULL) {
         Rcpp::stop("Session pointer is NULL\n");
     }
     return createExternalPointer<Session>(sp, sessionFinalizer, "blpapi::Session*");
 }
-
