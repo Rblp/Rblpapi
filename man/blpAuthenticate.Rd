@@ -18,7 +18,7 @@ is assumed that an app_name was set. See blpConnect() for app_name information}
 
 \item{con}{A connection object as created by a \code{blpConnect}
 call, and retrieved via the internal function. This is the only required
-argument to authenticate a bpipe connection with a app_name.
+argument to authenticate a bpipe connection with a appName.
 \code{defaultConnection}.}
 }
 \value{

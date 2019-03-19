@@ -28,7 +28,7 @@
 ##' @param ip.address An optional character variable with an IP address
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function. This is the only required
-##' argument to authenticate a bpipe connection with a app_name.
+##' argument to authenticate a bpipe connection with a appName.
 ##' \code{defaultConnection}.
 ##' @return The returned object should be passed to subsequent data
 ##' calls via bdp(), bds(), etc.

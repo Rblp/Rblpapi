@@ -6,7 +6,7 @@
 \usage{
 blpConnect(host = getOption("blpHost", "localhost"),
   port = getOption("blpPort", 8194L), default = TRUE,
-  app_name = getOption("blpAppName", NULL))
+  appName = getOption("blpAppName", NULL))
 }
 \arguments{
 \item{host}{A character option with either a machine name that is
@@ -20,8 +20,10 @@ to \code{8194L}.}
 be saved as the default, as opposed to returned to the
 user. Default to \code{TRUE}.}
 
-\item{app_name}{the name of an application that is authorized
-to connect to bpipe}
+\item{appName}{the name of an application that is authorized
+to connect to bpipe. If this is NULL Rblpapi connects to the
+Bloomberg API but cannot authenticate with an app name. This requires
+the user to authenticate with a user uuid.}
 }
 \value{
 In the \code{default=TRUE} case nothing is returned, and
