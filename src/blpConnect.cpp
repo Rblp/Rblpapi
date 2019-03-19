@@ -72,7 +72,7 @@ Session* blpConnectNoApp(const std::string host, const int port) {
 // [[Rcpp::export]]
 SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_) {
     Session* sp = NULL;
-    if (app_name_ == NULL) {
+    if (app_name_ == R_NilValue) {
         sp = blpConnectNoApp(host, port);
     } else {
         std::string app_name = Rcpp::as<std::string>(app_name_);
