@@ -41,18 +41,17 @@
 ##' }
 
 blpAuthenticate <- function(uuid, host="localhost", ip.address, con=defaultConnection()) {
-    if (missing(ip.address)) {
-        ## Linux only ?
-        cmd.res <- system(paste("host",host), intern=TRUE,
-                          ignore.stdout=FALSE, ignore.stderr=FALSE,wait=TRUE)
-        ip.address <- strsplit(cmd.res,"address ")[[1]][2]
-    }
     if(missing(uuid)) {
+        ## no UUID, assume BPIPE
         authenticate_Impl(con, NULL, NULL)
     } else {
+        ## have UUID, assume SAPI
+        if (missing(ip.address)) {
+            ## Linux only ?
+            cmd.res <- system(paste("host",host), intern=TRUE,
+                              ignore.stdout=FALSE, ignore.stderr=FALSE,wait=TRUE)
+            ip.address <- strsplit(cmd.res,"address ")[[1]][2]
+        }
         authenticate_Impl(con, as.character(uuid), ip.address)
     }
 }
-
-#### TODO: rename to just 'authenticate' ?
-
