@@ -41,45 +41,25 @@ static void sessionFinalizer(SEXP session_) {
     }
 }
 
-Session* blpConnectWithApp(const std::string host, const int port, const std::string app_name) {
-    SessionOptions sessionOptions;
-    sessionOptions.setServerHost(host.c_str());
-    sessionOptions.setServerPort(port);
-    std::string app(app_name);
-    std::string authentication_string = APP_PREFIX + app;
-    sessionOptions.setAuthenticationOptions(authentication_string.c_str());
-    Session* sp = new Session(sessionOptions);
-
-    if (!sp->start()) {
-        Rcpp::stop("Failed to start session with bpipe app name.\n");
-    }
-
-    return sp;
-}
-Session* blpConnectNoApp(const std::string host, const int port) {
-    SessionOptions sessionOptions;
-    sessionOptions.setServerHost(host.c_str());
-    sessionOptions.setServerPort(port);
-    Session* sp = new Session(sessionOptions);
-
-    if (!sp->start()) {
-        Rcpp::stop("Failed to start session without an app.\n");
-    }
-
-    return sp;
-}
-
 // [[Rcpp::export]]
 SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_) {
-    Session* sp = NULL;
-    if (app_name_ == R_NilValue) {
-        sp = blpConnectNoApp(host, port);
-    } else {
+    SessionOptions sessionOptions;
+    sessionOptions.setServerHost(host.c_str());
+    sessionOptions.setServerPort(port);
+
+    if (app_name_ != R_NilValue) {
         std::string app_name = Rcpp::as<std::string>(app_name_);
-        sp = blpConnectWithApp(host, port, app_name);
+        std::string authentication_string = APP_PREFIX + app_name;
+        sessionOptions.setAuthenticationOptions(authentication_string.c_str());
+    }
+    Session* sp = new Session(sessionOptions);
+
+    if (!sp->start()) {
+        Rcpp::stop("Failed to start session.\n");
     }
     if (sp == NULL) {
         Rcpp::stop("Session pointer is NULL\n");
     }
+
     return createExternalPointer<Session>(sp, sessionFinalizer, "blpapi::Session*");
 }
