@@ -1,11 +1,16 @@
-2019-03-19  Alfred Kanzler <alfredkanzler@mindspring.com>
+2019-03-21  John Laing  <john.laing@gmail.com>
+
+	* R/blpConnect.R: Only resolve IP address in SAPI
+	* src/blpConnect.cpp: Streamlined connection code
+
+2019-03-19  Alfred Kanzler  <alfredkanzler@mindspring.com>
 	
-	* DESCRIPTION(Version) updated minor version
+	* DESCRIPTION (Version, Date): Updated minor version
 	
-	* src/blpConnect.cpp added function to connect to bpipe with an appName
-	* src/blpAuthenticate.cpp authenticate a bpipe connection
-	* R/blpConnect.R added appName to argument list
-	* R/blpAutheticate.R if the uuid is missing tries to connect to bpipe
+	* src/blpConnect.cpp: Added function to connect to bpipe with an appName
+	* src/blpAuthenticate.cpp: Authenticate a bpipe connection
+	* R/blpConnect.R: Added appName to argument list
+	* R/blpAutheticate.R: If the uuid is missing tries to connect to bpipe
 	
 2019-02-21  Dirk Eddelbuettel  <edd@debian.org>
 
