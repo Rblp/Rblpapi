@@ -5,7 +5,8 @@
 \title{Establish connection to Bloomberg service}
 \usage{
 blpConnect(host = getOption("blpHost", "localhost"),
-  port = getOption("blpPort", 8194L), default = TRUE)
+  port = getOption("blpPort", 8194L), default = TRUE,
+  appName = getOption("blpAppName", NULL))
 }
 \arguments{
 \item{host}{A character option with either a machine name that is
@@ -18,6 +19,11 @@ to \code{8194L}.}
 \item{default}{A logical indicating whether this connection should
 be saved as the default, as opposed to returned to the
 user. Default to \code{TRUE}.}
+
+\item{appName}{the name of an application that is authorized
+to connect to bpipe. If this is NULL Rblpapi connects to the
+Bloomberg API but cannot authenticate with an app name. This requires
+the user to authenticate with a user uuid.}
 }
 \value{
 In the \code{default=TRUE} case nothing is returned, and
@@ -47,7 +53,7 @@ explicitly create such an object.
 }
 }
 \seealso{
-Many SAPI and bPipe connections require authentication 
+Many SAPI and bPipe connections require authentication
 via \code{blpAuthenticate} after \code{blpConnect}.
 }
 \author{

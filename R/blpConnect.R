@@ -29,6 +29,10 @@
 ##' @param host A character option with either a machine name that is
 ##' resolvable by DNS, or an IP address. Defaults to
 ##' \sQuote{localhost}.
+##' @param appName the name of an application that is authorized
+##' to connect to bpipe. If this is NULL Rblpapi connects to the
+##' Bloomberg API but cannot authenticate with an app name. This requires
+##' the user to authenticate with a user uuid.
 ##' @return In the \code{default=TRUE} case nothing is returned, and
 ##' this connection is automatically used for all future calls which
 ##' omit the \code{con} argument. Otherwise a connection object is
@@ -45,7 +49,7 @@
 ##' environment. This effectively frees users from having to
 ##' explicitly create such an object.
 ##' @author Whit Armstrong and Dirk Eddelbuettel
-##' @seealso Many SAPI and bPipe connections require authentication 
+##' @seealso Many SAPI and bPipe connections require authentication
 ##' via \code{blpAuthenticate} after \code{blpConnect}.
 ##' @examples
 ##' \dontrun{
@@ -53,10 +57,11 @@
 ##' }
 blpConnect <- function(host=getOption("blpHost", "localhost"),
                        port=getOption("blpPort", 8194L),
-                       default=TRUE) {
+                       default=TRUE,
+                       appName = getOption("blpAppName", NULL)) {
     if (storage.mode(port) != "integer") port <- as.integer(port)
     if (storage.mode(host) != "character") stop("Host argument must be character.", call.=FALSE)
-    con <- blpConnect_Impl(host, port)
+    con <- blpConnect_Impl(host, port, appName)
 
     if (default) .pkgenv$con <- con else return(con)
 }
