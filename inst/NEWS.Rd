@@ -4,7 +4,7 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
-\section{Changes in Rblpapi version 0.3.10 (2019-xx-yy)}{
+\section{Changes in Rblpapi version 0.3.10 (2019-04-02)}{
   \itemize{
     \item The \code{start.date} format for \code{bdh} now allows character
     values with relative date expressions (John in \ghpr{267}) fixing
@@ -16,6 +16,12 @@
     \item The file \code{src/init.c} is now redundant and removed as
     updated registration is in \code{src/RcppExports.cpp} (Davis Vaugh
     in \ghpr{275} fixing \ghit{274}).
+    \item Returned strings are now marked as UTF-8 encoded (Xianying Tan in
+      \ghpr{278})
+    \item Date vectors are now initialized with NA (Xianying Tan in
+      \ghpr{279} fixing an inssue introduced in \ghpr{273})
+    \item Authentication for BPIPE is now supported (Alfred Kanzler in
+      \ghpr{288} with assistance help from Dirk and John)
   }
 }
 
