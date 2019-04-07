@@ -50,7 +50,7 @@
 
 	* .travis.yml: Minor update
 
-2018-07-25  Davis Vaughn  <mvaugh15@uncc.edu>
+2018-07-25  Davis Vaughan  <mvaugh15@uncc.edu>
 
 	* src/init.c: Removed as content is in RcppExport.cpp
 	* src/RcppExports.cpp: Updated

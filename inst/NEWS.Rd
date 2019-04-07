@@ -14,7 +14,7 @@
     \item The \code{Rcpp::DateVector} class is used instead of a local
     date vector class (John in \ghpr{273}).
     \item The file \code{src/init.c} is now redundant and removed as
-    updated registration is in \code{src/RcppExports.cpp} (Davis Vaugh
+    updated registration is in \code{src/RcppExports.cpp} (Davis Vaughan
     in \ghpr{275} fixing \ghit{274}).
     \item Returned strings are now marked as UTF-8 encoded (Xianying Tan in
       \ghpr{278})
