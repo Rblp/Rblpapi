@@ -7,7 +7,7 @@
 \section{Changes in Rblpapi version 0.3.10 (2019-04-02)}{
   \itemize{
     \item The \code{start.date} format for \code{bdh} now allows character
-    values with relative date expressions (John in \ghpr{267}) fixing
+    values with relative date expressions (John in \ghpr{267} fixing
     \ghit{266}). 
     \item Relative date values are allowed in return (John in \ghpr{269}
     fixing \ghit{268}).
