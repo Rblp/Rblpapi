@@ -22,7 +22,7 @@
 ##'
 ##' @title Authenticate Bloomberg API access
 ##' @param uuid A character variable with a unique user id token. If this
-##' is missing the function will attempt to connect to bpipe or sapiusing the connection. It
+##' is missing the function will attempt to connect to bpipe or sapi using the connection. It
 ##' is assumed that an app_name was set. See blpConnect() for app_name information
 ##' @param host A character variable with a hostname, defaults to 'localhost'
 ##' @param ip.address An optional character variable with an IP address
