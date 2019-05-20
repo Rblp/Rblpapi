@@ -33,4 +33,4 @@ PKG_CPPFLAGS = -I../inst/include/ -I.
 PKG_LIBS     = -l$(BBG_LIB) -L../inst/blp -Wl,-rpath,$(BBG_RPATH)
 
 all: $(SHLIB)
-	@if command -v install_name_tool; then echo "fixxing"; install_name_tool -change libblpapi3_64.so '@rpath@/libblpapi3_64.so' Rblpapi.so; fi
+	@if command -v install_name_tool; then echo "fixing"; install_name_tool -change libblpapi3_64.so '@rpath@/libblpapi3_64.so' Rblpapi.so; fi

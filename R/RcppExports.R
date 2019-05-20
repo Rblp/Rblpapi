@@ -25,8 +25,8 @@ beqs_Impl <- function(con, screenName, screenType, group, pitdate, languageId, v
     .Call(`_Rblpapi_beqs_Impl`, con, screenName, screenType, group, pitdate, languageId, verbose)
 }
 
-blpConnect_Impl <- function(host, port) {
-    .Call(`_Rblpapi_blpConnect_Impl`, host, port)
+blpConnect_Impl <- function(host, port, app_name_) {
+    .Call(`_Rblpapi_blpConnect_Impl`, host, port, app_name_)
 }
 
 #' This function retrieves the version of Bloomberg API headers.

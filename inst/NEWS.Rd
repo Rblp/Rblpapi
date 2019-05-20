@@ -4,27 +4,42 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
-\section{Changes in Rblpapi version 0.3.8 (2018-xx-yy)}{
+\section{Changes in Rblpapi version 0.3.10 (2019-04-02)}{
   \itemize{
     \item The \code{start.date} format for \code{bdh} now allows character
-    values with relative date expressions (John in \ghpr{267}) fixing
+    values with relative date expressions (John in \ghpr{267} fixing
     \ghit{266}). 
     \item Relative date values are allowed in return (John in \ghpr{269}
     fixing \ghit{268}).
     \item The \code{Rcpp::DateVector} class is used instead of a local
     date vector class (John in \ghpr{273}).
     \item The file \code{src/init.c} is now redundant and removed as
-    updated registration is in \code{src/RcppExports.cpp} (Davis Vaugh
+    updated registration is in \code{src/RcppExports.cpp} (Davis Vaughan
     in \ghpr{275} fixing \ghit{274}).
+    \item Returned strings are now marked as UTF-8 encoded (Xianying Tan in
+      \ghpr{278})
+    \item Date vectors are now initialized with NA (Xianying Tan in
+      \ghpr{279} fixing an inssue introduced in \ghpr{273})
+    \item Authentication for BPIPE is now supported (Alfred Kanzler in
+      \ghpr{288} with assistance help from Dirk and John)
   }
 }
 
-\section{Changes in Rblpapi version 0.3.7 (2018-01-20)}{
+\section{Changes in Rblpapi version 0.3.9 (2019-02-20)}{
   \itemize{
+    \item Add 'StagedInstall: no' to DESCRIPTION to accomodate R 3.6.0.
+  }
+}
+
+\section{Changes in Rblpapi version 0.3.8 (2018-01-20)}{
+  \itemize{
+    \item This release should have been 0.3.7 but was accidentally
+    tagged as 0.3.8 in the DESCRIPTION file so we skipped 0.3.7.
     \item The 140 day limit for intra-day data histories is now
     mentioned in the \code{getTicks} help (Dirk in \ghpr{226} addressing
     \ghit{215} and \ghit{225}).
-    \item The Travis CI script was updated to use \code{run.sh} (Dirk in \ghpr{226}).
+    \item The Travis CI script was updated to use \code{run.sh} (Dirk in
+    \ghpr{226}).
     \item The \code{install_name_tool} invocation under macOS was
     corrected (@spennihana in \ghit{232})
     \item The \code{blpAuthenticate} help page has additional examples
@@ -156,6 +171,7 @@
     \item Build procedures rewritten so that required headers and
     libraries are downloaded during installation from corresponding GitHub
     repo \ghrepo{Rblp/blp} which contains custom tarballs derived from the
-    corresponding upstream releases at \url{http://www.bloomberglabs.com/api}.
+    corresponding upstream releases at
+    \url{https://www.bloomberg.com/professional/support/api-library/ }.
   }
 }
