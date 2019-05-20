@@ -22,10 +22,12 @@
 ##'
 ##' @title Authenticate Bloomberg API access
 ##' @param uuid A character variable with a unique user id token. If this
-##' is missing the function will attempt to connect to bpipe using the connection. It
+##' is missing the function will attempt to connect to bpipe or sapiusing the connection. It
 ##' is assumed that an app_name was set. See blpConnect() for app_name information
 ##' @param host A character variable with a hostname, defaults to 'localhost'
 ##' @param ip.address An optional character variable with an IP address
+##' for authentication.  Usually the IP address where the uuid/user last
+##' logged into the Bloomberg Terminal appication
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function. This is the only required
 ##' argument to authenticate a bpipe connection with a appName.
@@ -51,12 +53,13 @@ blpAuthenticate <- function(uuid=getOption("uuid"),
                             ip.address=getOption("blpIP", "localhost"),
                             con=defaultConnection(),
                             default=TRUE) {
-    if(missing(uuid)) {
-        ## no UUID, assume BPIPE
-        authenticate_Impl(con, NULL, NULL)
+    if(is.null(uuid)) {
+        ## no UUID, assume BPIPE or SAPI with application ID
+        blpAuth <- authenticate_Impl(con, NULL, NULL)
+        if (default) .pkgenv$blpAuth <- blpAuth else return(blpAuth)
     } else {
         ## have UUID, assume SAPI
-        if (missing(ip.address)) {
+        if (is.null(ip.address)) {
             ## Linux only ?
             cmd.res <- system(paste("host",host), intern=TRUE,
                               ignore.stdout=FALSE, ignore.stderr=FALSE,wait=TRUE)
