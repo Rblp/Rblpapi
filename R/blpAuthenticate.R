@@ -24,10 +24,14 @@
 ##' @param uuid A character variable with a unique user id token. If this
 ##' is missing the function will attempt to connect to bpipe or sapi using the connection. It
 ##' is assumed that an app_name was set. See blpConnect() for app_name information
-##' @param host A character variable with a hostname, defaults to 'localhost'
+##' @param host An optional character variable with a hostname.  This is
+##'     the hostname of the machine where the user last authenticated.
+##'     Either host or ip.address should be provided for user/uuid
+##'     authentication. Defaults to 'localhost'.
 ##' @param ip.address An optional character variable with an IP address
-##' for authentication.  Usually the IP address where the uuid/user last
-##' logged into the Bloomberg Terminal appication
+##'     for authentication.  Usually the IP address where the uuid/user
+##'     last logged into the Bloomberg Terminal appication.  Defaults to
+##'     NULL, which will then lookup the IP of the "host" option.
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function. This is the only required
 ##' argument to authenticate a bpipe connection with a appName.
@@ -49,7 +53,7 @@
 ##' }
 
 blpAuthenticate <- function(uuid=getOption("uuid"),
-                            host=getOption("blpHost", "localhost"),
+                            host=getOption("blpLoginHostname", "localhost"),
                             ip.address=getOption("blpIP", NULL),
                             con=defaultConnection(),
                             default=TRUE) {
