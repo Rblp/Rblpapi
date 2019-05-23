@@ -50,7 +50,7 @@
 
 blpAuthenticate <- function(uuid=getOption("uuid"),
                             host=getOption("blpHost", "localhost"),
-                            ip.address=getOption("blpIP", "localhost"),
+                            ip.address=getOption("blpIP", NULL),
                             con=defaultConnection(),
                             default=TRUE) {
     if(is.null(uuid)) {
@@ -66,6 +66,11 @@ blpAuthenticate <- function(uuid=getOption("uuid"),
             ip.address <- strsplit(cmd.res,"address ")[[1]][2]
         }
         blpAuth <- authenticate_Impl(con, as.character(uuid), ip.address)
-        if (default) .pkgenv$blpAuth <- blpAuth else return(blpAuth)
+        ## if we're setting the silent/hidden default object, return nothing
+        ## else, return the object (keeps old behavior)
+        if (default)
+            .pkgenv$blpAuth <- blpAuth
+        else
+            return(blpAuth)
     }
 }
