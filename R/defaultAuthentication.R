@@ -26,20 +26,32 @@
 ##'
 ##' @title Return the default authentication object
 ##'
-##' @details For the authentication object, the required arguments
-##' \code{uuid} and \code{ip} argument can be set via
-##' \code{\link{options}} as \code{uuid} and \code{blpIP}. In
-##' addition, if an additional option \code{blpAutoConnect} is set
-##' to \sQuote{TRUE} and \code{blpAutoAuthenticate} is set to
-##' \sQuote{TRUE}, a connection and authentication is established
-##' in the \code{.onAttach()} function and stored in the package
-##' environment. This effectively frees users from having to
-##' explicitly create such an object. Of course, the user can also
-##' call \code{blpAuthenticate} explicitly and store the
-##' authentication object.  This helper function looks up the
-##' stored authentication object and returns it. In case no
-##' authentication has been established, NULL is returned.  (NULL
-##' is sufficent for Desktop API connections.)
+##' @details For the authentication object, one can authenticate via
+##'     UUID/login-location or via Application-Name.
+##'
+##' For UUID authentication, the required arguments \code{uuid} and
+##'     (\code{ip.address} or \code{host}) arguments can be set via
+##'     \code{\link{options}} as \code{blpUUID}, \code{blpLoginIP} and
+##'     \code{blpLoginHostname} .
+##'
+##' For Application-Name authentication, the \code{blpAppName} argument
+##'     should have been passed to \code{blpConnect}, and no further
+##'     arguements are needed to \code{blpAuthenticate}
+##'
+##' If an additional option \code{blpAutoAuthenticate} is set to
+##'     \sQuote{TRUE}, an authentication is established in the
+##'     \code{.onAttach()} function and stored in the package
+##'     environment.
+##'
+##' @return In the \code{default=TRUE} case nothing is returned, and
+##'     this identity object is automatically used for all future calls
+##'     which omit the \code{identity} argument. Otherwise an identity
+##'     object is returned which is required by all the accessor
+##'     functions in the package.
+##'
+##' This helper function looks up the stored authentication object and
+##'     returns it. In case no authentication has been established, NULL
+##'     is returned.  (NULL is sufficent for Desktop API connections.)
 ##'
 ##' @author Whit Armstrong and Dirk Eddelbuettel
 ##' @examples
