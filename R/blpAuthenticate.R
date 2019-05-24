@@ -23,7 +23,7 @@
 ##' @title Authenticate Bloomberg API access
 ##' @param uuid An optional character variable with a unique user id
 ##'     token. If this is missing the function will attempt to connect
-##'     to bpipe or sapi using the connection. It is assumed that an
+##'     to B-PIPE or SAPI using the connection. It is assumed that an
 ##'     app_name was set. See blpConnect() for app_name information
 ##' @param host An optional character variable with a hostname.  This is
 ##'     the hostname of the machine where the user last authenticated.
@@ -36,7 +36,7 @@
 ##'     NULL, which will then lookup the IP of the "host" option.
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function. This is the only required
-##' argument to authenticate a bpipe connection with a appName.
+##' argument to authenticate a B-PIPE connection with a appName.
 ##' \code{defaultConnection}.
 ##' @return In the \code{default=TRUE} case nothing is returned, and
 ##' this authentication is automatically used for all future calls which
@@ -54,13 +54,13 @@
 ##' bdp("IBM US Equity", "NAME", identity=blpid)
 ##' }
 
-blpAuthenticate <- function(uuid=getOption("uuid"),
+blpAuthenticate <- function(uuid=getOption("blpUUID"),
                             host=getOption("blpLoginHostname", "localhost"),
                             ip.address=getOption("blpLoginIP", NULL),
                             con=defaultConnection(),
                             default=TRUE) {
     if(is.null(uuid)) {
-        ## no UUID, assume BPIPE or SAPI with application ID
+        ## no UUID, assume B-PIPE or SAPI with application ID
         blpAuth <- authenticate_Impl(con, NULL, NULL)
         if (default) .pkgenv$blpAuth <- blpAuth else return(blpAuth)
     } else {

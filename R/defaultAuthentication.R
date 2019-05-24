@@ -21,7 +21,7 @@
 ##' This function returns the default authentication object from the
 ##' package environment.  If no default authentication has been
 ##' established yet, will return NULL.  If using a desktop/workstation
-##' session, NULL will work fine.  If using SAPI/Bpipe, you may need
+##' session, NULL will work fine.  If using SAPI/B-PIPE, you may need
 ##' to use blpAuthenticate() to create an authentication object.
 ##'
 ##' @title Return the default authentication object
