@@ -1,3 +1,23 @@
+2019-05-23  randomee  <randomee@users.noreply.github.com>
+
+	* NAMESPACE: export new function defaultAuthentication()
+
+	* vignettes/rblpapi-intro.Rmd: document blpAutoAuthenticate
+	clarify host (blpConnect) vs hostname (blpAuthenticate) vs ip.address
+	clarify UUID, Application-Name, blpConnnect() and blpAuthenicate()
+
+	* R/defaultAuthentication.R: New file
+	Add default identity object
+	* R/blpAuthenticate.R: add default identity object
+	documentation clarification host vs ip
+	* R/init.R: check for auto-auth, call as needed
+
+	* R/bdh.R: support default identity object
+	* R/bdp.R: Idem
+	* R/bds.R: Idem
+	* R/portfolio.R.R: Idem
+	* R/subscribe.R: Idem
+
 2019-04-02  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): New release 0.3.10
