@@ -65,11 +65,10 @@ blpAuthenticate <- function(uuid=getOption("blpUUID", NULL),
     if(is.null(uuid)) {
         ## no UUID, assume B-PIPE or SAPI with application ID
         blpAuth <- authenticate_Impl(con, NULL, NULL)
-        if (default) .pkgenv$blpAuth <- blpAuth else return(blpAuth)
     } else {
         if ( (!is.null(ip.address)) && (!identical(host,"localhost")) ) {
             warning("Both ip.address and host are set.  Using ip.address.") }
-
+        
         ## have UUID, assume SAPI
         if (is.null(ip.address)) {
             ## Linux only ?
@@ -78,11 +77,11 @@ blpAuthenticate <- function(uuid=getOption("blpUUID", NULL),
             ip.address <- strsplit(cmd.res,"address ")[[1]][2]
         }
         blpAuth <- authenticate_Impl(con, as.character(uuid), ip.address)
-        ## if we're setting the silent/hidden default object, return nothing
-        ## else, return the object (keeps old behavior)
-        if (default)
-            .pkgenv$blpAuth <- blpAuth
-        else
-            return(blpAuth)
     }
+    ## if we're setting the silent/hidden default object, return nothing
+    ## else, return the object (keeps old behavior)
+    if (default)
+        .pkgenv$blpAuth <- blpAuth
+    else
+        return(blpAuth)
 }
