@@ -64,6 +64,9 @@ blpAuthenticate <- function(uuid=getOption("blpUUID"),
         blpAuth <- authenticate_Impl(con, NULL, NULL)
         if (default) .pkgenv$blpAuth <- blpAuth else return(blpAuth)
     } else {
+        if ((!is.null(ip.address)) && identical(host,"localhost"))
+            warning("Both ip.address and host are set.  Using ip.address.")
+
         ## have UUID, assume SAPI
         if (is.null(ip.address)) {
             ## Linux only ?
