@@ -30,7 +30,7 @@
 ##'     UUID/login-location or via Application-Name.
 ##'
 ##' For UUID authentication, the required arguments \code{uuid} and
-##'     (\code{ip.address} or \code{host}) arguments can be set via
+##'     (\code{ip.address} or \code{host}). Arguments can be set via
 ##'     \code{\link{options}} as \code{blpUUID}, \code{blpLoginIP} and
 ##'     \code{blpLoginHostname} .
 ##'
@@ -39,7 +39,7 @@
 ##'     arguments are needed to \code{blpAuthenticate}
 ##'
 ##' If an additional option \code{blpAutoAuthenticate} is set to
-##'     \sQuote{TRUE}, an authentication is established in the
+##'     \sQuote{TRUE}, an identity is established in the
 ##'     \code{.onAttach()} function and stored in the package
 ##'     environment.
 ##'
@@ -49,7 +49,7 @@
 ##'     object is returned which is required by all the accessor
 ##'     functions in the package.
 ##'
-##' @return This helper function looks up the stored authentication
+##' @return This helper function looks up the stored identity
 ##'     object and returns it. In case no authentication has been
 ##'     established, NULL is returned.  (NULL is sufficient for Desktop
 ##'     API connections.)
