@@ -48,18 +48,79 @@ blpConnect()
 ```
 
 which will connect to the Bloomberg backend. Default values for the IP
-address (127.0.0.1) and port (8194) are used and can be overridden both as
-function arguments and via global options `blpHost` and `blpPort`.  Moreover,
-if option `blpAutoConnect` is set to `TRUE`, this connection is done at
-package load.  Additionally, if `blpAutoAuthenticate` is true, blpAuthenticate()
-will be called at package load.
+address (127.0.0.1) and port (8194) are used and can be overridden both
+as function arguments and via global options `blpHost` and `blpPort`.
+Moreover, if option `blpAutoConnect` is set to `TRUE`, this connection
+is done at package load.
 
-The resulting connection object is stored in a per-package environment providing
-a default value.  If needed it can be overridden in each accessor function.
+The resulting connection object is stored in a per-package environment
+providing a default value.  If needed it can be overridden in each
+accessor function.
 
 As the connection object is being held onto, the `blpDisconnect()`
-function is implemented as an empty function without side-effects.  The internal
-function `defaultConnection()` returns the current connection object.
+function is implemented as an empty function without side-effects.  The
+internal function `defaultConnection()` returns the default connection
+object.
+
+Default arguments and auto-connect can be set via `options()`
+
+```{R, eval=FALSE}
+options("blpAutoConnect" = TRUE)
+options("blpHost" = "x.x.x.x")
+options("blpPort" = 8194)
+options("blpAppName" = "yyy")
+```
+
+Optionally use
+```{R, eval=FALSE}
+blpAuthenticate()
+```
+
+Usually needed for SAPI & B-PIPE sessions.  Not usually needed for DAPI
+(Desktop) sessions.
+
+Connects to SAPI/B-PIPE server, and authenticates via UUID or
+Application-Name.  Can set a default identity object for future calls
+(`bdp()`, `bds()`, etc).  Or can return an identity object to explicitly
+pass to future calls.  Additionally, if `blpAutoAuthenticate` is true,
+`blpAuthenticate()` will be called at package load, storing a default
+identity object. The internal function `defaultAuthentication()` returns
+the default identity object.
+
+If needed, the default identity object can be overridden in each
+accessor function.
+
+Default arguments and auto-authentication can be set via `options()`
+
+```{R, eval=FALSE}
+options("blpAutoAuthenticate" = TRUE)
+options("blpUUID" = "xxx")
+options("blpLoginHostname" = "yyy")
+options("blpLoginIP" = "z.z.z.z")
+
+```
+
+For application-id authentication, first use `blpConnect()` with an
+`appName` argument.  Then call `blpAuthenticate()` with no arguments.
+
+
+```{R, eval=FALSE}
+blpConnect( ... , appName = "appName")
+blpAuthenticate()
+```
+
+For UUID authentication, connect with `blpConnect()`, then
+`blpAuthenticate()` with the UUID and last hostname/IP the UUID logged
+in from.  Usually this is the IP of your Bloomberg Terminal.  For your
+UUID, `IAM <GO>` in Bloomberg Terminal.  Note, if you supply both IP and
+host arguments, the IP will be used, and the host ignored.
+
+
+```{R, eval=FALSE}
+blpConnect( ... )
+blpAuthenticate( uuid="UUID", ip.address="x.x.x.x")
+```
+
 
 ### bdp: Bloomberg Data Point
 
