@@ -24,20 +24,23 @@
 ##' @param uuid An optional character variable with a unique user id
 ##'     token. If this is missing the function will attempt to connect
 ##'     to B-PIPE or SAPI using the connection. It is assumed that an
-##'     app_name was set. See blpConnect() for app_name information
+##'     app_name was set. See \code{blpConnect()} for app_name
+##'     information.  Defaults to \code{getOption("blpUUID")} or NULL
 ##' @param host An optional character variable with a hostname.  This is
 ##'     the hostname of the machine where the user last authenticated.
 ##'     Either host or ip.address should be provided for user/uuid
 ##'     authentication. Note this is likely not the same 'host' used in
-##'     blpConnect() .  Defaults to 'localhost'.
+##'     \code{blpConnect()}.  Defaults to
+##'     \code{getOption("blpLoginHostname")} or "localhost"
 ##' @param ip.address An optional character variable with an IP address
 ##'     for authentication.  Usually the IP address where the uuid/user
 ##'     last logged into the Bloomberg Terminal appication.  Defaults to
-##'     NULL, which will then lookup the IP of the "host" option.
+##'     \code{getOption("blpLoginIP")} or NULL, which will then lookup
+##'     the IP of the "host" option. 
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function. This is the only required
 ##' argument to authenticate a B-PIPE connection with a appName.
-##' \code{defaultConnection}.
+##' Defaults to \code{defaultConnection}.
 ##' @return In the \code{default=TRUE} case nothing is returned, and
 ##' this authentication is automatically used for all future calls which
 ##' omit the \code{identity} argument. Otherwise an authentication object is
@@ -54,7 +57,7 @@
 ##' bdp("IBM US Equity", "NAME", identity=blpid)
 ##' }
 
-blpAuthenticate <- function(uuid=getOption("blpUUID"),
+blpAuthenticate <- function(uuid=getOption("blpUUID", NULL),
                             host=getOption("blpLoginHostname", "localhost"),
                             ip.address=getOption("blpLoginIP", NULL),
                             con=defaultConnection(),
@@ -64,8 +67,8 @@ blpAuthenticate <- function(uuid=getOption("blpUUID"),
         blpAuth <- authenticate_Impl(con, NULL, NULL)
         if (default) .pkgenv$blpAuth <- blpAuth else return(blpAuth)
     } else {
-        if ((!is.null(ip.address)) && identical(host,"localhost"))
-            warning("Both ip.address and host are set.  Using ip.address.")
+        if ( (!is.null(ip.address)) && (!identical(host,"localhost")) ) {
+            warning("Both ip.address and host are set.  Using ip.address.") }
 
         ## have UUID, assume SAPI
         if (is.null(ip.address)) {
