@@ -289,7 +289,7 @@ Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
             partial = BulkDataResponseToDF(event, field, "ReferenceDataResponse", verbose);
             partial_names = Rcpp::as<std::vector<std::string>>(partial.names()); // partial.attr("names");
             partial_i = 0;
-            while(partial_i < partial.length()) {
+            while(partial_i < unsigned(partial.length())) {
                 ret[ret_i] = partial[partial_i];
                 ret_names[ret_i] = partial_names[partial_i];
                 partial_i++;
@@ -297,7 +297,6 @@ Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
             }
             break;
         default:
-            ret = R_NilValue;
             MessageIterator msgIter(event);
             while (msgIter.next()) {
                 Message msg = msgIter.message();
