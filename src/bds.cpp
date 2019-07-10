@@ -60,7 +60,7 @@ void populateDfRowBDS(SEXP ans, R_len_t row_index, Element& e) {
             Rcpp::Rcerr << "BLPAPI_DATATYPE_INT64 exceeds max int value on this system (assigning std::numeric_limits<int>::max())." << std::endl;
             INTEGER(ans)[row_index] = std::numeric_limits<int>::max();
         } else {
-            INTEGER(ans)[row_index] = static_cast<int>(e.getValueAsInt64()); 
+            INTEGER(ans)[row_index] = static_cast<int>(e.getValueAsInt64());
         }
         break;
     case BLPAPI_DATATYPE_FLOAT32:
@@ -274,14 +274,30 @@ Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
 
     sendRequestWithIdentity(session, request, identity_);
 
+    Rcpp::List ret(securities.size());
+    std::vector<std::string> ret_names(securities.size());
+    size_t ret_i = 0;
+    Rcpp::List partial;
+    std::vector<std::string> partial_names;
+    size_t partial_i;
+
     while (true) {
         Event event = session->nextEvent();
         switch (event.eventType()) {
         case Event::RESPONSE:
         case Event::PARTIAL_RESPONSE:
-            return BulkDataResponseToDF(event, field, "ReferenceDataResponse", verbose);
+            partial = BulkDataResponseToDF(event, field, "ReferenceDataResponse", verbose);
+            partial_names = Rcpp::as<std::vector<std::string>>(partial.names()); // partial.attr("names");
+            partial_i = 0;
+            while(partial_i < partial.length()) {
+                ret[ret_i] = partial[partial_i];
+                ret_names[ret_i] = partial_names[partial_i];
+                partial_i++;
+                ret_i++;
+            }
             break;
         default:
+            ret = R_NilValue;
             MessageIterator msgIter(event);
             while (msgIter.next()) {
                 Message msg = msgIter.message();
@@ -290,7 +306,8 @@ Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
         }
         if (event.eventType() == Event::RESPONSE) { break; }
     }
-    return R_NilValue;
+    ret.attr("names") = ret_names;
+    return ret;
 }
 
 // [[Rcpp::export]]
