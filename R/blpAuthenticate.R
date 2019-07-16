@@ -49,8 +49,8 @@
 ##' }
 
 blpAuthenticate <- function(uuid=getOption("uuid"),
-                            host=getOption("blpHost", "localhost"),
-                            ip.address=getOption("blpIP", "localhost"),
+                            host=getOption("blpAuthHost", "localhost"),
+                            ip.address=getOption("blpIP", NULL),
                             con=defaultConnection(),
                             default=TRUE) {
     if(is.null(uuid)) {
