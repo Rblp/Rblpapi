@@ -36,7 +36,9 @@
 ##' @param options An optional named character vector with option
 ##' values. Each field must have both a name (designating the option
 ##' being set) as well as a value.
-##' @param identity An optional identity object.
+##' @param identity An optional identity object as created by a
+##' \code{blpAuthenticate} call, and retrived via the internal function
+##' \code{defaultAuthentication}.
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.

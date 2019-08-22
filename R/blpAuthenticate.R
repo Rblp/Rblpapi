@@ -32,6 +32,9 @@
 ##' call, and retrieved via the internal function. This is the only required
 ##' argument to authenticate a bpipe connection with a appName.
 ##' \code{defaultConnection}.
+##' @param default A logical indicating whether this authentication should
+##' be saved as the default, as opposed to returned to the
+##' user. Default to \code{TRUE}.
 ##' @return In the \code{default=TRUE} case nothing is returned, and
 ##' this authentication is automatically used for all future calls which
 ##' omit the \code{identity} argument. Otherwise an authentication object is

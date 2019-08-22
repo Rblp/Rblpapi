@@ -47,6 +47,7 @@
 ##'   con <- defaultConnection()
 ##'   blpid <- defaultAuthentication()
 ##' }
+##' @rdname defaults
 defaultConnection <- function() {
     con <- .pkgenv$con
     if (is.null(con))
@@ -54,6 +55,7 @@ defaultConnection <- function() {
              call.=FALSE)
     con
 }
+##' @rdname defaults
 defaultAuthentication <- function() {
     blpAuth <- .pkgenv$blpAuth
     blpAuth
