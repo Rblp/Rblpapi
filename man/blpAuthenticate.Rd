@@ -4,25 +4,35 @@
 \alias{blpAuthenticate}
 \title{Authenticate Bloomberg API access}
 \usage{
-blpAuthenticate(uuid = getOption("uuid"), host = getOption("blpAuthHost",
-  "localhost"), ip.address = getOption("blpIP", NULL),
-  con = defaultConnection(), default = TRUE)
+blpAuthenticate(uuid = getOption("blpUUID", NULL),
+  host = getOption("blpLoginHostname", "localhost"),
+  ip.address = getOption("blpLoginIP", NULL), con = defaultConnection(),
+  default = TRUE)
 }
 \arguments{
-\item{uuid}{A character variable with a unique user id token. If this
-is missing the function will attempt to connect to bpipe or sapi using the connection. It
-is assumed that an app_name was set. See blpConnect() for app_name information}
+\item{uuid}{An optional character variable with a unique user id
+token. If this is missing the function will attempt to connect
+to B-PIPE or SAPI using the connection. It is assumed that an
+app_name was set. See \code{blpConnect()} for app_name
+information.  Defaults to \code{getOption("blpUUID")} or NULL}
 
-\item{host}{A character variable with a hostname, defaults to 'localhost'}
+\item{host}{An optional character variable with a hostname.  This is
+the hostname of the machine where the user last authenticated.
+Either host or ip.address should be provided for user/uuid
+authentication. Note this is likely not the same 'host' used in
+\code{blpConnect()}.  Defaults to
+\code{getOption("blpLoginHostname")} or "localhost"}
 
 \item{ip.address}{An optional character variable with an IP address
-for authentication.  Usually the IP address where the uuid/user last
-logged into the Bloomberg Terminal appication}
+for authentication.  Usually the IP address where the uuid/user
+last logged into the Bloomberg Terminal appication.  Defaults to
+\code{getOption("blpLoginIP")} or NULL, which will then lookup
+the IP of the "host" option.}
 
 \item{con}{A connection object as created by a \code{blpConnect}
 call, and retrieved via the internal function. This is the only required
-argument to authenticate a bpipe connection with a appName.
-\code{defaultConnection}.}
+argument to authenticate a B-PIPE connection with a appName.
+Defaults to \code{defaultConnection}.}
 
 \item{default}{A logical indicating whether this authentication should
 be saved as the default, as opposed to returned to the

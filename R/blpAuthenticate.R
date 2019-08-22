@@ -21,17 +21,26 @@
 ##' This function authenticates against the the Bloomberg API
 ##'
 ##' @title Authenticate Bloomberg API access
-##' @param uuid A character variable with a unique user id token. If this
-##' is missing the function will attempt to connect to bpipe or sapi using the connection. It
-##' is assumed that an app_name was set. See blpConnect() for app_name information
-##' @param host A character variable with a hostname, defaults to 'localhost'
+##' @param uuid An optional character variable with a unique user id
+##'     token. If this is missing the function will attempt to connect
+##'     to B-PIPE or SAPI using the connection. It is assumed that an
+##'     app_name was set. See \code{blpConnect()} for app_name
+##'     information.  Defaults to \code{getOption("blpUUID")} or NULL
+##' @param host An optional character variable with a hostname.  This is
+##'     the hostname of the machine where the user last authenticated.
+##'     Either host or ip.address should be provided for user/uuid
+##'     authentication. Note this is likely not the same 'host' used in
+##'     \code{blpConnect()}.  Defaults to
+##'     \code{getOption("blpLoginHostname")} or "localhost"
 ##' @param ip.address An optional character variable with an IP address
-##' for authentication.  Usually the IP address where the uuid/user last
-##' logged into the Bloomberg Terminal appication
+##'     for authentication.  Usually the IP address where the uuid/user
+##'     last logged into the Bloomberg Terminal appication.  Defaults to
+##'     \code{getOption("blpLoginIP")} or NULL, which will then lookup
+##'     the IP of the "host" option. 
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function. This is the only required
-##' argument to authenticate a bpipe connection with a appName.
-##' \code{defaultConnection}.
+##' argument to authenticate a B-PIPE connection with a appName.
+##' Defaults to \code{defaultConnection}.
 ##' @param default A logical indicating whether this authentication should
 ##' be saved as the default, as opposed to returned to the
 ##' user. Default to \code{TRUE}.
@@ -51,16 +60,18 @@
 ##' bdp("IBM US Equity", "NAME", identity=blpid)
 ##' }
 
-blpAuthenticate <- function(uuid=getOption("uuid"),
-                            host=getOption("blpAuthHost", "localhost"),
-                            ip.address=getOption("blpIP", NULL),
+blpAuthenticate <- function(uuid=getOption("blpUUID", NULL),
+                            host=getOption("blpLoginHostname", "localhost"),
+                            ip.address=getOption("blpLoginIP", NULL),
                             con=defaultConnection(),
                             default=TRUE) {
     if(is.null(uuid)) {
-        ## no UUID, assume BPIPE or SAPI with application ID
+        ## no UUID, assume B-PIPE or SAPI with application ID
         blpAuth <- authenticate_Impl(con, NULL, NULL)
-        if (default) .pkgenv$blpAuth <- blpAuth else return(blpAuth)
     } else {
+        if ( (!is.null(ip.address)) && (!identical(host,"localhost")) ) {
+            warning("Both ip.address and host are set.  Using ip.address.") }
+        
         ## have UUID, assume SAPI
         if (is.null(ip.address)) {
             ## Linux only ?
@@ -69,6 +80,11 @@ blpAuthenticate <- function(uuid=getOption("uuid"),
             ip.address <- strsplit(cmd.res,"address ")[[1]][2]
         }
         blpAuth <- authenticate_Impl(con, as.character(uuid), ip.address)
-        if (default) .pkgenv$blpAuth <- blpAuth else return(blpAuth)
     }
+    ## if we're setting the silent/hidden default object, return nothing
+    ## else, return the object (keeps old behavior)
+    if (default)
+        .pkgenv$blpAuth <- blpAuth
+    else
+        return(blpAuth)
 }
