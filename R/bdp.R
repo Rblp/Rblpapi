@@ -33,7 +33,9 @@
 ##' being set) as well as a value.
 ##' @param verbose A boolean indicating whether verbose operation is
 ##' desired, defaults to \sQuote{FALSE}
-##' @param identity An optional identity object.
+##' @param identity An optional identity object as created by a
+##' \code{blpAuthenticate} call, and retrived via the internal function
+##' \code{defaultAuthentication}.
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.
@@ -52,7 +54,7 @@
 ##'   bdp("SPX Index", "INTERVAL_AVG", overrides=ovrd)
 ##' }
 bdp <- function(securities, fields, options=NULL, overrides=NULL,
-                verbose=FALSE, identity=NULL, con=defaultConnection()) {
+                verbose=FALSE, identity=defaultAuthentication(), con=defaultConnection()) {
     if (any(duplicated(securities))) stop("Duplicated securities submitted.", call.=FALSE)
     bdp_Impl(con, securities, fields, options, overrides, verbose, identity)
 }

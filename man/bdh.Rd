@@ -6,8 +6,9 @@
 \usage{
 bdh(securities, fields, start.date, end.date = NULL,
   include.non.trading.days = FALSE, options = NULL, overrides = NULL,
-  verbose = FALSE, identity = NULL, con = defaultConnection(),
-  int.as.double = getOption("blpIntAsDouble", FALSE))
+  verbose = FALSE, identity = defaultAuthentication(),
+  con = defaultConnection(), int.as.double = getOption("blpIntAsDouble",
+  FALSE))
 }
 \arguments{
 \item{securities}{A character vector with security symbols in
@@ -34,7 +35,9 @@ being set) as well as a value.}
 \item{verbose}{A boolean indicating whether verbose operation is
 desired, defaults to \sQuote{FALSE}}
 
-\item{identity}{An optional identity object.}
+\item{identity}{An optional identity object as created by a
+\code{blpAuthenticate} call, and retrived via the internal function
+\code{defaultAuthentication}.}
 
 \item{con}{A connection object as created by a \code{blpConnect}
 call, and retrieved via the internal function

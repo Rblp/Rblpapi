@@ -5,7 +5,8 @@
 \title{Run 'Portfolio Data' Queries}
 \usage{
 getPortfolio(security, field, options = NULL, overrides = NULL,
-  verbose = FALSE, identity = NULL, con = defaultConnection())
+  verbose = FALSE, identity = defaultAuthentication(),
+  con = defaultConnection())
 }
 \arguments{
 \item{security}{A character value with a single security symbol in
@@ -24,7 +25,9 @@ being set) as well as a value.}
 \item{verbose}{A boolean indicating whether verbose operation is
 desired, defaults to \sQuote{FALSE}}
 
-\item{identity}{An optional identity object.}
+\item{identity}{An optional identity object as created by a
+\code{blpAuthenticate} call, and retrived via the internal function
+\code{defaultAuthentication}.}
 
 \item{con}{A connection object as created by a \code{blpConnect}
 call, and retrieved via the internal function

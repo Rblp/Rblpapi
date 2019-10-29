@@ -5,7 +5,7 @@
 \title{Run 'Bloomberg Data Point' Queries}
 \usage{
 bdp(securities, fields, options = NULL, overrides = NULL, verbose = FALSE,
-  identity = NULL, con = defaultConnection())
+  identity = defaultAuthentication(), con = defaultConnection())
 }
 \arguments{
 \item{securities}{A character vector with security symbols in
@@ -24,7 +24,9 @@ being set) as well as a value.}
 \item{verbose}{A boolean indicating whether verbose operation is
 desired, defaults to \sQuote{FALSE}}
 
-\item{identity}{An optional identity object.}
+\item{identity}{An optional identity object as created by a
+\code{blpAuthenticate} call, and retrived via the internal function
+\code{defaultAuthentication}.}
 
 \item{con}{A connection object as created by a \code{blpConnect}
 call, and retrieved via the internal function

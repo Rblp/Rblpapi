@@ -33,7 +33,9 @@
 ##' being set) as well as a value.
 ##' @param verbose A boolean indicating whether verbose operation is
 ##' desired, defaults to \sQuote{FALSE}
-##' @param identity An optional identity object.
+##' @param identity An optional identity object as created by a
+##' \code{blpAuthenticate} call, and retrived via the internal function
+##' \code{defaultAuthentication}.
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.
@@ -53,7 +55,7 @@
 ##' }
 bds <- function(security, field, options=NULL,
                 overrides=NULL, verbose=FALSE,
-                identity=NULL, con=defaultConnection()) {
+                identity=defaultAuthentication(), con=defaultConnection()) {
     if (length(security) != 1L)
         stop("more than one security submitted.", call.=FALSE)
     if (length(field) != 1L)
