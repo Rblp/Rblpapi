@@ -55,8 +55,8 @@
 ##' }
 bds <- function(security, field, options=NULL,
                 overrides=NULL, verbose=FALSE,
-                identity=NULL, simplify = TRUE,
-                con=defaultConnection()) {
+                identity=defaultAuthentication(), con=defaultConnection(),
+                simplify = TRUE) {
     if (simplify && length(security) != 1L)
         stop("cannot simplify if more than one security is submitted.", call.=FALSE)
     if (length(field) != 1L)
