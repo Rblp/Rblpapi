@@ -4,8 +4,8 @@
 \alias{subscribe}
 \title{Subscribe to streaming market data}
 \usage{
-subscribe(securities, fields, fun, options = NULL, identity = NULL,
-  con = defaultConnection())
+subscribe(securities, fields, fun, options = NULL,
+  identity = defaultAuthentication(), con = defaultConnection())
 }
 \arguments{
 \item{securities}{A character vector with security symbols in
@@ -19,7 +19,9 @@ Bloomberg notation.}
 values. Each field must have both a name (designating the option
 being set) as well as a value.}
 
-\item{identity}{An optional identity object.}
+\item{identity}{An optional identity object as created by a
+\code{blpAuthenticate} call, and retrived via the internal function
+\code{defaultAuthentication}.}
 
 \item{con}{A connection object as created by a \code{blpConnect}
 call, and retrieved via the internal function

@@ -5,6 +5,7 @@ importFrom("utils", "object.size", "packageVersion")
 export("blpConnect",
        "blpDisconnect",
        "defaultConnection",
+       "defaultAuthentication",
        "blpAuthenticate",
        "bdp",
        "bdh",

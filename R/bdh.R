@@ -38,7 +38,9 @@
 ##' being set) as well as a value.
 ##' @param verbose A boolean indicating whether verbose operation is
 ##' desired, defaults to \sQuote{FALSE}
-##' @param identity An optional identity object.
+##' @param identity An optional identity object as created by a
+##' \code{blpAuthenticate} call, and retrived via the internal function
+##' \code{defaultAuthentication}.
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.
@@ -82,7 +84,7 @@
 ##' }
 bdh <- function(securities, fields, start.date, end.date=NULL,
                 include.non.trading.days=FALSE, options=NULL, overrides=NULL,
-                verbose=FALSE, identity=NULL, con=defaultConnection(),
+                verbose=FALSE, identity=defaultAuthentication(), con=defaultConnection(),
                 int.as.double=getOption("blpIntAsDouble", FALSE)) {
     if (class(start.date) == "Date") {
         start.date <- format(start.date, format="%Y%m%d")
