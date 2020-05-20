@@ -1,3 +1,7 @@
+2020-05-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Add 'last commit' badge
+
 2019-05-23  James Bell  <jamesbell@gmx.com>
 
 	* NAMESPACE: export new function defaultAuthentication()
