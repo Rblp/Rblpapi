@@ -155,15 +155,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // fieldSearch_Impl
-Rcpp::DataFrame fieldSearch_Impl(SEXP con, std::string searchterm, std::string excludeterm);
-RcppExport SEXP _Rblpapi_fieldSearch_Impl(SEXP conSEXP, SEXP searchtermSEXP, SEXP excludetermSEXP) {
+Rcpp::DataFrame fieldSearch_Impl(SEXP con, std::string searchterm);
+RcppExport SEXP _Rblpapi_fieldSearch_Impl(SEXP conSEXP, SEXP searchtermSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type con(conSEXP);
     Rcpp::traits::input_parameter< std::string >::type searchterm(searchtermSEXP);
-    Rcpp::traits::input_parameter< std::string >::type excludeterm(excludetermSEXP);
-    rcpp_result_gen = Rcpp::wrap(fieldSearch_Impl(con, searchterm, excludeterm));
+    rcpp_result_gen = Rcpp::wrap(fieldSearch_Impl(con, searchterm));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -258,7 +257,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Rblpapi_getHeaderVersion", (DL_FUNC) &_Rblpapi_getHeaderVersion, 0},
     {"_Rblpapi_getRuntimeVersion", (DL_FUNC) &_Rblpapi_getRuntimeVersion, 0},
     {"_Rblpapi_bsrch_Impl", (DL_FUNC) &_Rblpapi_bsrch_Impl, 4},
-    {"_Rblpapi_fieldSearch_Impl", (DL_FUNC) &_Rblpapi_fieldSearch_Impl, 3},
+    {"_Rblpapi_fieldSearch_Impl", (DL_FUNC) &_Rblpapi_fieldSearch_Impl, 2},
     {"_Rblpapi_getBars_Impl", (DL_FUNC) &_Rblpapi_getBars_Impl, 8},
     {"_Rblpapi_fieldInfo_Impl", (DL_FUNC) &_Rblpapi_fieldInfo_Impl, 2},
     {"_Rblpapi_getTicks_Impl", (DL_FUNC) &_Rblpapi_getTicks_Impl, 7},
