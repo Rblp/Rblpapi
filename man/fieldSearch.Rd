@@ -4,13 +4,13 @@
 \alias{fieldSearch}
 \title{Search for matching data fields}
 \usage{
-fieldSearch(searchterm, excludeterm = "Static", con = defaultConnection())
+fieldSearch(searchterm, excludeterm = NULL, con = defaultConnection())
 }
 \arguments{
 \item{searchterm}{A string with the term to search for}
 
-\item{excludeterm}{A string with an expression for matches to
-excludes, defaults to \dQuote{Static}}
+\item{excludeterm}{Deprecated. A warning is issued if not
+\sQuote{NULL}, the default}
 
 \item{con}{A connection object as created by a \code{blpConnect}
 call, and retrieved via the internal function

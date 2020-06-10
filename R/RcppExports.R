@@ -63,8 +63,8 @@ bsrch_Impl <- function(con, domain, limit, verbose = FALSE) {
     .Call(`_Rblpapi_bsrch_Impl`, con, domain, limit, verbose)
 }
 
-fieldSearch_Impl <- function(con, searchterm, excludeterm) {
-    .Call(`_Rblpapi_fieldSearch_Impl`, con, searchterm, excludeterm)
+fieldSearch_Impl <- function(con, searchterm) {
+    .Call(`_Rblpapi_fieldSearch_Impl`, con, searchterm)
 }
 
 getBars_Impl <- function(con, security, eventType, barInterval, startDateTime, endDateTime, options, verbose = FALSE) {

@@ -24,8 +24,8 @@
 ##' @title Search for matching data fields
 ##'
 ##' @param searchterm A string with the term to search for
-##' @param excludeterm A string with an expression for matches to
-##' excludes, defaults to \dQuote{Static}
+##' @param excludeterm Deprecated. A warning is issued if not
+##' \sQuote{NULL}, the default
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.
@@ -40,6 +40,9 @@
 ##'   head(fieldSearch("vwap"), 20)
 ##' }
 ##'
-fieldSearch <- function(searchterm, excludeterm="Static", con=defaultConnection()) {
-    fieldSearch_Impl(con, searchterm, excludeterm)
+fieldSearch <- function(searchterm, excludeterm=NULL, con=defaultConnection()) {
+    if (!is.null(excludeterm)) {
+        warning("argument 'excludeterm' is deprecated")
+    }
+    fieldSearch_Impl(con, searchterm)
 }

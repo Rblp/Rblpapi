@@ -60,7 +60,7 @@ namespace {
 }
 
 // [[Rcpp::export]]
-Rcpp::DataFrame fieldSearch_Impl(SEXP con, std::string searchterm, std::string excludeterm) {
+Rcpp::DataFrame fieldSearch_Impl(SEXP con, std::string searchterm) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     bbg::Session* session =
@@ -74,8 +74,6 @@ Rcpp::DataFrame fieldSearch_Impl(SEXP con, std::string searchterm, std::string e
     bbg::Service fieldInfoService = session->getService(APIFLDS_SVC);
     bbg::Request request = fieldInfoService.createRequest("FieldSearchRequest");
     request.set ("searchSpec", searchterm.c_str());
-    bbg::Element exclude = request.getElement("exclude");
-    exclude.setElement("fieldType", excludeterm.c_str());
     request.set ("returnFieldDocumentation", false);
     session->sendRequest(request);
 
