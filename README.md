@@ -37,7 +37,7 @@ spx_ndx <- bdh(securities = c("SPX Index","NDX Index"),
                start.date = as.Date("2013-03-01"), 
                include.non.trading.days = TRUE)
 
-monthlyOptions <- structure(c("ACTUAL", "MONTHLY"),
+monthly.options <- structure(c("ACTUAL", "MONTHLY"),
                             names = c("periodicityAdjustment",
                                       "periodicitySelection"))
 spx_ndx_monthly <- bdh(securities = c("SPX Index","NDX Index"), 
