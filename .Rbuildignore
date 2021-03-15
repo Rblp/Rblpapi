@@ -8,3 +8,4 @@
 src/Makevars$
 .Rhistory
 ^.*\.tar\.gz$
+^\.github
