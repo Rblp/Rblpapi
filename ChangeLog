@@ -3,6 +3,8 @@
 	* .github/workflows/ci.yaml (jobs): Add using run.sh from r-ci
 	* .Rbuildignore: Add .github
 
+	* .travis.yml: Switch to bionic and use run.sh from r-ci
+
 2020-05-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Add 'last commit' badge
