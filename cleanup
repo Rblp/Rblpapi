@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 rm -rf src/*.o src/Rblpapi.so src/Rblpapi.dylib src/Rblpapi.dll src/Makevars \
    .Rhistory
