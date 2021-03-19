@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 ## Emacs please make this -*- mode: shell-mode; -*-
 ##
 ##  configure -- Unix build preparation system
 ##
-##  Copyright (C) 2015  Dirk Eddelbuettel and Jeroen Ooms.
+##  Copyright (C) 2015 - 2021  Dirk Eddelbuettel and Jeroen Ooms.
 ##
 ##  This file is part of Rblpapi
 ##
@@ -21,24 +21,23 @@
 ##  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Check that we are on Unix
-uname=$(type -P uname)
-if [ "${uname}" = "" ]; then
-    echo "You do not have uname so this is unlikely to be a Unix system. Exiting."
-    exit -1
+if ! [ -x $(command -v uname) ]; then
+    echo "You do not have 'uname' so this is unlikely to be a Unix system. Exiting."
+    exit 1
 fi
 
 ## Check for Linux or OSX
 : ${R_HOME=$(R RHOME)}
 sysname=$(${R_HOME}/bin/Rscript -e 'cat(Sys.info()["sysname"])')
-if [ ${sysname} == "Linux" ]; then
+if [ ${sysname} = "Linux" ]; then
     platform="linux"
-elif [ ${sysname} == "Darwin" ]; then
+elif [ ${sysname} = "Darwin" ]; then
     platform="osx"
 else
     echo "Unsupported platform: $sysname"
     echo "Check https://www.bloomberg.com/professional/support/api-library/ for possible support first."
     echo "Contributions welcome, see https://github.com/Rblp/blp for integration with Rblapi."
-    exit -1
+    exit 2
 fi
 
 ## Populate Makevars
@@ -54,7 +53,7 @@ elif [ "${arch}" = "i686" ]; then
     flavour="32"
 else
     echo "Unknown architecture: ${arch}. Exiting."
-    exit -1
+    exit 3
 fi
 
 ## helper function to not rely on curl which at least on OS X fails to follow redirects
@@ -63,7 +62,7 @@ download() {
     ## sadly, for Travis we cannot rely on R as it lacks libcurl
     libcurl=$(${R_HOME}/bin/Rscript -e 'cat(capabilities()[["libcurl"]])')
     ## so when we have libcurl in R, use it -- else fall back to curl
-    if [ ${libcurl} == "TRUE" ]; then
+    if [ ${libcurl} = "TRUE" ]; then
         file=$(basename ${url})
         ${R_HOME}/bin/Rscript -e "download.file(\"${url}\", \"${file}\", quiet=TRUE, method='libcurl')"
     else
