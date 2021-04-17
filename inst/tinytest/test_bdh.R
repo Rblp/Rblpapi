@@ -1,7 +1,5 @@
-#!/usr/bin/env r
-# hey emacs, please make this use  -*- tab-width: 4 -*-
-#
-# Copyright (C) 2016   Dirk Eddelbuettel, Whit Armstrong and John Laing
+
+# Copyright (C) 2016 - 2021  Dirk Eddelbuettel, Whit Armstrong and John Laing
 #
 # This file is part of Rblpapi.
 #
@@ -18,51 +16,33 @@
 # You should have received a copy of the GNU General Public License
 # along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
+library(tinytest)
+
 .runThisTest <- Sys.getenv("RunRblpapiUnitTests") == "yes"
+if (!.runThisTest) exit_file("Skipping this file")
 
-if (.runThisTest) {
+library(Rblpapi)
 
-    test.bdhColumnTypes <- function() {
+#test.bdhColumnTypes <- function() {
+res <- bdh("TY1 Comdty",c("PX_LAST","OPEN_INT","FUT_CUR_GEN_TICKER"),Sys.Date()-10)
+expect_true(inherits(res, "data.frame"), info = "checking return type")
+expect_true(dim(res)[1] >= 5, info = "check return of five rows")
+expect_true(dim(res)[2] == 4, info = "check return of four cols")
+expect_true(all(c("PX_LAST","OPEN_INT","FUT_CUR_GEN_TICKER") %in% colnames(res)), info = "check column names")
+#}
 
-        res <- bdh("TY1 Comdty",c("PX_LAST","OPEN_INT","FUT_CUR_GEN_TICKER"),Sys.Date()-10)
+#    test.bdhDateAsDouble <- function() {
+res <- bdh("DOENUSCH Index","ECO_RELEASE_DT",start.date=as.Date('2016-02-01'),end.date=as.Date('2016-02-29'))
+expect_true(inherits(res, "data.frame"), info = "checking return type")
+expect_true(dim(res)[2] == 2, info = "check return of two cols")
+expect_true(all(c("date","ECO_RELEASE_DT") %in% colnames(res)), info = "check column names")
+col.types <- unique(unlist(lapply(res,class)))
+expect_true(length(col.types)==1L && col.types=="Date", info = "check column types == 'Date'")
+#}
 
-        checkTrue(inherits(res, "data.frame"),
-                  msg = "checking return type")
-
-        checkTrue(dim(res)[1] >= 5, msg = "check return of five rows")
-        checkTrue(dim(res)[2] == 4, msg = "check return of four cols")
-
-        checkTrue(all(c("PX_LAST","OPEN_INT","FUT_CUR_GEN_TICKER") %in% colnames(res)),
-                  msg = "check column names")
-
-    }
-
-    test.bdhDateAsDouble <- function() {
-
-        res <- bdh("DOENUSCH Index","ECO_RELEASE_DT",start.date=as.Date('2016-02-01'),end.date=as.Date('2016-02-29'))
-
-        checkTrue(inherits(res, "data.frame"),
-                  msg = "checking return type")
-
-        checkTrue(dim(res)[2] == 2,
-                  msg = "check return of two cols")
-
-        checkTrue(all(c("date","ECO_RELEASE_DT") %in% colnames(res)),
-                  msg = "check column names")
-
-        col.types <- unique(unlist(lapply(res,class)))
-        checkTrue(length(col.types)==1L && col.types=="Date",
-                  msg = "check column types == 'Date'")
-    }
-
-    test.bdhIntAsDouble <- function() {
-        checkException(bdh("SPX Index", "PX_VOLUME", as.Date("2000-12-14"), as.Date("2000-12-15")),
-                       msg = "check int overflow")
-
-        res <- bdh("SPX Index", "PX_VOLUME", as.Date("2000-12-14"), as.Date("2000-12-15"), int.as.double=TRUE)
-        checkTrue(!is.integer(res$PX_VOLUME),
-                  msg = "check volume is not integer")
-        checkTrue(is.numeric(res$PX_VOLUME),
-                  msg = "check volume is numeric")
-    }
-}
+#    test.bdhIntAsDouble <- function() {
+expect_error(bdh("SPX Index", "PX_VOLUME", as.Date("2000-12-14"), as.Date("2000-12-15")), info = "check int overflow")
+res <- bdh("SPX Index", "PX_VOLUME", as.Date("2000-12-14"), as.Date("2000-12-15"), int.as.double=TRUE)
+expect_true(!is.integer(res$PX_VOLUME), info = "check volume is not integer")
+expect_true(is.numeric(res$PX_VOLUME), info = "check volume is numeric")
+#}

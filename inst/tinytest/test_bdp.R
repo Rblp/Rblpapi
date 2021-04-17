@@ -1,7 +1,5 @@
-#!/usr/bin/env r
-# hey emacs, please make this use  -*- tab-width: 4 -*-
-#
-# Copyright (C) 2016   Dirk Eddelbuettel, Whit Armstrong and John Laing
+
+# Copyright (C) 2016 - 2021  Dirk Eddelbuettel, Whit Armstrong and John Laing
 #
 # This file is part of Rblpapi.
 #
@@ -18,33 +16,27 @@
 # You should have received a copy of the GNU General Public License
 # along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
+library(tinytest)
+
 .runThisTest <- Sys.getenv("RunRblpapiUnitTests") == "yes"
+if (!.runThisTest) exit_file("Skipping this file")
 
-if (.runThisTest) {
+library(Rblpapi)
 
-    test.bdpColumnTypes <- function() {
+#test.bdpColumnTypes <- function() {
+cols <- c("LAST_PRICE","PX_VOLUME","SECURITY_DES", "BID_YIELD")
+res <- bdp(c("TYA Comdty","ES1 Index"), cols)
+expect_true(inherits(res, "data.frame"), info = "checking return type")
+expect_true(dim(res)[1] == 2, info = "check return of two rows")
+expect_true(dim(res)[2] == 4, info = "check return of four cols")
+expect_true(all(cols == colnames(res)), info = "check column names")
+expect_true(all(fieldInfo(cols)$datatype == c("Double", "Int32", "String", "Float")),
+            info = "check fieldInfo matches expectations")
+expect_true(all(sapply(res, class) == c("numeric", "integer", "character", "numeric")),
+            info = "check column classes match fieldInfo")
+#    }
 
-        cols <- c("LAST_PRICE","PX_VOLUME","SECURITY_DES", "BID_YIELD")
-        res <- bdp(c("TYA Comdty","ES1 Index"), cols)
-
-        checkTrue(inherits(res, "data.frame"),
-                  msg = "checking return type")
-
-        checkTrue(dim(res)[1] == 2, msg = "check return of two rows")
-        checkTrue(dim(res)[2] == 4, msg = "check return of four cols")
-
-        checkTrue(all(cols == colnames(res)), msg = "check column names")
-
-        checkTrue(all(fieldInfo(cols)$datatype == c("Double", "Int32", "String", "Float")),
-                  msg="check fieldInfo matches expectations")
-
-        checkTrue(all(sapply(res, class) == c("numeric", "integer", "character", "numeric")),
-                  msg="check column classes match fieldInfo")
-    }
-
-    test.naDate <- function() {
-        res <- bdp("BBG006YQMFQ5", "ISSUE_DT")
-        checkTrue(is.na(res$ISSUE_DT), msg="checking NA date value")
-    }
-
-}
+#test.naDate <- function() {
+res <- bdp("BBG006YQMFQ5", "ISSUE_DT")
+expect_true(is.na(res$ISSUE_DT), info = "checking NA date value")
+#}

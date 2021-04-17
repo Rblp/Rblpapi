@@ -1,4 +1,4 @@
-## Copyright (C) 2016  Dirk Eddelbuettel and Whit Armstrong
+## Copyright (C) 2016 - 2021  Dirk Eddelbuettel and Whit Armstrong
 ## Based on earlier versions in Rcpp, RProtoBuf and other packages
 ##
 ## This file is part of Rblpapi

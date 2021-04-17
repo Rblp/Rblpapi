@@ -1,7 +1,5 @@
-#!/usr/bin/env r
-# hey emacs, please make this use  -*- tab-width: 4 -*-
-#
-# Copyright (C) 2016   Dirk Eddelbuettel, Whit Armstrong and John Laing
+
+# Copyright (C) 2016 - 2021  Dirk Eddelbuettel, Whit Armstrong and John Laing
 #
 # This file is part of Rblpapi.
 #
@@ -18,45 +16,50 @@
 # You should have received a copy of the GNU General Public License
 # along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
+library(tinytest)
+
 .runThisTest <- Sys.getenv("RunRblpapiUnitTests") == "yes"
+if (!.runThisTest) exit_file("Skipping this file")
 
-if (.runThisTest) {
-    ## don't mess with connections lest we break everything else
-    #  example(blpConnect, package="Rblpapi", run.dontrun=TRUE)
-    #  example(blpDisconnect, package="Rblpapi", run.dontrun=TRUE)
+library(Rblpapi)
 
-    ## also, don't touch subscription because it never quits:
-    #  example(subscribe, package="Rblpapi", run.dontrun=TRUE)
+## don't mess with connections lest we break everything else
+#  example(blpConnect, package="Rblpapi", run.dontrun=TRUE)
+#  example(blpDisconnect, package="Rblpapi", run.dontrun=TRUE)
 
-    isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
+## also, don't touch subscription because it never quits:
+#  example(subscribe, package="Rblpapi", run.dontrun=TRUE)
 
-    test.bdhExamples <- function()
-        example(bdh, package="Rblpapi", run.dontrun=TRUE)
+isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
 
-    test.bdpExamples <- function()
-        example(bdp, package="Rblpapi", run.dontrun=TRUE)
+#test.bdhExamples <- function()
+example(bdh, package="Rblpapi", run.dontrun=TRUE)
 
-    test.bdsExamples <- function()
-        example(bds, package="Rblpapi", run.dontrun=TRUE)
+#test.bdpExamples <- function()
+example(bdp, package="Rblpapi", run.dontrun=TRUE)
 
-    test.beqsExamples <- function()
-        example(beqs, package="Rblpapi", run.dontrun=TRUE)
+#test.bdsExamples <- function()
+example(bds, package="Rblpapi", run.dontrun=TRUE)
 
-    test.bsrchExamples <- function()
-        example(bsrch, package="Rblpapi", run.dontrun=TRUE)
+#test.beqsExamples <- function()
+example(beqs, package="Rblpapi", run.dontrun=TRUE)
 
-    test.defaultConnectionExamples <- function()
-        example(defaultConnection, package="Rblpapi", run.dontrun=TRUE)
+#test.bsrchExamples <- function()
+example(bsrch, package="Rblpapi", run.dontrun=TRUE)
 
-    test.fieldInfoExamples <- function()
-        example(fieldInfo, package="Rblpapi", run.dontrun=TRUE)
+#test.defaultConnectionExamples <- function()
+example(defaultConnection, package="Rblpapi", run.dontrun=TRUE)
 
-    test.fieldSearchExamples <- function()
-        example(fieldSearch, package="Rblpapi", run.dontrun=TRUE)
+#test.fieldInfoExamples <- function()
+example(fieldInfo, package="Rblpapi", run.dontrun=TRUE)
 
-    test.getBarsExamples <- function()
-        if (!isweekend) example(getBars, package="Rblpapi", run.dontrun=TRUE) else TRUE
+#test.fieldSearchExamples <- function()
+example(fieldSearch, package="Rblpapi", run.dontrun=TRUE)
 
-    test.getTicksExamples <- function()
-        if (!isweekend) example(getTicks, package="Rblpapi", run.dontrun=TRUE) else TRUE
-}
+#test.getBarsExamples <- function()
+if (!isweekend) example(getBars, package="Rblpapi", run.dontrun=TRUE) else TRUE
+
+#test.getTicksExamples <- function()
+if (!isweekend) example(getTicks, package="Rblpapi", run.dontrun=TRUE) else TRUE
+
+expect_true(TRUE, info = "all examples")

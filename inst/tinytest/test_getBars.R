@@ -1,6 +1,5 @@
-#!/usr/bin/env r
-#
-# Copyright (C) 2016   Dirk Eddelbuettel and Whit Armstrong
+
+# Copyright (C) 2016 - 2021  Dirk Eddelbuettel and Whit Armstrong
 #
 # This file is part of Rblpapi.
 #
@@ -17,46 +16,38 @@
 # You should have received a copy of the GNU General Public License
 # along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
+library(tinytest)
+
 .runThisTest <- Sys.getenv("RunRblpapiUnitTests") == "yes"
+if (!.runThisTest) exit_file("Skipping this file")
 
-if (.runThisTest) {
+library(Rblpapi)
 
-    test.getBarsAsMatrix <- function() {
+#test.getBarsAsMatrix <- function() {
 
-        isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
+isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
 
-        res <- getBars("ES1 Index",
-                       startTime=Sys.time() - isweekend*48*60*60 - 6*60*60,
-                       endTime=Sys.time() - isweekend*48*60*60,
-                       returnAs="matrix")
+res <- getBars("ES1 Index", startTime=Sys.time() - isweekend*48*60*60 - 6*60*60,
+               endTime=Sys.time() - isweekend*48*60*60, returnAs="matrix")
+expect_true(inherits(res, "data.frame"), info = "checking return type")
 
-        checkTrue(inherits(res, "data.frame"),
-                  msg = "checking return type")
+expect_true(dim(res)[1] > 3, info = "check return of at least three rows")
+expect_true(dim(res)[2] == 8, info = "check return of eight columns")
 
-        checkTrue(dim(res)[1] > 3, msg = "check return of at least three rows")
-        checkTrue(dim(res)[2] == 8, msg = "check return of eight columns")
+expect_true(all(c("times", "open", "high", "low", "close") %in% colnames(res)),
+            info = "check column names")
+#}
 
-        checkTrue(all(c("times", "open", "high", "low", "close") %in% colnames(res)),
-                  msg = "check column names")
-    }
+#    test.getBarsAsXts <- function() {
+isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
 
-    test.getBarsAsXts <- function() {
+res <- getBars("ES1 Index", startTime=Sys.time() - isweekend*48*60*60 - 6*60*60,
+               endTime=Sys.time() - isweekend*48*60*60, returnAs="xts")
+expect_true(inherits(res, "xts"), info = "checking return type")
 
-        isweekend <- as.POSIXlt(Sys.Date())$wday %in% c(0,6)
+expect_true(dim(res)[1] > 3, info = "check return of at least three rows")
+expect_true(dim(res)[2] == 7, info = "check return of seven columns")
+expect_true(all(c("open", "high", "low", "close") %in% colnames(res)),
+            info = "check column names")
 
-        res <- getBars("ES1 Index",
-                       startTime=Sys.time() - isweekend*48*60*60 - 6*60*60,
-                       endTime=Sys.time() - isweekend*48*60*60,
-                       returnAs="xts")
-
-        checkTrue(inherits(res, "xts"),
-                  msg = "checking return type")
-
-        checkTrue(dim(res)[1] > 3, msg = "check return of at least three rows")
-        checkTrue(dim(res)[2] == 7, msg = "check return of seven columns")
-
-        checkTrue(all(c("open", "high", "low", "close") %in% colnames(res)),
-                  msg = "check column names")
-
-    }
-}
+#}
