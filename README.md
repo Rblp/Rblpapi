@@ -6,7 +6,7 @@
 [![LibraryLicense](https://img.shields.io/badge/license-License.txt-yellow.svg?style=flat)](https://raw.githubusercontent.com/Rblp/Rblpapi/master/inst/License.txt) 
 [![CRAN](http://www.r-pkg.org/badges/version/Rblpapi)](https://cran.r-project.org/package=Rblpapi) 
 [![Dependencies](https://tinyverse.netlify.com/badge/Rblpapi)](https://cran.r-project.org/package=Rblpapi) 
-[![Downloads](http://cranlogs.r-pkg.org/badges/Rblpapi?color=brightgreen)](http://www.r-pkg.org/pkg/Rblpapi)
+[![Downloads](http://cranlogs.r-pkg.org/badges/Rblpapi?color=brightgreen)](https://www.r-pkg.org:443/pkg/Rblpapi)
 [![Last Commit](https://img.shields.io/github/last-commit/Rblp/Rblpapi)](https://github.com/Rblp/Rblpapi)
 
 ### Background
@@ -67,7 +67,7 @@ install.packages("Rblpapi")
 ```
 
 Interim (source or binary) releases _may_ be also be made available through the
-[ghrr drat](http://ghrr.github.io/drat) repository as well and can be accessed via
+[ghrr drat](https://ghrr.github.io/drat/) repository as well and can be accessed via
 
 ```r
 install.packages("drat")       # easier repo access + creation

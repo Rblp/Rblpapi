@@ -39,7 +39,7 @@ quotes.
 
 Full detials of the subscription string can be found in the header
 file
-\href{http://bloomberg.github.io/blpapi-docs/cpp/3.8/blpapi__subscriptionlist_8h.html}{blpapi_subscriptionlist.h}.
+\href{https://bloomberg.github.io/blpapi-docs/cpp/3.8/blpapi__subscriptionlist_8h.html}{blpapi_subscriptionlist.h}.
 }
 \examples{
 \dontrun{
@@ -49,7 +49,7 @@ file
 }
 }
 \references{
-\url{http://bloomberg.github.io/blpapi-docs/cpp/3.8}
+\url{https://bloomberg.github.io/blpapi-docs/cpp/3.8/}
 }
 \author{
 Whit Armstrong
