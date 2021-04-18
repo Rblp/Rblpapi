@@ -1,4 +1,4 @@
-## Copyright (C) 2016  Dirk Eddelbuettel and Whit Armstrong
+## Copyright (C) 2016 - 2021  Dirk Eddelbuettel and Whit Armstrong
 ## Based on earlier versions in Rcpp, RProtoBuf and other packages
 ##
 ## This file is part of Rblpapi
@@ -16,20 +16,6 @@
 ## You should have received a copy of the GNU General Public License
 ## along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
-## doRUnit.R --- Run RUnit tests
-##
-## with credits to package fUtilities in RMetrics
-## which credits Gregor Gojanc's example in CRAN package  'gdata'
-## as per the R Wiki http://wiki.r-project.org/rwiki/doku.php?id=developers:runit
-## and changed further by Martin Maechler
-## and more changes by Murray Stokely in HistogramTools
-## and then used adapted in RProtoBuf
-## and then used in Rcpp with two additional env var setters/getters
-##
-## Dirk Eddelbuettel, Feb 2016
-
-stopifnot(require(RUnit, quietly=TRUE))
-
 ## Set a seed to make the test deterministic (though currently to random data)
 set.seed(42)
 
@@ -45,28 +31,14 @@ if (file.exists(connectionParameterFile)) source(connectionParameterFile)
 ## recall that we DO need a working Bloomberg connection...
 if (getOption("blpUnitTests", FALSE)) {
 
-    ## load the package
-    stopifnot(require(Rblpapi, quietly=TRUE))
-
     ## without this, we get (or used to get) unit test failures
     Sys.setenv("R_TESTS"="")
 
+    ## set an option the test files check for
     Sys.setenv("RunRblpapiUnitTests" = "yes")
 
-    ## Define tests
-    testSuite <- defineTestSuite(name="Rblpapi Unit Tests",
-                                 dirs=system.file("unitTests", package = "Rblpapi"),
-                                 testFuncRegexp = "^[Tt]est.+")
-
-    ## Run tests
-    tests <- runTestSuite(testSuite)
-
-    ## Print results
-    printTextProtocol(tests)
-
-    ## Return success or failure to R CMD CHECK
-    if (getErrors(tests)$nFail > 0) stop("TEST FAILED!")
-    if (getErrors(tests)$nErr > 0) stop("TEST HAD ERRORS!")
-    if (getErrors(tests)$nTestFunc < 1) stop("NO TEST FUNCTIONS RUN!")
+    ## standard test suite call provided tinytest is present
+    if (requireNamespace("tinytest", quietly=TRUE)) {
+        tinytest::test_package("Rblpapi")
+    }
 }
-

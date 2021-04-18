@@ -5,7 +5,7 @@ Date: 2019-04-02
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Author: Whit Armstrong, Dirk Eddelbuettel and John Laing
 Imports: Rcpp (>= 0.11.0), utils
-Suggests: fts, xts, zoo, data.table, knitr, RUnit
+Suggests: fts, xts, zoo, data.table, knitr, minidown, tinytest
 VignetteBuilder: knitr
 LazyLoad: yes
 StagedInstall: no
@@ -18,7 +18,7 @@ SystemRequirements: A valid Bloomberg installation. The API headers and
  documentation. A compiler recent enough for (at least partial) C++11
  support is required; g++-4.6.* or later should be sufficient and g++-4.9.*
  or later is preferred.
-URL: http://dirk.eddelbuettel.com/code/rblpapi.html, https://github.com/Rblp/Rblpapi
+URL: https://dirk.eddelbuettel.com/code/rblpapi.html, https://github.com/Rblp/Rblpapi
 BugReports: https://github.com/Rblp/Rblpapi/issues
 License: file LICENSE
 RoxygenNote: 6.0.1
