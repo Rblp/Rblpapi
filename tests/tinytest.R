@@ -39,6 +39,6 @@ if (getOption("blpUnitTests", FALSE)) {
 
     ## standard test suite call provided tinytest is present
     if (requireNamespace("tinytest", quietly=TRUE)) {
-        tinytest::test_package("td")
+        tinytest::test_package("Rblpapi")
     }
 }
