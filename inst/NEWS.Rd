@@ -4,6 +4,19 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
+\section{Changes in Rblpapi version 0.3.11 (2021-04-18)}{
+  \itemize{
+    \item Support blpAutoAuthenticate and B-PIPE access, refactor and
+    generalise authentication (James Bell in \ghpr{285})
+    \item Deprecate \code{excludeterm} (John in \ghpr{306})
+    \item Correct example in README.md (Maxime Legrand in \ghpr{314})
+    \item Add GitHub Actions continuous integration (Dirk in \ghpr{323})
+    \item Remove bashisms detected by R CMD check (Dirk \ghpr{324})
+    \item Switch vignette to minidown (Dirk in \ghpr{331})
+    \item Switch unit tests framework to tinytest (Dirk in \ghpr{332})
+  }
+}
+
 \section{Changes in Rblpapi version 0.3.10 (2019-04-02)}{
   \itemize{
     \item The \code{start.date} format for \code{bdh} now allows character
