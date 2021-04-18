@@ -2,11 +2,15 @@
 title: "Introducing Rblpapi"
 author: "Dirk Eddelbuettel"
 date: "2015-08-13"
-output: rmarkdown::html_vignette
+output:
+  minidown::mini_document:
+    framework: water
+    toc: true
+    toc_float: true
 vignette: >
   %\VignetteIndexEntry{Introducing Rblpapi}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ## Introduction
