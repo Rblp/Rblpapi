@@ -4,7 +4,7 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
-\section{Changes in Rblpapi version 0.3.11 (2021-04-18)}{
+\section{Changes in Rblpapi version 0.3.11 (2021-04-20)}{
   \itemize{
     \item Support blpAutoAuthenticate and B-PIPE access, refactor and
     generalise authentication (James Bell in \ghpr{285})
