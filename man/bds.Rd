@@ -33,11 +33,7 @@ call, and retrieved via the internal function
 \code{defaultConnection}.}
 }
 \value{
-A list with as many entries as there are entries in
-\code{securities}; each list contains a data.frame with one row
-per observations and as many columns as entries in
-\code{fields}. If the list is of length one, it is collapsed into
-a single data frame.
+A data frame object with the requested data set.
 }
 \description{
 This function uses the Bloomberg API to retrieve 'bds' (Bloomberg
