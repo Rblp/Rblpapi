@@ -36,7 +36,7 @@
 
 	* .travis.yml: Switch to bionic and use run.sh from r-ci
 
-2021-02-25  Michael Kerber  <kerber@tugraz.at>
+2021-02-25  Michael Kerber  <mtkerber@gmail.com>
 
 	* man/bds.Rd: Correct return type desription
 
