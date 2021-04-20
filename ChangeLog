@@ -2,16 +2,18 @@
 
 	* DESCRIPTION (Version, Date): New release 0.3.11
 
+2021-04-19  John Laing  <john.laing@gmail.com>
+
+	* man/bds.Rd: Regenerate based on updated roxygen
+	* R/bds.R: Simply given single argument
+
+2021-04-18  Dirk Eddelbuettel  <edd@debian.org>
+
 	* DESCRIPTION (Suggests): Add rmarkdown
 
 	* R/subscribe.R: Update two URLs to https
 	* man/subscribe.Rd: Ditto
 	* README.md: Ditto
-
-2021-04-19  John Laing  <john.laing@gmail.com>
-
-	* man/bds.Rd: Regenerate based on updated roxygen
-	* R/bds.R: Simply given single argument
 
 2021-04-17  Dirk Eddelbuettel  <edd@debian.org>
 
