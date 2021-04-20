@@ -1,4 +1,4 @@
-2021-04-18  Dirk Eddelbuettel  <edd@debian.org>
+2021-04-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): New release 0.3.11
 
@@ -7,6 +7,11 @@
 	* R/subscribe.R: Update two URLs to https
 	* man/subscribe.Rd: Ditto
 	* README.md: Ditto
+
+2021-04-19  John Laing  <john.laing@gmail.com>
+
+	* man/bds.Rd: Regenerate based on updated roxygen
+	* R/bds.R: Simply given single argument
 
 2021-04-17  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -28,6 +33,10 @@
 	* .Rbuildignore: Add .github
 
 	* .travis.yml: Switch to bionic and use run.sh from r-ci
+
+2021-02-25  Michael Kerber  <kerber@tugraz.at>
+
+	* man/bds.Rd: Correct return type desription
 
 2020-05-19  Dirk Eddelbuettel  <edd@debian.org>
 

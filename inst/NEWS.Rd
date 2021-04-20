@@ -10,6 +10,8 @@
     generalise authentication (James Bell in \ghpr{285})
     \item Deprecate \code{excludeterm} (John in \ghpr{306})
     \item Correct example in README.md (Maxime Legrand in \ghpr{314})
+    \item Correct \code{bds} man page (and code) (Michael Kerber, and
+    John, in \ghpr{320})
     \item Add GitHub Actions continuous integration (Dirk in \ghpr{323})
     \item Remove bashisms detected by R CMD check (Dirk \ghpr{324})
     \item Switch vignette to minidown (Dirk in \ghpr{331})
