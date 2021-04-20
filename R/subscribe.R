@@ -27,7 +27,7 @@
 ##'
 ##' Full detials of the subscription string can be found in the header
 ##' file
-##' \href{http://bloomberg.github.io/blpapi-docs/cpp/3.8/blpapi__subscriptionlist_8h.html}{blpapi_subscriptionlist.h}.
+##' \href{https://bloomberg.github.io/blpapi-docs/cpp/3.8/blpapi__subscriptionlist_8h.html}{blpapi_subscriptionlist.h}.
 ##' 
 ##' @param securities A character vector with security symbols in
 ##' Bloomberg notation.
@@ -43,7 +43,7 @@
 ##' call, and retrieved via the internal function
 ##' \code{defaultConnection}.
 ##' @return This function always returns NULL.
-##' @references \url{http://bloomberg.github.io/blpapi-docs/cpp/3.8}
+##' @references \url{https://bloomberg.github.io/blpapi-docs/cpp/3.8/}
 ##' @author Whit Armstrong
 ##' @examples
 ##' \dontrun{
