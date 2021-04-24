@@ -51,10 +51,10 @@
 ##' be retrieved as doubles instead. This option is a workaround for very
 ##' large values which would overflow int32. Defaults to \sQuote{FALSE}
 ##' @return A list with as a many entries as there are entries in
-##' \code{securities}; each list contains a object of class \code{returnAs} with one row
+##' \code{securities}; each list contains a object of type \code{returnAs} with one row
 ##' per observations and as many columns as entries in
 ##' \code{fields}. If the list is of length one, it is collapsed into
-##' a single object of class \code{returnAs}. Note that the order of securities returned
+##' a single object of type \code{returnAs}. Note that the order of securities returned
 ##' is determined by the backend and may be different from the order
 ##' of securities in the \code{securities} field.
 ##' @seealso For historical futures series, see \sQuote{DOCS #2072138 <GO>}
@@ -109,10 +109,10 @@ bdh <- function(securities, fields, start.date, end.date=NULL,
     
     res <- switch(returnAs,
                   data.frame = res,            # default is data.frame
-                  fts        = lapply(res, function(x) fts::fts(x[,1], x[,-1])),
-                  xts        = lapply(res, function(x) xts::xts(x[,-1], order.by = x[,1])),
-                  zoo        = lapply(res, function(x) zoo::zoo(x[,-1], order.by = x[,1])),
-                  data.table = lapply(res, function(x) Rblpapi:::asDataTable(x)[,-c(1,3)]),
+                  fts        = lapply(res, function(x) fts::fts(x[,1], x[,-1, drop = FALSE])),
+                  xts        = lapply(res, function(x) xts::xts(x[,-1, drop = FALSE], order.by = x[,1])),
+                  zoo        = lapply(res, function(x) zoo::zoo(x[,-1, drop = FALSE], order.by = x[,1])),
+                  data.table = lapply(res, function(x) data.table::data.table(date = data.table::as.IDate(x[, 1]), x[, -1, drop = FALSE])),
                   res)
   
   if (typeof(res)=="list" && length(res)==1) {
