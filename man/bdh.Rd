@@ -6,9 +6,9 @@
 \usage{
 bdh(securities, fields, start.date, end.date = NULL,
   include.non.trading.days = FALSE, options = NULL, overrides = NULL,
-  verbose = FALSE, identity = defaultAuthentication(),
-  con = defaultConnection(), int.as.double = getOption("blpIntAsDouble",
-  FALSE))
+  verbose = FALSE, returnAs = getOption("bdhType", "data.frame"),
+  identity = defaultAuthentication(), con = defaultConnection(),
+  int.as.double = getOption("blpIntAsDouble", FALSE))
 }
 \arguments{
 \item{securities}{A character vector with security symbols in
@@ -35,8 +35,12 @@ being set) as well as a value.}
 \item{verbose}{A boolean indicating whether verbose operation is
 desired, defaults to \sQuote{FALSE}}
 
+\item{returnAs}{A character variable describing the type of return
+object; currently supported are \sQuote{data.frame} (also the default),
+\sQuote{data.table}, \sQuote{fts}, \sQuote{xts} and \sQuote{zoo}}
+
 \item{identity}{An optional identity object as created by a
-\code{blpAuthenticate} call, and retrived via the internal function
+\code{blpAuthenticate} call, and retrieved via the internal function
 \code{defaultAuthentication}.}
 
 \item{con}{A connection object as created by a \code{blpConnect}
@@ -49,10 +53,10 @@ large values which would overflow int32. Defaults to \sQuote{FALSE}}
 }
 \value{
 A list with as a many entries as there are entries in
-\code{securities}; each list contains a data.frame with one row
+\code{securities}; each list contains a object of type \code{returnAs} with one row
 per observations and as many columns as entries in
 \code{fields}. If the list is of length one, it is collapsed into
-a single data frame. Note that the order of securities returned
+a single object of type \code{returnAs}. Note that the order of securities returned
 is determined by the backend and may be different from the order
 of securities in the \code{securities} field.
 }
@@ -76,7 +80,7 @@ Data History) queries
       start.date="-6CM", options=opt)
 
   ## example for options and overrides
-  opt <- c("periodicitySelection" = "QUARTERLY")
+  opt <- c("periodicitySelection"="QUARTERLY")
   ovrd <- c("BEST_FPERIOD_OVERRIDE"="1GQ")
   bdh("IBM US Equity", "BEST_SALES", start.date=Sys.Date()-365.25*4,
       options=opt, overrides=ovrd)

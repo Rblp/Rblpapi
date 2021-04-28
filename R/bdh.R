@@ -38,8 +38,11 @@
 ##' being set) as well as a value.
 ##' @param verbose A boolean indicating whether verbose operation is
 ##' desired, defaults to \sQuote{FALSE}
+##' @param returnAs A character variable describing the type of return
+##' object; currently supported are \sQuote{data.frame} (also the default),
+##' \sQuote{data.table}, \sQuote{fts}, \sQuote{xts} and \sQuote{zoo}
 ##' @param identity An optional identity object as created by a
-##' \code{blpAuthenticate} call, and retrived via the internal function
+##' \code{blpAuthenticate} call, and retrieved via the internal function
 ##' \code{defaultAuthentication}.
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function
@@ -48,10 +51,10 @@
 ##' be retrieved as doubles instead. This option is a workaround for very
 ##' large values which would overflow int32. Defaults to \sQuote{FALSE}
 ##' @return A list with as a many entries as there are entries in
-##' \code{securities}; each list contains a data.frame with one row
+##' \code{securities}; each list contains a object of type \code{returnAs} with one row
 ##' per observations and as many columns as entries in
 ##' \code{fields}. If the list is of length one, it is collapsed into
-##' a single data frame. Note that the order of securities returned
+##' a single object of type \code{returnAs}. Note that the order of securities returned
 ##' is determined by the backend and may be different from the order
 ##' of securities in the \code{securities} field.
 ##' @seealso For historical futures series, see \sQuote{DOCS #2072138 <GO>}
@@ -73,7 +76,7 @@
 ##'       start.date="-6CM", options=opt)
 ##'
 ##'   ## example for options and overrides
-##'   opt <- c("periodicitySelection" = "QUARTERLY")
+##'   opt <- c("periodicitySelection"="QUARTERLY")
 ##'   ovrd <- c("BEST_FPERIOD_OVERRIDE"="1GQ")
 ##'   bdh("IBM US Equity", "BEST_SALES", start.date=Sys.Date()-365.25*4,
 ##'       options=opt, overrides=ovrd)
@@ -84,8 +87,10 @@
 ##' }
 bdh <- function(securities, fields, start.date, end.date=NULL,
                 include.non.trading.days=FALSE, options=NULL, overrides=NULL,
-                verbose=FALSE, identity=defaultAuthentication(), con=defaultConnection(),
+                verbose=FALSE, returnAs=getOption("bdhType", "data.frame"), 
+                identity=defaultAuthentication(), con=defaultConnection(),
                 int.as.double=getOption("blpIntAsDouble", FALSE)) {
+    match.arg(returnAs, c("data.frame", "fts", "xts", "zoo", "data.table"))
     if (class(start.date) == "Date") {
         start.date <- format(start.date, format="%Y%m%d")
     }
@@ -101,7 +106,16 @@ bdh <- function(securities, fields, start.date, end.date=NULL,
 
     res <- bdh_Impl(con, securities, fields, start.date, end.date, options, overrides,
                     verbose, identity, int.as.double)
-    if (typeof(res)=="list" && length(res)==1) {
+    
+    res <- switch(returnAs,
+                  data.frame = res,            # default is data.frame
+                  fts        = lapply(res, function(x) fts::fts(x[,1], x[,-1, drop = FALSE])),
+                  xts        = lapply(res, function(x) xts::xts(x[,-1, drop = FALSE], order.by = x[,1])),
+                  zoo        = lapply(res, function(x) zoo::zoo(x[,-1, drop = FALSE], order.by = x[,1])),
+                  data.table = lapply(res, function(x) data.table::data.table(date = data.table::as.IDate(x[, 1]), x[, -1, drop = FALSE])),
+                  res)
+  
+  if (typeof(res)=="list" && length(res)==1) {
         res <- res[[1]]
     }
     res

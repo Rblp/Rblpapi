@@ -1,3 +1,15 @@
+2021-04-27  John Laing  <john.laing@gmail.com>
+
+	* inst/tinytest/test_bdh.R: Added tests for new argument 'returnAs'
+
+2021-04-24  Dirk Eddelbuettel  <edd@debian.org>
+
+	* man/bdh.Rd: Regenerated
+
+2021-04-24  Michael Kerber  <mtkerber@gmail.com>
+
+	* R/bdh.R: Support new argument 'returnAs'
+
 2021-04-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): New release 0.3.11

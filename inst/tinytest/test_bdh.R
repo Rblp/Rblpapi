@@ -31,6 +31,24 @@ expect_true(dim(res)[2] == 4, info = "check return of four cols")
 expect_true(all(c("PX_LAST","OPEN_INT","FUT_CUR_GEN_TICKER") %in% colnames(res)), info = "check column names")
 #}
 
+#test.bdhReturnAsDT <- function() {
+res <- bdh("TY1 Comdty",c("PX_LAST","OPEN_INT","FUT_CUR_GEN_TICKER"),Sys.Date()-10,returnAs="data.table")
+expect_true(inherits(res, "data.table"), info = "checking return type - data.table")
+expect_true(dim(res)[1] >= 5, info = "check return of five rows - data.table")
+expect_true(dim(res)[2] == 4, info = "check return of four cols - data.table")
+expect_true(all(c("PX_LAST","OPEN_INT","FUT_CUR_GEN_TICKER") %in% colnames(res)), info = "check column names - data.table")
+#}
+
+#test.bdhReturnAsTS <- function() {
+for (retAs in c("fts", "xts", "zoo")) {
+    res <- bdh("TY1 Comdty",c("PX_OPEN", "PX_HIGH", "PX_LOW", "PX_CLOSE"),Sys.Date()-10,returnAs=retAs)
+    expect_true(inherits(res, retAs), info = paste("checking return type -", retAs))
+    expect_true(dim(res)[1] >= 5, info = paste("check return of five rows -", retAs))
+    expect_true(dim(res)[2] == 4, info = paste("check return of four cols -", retAs))
+    expect_true(all(c("PX_OPEN", "PX_HIGH", "PX_LOW", "PX_CLOSE") %in% colnames(res)), info = paste("check column names -", retAs))
+}
+#}
+
 #    test.bdhDateAsDouble <- function() {
 res <- bdh("DOENUSCH Index","ECO_RELEASE_DT",start.date=as.Date('2016-02-01'),end.date=as.Date('2016-02-29'))
 expect_true(inherits(res, "data.frame"), info = "checking return type")
