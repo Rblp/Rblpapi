@@ -1,3 +1,7 @@
+2021-04-28  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/test_bdh.R: Tweak thanks to hint from Michael
+
 2021-04-27  John Laing  <john.laing@gmail.com>
 
 	* inst/tinytest/test_bdh.R: Added tests for new argument 'returnAs'
