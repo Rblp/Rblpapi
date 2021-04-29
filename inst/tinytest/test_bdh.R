@@ -41,11 +41,11 @@ expect_true(all(c("PX_LAST","OPEN_INT","FUT_CUR_GEN_TICKER") %in% colnames(res))
 
 #test.bdhReturnAsTS <- function() {
 for (retAs in c("fts", "xts", "zoo")) {
-    res <- bdh("TY1 Comdty",c("PX_OPEN", "PX_HIGH", "PX_LOW", "PX_CLOSE"),Sys.Date()-10,returnAs=retAs)
+    res <- bdh("TY1 Comdty",c("PX_OPEN", "PX_HIGH", "PX_LOW", "PX_LAST"),Sys.Date()-10,returnAs=retAs)
     expect_true(inherits(res, retAs), info = paste("checking return type -", retAs))
     expect_true(dim(res)[1] >= 5, info = paste("check return of five rows -", retAs))
     expect_true(dim(res)[2] == 4, info = paste("check return of four cols -", retAs))
-    expect_true(all(c("PX_OPEN", "PX_HIGH", "PX_LOW", "PX_CLOSE") %in% colnames(res)), info = paste("check column names -", retAs))
+    expect_true(all(c("PX_OPEN", "PX_HIGH", "PX_LOW", "PX_LAST") %in% colnames(res)), info = paste("check column names -", retAs))
 }
 #}
 
