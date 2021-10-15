@@ -36,7 +36,7 @@ functions also have proper help pages for fuller details.
 
 Use
 
-```{r, eval=FALSE}
+```r
 library(Rblpapi)
 ```
 
@@ -47,7 +47,7 @@ automatically connect at package load; see the next section.
 
 Use
 
-```{r, eval=FALSE}
+```r
 blpConnect()
 ```
 
@@ -71,7 +71,7 @@ object.
 
 Default arguments and auto-connect can be set via `options()`
 
-```{R, eval=FALSE}
+```r
 options("blpAutoConnect" = TRUE)
 options("blpHost" = "x.x.x.x")
 options("blpPort" = 8194)
@@ -79,7 +79,7 @@ options("blpAppName" = "yyy")
 ```
 
 Optionally use
-```{R, eval=FALSE}
+```r
 blpAuthenticate()
 ```
 
@@ -102,7 +102,7 @@ accessor function.
 
 Default arguments and auto-authentication can be set via `options()`
 
-```{R, eval=FALSE}
+```r
 options("blpAutoAuthenticate" = TRUE)
 options("blpUUID" = "xxx")
 options("blpLoginHostname" = "yyy")
@@ -114,7 +114,7 @@ For application-id authentication, first use `blpConnect()` with an
 `appName` argument.  Then call `blpAuthenticate()` with no arguments.
 
 
-```{R, eval=FALSE}
+```r
 blpConnect( ... , appName = "appName")
 blpAuthenticate()
 ```
@@ -126,7 +126,7 @@ UUID, `IAM <GO>` in Bloomberg Terminal.  Note, if you supply both IP and
 host arguments, the IP will be used, and the host ignored.
 
 
-```{R, eval=FALSE}
+```r
 blpConnect( ... )
 blpAuthenticate( uuid="UUID", ip.address="x.x.x.x")
 ```
@@ -137,7 +137,7 @@ blpAuthenticate( uuid="UUID", ip.address="x.x.x.x")
 Current (or most recent) values of market-related instruments can be accessed
 via the `bdp()` function:
 
-```{r, eval=FALSE}
+```r
 bdp(c("ESA Index", "SPY US Equity"), c("PX_LAST", "VOLUME"))
 ```
 
@@ -145,7 +145,7 @@ bdp(c("ESA Index", "SPY US Equity"), c("PX_LAST", "VOLUME"))
 
 The `bds()` function can retrieve data of a more static nature:
 
-```{r, eval=FALSE}
+```r
 bds("GOOG US Equity", "TOP_20_HOLDERS_PUBLIC_FILINGS")
 ```
 
@@ -153,7 +153,7 @@ bds("GOOG US Equity", "TOP_20_HOLDERS_PUBLIC_FILINGS")
 
 Historical data (at a daily granularity) can be retrieved with `bdh()`:
 
-```{r, eval=FALSE}
+```r
 bdh("SPY US Equity", c("PX_LAST", "VOLUME"), start.date=Sys.Date()-31)
 ```
 
@@ -162,7 +162,7 @@ bdh("SPY US Equity", c("PX_LAST", "VOLUME"), start.date=Sys.Date()-31)
 The `getBars()` function retrieves aggregated Open / High / Low /
 Close / Volume data. For example, in
 
-```{r, eval=FALSE}
+```r
 getBars("ES1 Index")
 ```
 
@@ -174,7 +174,7 @@ the default values of six hourly bars for the lead ES future.
 The `getTicks()` function retrieves tickdata, albeit with timestamps
 at a minute granularity.  For example, the call
 
-```{r, eval=FALSE}
+```r
 getTicks("ES1 Index")
 ```
 
@@ -185,7 +185,7 @@ retrieves all ticks for the given security over the last hour.
 The `fieldSearch()` helper function can search for available fields
 which can be used with the `bdp()`, `bdh()` or `bds()` functions. For example,
 
-```{r, eval=FALSE}
+```r
 res <- fieldSearch("vwap")
 ```
 
@@ -196,7 +196,7 @@ search for fields describing volume-weighted average price fields
 The `beqs()` function (which was contribued by Rademeyer Vermaak) can access
 EQS functionality: 
 
-```{r, eval=FALSE}
+```r
 beqs("Global Oil Companies YTD Return","GLOBAL")
 ```
 
