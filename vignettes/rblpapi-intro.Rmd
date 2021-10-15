@@ -38,7 +38,7 @@ Use
 
 ```{r, eval=FALSE}
 library(Rblpapi)
-````
+```
 
 to load the package.  You can also set options which will
 automatically connect at package load; see the next section.
