@@ -1,5 +1,7 @@
 2021-10-15  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Version,Date): Roll version and date
+
 	* vignettes/rblpapi-intro.Rmd (vignette): Set chunks to pandoc R
 	invocation as no evaluation can be made given lack of BLP access
 
