@@ -1,3 +1,9 @@
+2021-12-03 Kai Lin <klin441@gmail.com>
+
+    * src/bds.cpp: Change SEXP variables to Rcpp::RObject to prevent segfaults caused by garbage collection
+
+    * src/Rblpapi_types.h: Change LazyFrameT and LazyFrameIteratorT to use Rcpp::RObject to protect against garbage collection
+
 2021-10-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version,Date): Roll version and date
