@@ -22,8 +22,8 @@
 #include <string>
 #include <Rcpp.h>
 
-typedef std::map<std::string,SEXP> LazyFrameT;
-typedef std::map<std::string,SEXP>::iterator LazyFrameIteratorT;
+typedef std::map<std::string,Rcpp::RObject> LazyFrameT;
+typedef std::map<std::string,Rcpp::RObject>::iterator LazyFrameIteratorT;
 
 class FieldInfo {
 public:
