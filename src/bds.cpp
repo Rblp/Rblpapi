@@ -39,7 +39,7 @@ using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 
-void populateDfRowBDS(SEXP ans, R_len_t row_index, Element& e) {
+void populateDfRowBDS(Rcpp::RObject ans, R_len_t row_index, Element& e) {
     if (e.isNull()) { return; }
 
     switch(e.datatype()) {
@@ -104,8 +104,8 @@ void populateDfRowBDS(SEXP ans, R_len_t row_index, Element& e) {
 }
 
 // deprecated -- still needed by BDS
-SEXP allocateDataFrameColumn(int fieldT, size_t n) {
-    SEXP ans;
+Rcpp::RObject allocateDataFrameColumn(int fieldT, size_t n) {
+    Rcpp::RObject ans;
 
     switch(fieldT) {
     case BLPAPI_DATATYPE_BOOL:
@@ -192,8 +192,8 @@ LazyFrameIteratorT assertColumnDefined(LazyFrameT& lazy_frame, BloombergLP::blpa
 
     // insert only if not present
     if (iter == lazy_frame.end()) {
-        SEXP column = allocateDataFrameColumn(e.datatype(), n);
-        iter = lazy_frame.insert(lazy_frame.begin(),std::pair<std::string,SEXP>(e.name().string(),column));
+        Rcpp::RObject column = allocateDataFrameColumn(e.datatype(), n);
+        iter = lazy_frame.insert(lazy_frame.begin(),std::pair<std::string,Rcpp::RObject>(e.name().string(),column));
     }
 
   return iter;
