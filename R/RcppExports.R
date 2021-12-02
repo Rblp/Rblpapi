@@ -17,6 +17,10 @@ bds_Impl <- function(con_, securities, field, options_, overrides_, verbose, ide
     .Call(`_Rblpapi_bds_Impl`, con_, securities, field, options_, overrides_, verbose, identity_)
 }
 
+bds_Impl_Debug <- function(con_, securities, field, options_, overrides_, repeats, verbose, identity_) {
+    .Call(`_Rblpapi_bds_Impl_Debug`, con_, securities, field, options_, overrides_, repeats, verbose, identity_)
+}
+
 getPortfolio_Impl <- function(con_, securities, field, options_, overrides_, verbose, identity_) {
     .Call(`_Rblpapi_getPortfolio_Impl`, con_, securities, field, options_, overrides_, verbose, identity_)
 }

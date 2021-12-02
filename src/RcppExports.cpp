@@ -73,6 +73,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bds_Impl_Debug
+Rcpp::List bds_Impl_Debug(SEXP con_, std::vector<std::string> securities, std::string field, SEXP options_, SEXP overrides_, int repeats, bool verbose, SEXP identity_);
+RcppExport SEXP _Rblpapi_bds_Impl_Debug(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldSEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP repeatsSEXP, SEXP verboseSEXP, SEXP identity_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type con_(con_SEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type securities(securitiesSEXP);
+    Rcpp::traits::input_parameter< std::string >::type field(fieldSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type options_(options_SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type overrides_(overrides_SEXP);
+    Rcpp::traits::input_parameter< int >::type repeats(repeatsSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type identity_(identity_SEXP);
+    rcpp_result_gen = Rcpp::wrap(bds_Impl_Debug(con_, securities, field, options_, overrides_, repeats, verbose, identity_));
+    return rcpp_result_gen;
+END_RCPP
+}
 // getPortfolio_Impl
 Rcpp::List getPortfolio_Impl(SEXP con_, std::vector<std::string> securities, std::string field, SEXP options_, SEXP overrides_, bool verbose, SEXP identity_);
 RcppExport SEXP _Rblpapi_getPortfolio_Impl(SEXP con_SEXP, SEXP securitiesSEXP, SEXP fieldSEXP, SEXP options_SEXP, SEXP overrides_SEXP, SEXP verboseSEXP, SEXP identity_SEXP) {
@@ -251,6 +269,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Rblpapi_bdh_Impl", (DL_FUNC) &_Rblpapi_bdh_Impl, 10},
     {"_Rblpapi_bdp_Impl", (DL_FUNC) &_Rblpapi_bdp_Impl, 7},
     {"_Rblpapi_bds_Impl", (DL_FUNC) &_Rblpapi_bds_Impl, 7},
+    {"_Rblpapi_bds_Impl_Debug", (DL_FUNC) &_Rblpapi_bds_Impl_Debug, 8},
     {"_Rblpapi_getPortfolio_Impl", (DL_FUNC) &_Rblpapi_getPortfolio_Impl, 7},
     {"_Rblpapi_beqs_Impl", (DL_FUNC) &_Rblpapi_beqs_Impl, 7},
     {"_Rblpapi_blpConnect_Impl", (DL_FUNC) &_Rblpapi_blpConnect_Impl, 3},

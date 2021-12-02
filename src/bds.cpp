@@ -60,7 +60,7 @@ void populateDfRowBDS(SEXP ans, R_len_t row_index, Element& e) {
             Rcpp::Rcerr << "BLPAPI_DATATYPE_INT64 exceeds max int value on this system (assigning std::numeric_limits<int>::max())." << std::endl;
             INTEGER(ans)[row_index] = std::numeric_limits<int>::max();
         } else {
-            INTEGER(ans)[row_index] = static_cast<int>(e.getValueAsInt64()); 
+            INTEGER(ans)[row_index] = static_cast<int>(e.getValueAsInt64());
         }
         break;
     case BLPAPI_DATATYPE_FLOAT32:
@@ -292,6 +292,66 @@ Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
     }
     return R_NilValue;
 }
+
+
+// debug: send many requests at once to raise chance of hitting segfault
+// [[Rcpp::export]]
+Rcpp::List bds_Impl_Debug(SEXP con_, std::vector<std::string> securities,
+                          std::string field, SEXP options_, SEXP overrides_, int repeats,
+                          bool verbose, SEXP identity_) {
+
+  Session* session =
+    reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
+
+  std::vector<std::string> field_types;
+
+  const std::string rdsrv = "//blp/refdata";
+  if (!session->openService(rdsrv.c_str())) {
+    Rcpp::stop("Failed to open " + rdsrv);
+  }
+
+  Service refDataService = session->getService(rdsrv.c_str());
+
+
+  // send repeated requests at once
+  for (size_t rep_i = 0; rep_i < repeats; rep_i++) {
+    Request request = refDataService.createRequest("ReferenceDataRequest");
+    for (size_t i = 0; i < securities.size(); i++) {
+      request.getElement("securities").appendValue(securities[i].c_str());
+    }
+    request.getElement("fields").appendValue(field.c_str());
+    appendOptionsToRequest(request,options_);
+    appendOverridesToRequest(request,overrides_);
+
+    sendRequestWithIdentity(session, request, identity_);
+  }
+
+  Rcpp::List resList(repeats);
+  Rcpp::List responseDF;
+  for (size_t rep_i = 0; rep_i < repeats; rep_i++) {
+    // keep overwriting result data frame is fine - we are just smashing bds to reliably segfault
+    responseDF = R_NilValue;
+    while (true) {
+      Event event = session->nextEvent();
+      switch (event.eventType()) {
+      case Event::RESPONSE:
+      case Event::PARTIAL_RESPONSE:
+        responseDF = BulkDataResponseToDF(event, field, "ReferenceDataResponse", verbose);
+        break;
+      default:
+        MessageIterator msgIter(event);
+      while (msgIter.next()) {
+        Message msg = msgIter.message();
+        //FIXME:: capture messages here for debugging
+      }
+      }
+      if (event.eventType() == Event::RESPONSE) { break; }
+    }
+    resList[rep_i] = responseDF;
+  }
+  return resList;
+}
+
 
 // [[Rcpp::export]]
 Rcpp::List getPortfolio_Impl(SEXP con_, std::vector<std::string> securities,

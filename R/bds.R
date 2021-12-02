@@ -59,3 +59,14 @@ bds <- function(security, field, options=NULL,
     bds_Impl(con, security, field, options, overrides, verbose, identity)
 }
 
+
+bds_debug <- function(security, field, options=NULL,
+                overrides=NULL, repeats = 1, verbose=FALSE,
+                identity=defaultAuthentication(), con=defaultConnection()) {
+    if (length(security) != 1L)
+        stop("more than one security submitted.", call.=FALSE)
+    if (length(field) != 1L)
+        stop("more than one field submitted.", call.=FALSE)
+    bds_Impl_Debug(con, security, field, options, overrides, repeats, verbose, identity)
+}
+
