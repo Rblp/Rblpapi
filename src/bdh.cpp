@@ -165,12 +165,24 @@ Rcpp::List bdh_Impl(SEXP con_,
             ans_names.push_back(getSecurityName(event));
             ans[i++] = HistoricalDataResponseToDF(event, fields, rtypes, verbose);
             break;
-        default:
+        case Event::REQUEST_STATUS: {
+            MessageIterator msgIter(event);
+            while (msgIter.next()) {
+                Message msg = msgIter.message();
+                Element response = msg.asElement();
+                if (verbose) response.print(Rcpp::Rcout);
+                // FIXME:: capture msg here for logging
+            }
+            Rcpp::stop("Bloomberg request timed out on server side\n");
+            break;
+        }
+        default: {
             MessageIterator msgIter(event);
             while (msgIter.next()) {
                 Message msg = msgIter.message();
                 // FIXME:: capture msg here for logging
             }
+        }
         }
         if (event.eventType() == Event::RESPONSE) { break; }
     }
