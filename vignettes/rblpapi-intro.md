@@ -1,16 +1,13 @@
+<!--
+%\VignetteIndexEntry{Introducing Rblpapi}
+%\VignetteEngine{simplermarkdown::mdweave_to_html}
+%\VignetteEncoding{UTF-8}
+-->
 ---
 title: "Introducing Rblpapi"
 author: "Dirk Eddelbuettel"
 date: "2015-08-13"
-output:
-  minidown::mini_document:
-    framework: water
-    toc: true
-    toc_float: true
-vignette: >
-  %\VignetteIndexEntry{Introducing Rblpapi}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+css: "water.css"
 ---
 
 ## Introduction
