@@ -4,6 +4,19 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
+\section{Changes in Rblpapi version 0.3.12 (2021-12-07)}{
+  \itemize{
+    \item \code{bdh()} supports new option \code{returnAs} (Michael
+    Kerber and Dirk in \ghpr{335} fixing \ghit{206})
+    \item Remove extra backtick in vignette (Yihui Xie in \ghpr{343})
+    \item Fix a segfault from bulk access with \code{bds} (Kai Lin in
+    \ghpr{347} fixing \ghit{253})
+    \item Support \code{REQUEST_STATUS} in \code{bdh} (Kai Lin and John
+    in \ghpr{349} fixing \ghit{348})
+    \item Vignette now uses \pkg{simplermarkdown} (Dirk in \ghpr{350})
+  }
+}
+
 \section{Changes in Rblpapi version 0.3.11 (2021-04-20)}{
   \itemize{
     \item Support blpAutoAuthenticate and B-PIPE access, refactor and
