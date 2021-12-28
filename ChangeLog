@@ -1,3 +1,14 @@
+2021-12-28  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll minor version
+
+	* R/bds.R: Add 'simplify' argument with option support and default of
+	TRUE effectively reverting commit 4d11c47 from release 0.3.11
+	* man/bds.Rd: Document new argument
+	* R/bdh.R: Add 'simplify' argument with option support and default of
+	FALSE for prior behavior
+	* man/bdh.Rd: Document new argument
+
 2021-12-22  Michael Kerber  <mtkerber@gmail.com>
 
 	* inst/tinytest/test_bds.R: Added file, test for return type of function 'bds'
