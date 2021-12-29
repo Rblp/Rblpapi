@@ -23,23 +23,18 @@ if (!.runThisTest) exit_file("Skipping this file")
 
 library(Rblpapi)
 
-#test.bdhColumnTypes <- function() {
 res <- bdh("TY1 Comdty",c("PX_LAST","OPEN_INT","FUT_CUR_GEN_TICKER"),Sys.Date()-10)
 expect_true(inherits(res, "data.frame"), info = "checking return type")
 expect_true(dim(res)[1] >= 5, info = "check return of five rows")
 expect_true(dim(res)[2] == 4, info = "check return of four cols")
 expect_true(all(c("PX_LAST","OPEN_INT","FUT_CUR_GEN_TICKER") %in% colnames(res)), info = "check column names")
-#}
 
-#test.bdhReturnAsDT <- function() {
 res <- bdh("TY1 Comdty",c("PX_LAST","OPEN_INT","FUT_CUR_GEN_TICKER"),Sys.Date()-10,returnAs="data.table")
 expect_true(inherits(res, "data.table"), info = "checking return type - data.table")
 expect_true(dim(res)[1] >= 5, info = "check return of five rows - data.table")
 expect_true(dim(res)[2] == 4, info = "check return of four cols - data.table")
 expect_true(all(c("PX_LAST","OPEN_INT","FUT_CUR_GEN_TICKER") %in% colnames(res)), info = "check column names - data.table")
-#}
 
-#test.bdhReturnAsTS <- function() {
 for (retAs in c("fts", "xts", "zoo")) {
     res <- bdh("TY1 Comdty",c("PX_OPEN", "PX_HIGH", "PX_LOW", "PX_LAST"),Sys.Date()-10,returnAs=retAs)
     expect_true(inherits(res, retAs), info = paste("checking return type -", retAs))
@@ -47,20 +42,19 @@ for (retAs in c("fts", "xts", "zoo")) {
     expect_true(dim(res)[2] == 4, info = paste("check return of four cols -", retAs))
     expect_true(all(c("PX_OPEN", "PX_HIGH", "PX_LOW", "PX_LAST") %in% colnames(res)), info = paste("check column names -", retAs))
 }
-#}
 
-#    test.bdhDateAsDouble <- function() {
 res <- bdh("DOENUSCH Index","ECO_RELEASE_DT",start.date=as.Date('2016-02-01'),end.date=as.Date('2016-02-29'))
 expect_true(inherits(res, "data.frame"), info = "checking return type")
 expect_true(dim(res)[2] == 2, info = "check return of two cols")
 expect_true(all(c("date","ECO_RELEASE_DT") %in% colnames(res)), info = "check column names")
 col.types <- unique(unlist(lapply(res,class)))
 expect_true(length(col.types)==1L && col.types=="Date", info = "check column types == 'Date'")
-#}
 
-#    test.bdhIntAsDouble <- function() {
 expect_error(bdh("SPX Index", "PX_VOLUME", as.Date("2000-12-14"), as.Date("2000-12-15")), info = "check int overflow")
 res <- bdh("SPX Index", "PX_VOLUME", as.Date("2000-12-14"), as.Date("2000-12-15"), int.as.double=TRUE)
 expect_true(!is.integer(res$PX_VOLUME), info = "check volume is not integer")
 expect_true(is.numeric(res$PX_VOLUME), info = "check volume is numeric")
-#}
+
+res <- bdh("TY1 Comdty", c("PX_LAST","OPEN_INT","FUT_CUR_GEN_TICKER"), Sys.Date()-10, simplify = FALSE)
+expect_true(inherits(res, "list"), info = "checking return type")
+expect_true(inherits(res[[1]], "data.frame"), info = "checking return type of first element")
