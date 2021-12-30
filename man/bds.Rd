@@ -6,7 +6,7 @@
 \usage{
 bds(security, field, options = NULL, overrides = NULL, verbose = FALSE,
   identity = defaultAuthentication(), con = defaultConnection(),
-  simplify = getOption("blpSimplifyBds", TRUE))
+  simplify = getOption("blpSimplify", TRUE))
 }
 \arguments{
 \item{security}{A character value with a single security symbol in
@@ -35,7 +35,7 @@ call, and retrieved via the internal function
 
 \item{simplify}{A boolean indicating whether result objects that are one
 element lists should be altered to returned just the single inner object.
-Defaults to the value of the \sQuote{blpSimplifyBds} option, with a fallback
+Defaults to the value of the \sQuote{blpSimplify} option, with a fallback
 of \sQuote{TRUE} if unset ensuring prior behavior is maintained.}
 }
 \value{

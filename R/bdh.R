@@ -1,5 +1,4 @@
 
-##
 ##  Copyright (C) 2015 - 2021  Whit Armstrong and Dirk Eddelbuettel and John Laing
 ##
 ##  This file is part of Rblpapi
@@ -52,8 +51,8 @@
 ##' large values which would overflow int32. Defaults to \sQuote{FALSE}.
 ##' @param simplify A boolean indicating whether result objects that are one
 ##' element lists should be altered to returned just the single inner object.
-##' Defaults to the value of the \sQuote{blpSimplifyBdh} option, with a fallback
-##' of \sQuote{FALSE} if unset ensuring prior behavior is maintained.
+##' Defaults to the value of the \sQuote{blpSimplify} option, with a fallback
+##' of \sQuote{TRUE} if unset ensuring prior behavior is maintained.
 ##' @return A list with as a many entries as there are entries in
 ##' \code{securities}; each list contains a object of type \code{returnAs} with one row
 ##' per observations and as many columns as entries in
@@ -94,7 +93,7 @@ bdh <- function(securities, fields, start.date, end.date=NULL,
                 verbose=FALSE, returnAs=getOption("bdhType", "data.frame"), 
                 identity=defaultAuthentication(), con=defaultConnection(),
                 int.as.double=getOption("blpIntAsDouble", FALSE),
-                simplify=getOption("blpSimplifyBdh", FALSE)) {
+                simplify=getOption("blpSimplify", TRUE)) {
     match.arg(returnAs, c("data.frame", "fts", "xts", "zoo", "data.table"))
     if (class(start.date) == "Date") {
         start.date <- format(start.date, format="%Y%m%d")

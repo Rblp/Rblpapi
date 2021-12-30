@@ -41,7 +41,7 @@
 ##' \code{defaultConnection}.
 ##' @param simplify A boolean indicating whether result objects that are one
 ##' element lists should be altered to returned just the single inner object.
-##' Defaults to the value of the \sQuote{blpSimplifyBds} option, with a fallback
+##' Defaults to the value of the \sQuote{blpSimplify} option, with a fallback
 ##' of \sQuote{TRUE} if unset ensuring prior behavior is maintained.
 ##' @return A data frame object with the requested data set.
 ##' @author Whit Armstrong and Dirk Eddelbuettel
@@ -56,7 +56,7 @@
 bds <- function(security, field, options=NULL,
                 overrides=NULL, verbose=FALSE,
                 identity=defaultAuthentication(), con=defaultConnection(),
-                simplify=getOption("blpSimplifyBds", TRUE)) {
+                simplify=getOption("blpSimplify", TRUE)) {
     if (length(security) != 1L)
         stop("more than one security submitted.", call.=FALSE)
     if (length(field) != 1L)
