@@ -23,11 +23,12 @@ if (!.runThisTest) exit_file("Skipping this file")
 
 library(Rblpapi)
 
-#test.bdsResult <- function() {
-res <- bds("DAX Index", "INDX_MEMBERS")
+res <- bds("DAX Index", "INDX_MEMBERS", simplify=FALSE)
 expect_true(inherits(res, "list"), info = "checking return type")
 expect_true(inherits(res[[1]], "data.frame"), info = "checking return type of first element")
 expect_error(bds(c("DAX Index", "SPX Index"), "INDX_MEMBERS"), info = "more than one security")
-expect_error(bds(c("DAX Index", "SPX Index"), c("INDX_MEMBERS", "IVOL_SURFACE")), info = "more than one field")
-expect_error(bds("DAX Index", c("INDX_MEMBERS", "IVOL_SURFACE")), info = "more than one security and more than one field")
-#    }
+expect_error(bds(c("DAX Index", "SPX Index"), c("INDX_MEMBERS", "IVOL_SURFACE")), info = "more than one security and more than one field")
+expect_error(bds("DAX Index", c("INDX_MEMBERS", "IVOL_SURFACE")), info = "more than one field")
+
+res <- bds("DAX Index", "INDX_MEMBERS")
+expect_true(inherits(res, "data.frame"), info = "checking return type under simplify")

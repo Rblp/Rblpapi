@@ -8,7 +8,8 @@ bdh(securities, fields, start.date, end.date = NULL,
   include.non.trading.days = FALSE, options = NULL, overrides = NULL,
   verbose = FALSE, returnAs = getOption("bdhType", "data.frame"),
   identity = defaultAuthentication(), con = defaultConnection(),
-  int.as.double = getOption("blpIntAsDouble", FALSE))
+  int.as.double = getOption("blpIntAsDouble", FALSE),
+  simplify = getOption("blpSimplify", TRUE))
 }
 \arguments{
 \item{securities}{A character vector with security symbols in
@@ -49,7 +50,12 @@ call, and retrieved via the internal function
 
 \item{int.as.double}{A boolean indicating whether integer fields should
 be retrieved as doubles instead. This option is a workaround for very
-large values which would overflow int32. Defaults to \sQuote{FALSE}}
+large values which would overflow int32. Defaults to \sQuote{FALSE}.}
+
+\item{simplify}{A boolean indicating whether result objects that are one
+element lists should be altered to returned just the single inner object.
+Defaults to the value of the \sQuote{blpSimplify} option, with a fallback
+of \sQuote{TRUE} if unset ensuring prior behavior is maintained.}
 }
 \value{
 A list with as a many entries as there are entries in

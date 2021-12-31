@@ -1,741 +1,762 @@
+2021-12-29  Dirk Eddelbuettel  <edd@debian.org>
+
+        * R/bdh.R: Use getOption("blpSimplify", TRUE) as simplify default
+        * R/bds.R: Ditto
+        * R/bdh.R: Document default argument for simplify
+        * R/bds.R: Ditto
+
+        * inst/tinytest/test_bds.R: Add simple tests for simplify
+        * inst/tinytest/test_bdh.R: Idem
+
+2021-12-28  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION (Version, Date): Roll minor version
+
+        * R/bds.R: Add 'simplify' argument with option support and default of
+        TRUE effectively reverting commit 4d11c47 from release 0.3.11
+        * man/bds.Rd: Document new argument
+        * R/bdh.R: Add 'simplify' argument with option support and default of
+        FALSE for prior behavior
+        * man/bdh.Rd: Document new argument
+
 2021-12-22  Michael Kerber  <mtkerber@gmail.com>
 
-	* inst/tinytest/test_bds.R: Added file, test for return type of function 'bds'
+        * inst/tinytest/test_bds.R: Added file, test for return type of function 'bds'
 
 2021-12-07  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): New release 0.3.12
+        * DESCRIPTION (Version, Date): New release 0.3.12
 
 2021-12-06  Dirk Eddelbuettel  <edd@debian.org>
 
-	* vignettes/rblpapi-intro.md: Converted to simplermarkdown
-	* vignettes/water.css : Added
-	* DESCRIPTION: Set Suggests:, VignetteBuilder: to simplermarkdown
+        * vignettes/rblpapi-intro.md: Converted to simplermarkdown
+        * vignettes/water.css : Added
+        * DESCRIPTION: Set Suggests:, VignetteBuilder: to simplermarkdown
 
 2021-12-05  John Laing  <john.laing@gmail.com>
 
-	* src/bdh.cpp: Catch 'REQUEST_STATUS' event to report timeout
+        * src/bdh.cpp: Catch 'REQUEST_STATUS' event to report timeout
 
 2021-12-03  Kai Lin  <klin441@gmail.com>
 
-	* src/bds.cpp: Change SEXP variables to Rcpp::RObject to prevent
-	segfaults caused by garbage collection
+        * src/bds.cpp: Change SEXP variables to Rcpp::RObject to prevent
+        segfaults caused by garbage collection
 
-	* src/Rblpapi_types.h: Change LazyFrameT and LazyFrameIteratorT to
-	use Rcpp::RObject to protect against garbage collection
+        * src/Rblpapi_types.h: Change LazyFrameT and LazyFrameIteratorT to
+        use Rcpp::RObject to protect against garbage collection
 
 2021-10-15  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version,Date): Roll version and date
+        * DESCRIPTION (Version,Date): Roll version and date
 
-	* vignettes/rblpapi-intro.Rmd (vignette): Set chunks to pandoc R
-	invocation as no evaluation can be made given lack of BLP access
+        * vignettes/rblpapi-intro.Rmd (vignette): Set chunks to pandoc R
+        invocation as no evaluation can be made given lack of BLP access
 
 2021-10-15  Yihui Xie <xie@yihui.name>
 
-	* vignettes/rblpapi-intro.Rmd (vignette): Remove extra backtick
+        * vignettes/rblpapi-intro.Rmd (vignette): Remove extra backtick
 
 2021-04-28  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version,Date): Roll version and date
+        * DESCRIPTION (Version,Date): Roll version and date
 
-	* inst/tinytest/test_bdh.R: Tweak thanks to hint from Michael
+        * inst/tinytest/test_bdh.R: Tweak thanks to hint from Michael
 
 2021-04-27  John Laing  <john.laing@gmail.com>
 
-	* inst/tinytest/test_bdh.R: Added tests for new argument 'returnAs'
+        * inst/tinytest/test_bdh.R: Added tests for new argument 'returnAs'
 
 2021-04-24  Dirk Eddelbuettel  <edd@debian.org>
 
-	* man/bdh.Rd: Regenerated
+        * man/bdh.Rd: Regenerated
 
 2021-04-24  Michael Kerber  <mtkerber@gmail.com>
 
-	* R/bdh.R: Support new argument 'returnAs'
+        * R/bdh.R: Support new argument 'returnAs'
 
 2021-04-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): New release 0.3.11
+        * DESCRIPTION (Version, Date): New release 0.3.11
 
 2021-04-19  John Laing  <john.laing@gmail.com>
 
-	* man/bds.Rd: Regenerate based on updated roxygen
-	* R/bds.R: Simply given single argument
+        * man/bds.Rd: Regenerate based on updated roxygen
+        * R/bds.R: Simply given single argument
 
 2021-04-18  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Suggests): Add rmarkdown
+        * DESCRIPTION (Suggests): Add rmarkdown
 
-	* R/subscribe.R: Update two URLs to https
-	* man/subscribe.Rd: Ditto
-	* README.md: Ditto
+        * R/subscribe.R: Update two URLs to https
+        * man/subscribe.Rd: Ditto
+        * README.md: Ditto
 
 2021-04-17  Dirk Eddelbuettel  <edd@debian.org>
 
-	* tests/tinytest.R: Renamed and converted from doRUnit.R
-	* inst/tinytest/*: Renamed and converted from RUnit to testthat
-	* DESCRIPTION (Suggests): Switched from RUnit to tinytest
+        * tests/tinytest.R: Renamed and converted from doRUnit.R
+        * inst/tinytest/*: Renamed and converted from RUnit to testthat
+        * DESCRIPTION (Suggests): Switched from RUnit to tinytest
 
-	* vignettes/rblpapi-intro.Rmd: Switched to minidown
-	* DESCRIPTION (Suggests): Added minidown
+        * vignettes/rblpapi-intro.Rmd: Switched to minidown
+        * DESCRIPTION (Suggests): Added minidown
 
 2021-03-17  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure: Change from bash to sh
-	* cleanup: Ditto
+        * configure: Change from bash to sh
+        * cleanup: Ditto
 
 2021-03-15  Dirk Eddelbuettel  <edd@debian.org>
 
-	* .github/workflows/ci.yaml (jobs): Add using run.sh from r-ci
-	* .Rbuildignore: Add .github
+        * .github/workflows/ci.yaml (jobs): Add using run.sh from r-ci
+        * .Rbuildignore: Add .github
 
-	* .travis.yml: Switch to bionic and use run.sh from r-ci
+        * .travis.yml: Switch to bionic and use run.sh from r-ci
 
 2021-02-25  Michael Kerber  <mtkerber@gmail.com>
 
-	* man/bds.Rd: Correct return type desription
+        * man/bds.Rd: Correct return type desription
 
 2020-05-19  Dirk Eddelbuettel  <edd@debian.org>
 
-	* README.md: Add 'last commit' badge
+        * README.md: Add 'last commit' badge
 
 2019-05-23  James Bell  <jamesbell@gmx.com>
 
-	* NAMESPACE: export new function defaultAuthentication()
+        * NAMESPACE: export new function defaultAuthentication()
 
-	* vignettes/rblpapi-intro.Rmd: document blpAutoAuthenticate
-	clarify host (blpConnect) vs hostname (blpAuthenticate) vs ip.address
-	clarify UUID, Application-Name, blpConnnect() and blpAuthenicate()
+        * vignettes/rblpapi-intro.Rmd: document blpAutoAuthenticate
+        clarify host (blpConnect) vs hostname (blpAuthenticate) vs ip.address
+        clarify UUID, Application-Name, blpConnnect() and blpAuthenicate()
 
-	* R/defaultAuthentication.R: New file
-	Add default identity object
-	* R/blpAuthenticate.R: add default identity object
-	documentation clarification host vs ip
-	* R/init.R: check for auto-auth, call as needed
+        * R/defaultAuthentication.R: New file
+        Add default identity object
+        * R/blpAuthenticate.R: add default identity object
+        documentation clarification host vs ip
+        * R/init.R: check for auto-auth, call as needed
 
-	* R/bdh.R: support default identity object
-	* R/bdp.R: Idem
-	* R/bds.R: Idem
-	* R/portfolio.R.R: Idem
-	* R/subscribe.R: Idem
+        * R/bdh.R: support default identity object
+        * R/bdp.R: Idem
+        * R/bds.R: Idem
+        * R/portfolio.R.R: Idem
+        * R/subscribe.R: Idem
 
 2019-04-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): New release 0.3.10
+        * DESCRIPTION (Version, Date): New release 0.3.10
 
-	* README.md: Add dependencies badge
+        * README.md: Add dependencies badge
 
 2019-03-21  John Laing  <john.laing@gmail.com>
 
-	* R/blpConnect.R: Only resolve IP address in SAPI
-	* src/blpConnect.cpp: Streamlined connection code
+        * R/blpConnect.R: Only resolve IP address in SAPI
+        * src/blpConnect.cpp: Streamlined connection code
 
 2019-03-19  Alfred Kanzler  <alfredkanzler@mindspring.com>
 
-	* DESCRIPTION (Version, Date): Updated minor version
+        * DESCRIPTION (Version, Date): Updated minor version
 
-	* src/blpConnect.cpp: Added function to connect to bpipe with an appName
-	* src/blpAuthenticate.cpp: Authenticate a bpipe connection
-	* R/blpConnect.R: Added appName to argument list
-	* R/blpAutheticate.R: If the uuid is missing tries to connect to bpipe
+        * src/blpConnect.cpp: Added function to connect to bpipe with an appName
+        * src/blpAuthenticate.cpp: Authenticate a bpipe connection
+        * R/blpConnect.R: Added appName to argument list
+        * R/blpAutheticate.R: If the uuid is missing tries to connect to bpipe
 
 2019-02-21  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): New release 0.3.9
+        * DESCRIPTION (Version, Date): New release 0.3.9
 
-	* vignettes/rblpapi-intro.Rmd (vignette): Updated (old) API download
-	URL to new location
-	* DESCRIPTION: Idem
-	* README.md: Idem
-	* configure: Idem
+        * vignettes/rblpapi-intro.Rmd (vignette): Updated (old) API download
+        URL to new location
+        * DESCRIPTION: Idem
+        * README.md: Idem
+        * configure: Idem
 
 2019-02-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Set 'StagedInstall: no' to accomodate R 3.6.0
+        * DESCRIPTION: Set 'StagedInstall: no' to accomodate R 3.6.0
 
-	* inst/NEWS.Rd: Updated (old) API download URL to new location
+        * inst/NEWS.Rd: Updated (old) API download URL to new location
 
 2018-10-25  John Laing  <john.laing@gmail.com>
 
-	* DESCRIPTION (Date): Roll date
-	* inst/unitTests/runit.bdp.R: Add test for NA date fix
+        * DESCRIPTION (Date): Roll date
+        * inst/unitTests/runit.bdp.R: Add test for NA date fix
 
 2018-10-25  Xianying Tan  <shrektan@126.com>
 
-	* DESCRIPTION (Version): New minor version
-	* src/getFieldInfo.cpp: Use UTF-8 encoding
-	* src/bds.cpp: Use UTF-8 encoding and initialize Date vector with NA
-	* src/blpapi_utils.cpp: Idem
+        * DESCRIPTION (Version): New minor version
+        * src/getFieldInfo.cpp: Use UTF-8 encoding
+        * src/bds.cpp: Use UTF-8 encoding and initialize Date vector with NA
+        * src/blpapi_utils.cpp: Idem
 
 2018-09-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* .travis.yml: Minor update
+        * .travis.yml: Minor update
 
 2018-07-25  Davis Vaughan  <mvaugh15@uncc.edu>
 
-	* src/init.c: Removed as content is in RcppExport.cpp
-	* src/RcppExports.cpp: Updated
-	* R/RcppExports.R: Idem
+        * src/init.c: Removed as content is in RcppExport.cpp
+        * src/RcppExports.cpp: Updated
+        * R/RcppExports.R: Idem
 
 2018-07-24  John Laing  <john.laing@gmail.com>
 
-	* src/bds.cpp: Use Rcpp::DateVectorAllow relative dates
-	* src/blpapi_utils.cpp: Idem
-	* src/blpapi_utils.h: Idem
+        * src/bds.cpp: Use Rcpp::DateVectorAllow relative dates
+        * src/blpapi_utils.cpp: Idem
+        * src/blpapi_utils.h: Idem
 
 2018-07-20  John Laing  <john.laing@gmail.com>
 
-	* src/bdh.cpp: Accomodate extra field from relative date option
-	* R/bdh.R: Idem
-	* man/bdh.Rd: Documentation
+        * src/bdh.cpp: Accomodate extra field from relative date option
+        * R/bdh.R: Idem
+        * man/bdh.Rd: Documentation
 
 2018-06-26  John Laing  <john.laing@gmail.com>
 
-	* R/bdh.R: Allow character start date
-	* man/bdh.Rd: Documentation
+        * R/bdh.R: Allow character start date
+        * man/bdh.Rd: Documentation
 
 2018-01-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): New release 0.3.8
-	  (which should have been named 0.3.7)
+        * DESCRIPTION (Version, Date): New release 0.3.8
+          (which should have been named 0.3.7)
 
 2018-01-19  Whit Armstrong  <armstrong.whit@gmail.com>
 
-	* DESCRIPTION (Version): New minor version
+        * DESCRIPTION (Version): New minor version
 
-	* src/subscribe.cpp: Rewritten and improved logic
+        * src/subscribe.cpp: Rewritten and improved logic
 
 2017-12-03  randomee  <randomee@users.noreply.github.com>
 
-	* R/blpAuthenticate.R: More usage examples in help page
-	* R/blpConnect.R: Reference blpAuthenticate
+        * R/blpAuthenticate.R: More usage examples in help page
+        * R/blpConnect.R: Reference blpAuthenticate
 
 2017-07-01  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Roll minor version and date
+        * DESCRIPTION (Version, Date): Roll minor version and date
 
 2017-06-30  spencer <spnrpa@gmail.com>
 
-	* src/Makevars: Add missing @ in sed and rpath use under macOS
+        * src/Makevars: Add missing @ in sed and rpath use under macOS
 
 2017-05-09  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Roll minor version
+        * DESCRIPTION (Version, Date): Roll minor version
 
-	* R/getTicks.R: Document limit of 140 days of intraday data
-	* man/getTicks.Rd: Idem
+        * R/getTicks.R: Document limit of 140 days of intraday data
+        * man/getTicks.Rd: Idem
 
-	* R/lookup.R: Add regular expression example to extract symbol (cf #215)
-	* man/lookupSecurity.Rd: Idem
+        * R/lookup.R: Add regular expression example to extract symbol (cf #215)
+        * man/lookupSecurity.Rd: Idem
 
-	* .travis.yml: Switch to using run.sh for Travis CI
+        * .travis.yml: Switch to using run.sh for Travis CI
 
 2017-04-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.3.6
+        * DESCRIPTION (Version, Date): Release 0.3.6
 
 2017-04-08  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/finalizers.h (createExternalPointer): Use Shield<>
+        * src/finalizers.h (createExternalPointer): Use Shield<>
 
-	* src/bds.cpp (allocateDataFrameColumn): Create directly from Rcpp vectors
-	* src/blpapi_utils.cpp (allocateDataFrameColumn): Ditto
+        * src/bds.cpp (allocateDataFrameColumn): Create directly from Rcpp vectors
+        * src/blpapi_utils.cpp (allocateDataFrameColumn): Ditto
 
 2017-04-07  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Roll minor version
-	* src/bds.cpp (allocateDataFrameColumn): Use Rcpp::Shield<>
-	(buildDataFrame): No need to UNPROTECT
+        * DESCRIPTION (Version, Date): Roll minor version
+        * src/bds.cpp (allocateDataFrameColumn): Use Rcpp::Shield<>
+        (buildDataFrame): No need to UNPROTECT
 
 2017-03-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/converters.R (asDataTable): New (unexported) helper function
-	* R/getBars.R (getBars): Use asDataTable()
-	* R/getTicks.R (getBars): Ditto
- 	* inst/unitTests/runit.getTicks.R (test.getTicksAsDataTable): Adjusted
+        * R/converters.R (asDataTable): New (unexported) helper function
+        * R/getBars.R (getBars): Use asDataTable()
+        * R/getTicks.R (getBars): Ditto
+        * inst/unitTests/runit.getTicks.R (test.getTicksAsDataTable): Adjusted
 
 2017-02-27  Dirk Eddelbuettel  <edd@debian.org>
 
-	* NAMESPACE (useDynLib): Add .registration=TRUE; some other edits
-	* src/init.c: Added 'R_registerRoutines()' & 'R_useDynamicSymbols()'
+        * NAMESPACE (useDynLib): Add .registration=TRUE; some other edits
+        * src/init.c: Added 'R_registerRoutines()' & 'R_useDynamicSymbols()'
 
 2017-02-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Roll minor version
+        * DESCRIPTION (Version, Date): Roll minor version
 
-	* R/lookup.R (lookupSecurity): Renamed to lookupSecurity(), tweaks
-	to help page and argument handling
-	* man/lookupSecurity.Rd: Also renamed
+        * R/lookup.R (lookupSecurity): Renamed to lookupSecurity(), tweaks
+        to help page and argument handling
+        * man/lookupSecurity.Rd: Also renamed
 
 2017-02-12  Kevin Jin  <goldstar.kevin@gmail.com>
 
-	* R/lookup.R (lookup): New function to look up securities,
-	possibly filtered by yellow key and language (PR #216)
-	* man/lookup.Rd: Documentation
+        * R/lookup.R (lookup): New function to look up securities,
+        possibly filtered by yellow key and language (PR #216)
+        * man/lookup.Rd: Documentation
 
 2017-01-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (URL, BugReports): Add URLs
+        * DESCRIPTION (URL, BugReports): Add URLs
 
 2016-12-14  Dirk Eddelbuettel  <edd@debian.org>
 
-	* README.md: Mention ghrr drat in Installation section
+        * README.md: Mention ghrr drat in Installation section
 
 2016-12-13  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date):  Rolled to minor version 0.3.5.1
+        * DESCRIPTION (Version, Date):  Rolled to minor version 0.3.5.1
 
 2016-12-08  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/bdp.R: Another overrides example (by Morgan on StackOverflow)
-	* man/bdp.Rd: Ditto
+        * R/bdp.R: Another overrides example (by Morgan on StackOverflow)
+        * man/bdp.Rd: Ditto
 
 2016-11-18  John Laing  <john.laing@gmail.com>
 
-	* R/bdh.R: Add option to use double for int32 and int64 field types in bdh
-	* R/RcppExports.R: Ditto
-	* man/bdh.Rd: Ditto
-	* src/RcppExports.cpp: Ditto
-	* src/bdh.cpp: Ditto
-	* inst/unitTests/runit.bdh.R: Ditto
+        * R/bdh.R: Add option to use double for int32 and int64 field types in bdh
+        * R/RcppExports.R: Ditto
+        * man/bdh.Rd: Ditto
+        * src/RcppExports.cpp: Ditto
+        * src/bdh.cpp: Ditto
+        * inst/unitTests/runit.bdh.R: Ditto
 
 2016-10-25  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 0.3.5
+        * DESCRIPTION (Version, Date): Release 0.3.5
 
 2016-10-24  Dirk Eddelbuettel  <edd@debian.org>
 
-	* README.md: Canonical URLs, switch to https
-	* vignettes/rblpapi-intro.Rmd (vignette): Ditto
+        * README.md: Canonical URLs, switch to https
+        * vignettes/rblpapi-intro.Rmd (vignette): Ditto
 
-	* DESCRIPTION: Edits for current R CMD check standards
+        * DESCRIPTION: Edits for current R CMD check standards
 
 2016-10-13  Dirk Eddelbuettel  <edd@debian.org>
 
-	* README.md: Correct license tag to say GPL-3 rather than GPL (>= 3)
+        * README.md: Correct license tag to say GPL-3 rather than GPL (>= 3)
 
 2016-10-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/getBars.R: Updated comment on returned timestamp
-	* man/getBars.Rd: Ditto
+        * R/getBars.R: Updated comment on returned timestamp
+        * man/getBars.Rd: Ditto
 
-	* inst/NEWS.Rd: Catching up with recent changes
+        * inst/NEWS.Rd: Catching up with recent changes
 
 2016-09-30  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/getTicks.R: Expanded help text to mention condition code and
-	possibility of multiple returns
-	* man/getTicks.Rd: Ditto
+        * R/getTicks.R: Expanded help text to mention condition code and
+        possibility of multiple returns
+        * man/getTicks.Rd: Ditto
 
-	* R/getTicks.R: (getMultipleTicks): Changed to support data.frame
-	and data.table support as type and code cannot be represented in
-	numeric matrices
-	* man/getMultipleTicks.Rd: Ditto
+        * R/getTicks.R: (getMultipleTicks): Changed to support data.frame
+        and data.table support as type and code cannot be represented in
+        numeric matrices
+        * man/getMultipleTicks.Rd: Ditto
 
 2016-09-16  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/getTicks.cpp: Re-enable condition codes for data.frame and
-	data.table
+        * src/getTicks.cpp: Re-enable condition codes for data.frame and
+        data.table
 
-	* R/getTicks.R (getTicks): Support data.table return; set use of
-	condition code if data.table or data.frame returned
-	* man/getTicks.Rd: Updated
+        * R/getTicks.R (getTicks): Support data.table return; set use of
+        condition code if data.table or data.frame returned
+        * man/getTicks.Rd: Updated
 
-	* inst/unitTests/runit.getTicks.R (test.getTicksAsDataTable):
-	added, renamed other test function from getTicksAsMatrix to
-	getTicksAsDataFrame as it returned a data.frame
+        * inst/unitTests/runit.getTicks.R (test.getTicksAsDataTable):
+        added, renamed other test function from getTicksAsMatrix to
+        getTicksAsDataFrame as it returned a data.frame
 
 2016-09-15  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Suggests): Added data.table()
+        * DESCRIPTION (Suggests): Added data.table()
 
-	* R/getTicks.R (getTicks): Corrected default return type to
-	data.frame, added support for new return type data.table
+        * R/getTicks.R (getTicks): Corrected default return type to
+        data.frame, added support for new return type data.table
 
 2016-07-08  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/bsrch.R: Correct example to COMDTY:VESSEL
-	* man/bsrch.Rd: Ditto
+        * R/bsrch.R: Correct example to COMDTY:VESSEL
+        * man/bsrch.Rd: Ditto
 
 2016-06-06  John Laing  <john.laing@gmail.com>
 
-	* R/portfolio.R: New function getPortfolio to retrieve portfolio data
-	via bds()
-	* man/getPortfolio.R: Documentation for new function
+        * R/portfolio.R: New function getPortfolio to retrieve portfolio data
+        via bds()
+        * man/getPortfolio.R: Documentation for new function
 
 2016-05-08  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Release 0.3.4
+        * DESCRIPTION (Version): Release 0.3.4
 
 2016-04-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (SystemRequirements): Clarify need for C++11 compiler
+        * DESCRIPTION (SystemRequirements): Clarify need for C++11 compiler
 
 2016-04-15  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Rolled minor version
+        * DESCRIPTION (Version): Rolled minor version
 
-	* src/blpVersion.cpp (getHeaderVersion): Use more defensive
-	implementation not reyling on VersionInfo class
-	* src/blpVersion.cpp (getRuntimeVersion): Ditto
+        * src/blpVersion.cpp (getHeaderVersion): Use more defensive
+        implementation not reyling on VersionInfo class
+        * src/blpVersion.cpp (getRuntimeVersion): Ditto
 
-	* src/blpVersion.cpp (getVersionIdentifier): Disabled as not in
-	currently used Windows setup, and not used in startup message
+        * src/blpVersion.cpp (getVersionIdentifier): Disabled as not in
+        currently used Windows setup, and not used in startup message
 
 2016-04-12  Dirk Eddelbuettel  <edd@debian.org>
 
         * R/bdh.R: Added note about 'DOCS #2072138 <GO>' on rolling futures
-	* man/bdh.Rd: Ditto
+        * man/bdh.Rd: Ditto
 
 2016-04-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* NAMESPACE: Import utils::packageVersion now used in .onAttach
+        * NAMESPACE: Import utils::packageVersion now used in .onAttach
 
 2016-04-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Rolled minor version
+        * DESCRIPTION (Version): Rolled minor version
 
-	* src/blpVersion.cpp (getVersionIdentifier, getHeaderVersion),
-	(getRunTimeVersion):  New helper functions to identify API versions
-	* man/getHeaderVersion.Rd: New manual page
-	* man/getRuntimeVersion.Rd: Ditto
-	* man/getVersionIdentifier.Rd: Ditto
+        * src/blpVersion.cpp (getVersionIdentifier, getHeaderVersion),
+        (getRunTimeVersion):  New helper functions to identify API versions
+        * man/getHeaderVersion.Rd: New manual page
+        * man/getRuntimeVersion.Rd: Ditto
+        * man/getVersionIdentifier.Rd: Ditto
 
-	* R/init.R (.onAttach): In verbose mode, show package and API version.
+        * R/init.R (.onAttach): In verbose mode, show package and API version.
 
 2016-03-23  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Rolled minor version
+        * DESCRIPTION (Version): Rolled minor version
 
-	* R/beqs.R: More restrained output from \example(..., run.dontrun=TRUE)
-	* R/bsrch.R: Idem
-	* R/fieldSearch.R: Idem
-	* R/getTicks.R: Idem
-	* man/beqs.Rd: Idem
-	* man/beqs.Rd: Idem
-	* man/bsrch.Rd: Idem
-	* man/fieldSearch.Rd: Idem
+        * R/beqs.R: More restrained output from \example(..., run.dontrun=TRUE)
+        * R/bsrch.R: Idem
+        * R/fieldSearch.R: Idem
+        * R/getTicks.R: Idem
+        * man/beqs.Rd: Idem
+        * man/beqs.Rd: Idem
+        * man/bsrch.Rd: Idem
+        * man/fieldSearch.Rd: Idem
 
-	* R/bdh.R: Additional example using options and overrides (to
-	retrieve quarterly sales estimates)
+        * R/bdh.R: Additional example using options and overrides (to
+        retrieve quarterly sales estimates)
 
 2016-03-22  John Laing  <john.laing@gmail.com>
 
-	* src/blpapi_utils.cpp: Add Integer64 type using REAL storage
-	* src/Rblpapi_types.h: Idem
+        * src/blpapi_utils.cpp: Add Integer64 type using REAL storage
+        * src/Rblpapi_types.h: Idem
 
 2016-03-22  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/bds.R (bds): Correct docs to state single security and field
-	* man/bds.Rd: Idem
+        * R/bds.R (bds): Correct docs to state single security and field
+        * man/bds.Rd: Idem
 
 2016-03-21  John Laing  <john.laing@gmail.com>
 
-	* R/blpDisconnect.R: Fix typo
-	* R/fieldInfo.R: Idem
-	* man/blpDisconnect.Rd: Idem
-	* man/fieldInfo.Rd: Idem
+        * R/blpDisconnect.R: Fix typo
+        * R/fieldInfo.R: Idem
+        * man/blpDisconnect.Rd: Idem
+        * man/fieldInfo.Rd: Idem
 
-	* inst/unitTests/runit.examples.R: Run examples as unit test
+        * inst/unitTests/runit.examples.R: Run examples as unit test
 
 2016-03-18  John Laing  <john.laing@gmail.com>
 
-	* src/Rblpapi_types.h: Add Float type, same behavior as Double
-	* src/blpapi_utils.cpp: Idem
+        * src/Rblpapi_types.h: Add Float type, same behavior as Double
+        * src/blpapi_utils.cpp: Idem
 
-	* inst/unitTests/runit.bdp.R: Column type tests
+        * inst/unitTests/runit.bdp.R: Column type tests
 
 2016-03-17  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/bdp.cpp (bdp_Impl): Support boolean option verbose
-	* R/bdp.R (bdp): Idem
-	* man/bdp.Rd (bdp): Idem
+        * src/bdp.cpp (bdp_Impl): Support boolean option verbose
+        * R/bdp.R (bdp): Idem
+        * man/bdp.Rd (bdp): Idem
 
-	* inst/unitTests/runit.getBars.R: Correct thinko in dealing with
-	weekend / no-weekend case for data-drive unit test
-	* inst/unitTests/runit.getTicks.R: Idem
+        * inst/unitTests/runit.getBars.R: Correct thinko in dealing with
+        weekend / no-weekend case for data-drive unit test
+        * inst/unitTests/runit.getTicks.R: Idem
 
 2016-03-16  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/Rblpapi_types.h: Renamed from rblpapi_types.h as Rcpp
-	Attributes prefers a properly capitalized package name here
-	* src/blpapi_utils.h: Corresponding update in include
+        * src/Rblpapi_types.h: Renamed from rblpapi_types.h as Rcpp
+        Attributes prefers a properly capitalized package name here
+        * src/blpapi_utils.h: Corresponding update in include
 
 2016-03-15  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Release 0.3.3
+        * DESCRIPTION (Version): Release 0.3.3
 
-	* README.md: Use canonical CRAN URL
+        * README.md: Use canonical CRAN URL
 
 2016-03-06  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/subscribe.R: Correct URL of referenced Doxygen file to below
-	bloomberg.github.io/blpapi-docs/cpp/3.8/
+        * R/subscribe.R: Correct URL of referenced Doxygen file to below
+        bloomberg.github.io/blpapi-docs/cpp/3.8/
 
-	* inst/NEWS.Rd: Filled some missing entries from the last few weeks
-	* ChangeLog: Idem
+        * inst/NEWS.Rd: Filled some missing entries from the last few weeks
+        * ChangeLog: Idem
 
-	* inst/unitTests/runit.getTicks.R: Add simple correction for start
-	and end times to avoid getting tripped by a weekend
-	* inst/unitTests/runit.getBars.R: Idem
+        * inst/unitTests/runit.getTicks.R: Add simple correction for start
+        and end times to avoid getting tripped by a weekend
+        * inst/unitTests/runit.getBars.R: Idem
 
 2016-03-02  Whit Armstrong  <armstrong.whit@gmail.com>
 
-	* src/blpapi_utils.cpp: New Date conversion function bbgDateToRDate
+        * src/blpapi_utils.cpp: New Date conversion function bbgDateToRDate
 
-	* inst/unitTests/runit.bdh.R: Additional Date conversion tests
+        * inst/unitTests/runit.bdh.R: Additional Date conversion tests
 
 2016-02-29  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/bdh.R: Clarify in help page that order of securities in return
-	may be different from order in 'securities' var (issues #101, #139)
+        * R/bdh.R: Clarify in help page that order of securities in return
+        may be different from order in 'securities' var (issues #101, #139)
 
 2016-02-28  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/bdh.cpp (bdh_Impl): Support boolean option verbose
-	* R/bdh.R (bdh): Idem
-	* man/bdh.Rd (bdh): Idem
+        * src/bdh.cpp (bdh_Impl): Support boolean option verbose
+        * R/bdh.R (bdh): Idem
+        * man/bdh.Rd (bdh): Idem
 
 2016-02-28  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/bds.cpp (bds_Impl): Support boolean option verbose
-	* R/bds.R (bds): Idem
-	* man/bds.Rd (bds): Idem
+        * src/bds.cpp (bds_Impl): Support boolean option verbose
+        * R/bds.R (bds): Idem
+        * man/bds.Rd (bds): Idem
 
 2016-02-25  Whit Armstrong  <armstrong.whit@gmail.com>
 
-	* src/blpapi_utils.cpp: New populateDfRow using new RblpapiT parameter
-	* src/bdh.cpp: New RblpapiT parameter to match types
-	* src/bdp.cpp: Idem
-	* src/bds.cpp: Moved legacy populateDfRow here as populateDfRowBDS
+        * src/blpapi_utils.cpp: New populateDfRow using new RblpapiT parameter
+        * src/bdh.cpp: New RblpapiT parameter to match types
+        * src/bdp.cpp: Idem
+        * src/bds.cpp: Moved legacy populateDfRow here as populateDfRowBDS
 
-	* src/blpapi_utils.cpp: Add default to DatetypeT::Datetime
+        * src/blpapi_utils.cpp: Add default to DatetypeT::Datetime
 
-	* inst/unitTests/runit.bdh.R: New unit test
-	* inst/unitTests/runit.bdp.R: Idem
+        * inst/unitTests/runit.bdh.R: New unit test
+        * inst/unitTests/runit.bdp.R: Idem
 
 2016-02-25  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/unitTests/runit.getTicks.R: Two new test functions
+        * inst/unitTests/runit.getTicks.R: Two new test functions
 
-	* tests/doRUnit.R: Improved setup logic
-	* inst/unitTests/runit.getBars.R: Simplified setup
+        * tests/doRUnit.R: Improved setup logic
+        * inst/unitTests/runit.getBars.R: Simplified setup
 
 2016-02-24  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Suggests): Added RUnit
-	* .travis.yml: Idem (though tests are skipped at Travis)
+        * DESCRIPTION (Suggests): Added RUnit
+        * .travis.yml: Idem (though tests are skipped at Travis)
 
-	* tests/doRUnit.R: Unit test wrapper using RUnit
+        * tests/doRUnit.R: Unit test wrapper using RUnit
 
-	* inst/unitTests/runit.getBars.R: Two new test functions for
-	getBars() as a start; requires ~/.R/rblpapiOptions.R with options()
+        * inst/unitTests/runit.getBars.R: Two new test functions for
+        getBars() as a start; requires ~/.R/rblpapiOptions.R with options()
 
 2016-02-10  Whit Armstrong  <armstrong.whit@gmail.com>
 
-	* src/bdp.cpp: check order of bbg response matches user reqeust order
-	* src/blpapi_utils.cpp: move new util functions out of getFieldInfo.cpp
-	* src/bds.cpp: move all LazyFrame related functions here
+        * src/bdp.cpp: check order of bbg response matches user reqeust order
+        * src/blpapi_utils.cpp: move new util functions out of getFieldInfo.cpp
+        * src/bds.cpp: move all LazyFrame related functions here
 
 2016-02-09  Whit Armstrong  <armstrong.whit@gmail.com>
 
-	* src/getFieldInfo.cpp: add overloaded allocateDataFrame using nrows (no rownames)
-	* src/bdh.cpp: drop LazyFrame, preallocate result using getFieldTypes
-	* R/fieldInfo.R: add fieldInfo function
+        * src/getFieldInfo.cpp: add overloaded allocateDataFrame using nrows (no rownames)
+        * src/bdh.cpp: drop LazyFrame, preallocate result using getFieldTypes
+        * R/fieldInfo.R: add fieldInfo function
 
 2016-02-06  Whit Armstrong  <armstrong.whit@gmail.com>
 
-	* src/bdp.cpp: drop LazyFrame, preallocate result using getFieldTypes
-	* R/fieldInfo.R: new function 'fieldInfo'
-	* src/getFieldInfo.cpp: cpp implementation for 'fieldInfo' function
+        * src/bdp.cpp: drop LazyFrame, preallocate result using getFieldTypes
+        * R/fieldInfo.R: new function 'fieldInfo'
+        * src/getFieldInfo.cpp: cpp implementation for 'fieldInfo' function
 
 2016-02-05  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/bds.R: Add example of overrides use with bds()
-	* man/bds.Rd: Ditto
+        * R/bds.R: Add example of overrides use with bds()
+        * man/bds.Rd: Ditto
 
 2015-12-17  Morgan Williams <wmorgan85@gmail.com>
 
-	* src/bsrch.cpp: Initial version of BSRCH functionality
-	* R/bsrch.R: R side of new bsrch() function
-	* man/bsrch.Rd: Manual page for bsrch()
+        * src/bsrch.cpp: Initial version of BSRCH functionality
+        * R/bsrch.R: R side of new bsrch() function
+        * man/bsrch.Rd: Manual page for bsrch()
 
 2015-12-07  Martin Bel  <belmartin@outlook.com>
 
-	* configure: Add 'method="libcurl"' to download.file call
+        * configure: Add 'method="libcurl"' to download.file call
 
 2015-12-06  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Version 0.3.2
+        * DESCRIPTION: Version 0.3.2
 
 2015-12-04  Anonymous  <joel23888@users.noreply.github.com>
 
-	* src/getBars.cpp: Changed to support a single options vector with
-	named elements.
-	* R/getBars.R: Idem
-	* man/getBars.Rd: Corresponding manual page update
+        * src/getBars.cpp: Changed to support a single options vector with
+        named elements.
+        * R/getBars.R: Idem
+        * man/getBars.Rd: Corresponding manual page update
 
 2015-11-23  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/beqs.cpp: Minor postprocessing and cleanup
+        * src/beqs.cpp: Minor postprocessing and cleanup
 
 2015-11-23  Rademeyer Vermaak  <csrvermaak@hotmail.com>
 
-	* src/beqs.cpp: More robust handling of empty return columns
+        * src/beqs.cpp: More robust handling of empty return columns
 
 2015-11-20  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/beqs.cpp: Correct comparison for response type
+        * src/beqs.cpp: Correct comparison for response type
 
 2015-11-19  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure (download): Use R to download instead of curl as the
-	latter fails to follow redirect links on e.g. OS X -- but only when
-	we have capabilities()[["libcurl"]] or else fall back to curl
+        * configure (download): Use R to download instead of curl as the
+        latter fails to follow redirect links on e.g. OS X -- but only when
+        we have capabilities()[["libcurl"]] or else fall back to curl
 
-	* src/beqs.cpp: Make g++-5.2 happy and use std::strcmp
+        * src/beqs.cpp: Make g++-5.2 happy and use std::strcmp
 
-	* .travis.yml (after_failure): Add new target to get more output
+        * .travis.yml (after_failure): Add new target to get more output
 
-	* DESCRIPTION: Roll Date and Version
+        * DESCRIPTION: Roll Date and Version
 
 2015-11-16  Rademeyer Vermaak  <csrvermaak@hotmail.com>
 
-	* src/bdh.R: Correct example
+        * src/bdh.R: Correct example
 
 2015-11-09  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/getBars.cpp: Also return value-traded per bar
-	* R/getBars.R: Document additional return column
+        * src/getBars.cpp: Also return value-traded per bar
+        * R/getBars.R: Document additional return column
 
 2015-11-09  Whit Armstrong  <armstrong.whit@gmail.com>
 
-	* src/subscribe.cpp: Finalize live subscription
-	* R/subscribe.R: Idem
-	* man/subsribe.Rd: Idem
+        * src/subscribe.cpp: Finalize live subscription
+        * R/subscribe.R: Idem
+        * man/subsribe.Rd: Idem
 
 2015-11-06  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/getBars.R: Check startTime and endTime for Datetime type;
-	added example section to manual page
-	* R/getTicks.R: Ditto
+        * R/getBars.R: Check startTime and endTime for Datetime type;
+        added example section to manual page
+        * R/getTicks.R: Ditto
 
-	* man/getBars.Rd: Added simple example from vignette
-	* man/getTicks.Rd: Ditto
+        * man/getBars.Rd: Added simple example from vignette
+        * man/getTicks.Rd: Ditto
 
 2015-11-02  Whit Armstrong  <armstrong.whit@gmail.com>
 
-	* src/subscribe.cpp: Begginning of live subscription
+        * src/subscribe.cpp: Begginning of live subscription
 
 2015-10-21  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/beqs.R: Correct Date use in example section
-	* man/beqs.Rd: Ditto
+        * R/beqs.R: Correct Date use in example section
+        * man/beqs.Rd: Ditto
 
 2015-10-18  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Version 0.3.1
+        * DESCRIPTION: Version 0.3.1
 
 2015-10-16  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/beqs.cpp: More robust identification of column types,
-	as well as presetting of result columns with NA values
+        * src/beqs.cpp: More robust identification of column types,
+        as well as presetting of result columns with NA values
 
-	* src/beqs.cpp: Support 'Date' types in return
+        * src/beqs.cpp: Support 'Date' types in return
 
 2015-10-11  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/beqs.R: Always return the date as the first column
+        * R/beqs.R: Always return the date as the first column
 
 2015-10-05  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Rolled (dev) Version and Date
+        * DESCRIPTION: Rolled (dev) Version and Date
 
 2015-10-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/beqs.cpp: Reworked to return a data frame, also changed some
-	argument names for consistency
-	* R/beqs.R: Corresponding changes
+        * src/beqs.cpp: Reworked to return a data frame, also changed some
+        argument names for consistency
+        * R/beqs.R: Corresponding changes
 
-	* man/beqs.Rd: Ditto
-	* src/RcppExports.cpp: Ditto
-	* R/RcppExports.R: Ditto
+        * man/beqs.Rd: Ditto
+        * src/RcppExports.cpp: Ditto
+        * R/RcppExports.R: Ditto
 
 2015-10-03  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/beqs.cpp: Added verbose flag
-	* R/beqs.R: Ditto
+        * src/beqs.cpp: Added verbose flag
+        * R/beqs.R: Ditto
 
-	* man/beqs.Rd: Added by running roxygenize()
-	* src/RcppExports.cpp: Updated by running compileAttributes()
-	* R/RcppExports.R: Updated by running compileAttributes()
+        * man/beqs.Rd: Added by running roxygenize()
+        * src/RcppExports.cpp: Updated by running compileAttributes()
+        * R/RcppExports.R: Updated by running compileAttributes()
 
 2015-10-03  Rademeyer Vermaak  <csrvermaak@hotmail.com>
 
-	* src/beqs.cpp: Add BEQS functionality
-	* R/beqs.R: Add BEQS functionality
-	* man/beqs.Rd: Corresponding manual page
+        * src/beqs.cpp: Add BEQS functionality
+        * R/beqs.R: Add BEQS functionality
+        * man/beqs.Rd: Corresponding manual page
 
 2015-10-01  Dirk Eddelbuettel  <edd@debian.org>
 
-	* configure: Rewritten to (locally) cache the Bloomberg header and
-	and library files making (repeated) builds quicker (issue #65)
-	* src/Makevars.win: Ditto
+        * configure: Rewritten to (locally) cache the Bloomberg header and
+        and library files making (repeated) builds quicker (issue #65)
+        * src/Makevars.win: Ditto
 
-	* .gitignore: Add blp/ and inst/include/ with cached files
-	* .Rbuildignore: Ditto
-	* cleanup: Adjusted accordingly as well
+        * .gitignore: Add blp/ and inst/include/ with cached files
+        * .Rbuildignore: Ditto
+        * cleanup: Adjusted accordingly as well
 
 2015-09-30  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/getTicks.R (getMultipleTicks): In xts mode, make timestamps
-	unique prior to merge to ensure order is preserved (issue #76)
+        * R/getTicks.R (getMultipleTicks): In xts mode, make timestamps
+        unique prior to merge to ensure order is preserved (issue #76)
 
 2015-09-18  Dirk Eddelbuettel  <edd@debian.org>
 
-	* .travis.yml (notifications): Added slack notification
+        * .travis.yml (notifications): Added slack notification
 
 2015-09-16  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/bdp.R: Add example using override for vendor-specific data (cf
-	issue ticket #67)
-	* man/bdp.Rd: Corresponding manual page update
+        * R/bdp.R: Add example using override for vendor-specific data (cf
+        issue ticket #67)
+        * man/bdp.Rd: Corresponding manual page update
 
 2015-09-15  John Laing <john.laing@gmail.com>
 
-	* src/blpapi_utils.cpp: Fix Boost auto_ptr warning
+        * src/blpapi_utils.cpp: Fix Boost auto_ptr warning
 
 2015-08-19  Dirk Eddelbuettel  <edd@debian.org>
 
-	* R/bdh.R: Add example using optional parameter for monthly data
-	* man/bdh.Rd: Corresponding manual page
+        * R/bdh.R: Add example using optional parameter for monthly data
+        * man/bdh.Rd: Corresponding manual page
 
 2015-08-14  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Version 0.3.0
+        * DESCRIPTION: Version 0.3.0
 
-	* configure: Respect R_HOME if set, use fallback if not
+        * configure: Respect R_HOME if set, use fallback if not
 
 2015-08-13  Dirk Eddelbuettel  <edd@debian.org>
 
-	* vignettes/rblpapi-intro.Rmd: Added vignette
-	* DESCRIPTION: Add knitr to Suggests: and VignetteBuilder:
+        * vignettes/rblpapi-intro.Rmd: Added vignette
+        * DESCRIPTION: Add knitr to Suggests: and VignetteBuilder:
 
-	* .travis.yml: Add knitr to installed packages
+        * .travis.yml: Add knitr to installed packages
 
-	* configure: Refine which program is used for downloads
+        * configure: Refine which program is used for downloads
 
-	* cleanup: Refine what is removed post-build
+        * cleanup: Refine what is removed post-build
 
 2015-08-12  Jeroen Ooms  <jeroenooms@gmail.com>
 
-	* configure: Added support for OS X builds
-	* src/Makevars.in: Ditto
+        * configure: Added support for OS X builds
+        * src/Makevars.in: Ditto
 
 2015-08-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* ChangeLog: Added, see git log for previous changes
-	* NEWS.Rd: Added, see git log for previous changes
+        * ChangeLog: Added, see git log for previous changes
+        * NEWS.Rd: Added, see git log for previous changes
 
 
 

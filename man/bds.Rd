@@ -5,7 +5,8 @@
 \title{Run 'Bloomberg Data Set' Queries}
 \usage{
 bds(security, field, options = NULL, overrides = NULL, verbose = FALSE,
-  identity = defaultAuthentication(), con = defaultConnection())
+  identity = defaultAuthentication(), con = defaultConnection(),
+  simplify = getOption("blpSimplify", TRUE))
 }
 \arguments{
 \item{security}{A character value with a single security symbol in
@@ -31,6 +32,11 @@ desired, defaults to \sQuote{FALSE}}
 \item{con}{A connection object as created by a \code{blpConnect}
 call, and retrieved via the internal function
 \code{defaultConnection}.}
+
+\item{simplify}{A boolean indicating whether result objects that are one
+element lists should be altered to returned just the single inner object.
+Defaults to the value of the \sQuote{blpSimplify} option, with a fallback
+of \sQuote{TRUE} if unset ensuring prior behavior is maintained.}
 }
 \value{
 A data frame object with the requested data set.
