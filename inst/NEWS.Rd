@@ -4,6 +4,16 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
+\section{Changes in Rblpapi version 0.3.13 (2022-01-09)}{
+  \itemize{
+    \item Add a test for \code{bds} (Michael Kerber in \ghpr{352})
+    \item Add \code{simplify} argument (and option) to \code{bdh} and
+    \code{bds} (Dirk in \ghpr{354} closing \ghit{353}, \ghit{351})
+    \item Improve documentation for \code{bsearch} (John in \ghpr{357}
+    closing \ghit{356})
+  }
+}
+
 \section{Changes in Rblpapi version 0.3.12 (2021-12-07)}{
   \itemize{
     \item \code{bdh()} supports new option \code{returnAs} (Michael
