@@ -1,3 +1,8 @@
+2022-01-08  John Laing  <john.laing@gmail.com>
+
+        * R/bsrch.R: Fix documentation
+        * man/bsrch.Rd: Regenerated
+
 2021-12-29  Dirk Eddelbuettel  <edd@debian.org>
 
         * R/bdh.R: Use getOption("blpSimplify", TRUE) as simplify default
