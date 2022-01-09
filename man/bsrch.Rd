@@ -29,10 +29,14 @@ A data frame object with the requested SRCH data.
 This function uses the Bloomberg API to retrieve 'bsrcb' (Bloomberg
 SRCH Data) queries
 }
+\note{
+There are two main domains used for bsrch. The COMDTY domain
+requires additional parameters and is not supported. The FI domain
+works on user-defined searches accessed via SRCH.
+}
 \examples{
 \dontrun{
-head(bsrch("COMDTY:NGFLOW"), 20)
-head(bsrch("COMDTY:VESSEL"), 20)
+head(bsrch("FI:YOURSRCH"), 20)
 }
 }
 \author{
