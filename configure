@@ -56,6 +56,14 @@ else
     exit 3
 fi
 
+## Set the source to retrieve header files from
+h=https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz
+if [ -z ${RBLPAPI_BLPHEADERS+h} ]; then RBLPAPI_BLPHEADERS=$h; echo "using default source to download headers $RBLPAPI_BLPHEADERS"; else echo "using user defined source to download headers $RBLPAPI_BLPHEADERS"; fi
+
+## Set the source to retrieve the precompiled shared library from
+l=https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
+if [ -z ${RBLPAPI_BLPLIBRARY+l} ]; then RBLPAPI_BLPLIBRARY=$l; echo "using default source to download library $RBLPAPI_BLPLIBRARY"; else echo "using user defined source to download library $RBLPAPI_BLPLIBRARY'"; fi
+
 ## helper function to not rely on curl which at least on OS X fails to follow redirects
 download() {
     url=${1}
@@ -75,7 +83,7 @@ cwd=$(pwd)
 mkdir -p blp/${platform}
 cd blp/${platform}
 if [ ! -f blpHeaders.tar.gz ]; then
-    download https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz
+    download $RBLPAPI_BLPHEADERS
     tar xfz blpHeaders.tar.gz -C ../../inst
 fi
 cd ${cwd}
@@ -84,7 +92,7 @@ cd ${cwd}
 mkdir -p inst/blp
 cd blp/${platform}
 if [ ! -f blpLibrary.tar.gz ]; then
-    download https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
+    download $RBLPAPI_BLPLIBRARY
     tar xfz blpLibrary.tar.gz -C ../../inst/blp/ libblpapi3_${flavour}.so
 fi
 cd ${cwd}
