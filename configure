@@ -70,23 +70,32 @@ download() {
     fi
 }
 
-## Get and install header files
+## default file names, can override with say 'blpHeaders="/opt/blp/blpHeaders_1.2.3.tar.gz"'
+## respects enviroment variable so 'blpHeaders="/opt/blp/blpHeaders_1.2.3.tar.gz" ./configure' works
+: ${blpHeaders="blpHeaders.tar.gz"}
+: ${blpLibrary="blpLibrary.tar.gz"}
+
+## Check for header files and download if needed
 cwd=$(pwd)
 mkdir -p blp/${platform}
 cd blp/${platform}
-if [ ! -f blpHeaders.tar.gz ]; then
+if [ ! -f ${blpHeaders} ]; then
     download https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz
-    tar xfz blpHeaders.tar.gz -C ../../inst
+else
+    echo "** using ${blpHeaders}"
 fi
+tar xfz ${blpHeaders} -C ../../inst
 cd ${cwd}
 
 ## Get and install precompiled shared library
 mkdir -p inst/blp
 cd blp/${platform}
-if [ ! -f blpLibrary.tar.gz ]; then
+if [ ! -f ${blpLibrary} ]; then
     download https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
-    tar xfz blpLibrary.tar.gz -C ../../inst/blp/ libblpapi3_${flavour}.so
+else
+    echo "** using ${blpLibrary}"
 fi
+tar xfz ${blpLibrary} -C ../../inst/blp/ libblpapi3_${flavour}.so
 cd ${cwd}
 
 exit 0
