@@ -45,11 +45,11 @@ spx_ndx_monthly <- bdh(securities = c("SPX Index","NDX Index"),
                        start.date = as.Date("2012-01-01"), 
                        options = monthly.options)
 
-goog_ge_div <- bdh(securities = c("GOOG Equity","GE Equity"),
+goog_ge_div <- bdh(securities = c("GOOG US Equity","GE US Equity"),
                    fields = c("PX_LAST","CF_DVD_PAID"), 
                    start.date = as.Date("2012-11-01"))
 
-goog_ge_px <- bdp(securities = c("GOOG Equity","GE Equity"),
+goog_ge_px <- bdp(securities = c("GOOG US Equity","GE US Equity"),
                   fields = c("PX_LAST","DS002"))
 ```
 
