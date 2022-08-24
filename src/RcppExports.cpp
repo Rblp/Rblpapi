@@ -7,15 +7,16 @@
 using namespace Rcpp;
 
 // authenticate_Impl
-SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_);
-RcppExport SEXP _Rblpapi_authenticate_Impl(SEXP con_SEXP, SEXP uuid_SEXP, SEXP ip_address_SEXP) {
+SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_, SEXP isEmrsId_);
+RcppExport SEXP _Rblpapi_authenticate_Impl(SEXP con_SEXP, SEXP uuid_SEXP, SEXP ip_address_SEXP, SEXP isEmrsId_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type con_(con_SEXP);
     Rcpp::traits::input_parameter< SEXP >::type uuid_(uuid_SEXP);
     Rcpp::traits::input_parameter< SEXP >::type ip_address_(ip_address_SEXP);
-    rcpp_result_gen = Rcpp::wrap(authenticate_Impl(con_, uuid_, ip_address_));
+    Rcpp::traits::input_parameter< SEXP >::type isEmrsId_(isEmrsId_SEXP);
+    rcpp_result_gen = Rcpp::wrap(authenticate_Impl(con_, uuid_, ip_address_, isEmrsId_));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -247,7 +248,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_Rblpapi_authenticate_Impl", (DL_FUNC) &_Rblpapi_authenticate_Impl, 3},
+    {"_Rblpapi_authenticate_Impl", (DL_FUNC) &_Rblpapi_authenticate_Impl, 4},
     {"_Rblpapi_bdh_Impl", (DL_FUNC) &_Rblpapi_bdh_Impl, 10},
     {"_Rblpapi_bdp_Impl", (DL_FUNC) &_Rblpapi_bdp_Impl, 7},
     {"_Rblpapi_bds_Impl", (DL_FUNC) &_Rblpapi_bds_Impl, 7},

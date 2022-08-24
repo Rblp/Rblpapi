@@ -54,7 +54,7 @@ static void identityFinalizer(SEXP identity_) {
     }
 }
 
-Identity* authenticateWithId(SEXP con_, SEXP uuid_, SEXP ip_address_) {
+Identity* authenticateWithId(SEXP con_, SEXP uuid_, SEXP ip_address_, SEXP isEmrsId_) {
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     Session* session =
         reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
@@ -65,6 +65,7 @@ Identity* authenticateWithId(SEXP con_, SEXP uuid_, SEXP ip_address_) {
 
     std::string uuid = Rcpp::as<std::string>(uuid_);
     std::string ip_address = Rcpp::as<std::string>(ip_address_);
+    bool isEmrsId = Rcpp::as<bool>(isEmrsId_);
 
     const std::string authsrv = "//blp/apiauth";
     if (!session->openService(authsrv.c_str())) {
@@ -73,7 +74,13 @@ Identity* authenticateWithId(SEXP con_, SEXP uuid_, SEXP ip_address_) {
 
     Service apiAuthSvc = session->getService(authsrv.c_str());
     Request authorizationRequest = apiAuthSvc.createAuthorizationRequest();
-    authorizationRequest.set("uuid", uuid.c_str());
+    // if isEmrsId is true, we are actually assuming a BPIPE scenario
+    // where we still want to auth by user id & ip address
+    if (isEmrsId) {
+        authorizationRequest.set("emrsId", uuid.c_str());
+    } else {
+        authorizationRequest.set("uuid", uuid.c_str());
+    }
     authorizationRequest.set("ipAddress", ip_address.c_str());
     Identity* identity_p = new Identity(session->createIdentity());
     session->sendAuthorizationRequest(authorizationRequest, identity_p);
@@ -173,12 +180,12 @@ Identity* authenticateWithApp(SEXP con_) {
 // Simpler interface
 //
 // [[Rcpp::export]]
-SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_) {
+SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_, SEXP isEmrsId_) {
     Identity* identity_p = NULL;
     if (uuid_ == R_NilValue) {
         identity_p = authenticateWithApp(con_);
     } else {
-        identity_p = authenticateWithId(con_, uuid_, ip_address_);
+        identity_p = authenticateWithId(con_, uuid_, ip_address_, isEmrsId_);
     }
     if(identity_p == NULL) { Rcpp::stop("Identity pointer is null\n"); }
     return createExternalPointer<Identity>(identity_p, identityFinalizer, "blpapi::Identity*");
