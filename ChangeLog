@@ -1,3 +1,16 @@
+2022-08-27  Bob Harlow  <rharlow86@gmail.com>
+
+	* DESCRIPTION (Version, Date): Roll minor version
+
+	* R/blpAuthenticate.R: Add isAuthId and appName parameters to handle
+	the case where we want to authenticate with a B-PIPE app AND a
+	user associated with that app, in which case the uuid will
+	be interpreted as a bloomberg authId.
+
+	* src/authenticate.cpp: Handle new parameters at the C++ level
+
+	* man/blpAuthenticate.R: document new parameters
+
 2022-02-21  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION (Version, Date): Roll minor version
@@ -775,7 +788,3 @@
 
         * ChangeLog: Added, see git log for previous changes
         * NEWS.Rd: Added, see git log for previous changes
-
-
-
-

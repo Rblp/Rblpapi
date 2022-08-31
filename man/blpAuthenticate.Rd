@@ -4,10 +4,15 @@
 \alias{blpAuthenticate}
 \title{Authenticate Bloomberg API access}
 \usage{
-blpAuthenticate(uuid = getOption("blpUUID", NULL),
+blpAuthenticate(
+  uuid = getOption("blpUUID", NULL),
   host = getOption("blpLoginHostname", "localhost"),
-  ip.address = getOption("blpLoginIP", NULL), con = defaultConnection(),
-  default = TRUE)
+  ip.address = getOption("blpLoginIP", NULL),
+  con = defaultConnection(),
+  default = TRUE,
+  isAuthId = getOption("blpIsAuthId", FALSE),
+  appName = getOption("blpAppName", NULL)
+)
 }
 \arguments{
 \item{uuid}{An optional character variable with a unique user id
@@ -37,6 +42,14 @@ Defaults to \code{defaultConnection}.}
 \item{default}{A logical indicating whether this authentication should
 be saved as the default, as opposed to returned to the
 user. Default to \code{TRUE}.}
+
+\item{isAuthId}{A logical indicating whether to interpret the uuid
+as an authId for authenticating a user with a B-PIPE application.}
+
+\item{appName}{If isAuthId is TRUE, this is a character string
+associated with the B-PIPE application name. This will be the same
+appName used by \code{blpConnect()}. If isAuthId is FALSE,
+this will be ignored.}
 }
 \value{
 In the \code{default=TRUE} case nothing is returned, and

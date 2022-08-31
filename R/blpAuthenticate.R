@@ -44,8 +44,12 @@
 ##' @param default A logical indicating whether this authentication should
 ##' be saved as the default, as opposed to returned to the
 ##' user. Default to \code{TRUE}.
-##' @param isEmrsId A logical indicating whether to interpret the uuid
-##' as an emrsId for authenticating a user with a B-PIPE application.
+##' @param isAuthId A logical indicating whether to interpret the uuid
+##' as an authId for authenticating a user with a B-PIPE application.
+##' @param appName If isAuthId is TRUE, this is a character string
+##' associated with the B-PIPE application name. This will be the same
+##' appName used by \code{blpConnect()}. If isAuthId is FALSE,
+##' this will be ignored.
 ##' @return In the \code{default=TRUE} case nothing is returned, and
 ##' this authentication is automatically used for all future calls which
 ##' omit the \code{identity} argument. Otherwise an authentication object is
@@ -67,17 +71,20 @@ blpAuthenticate <- function(uuid=getOption("blpUUID", NULL),
                             ip.address=getOption("blpLoginIP", NULL),
                             con=defaultConnection(),
                             default=TRUE,
-                            isEmrsId = getOption("isEmrsId", FALSE)) {
+                            isAuthId = getOption("blpIsAuthId", FALSE),
+                            appName = getOption("blpAppName", NULL)) {
     if(is.null(uuid)) {
         ## no UUID, assume B-PIPE or SAPI with application ID
         blpAuth <- authenticate_Impl(con, NULL, NULL, FALSE)
-    } else if(isEmrsId) {
-        if(is.null(uuid) || is.null(ip.address)){
-            stop("when isEmrsId is TRUE, uuid and ip.address must be passed")
+    } else if(isAuthId) {
+        if(is.null(uuid) || is.null(ip.address) || is.null(appName)){
+          stop(
+            "When isAuthId is TRUE, uuid, ip.address & appName can't be NULL")
         }
-        ## assume that the UUID is actually an emrsId & authenticate
+        ## assume that the UUID is actually an authId & authenticate
         ## with B-PIPE application + user
-        blpAuth <- authenticate_Impl(con, as.character(uuid), ip.address, TRUE)
+        blpAuth <- authenticate_Impl(con, as.character(uuid), ip.address, TRUE,
+                                     as.character(appName))
     } else {
         if ( (!is.null(ip.address)) && (!identical(host,"localhost")) ) {
             warning("Both ip.address and host are set.  Using ip.address.") }
@@ -89,7 +96,8 @@ blpAuthenticate <- function(uuid=getOption("blpUUID", NULL),
                               ignore.stdout=FALSE, ignore.stderr=FALSE,wait=TRUE)
             ip.address <- strsplit(cmd.res,"address ")[[1]][2]
         }
-        blpAuth <- authenticate_Impl(con, as.character(uuid), ip.address, FALSE)
+        blpAuth <- authenticate_Impl(con, as.character(uuid), ip.address, FALSE,
+                                     appName)
     }
     ## if we're setting the silent/hidden default object, return nothing
     ## else, return the object (keeps old behavior)
