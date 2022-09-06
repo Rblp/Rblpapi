@@ -75,30 +75,27 @@ blpAuthenticate <- function(uuid=getOption("blpUUID", NULL),
                             appName = getOption("blpAppName", NULL)) {
     if(is.null(uuid)) {
         ## no UUID, assume B-PIPE or SAPI with application ID
-        blpAuth <- authenticate_Impl(con, NULL, NULL, FALSE)
-    } else if(isAuthId) {
-        if(is.null(uuid) || is.null(ip.address) || is.null(appName)){
-          stop(
-            "When isAuthId is TRUE, uuid, ip.address & appName can't be NULL")
-        }
-        ## assume that the UUID is actually an authId & authenticate
-        ## with B-PIPE application + user
-        blpAuth <- authenticate_Impl(con, as.character(uuid), ip.address, TRUE,
-                                     as.character(appName))
+        blpAuth <- authenticate_Impl(con, NULL, NULL, FALSE, NULL)
     } else {
         if ( (!is.null(ip.address)) && (!identical(host,"localhost")) ) {
             warning("Both ip.address and host are set.  Using ip.address.") }
 
-        ## have UUID, assume SAPI
+        ## have UUID, assume SAPI or B-PIPE with uuid/authId
         if (is.null(ip.address)) {
             ## Linux only ?
             cmd.res <- system(paste("host",host), intern=TRUE,
                               ignore.stdout=FALSE, ignore.stderr=FALSE,wait=TRUE)
             ip.address <- strsplit(cmd.res,"address ")[[1]][2]
         }
-        blpAuth <- authenticate_Impl(con, as.character(uuid), ip.address, FALSE,
-                                     appName)
+        isAuthId <- as.logical(isAuthId)
+        if(isAuthId && is.null(appName)) {
+          stop(
+              "When isAuthId is TRUE, uuid, ip.address & appName can't be NULL")
+        }
+        blpAuth <- authenticate_Impl(con, as.character(uuid), ip.address,
+                                     isAuthId, as.character(appName))
     }
+
     ## if we're setting the silent/hidden default object, return nothing
     ## else, return the object (keeps old behavior)
     if (default)
