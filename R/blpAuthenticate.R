@@ -36,7 +36,7 @@
 ##'     for authentication.  Usually the IP address where the uuid/user
 ##'     last logged into the Bloomberg Terminal appication.  Defaults to
 ##'     \code{getOption("blpLoginIP")} or NULL, which will then lookup
-##'     the IP of the "host" option. 
+##'     the IP of the "host" option.
 ##' @param con A connection object as created by a \code{blpConnect}
 ##' call, and retrieved via the internal function. This is the only required
 ##' argument to authenticate a B-PIPE connection with a appName.
@@ -44,11 +44,17 @@
 ##' @param default A logical indicating whether this authentication should
 ##' be saved as the default, as opposed to returned to the
 ##' user. Default to \code{TRUE}.
+##' @param isAuthId A logical indicating whether to interpret the uuid
+##' as an authId for authenticating a user with a B-PIPE application.
+##' @param appName If isAuthId is TRUE, this is a character string
+##' associated with the B-PIPE application name. This will be the same
+##' appName used by \code{blpConnect()}. If isAuthId is FALSE,
+##' this will be ignored.
 ##' @return In the \code{default=TRUE} case nothing is returned, and
 ##' this authentication is automatically used for all future calls which
 ##' omit the \code{identity} argument. Otherwise an authentication object is
 ##' returned which is required by all the accessor functions in the
-##' package. (e.g. \code{bdp()} \code{bds()} \code{getPortfolio()} 
+##' package. (e.g. \code{bdp()} \code{bds()} \code{getPortfolio()}
 ##' @author Whit Armstrong and Dirk Eddelbuettel
 ##' @examples
 ##' \dontrun{
@@ -64,23 +70,32 @@ blpAuthenticate <- function(uuid=getOption("blpUUID", NULL),
                             host=getOption("blpLoginHostname", "localhost"),
                             ip.address=getOption("blpLoginIP", NULL),
                             con=defaultConnection(),
-                            default=TRUE) {
+                            default=TRUE,
+                            isAuthId = getOption("blpIsAuthId", FALSE),
+                            appName = getOption("blpAppName", NULL)) {
     if(is.null(uuid)) {
         ## no UUID, assume B-PIPE or SAPI with application ID
-        blpAuth <- authenticate_Impl(con, NULL, NULL)
+        blpAuth <- authenticate_Impl(con, NULL, NULL, FALSE, NULL)
     } else {
         if ( (!is.null(ip.address)) && (!identical(host,"localhost")) ) {
             warning("Both ip.address and host are set.  Using ip.address.") }
-        
-        ## have UUID, assume SAPI
+
+        ## have UUID, assume SAPI or B-PIPE with uuid/authId
         if (is.null(ip.address)) {
             ## Linux only ?
             cmd.res <- system(paste("host",host), intern=TRUE,
                               ignore.stdout=FALSE, ignore.stderr=FALSE,wait=TRUE)
             ip.address <- strsplit(cmd.res,"address ")[[1]][2]
         }
-        blpAuth <- authenticate_Impl(con, as.character(uuid), ip.address)
+        isAuthId <- as.logical(isAuthId)
+        if(isAuthId && is.null(appName)) {
+          stop(
+              "When isAuthId is TRUE, uuid, ip.address & appName can't be NULL")
+        }
+        blpAuth <- authenticate_Impl(con, as.character(uuid), ip.address,
+                                     isAuthId, as.character(appName))
     }
+
     ## if we're setting the silent/hidden default object, return nothing
     ## else, return the object (keeps old behavior)
     if (default)
