@@ -26,7 +26,7 @@ desired, defaults to \sQuote{FALSE}}
 
 \item{returnAs}{A character variable describing the type of return
 object; currently supported are \sQuote{data.frame} (also the default),
-\sQuote{data.table}, \sQuote{fts}, \sQuote{xts} and \sQuote{zoo}}
+\sQuote{data.table}, \sQuote{xts} and \sQuote{zoo}}
 
 \item{tz}{A character variable with the desired local timezone,
 defaulting to the value \sQuote{TZ} environment variable, and
@@ -40,7 +40,7 @@ call, and retrieved via the internal function
 Depending on the value of \sQuote{returnAs}, either a
 \sQuote{data.frame} or \sQuote{data.table} object also containing
 non-numerical information such as condition codes, or a time-indexed
-container of type \sQuote{fts}, \sQuote{xts} and \sQuote{zoo} with
+container of type \sQuote{xts} and \sQuote{zoo} with
 a numeric matrix containing only \sQuote{value} and \sQuote{size}.
 }
 \description{

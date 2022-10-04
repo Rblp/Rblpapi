@@ -35,7 +35,7 @@ expect_true(dim(res)[1] >= 5, info = "check return of five rows - data.table")
 expect_true(dim(res)[2] == 4, info = "check return of four cols - data.table")
 expect_true(all(c("PX_LAST","OPEN_INT","FUT_CUR_GEN_TICKER") %in% colnames(res)), info = "check column names - data.table")
 
-for (retAs in c("fts", "xts", "zoo")) {
+for (retAs in c("xts", "zoo")) {
     res <- bdh("TY1 Comdty",c("PX_OPEN", "PX_HIGH", "PX_LOW", "PX_LAST"),Sys.Date()-10,returnAs=retAs)
     expect_true(inherits(res, retAs), info = paste("checking return type -", retAs))
     expect_true(dim(res)[1] >= 5, info = paste("check return of five rows -", retAs))

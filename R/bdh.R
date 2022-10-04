@@ -39,7 +39,7 @@
 ##' desired, defaults to \sQuote{FALSE}
 ##' @param returnAs A character variable describing the type of return
 ##' object; currently supported are \sQuote{data.frame} (also the default),
-##' \sQuote{data.table}, \sQuote{fts}, \sQuote{xts} and \sQuote{zoo}
+##' \sQuote{data.table}, \sQuote{xts} and \sQuote{zoo}
 ##' @param identity An optional identity object as created by a
 ##' \code{blpAuthenticate} call, and retrieved via the internal function
 ##' \code{defaultAuthentication}.
@@ -94,7 +94,7 @@ bdh <- function(securities, fields, start.date, end.date=NULL,
                 identity=defaultAuthentication(), con=defaultConnection(),
                 int.as.double=getOption("blpIntAsDouble", FALSE),
                 simplify=getOption("blpSimplify", TRUE)) {
-    match.arg(returnAs, c("data.frame", "fts", "xts", "zoo", "data.table"))
+    match.arg(returnAs, c("data.frame", "xts", "zoo", "data.table"))
     if (class(start.date) == "Date") {
         start.date <- format(start.date, format="%Y%m%d")
     }
@@ -113,7 +113,6 @@ bdh <- function(securities, fields, start.date, end.date=NULL,
     
     res <- switch(returnAs,
                   data.frame = res,            # default is data.frame
-                  fts        = lapply(res, function(x) fts::fts(x[,1], x[,-1, drop = FALSE])),
                   xts        = lapply(res, function(x) xts::xts(x[,-1, drop = FALSE], order.by = x[,1])),
                   zoo        = lapply(res, function(x) zoo::zoo(x[,-1, drop = FALSE], order.by = x[,1])),
                   data.table = lapply(res, function(x) data.table::data.table(date = data.table::as.IDate(x[, 1]), x[, -1, drop = FALSE])),

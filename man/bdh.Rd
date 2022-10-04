@@ -38,7 +38,7 @@ desired, defaults to \sQuote{FALSE}}
 
 \item{returnAs}{A character variable describing the type of return
 object; currently supported are \sQuote{data.frame} (also the default),
-\sQuote{data.table}, \sQuote{fts}, \sQuote{xts} and \sQuote{zoo}}
+\sQuote{data.table}, \sQuote{xts} and \sQuote{zoo}}
 
 \item{identity}{An optional identity object as created by a
 \code{blpAuthenticate} call, and retrieved via the internal function
