@@ -8,7 +8,6 @@ Imports: Rcpp (>= 0.11.0), utils
 Suggests: fts, xts, zoo, data.table, simplermarkdown, tinytest
 VignetteBuilder: simplermarkdown
 LazyLoad: yes
-StagedInstall: no
 LinkingTo: Rcpp, BH
 Description: An R Interface to 'Bloomberg' is provided via the 'Blp API'.
 SystemRequirements: A valid Bloomberg installation. The API headers and
