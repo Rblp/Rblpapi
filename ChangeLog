@@ -1,3 +1,9 @@
+2022-10-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/Makevars.in: Set rpath to relative path for staged installation
+	* configure: No longer set rpath
+	* DESCRIPTION: No longer impose non-staged installation
+
 2022-08-27  Bob Harlow  <rharlow86@gmail.com>
 
 	* DESCRIPTION (Version, Date): Roll minor version
