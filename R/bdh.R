@@ -95,7 +95,7 @@ bdh <- function(securities, fields, start.date, end.date=NULL,
                 int.as.double=getOption("blpIntAsDouble", FALSE),
                 simplify=getOption("blpSimplify", TRUE)) {
     match.arg(returnAs, c("data.frame", "xts", "zoo", "data.table"))
-    if (class(start.date) == "Date") {
+    if (inherits(start.date, "Date")) {
         start.date <- format(start.date, format="%Y%m%d")
     }
     if (!is.null(end.date)) {

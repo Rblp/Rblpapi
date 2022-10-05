@@ -4,6 +4,21 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
+\section{Changes in Rblpapi version 0.3.14 (2022-10-05)}{
+  \itemize{
+    \item Build configuration was generalized to consider local copies
+    of library and headers (Dirk in \ghpr{362})
+    \item A ticker symbol was corrected (Dirk in \ghpr{368} addressing
+    an issue \ghit{366} and \ghit{367})
+    \item Support for B-PIPE was added (Robert Harlow in \ghpr{369}
+    closing \ghit{342})
+    \item The package no longer requires staged installation thanks to
+    an assist from Tomas Kalibera (Dirk in \ghpr{373})
+    \item The retired package \pkg{fts} is no longer suggested (Dirk in
+    \ghpr{374} closing \ghpr{372}) 
+  }
+}
+
 \section{Changes in Rblpapi version 0.3.13 (2022-01-09)}{
   \itemize{
     \item Add a test for \code{bds} (Michael Kerber in \ghpr{352})
