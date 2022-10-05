@@ -1,5 +1,16 @@
 2022-10-04  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Suggests): No longer suggest 'fts'
+ 	* R/bdh.R (bdh): Remove support for 'fts'
+	* R/getBars.R (getBars): Idem
+	* R/getTicks.R (getTicks): Idem
+	* inst/tinytest/test_bdh.R: Idem
+	* man/bdh.Rd: Remove documentation entry for 'fts'
+	* man/getBars.Rd: Idem
+	* man/getTicks.Rd: Idem
+
+2022-10-04  Dirk Eddelbuettel  <edd@debian.org>
+
 	* src/Makevars.in: Set rpath to relative path for staged installation
 	* configure: No longer set rpath
 	* DESCRIPTION: No longer impose non-staged installation
@@ -16,6 +27,8 @@
 	* src/authenticate.cpp: Handle new parameters at the C++ level
 
 	* man/blpAuthenticate.R: document new parameters
+
+	* DESCRIPTION: No longer Suggests: fts
 
 2022-02-21  Dirk Eddelbuettel  <edd@debian.org>
 

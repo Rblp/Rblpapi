@@ -33,7 +33,7 @@ desired, defaults to \sQuote{FALSE}}
 
 \item{returnAs}{A character variable describing the type of return
 object; currently supported are \sQuote{matrix} (also the default),
-\sQuote{fts}, \sQuote{xts}, \sQuote{zoo} and \sQuote{data.table}}
+\sQuote{xts}, \sQuote{zoo} and \sQuote{data.table}}
 
 \item{tz}{A character variable with the desired local timezone,
 defaulting to the value \sQuote{TZ} environment variable, and

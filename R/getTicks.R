@@ -1,6 +1,6 @@
 
 ##
-##  Copyright (C) 2015 - 2016  Whit Armstrong and Dirk Eddelbuettel and John Laing
+##  Copyright (C) 2015 - 2022  Whit Armstrong and Dirk Eddelbuettel and John Laing
 ##
 ##  This file is part of Rblpapi
 ##
@@ -41,7 +41,7 @@
 ##' desired, defaults to \sQuote{FALSE}
 ##' @param returnAs A character variable describing the type of return
 ##' object; currently supported are \sQuote{data.frame} (also the default),
-##' \sQuote{data.table}, \sQuote{fts}, \sQuote{xts} and \sQuote{zoo}
+##' \sQuote{data.table}, \sQuote{xts} and \sQuote{zoo}
 ##' @param tz A character variable with the desired local timezone,
 ##' defaulting to the value \sQuote{TZ} environment variable, and
 ##' \sQuote{UTC} if unset
@@ -51,7 +51,7 @@
 ##' @return Depending on the value of \sQuote{returnAs}, either a
 ##' \sQuote{data.frame} or \sQuote{data.table} object also containing
 ##' non-numerical information such as condition codes, or a time-indexed
-##' container of type \sQuote{fts}, \sQuote{xts} and \sQuote{zoo} with
+##' container of type \sQuote{xts} or \sQuote{zoo} with
 ##' a numeric matrix containing only \sQuote{value} and \sQuote{size}.
 ##' @author Dirk Eddelbuettel
 ##' @examples
@@ -72,7 +72,7 @@ getTicks <- function(security,
                      tz = Sys.getenv("TZ", unset="UTC"),
                      con = defaultConnection()) {
 
-    match.arg(returnAs, c("data.frame", "fts", "xts", "zoo", "data.table"))
+    match.arg(returnAs, c("data.frame", "xts", "zoo", "data.table"))
     if (!inherits(startTime, "POSIXt") || !inherits(endTime, "POSIXt")) {
         stop("startTime and endTime must be Datetime objects", call.=FALSE)
     }
@@ -89,7 +89,6 @@ getTicks <- function(security,
     ## return data, but omit event type which is character type
     res <- switch(returnAs,
                   data.frame = res,            # default is data.frame
-                  fts        = fts::fts(res[,1], res[,-c(1:2,5)]),
                   xts        = xts::xts(res[,-c(1:2,5)], order.by=res[,1]),
                   zoo        = zoo::zoo(res[,-c(1:2,5)], order.by=res[,1]),
                   data.table = asDataTable(res),

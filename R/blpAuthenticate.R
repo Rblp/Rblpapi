@@ -1,6 +1,6 @@
 
 ##
-##  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel and John Laing
+##  Copyright (C) 2015 - 2022  Whit Armstrong and Dirk Eddelbuettel and John Laing
 ##
 ##  This file is part of Rblpapi
 ##
