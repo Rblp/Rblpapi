@@ -72,5 +72,6 @@ lookupSecurity <- function(query,
 
     yellowkey <- paste("YK", "FILTER", toupper(yellowkey), sep="_")
     language <- paste("LANG", "OVERRIDE", toupper(language), sep="_")
+    if (maxResults > 1000) warning("results may be limited to 1000 by the API")
     lookup_Impl(con, query, yellowkey, language, maxResults, verbose)
 }
