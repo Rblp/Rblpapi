@@ -26,7 +26,7 @@ required during the build.
 
 ## Usage
 
-The next few section illustrate key functions within the package. All
+The next few sections illustrate key functions within the package. All
 functions also have proper help pages for fuller details.
 
 ### Package Load
@@ -157,13 +157,13 @@ bdh("SPY US Equity", c("PX_LAST", "VOLUME"), start.date=Sys.Date()-31)
 ### getBars: OHLCV Aggregates
 
 The `getBars()` function retrieves aggregated Open / High / Low /
-Close / Volume data. For example, in
+Close / Volume data. For example, 
 
 ```r
 getBars("ES1 Index")
 ```
 
-the default values of six hourly bars for the lead ES future.
+gets the default values of six hourly bars for the lead ES future.
 
 ### getTicks: Transactional Tick Data
 
@@ -186,11 +186,11 @@ which can be used with the `bdp()`, `bdh()` or `bds()` functions. For example,
 res <- fieldSearch("vwap")
 ```
 
-search for fields describing volume-weighted average price fields
+searches for fields describing volume-weighted average price fields
 
 ### beqs: Bloomberg EQS Queries
 
-The `beqs()` function (which was contribued by Rademeyer Vermaak) can access
+The `beqs()` function (which was contributed by Rademeyer Vermaak) can access
 EQS functionality: 
 
 ```r

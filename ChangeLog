@@ -1,3 +1,7 @@
+2022-10-25  Dr Michael Streatfield  <michael.streatfield@gmail.com>
+
+    * Fix minor typos in vignettes\rblpapi-intro.md
+
 2022-10-05  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): New release 0.3.14
