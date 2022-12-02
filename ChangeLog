@@ -1,6 +1,10 @@
+2022-12-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* .github/workflows/ci.yaml (jobs): Update to actions/checkout@v3
+
 2022-10-25  Dr Michael Streatfield  <michael.streatfield@gmail.com>
 
-    * Fix minor typos in vignettes\rblpapi-intro.md
+	* Fix minor typos in vignettes/rblpapi-intro.md
 
 2022-10-05  Dirk Eddelbuettel  <edd@debian.org>
 
