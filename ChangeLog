@@ -2,6 +2,8 @@
 
 	* README.md: Use tinyverse.netlify.app for dependency badge
 
+	* .github/workflows/ci.yaml (jobs): Turn off macOS which is arm64 now
+
 2024-02-23  Dirk Eddelbuettel  <edd@debian.org>
 
 	* .github/workflows/ci.yaml (jobs): Update to actions/checkout@v4,
