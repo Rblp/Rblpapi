@@ -1,3 +1,7 @@
+2024-07-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Switch some URLs from http to https
+
 2024-05-23  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Use tinyverse.netlify.app for dependency badge
