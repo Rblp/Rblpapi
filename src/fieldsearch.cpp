@@ -1,9 +1,8 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 //
 //  fieldsearch.cpp -- a simple field search function for the BLP API
 //
 //  Copyright (C) 2013         Whit Armstrong
-//  Copyright (C) 2014 - 2015  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2014 - 2024  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -73,8 +72,8 @@ Rcpp::DataFrame fieldSearch_Impl(SEXP con, std::string searchterm) {
 
     bbg::Service fieldInfoService = session->getService(APIFLDS_SVC);
     bbg::Request request = fieldInfoService.createRequest("FieldSearchRequest");
-    request.set ("searchSpec", searchterm.c_str());
-    request.set ("returnFieldDocumentation", false);
+    request.set(bbg::Name{"searchSpec"}, searchterm.c_str());
+    request.set(bbg::Name{"returnFieldDocumentation"}, false);
     session->sendRequest(request);
 
     std::vector<std::string> fieldId, fieldMnen, fieldDesc;
@@ -89,7 +88,7 @@ Rcpp::DataFrame fieldSearch_Impl(SEXP con, std::string searchterm) {
         bbg::MessageIterator msgIter(event);
         while (msgIter.next()) {
             bbg::Message msg = msgIter.message();
-            bbg::Element fields = msg.getElement("fieldData");
+            bbg::Element fields = msg.getElement(bbg::Name{"fieldData"});
             int numElements = fields.numValues();
             //Rprintf("Seeing %d elements\n", numElements);
             for (int i=0; i < numElements; i++) {

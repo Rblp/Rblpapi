@@ -1,8 +1,7 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 //
 //  bsrch.cpp -- "Bloomberg SRCH" query function for the BLP API
 //
-//  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel and John Laing
+//  Copyright (C) 2015 - 2024  Whit Armstrong and Dirk Eddelbuettel and John Laing
 //
 //  This file is part of Rblpapi
 //
@@ -50,6 +49,7 @@ using BloombergLP::blpapi::Event;
 using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
+using BloombergLP::blpapi::Name;
 
 Rcpp::DataFrame processBsrchResponse(Event event, const bool verbose) {
 
@@ -65,12 +65,12 @@ Rcpp::DataFrame processBsrchResponse(Event event, const bool verbose) {
 
     // exrsvc provides a grid in the form of DataRecords
     // Extract the dimensions and key attributes before processing
-    Element dataRecords = msg.getElement("DataRecords");
+    Element dataRecords = msg.getElement(Name{"DataRecords"});
 
-    int numRows = msg.getElementAsInt64("NumOfRecords");
+    int numRows = msg.getElementAsInt64(Name{"NumOfRecords"});
     if (verbose) Rcpp::Rcout << numRows << " records returned" << std::endl;
 
-    Element columnTitles = msg.getElement("ColumnTitles");
+    Element columnTitles = msg.getElement(Name{"ColumnTitles"});
     int numCols = columnTitles.numValues();
     if (verbose) Rcpp::Rcout << "Returned columns:" << std::endl;
     if (verbose) columnTitles.print(Rcpp::Rcout);
@@ -94,10 +94,10 @@ Rcpp::DataFrame processBsrchResponse(Event event, const bool verbose) {
             // DataFieldArray
                 // DataField --> value
     // TODO - this step could made simpler for exrsvc queries as they always
-    // return values as a Choice 
+    // return values as a Choice
     for (int i = 0; i < min(numRows, 25); i++) { 		                 // look at up to 25 rows to infer types
         Element dataRecord = dataRecords.getValueAsElement(i); 	         // pick i-th element to infer DataRecord type
-        Element dataFields = dataRecord.getElement("DataFields");        // get data payload of first element
+        Element dataFields = dataRecord.getElement(Name{"DataFields"});  // get data payload of first element
 
         for (int j=0; j< numCols; j++) { 			                     // loop over first data set, and infer types
             if (!chk(j)) {                                               // column has not been set yet
@@ -139,7 +139,7 @@ Rcpp::DataFrame processBsrchResponse(Event event, const bool verbose) {
     for (int i = 0; i < numRows; i++) {
 
         Element dataRecord = dataRecords.getValueAsElement(i);
-        Element dataFields = dataRecord.getElement("DataFields");
+        Element dataFields = dataRecord.getElement(Name{"DataFields"});
         if (verbose) dataFields.print(Rcpp::Rcout);
 
         for (int j = 0; j < numCols; j++) {
@@ -189,7 +189,7 @@ DataFrame bsrch_Impl(SEXP con,
     Service exrService = session->getService(exrsrv.c_str());
     Request request = exrService.createRequest("ExcelGetGridRequest");
 
-    request.getElement("Domain").setValue(domain.c_str());
+    request.getElement(Name{"Domain"}).setValue(Name{domain.c_str()});
 
     // TODO - implement limit and other overrides
 

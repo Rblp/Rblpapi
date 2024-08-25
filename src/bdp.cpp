@@ -1,9 +1,8 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 //
 //  bdp.cpp -- "Bloomberg Data Point" query function for the BLP API
 //
 //  Copyright (C) 2013         Whit Armstrong
-//  Copyright (C) 2015 - 2016  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2015 - 2024  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -43,6 +42,7 @@ using BloombergLP::blpapi::Event;
 using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
+using BloombergLP::blpapi::Name;
 
 void getBDPResult(Event& event, Rcpp::List& res, const std::vector<std::string>& securities, const std::vector<std::string>& colnames, const std::vector<RblpapiT>& rtypes, bool verbose) {
     MessageIterator msgIter(event);
@@ -55,17 +55,17 @@ void getBDPResult(Event& event, Rcpp::List& res, const std::vector<std::string>&
     if (std::strcmp(response.name().string(),"ReferenceDataResponse")) {
         throw std::logic_error("Not a valid ReferenceDataResponse.");
     }
-    Element securityData = response.getElement("securityData");
+    Element securityData = response.getElement(Name{"securityData"});
 
     for (size_t i = 0; i < securityData.numValues(); ++i) {
         Element this_security = securityData.getValueAsElement(i);
-        size_t row_index = this_security.getElement("sequenceNumber").getValueAsInt32();
+        size_t row_index = this_security.getElement(Name{"sequenceNumber"}).getValueAsInt32();
 
         // check that the seqNum matches the order of the securities vector (it's a grave error to screw this up)
-        if(securities[row_index].compare(this_security.getElementAsString("security"))!=0) {
+        if(securities[row_index].compare(this_security.getElementAsString(Name{"security"}))!=0) {
             throw std::logic_error("mismatched Security sequence, please report a bug.");
         }
-        Element fieldData = this_security.getElement("fieldData");
+        Element fieldData = this_security.getElement(Name{"fieldData"});
         for(size_t j = 0; j < fieldData.numElements(); ++j) {
             Element e = fieldData.getElement(j);
             auto col_iter = std::find(colnames.begin(), colnames.end(), e.name().string());

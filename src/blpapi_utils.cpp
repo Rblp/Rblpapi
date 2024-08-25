@@ -1,9 +1,8 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 
 //  blpapi_utils -- helper functions for the BLP API
 //
 //  Copyright (C) 2013         Whit Armstrong
-//  Copyright (C) 2017 -       Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2017 - 2024  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -47,6 +46,7 @@ using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Event;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
+using BloombergLP::blpapi::Name;
 
 void* checkExternalPointer(SEXP xp_, const char* valid_tag) {
   if(xp_ == R_NilValue) {
@@ -118,8 +118,8 @@ const double bbgDatetimeToPOSIX(const Datetime& dt) {
   return static_cast<double>(mktime(&tm_time));
 }
 
-// In case data already comes in localtime (cf TZDF<GO>) 
-// we need to adjust back to UTC 
+// In case data already comes in localtime (cf TZDF<GO>)
+// we need to adjust back to UTC
 const double bbgDatetimeToUTC(const BloombergLP::blpapi::Datetime& dt) {
   boost::gregorian::date bbg_boost_date(dt.year(),dt.month(),dt.day());
   boost::posix_time::time_duration td =
@@ -163,7 +163,7 @@ void appendOptionsToRequest(Request& request, SEXP options_) {
   }
 
   for(R_len_t i = 0; i < options.length(); i++) {
-    request.set(static_cast<std::string>(options_names[i]).c_str(), static_cast<std::string>(options[i]).c_str());
+    request.set(Name{ static_cast<std::string>(options_names[i]).c_str() }, static_cast<std::string>(options[i]).c_str());
   }
 }
 
@@ -181,11 +181,11 @@ void appendOverridesToRequest(Request& request, SEXP overrides_) {
     throw std::logic_error("Request overrides must be non empty and named.");
   }
 
-  Element request_overrides = request.getElement("overrides");
+  Element request_overrides = request.getElement(Name{"overrides"});
   for(R_len_t i = 0; i < overrides.length(); i++) {
     Element this_override = request_overrides.appendElement();
-    this_override.setElement("fieldId", static_cast<std::string>(overrides_names[i]).c_str());
-    this_override.setElement("value", static_cast<std::string>(overrides[i]).c_str());
+    this_override.setElement(Name{"fieldId"}, static_cast<std::string>(overrides_names[i]).c_str());
+    this_override.setElement(Name{"value"}, static_cast<std::string>(overrides[i]).c_str());
   }
 }
 
@@ -196,11 +196,11 @@ void createStandardRequest(Request& request,
                            SEXP overrides_) {
 
   for(size_t i = 0; i < securities.size(); i++) {
-    request.getElement("securities").appendValue(securities[i].c_str());
+    request.getElement(Name{"securities"}).appendValue(securities[i].c_str());
   }
 
   for(size_t i = 0; i < fields.size(); i++) {
-    request.getElement("fields").appendValue(fields[i].c_str());
+    request.getElement(Name{"fields"}).appendValue(fields[i].c_str());
   }
 
   if(options_ != R_NilValue) { appendOptionsToRequest(request,options_); }
@@ -349,8 +349,8 @@ SEXP allocateDataFrameColumn(RblpapiT rblpapitype, const size_t n) {
 FieldInfo getFieldType(Session *session, Service& fieldInfoService, const std::string& field) {
 
   Request request = fieldInfoService.createRequest("FieldInfoRequest");
-  request.append("id", field.c_str());
-  request.set("returnFieldDocumentation", false);
+  request.append(Name{"id"}, field.c_str());
+  request.set(Name{"returnFieldDocumentation"}, false);
   session->sendRequest(request);
 
   FieldInfo ans;
@@ -365,33 +365,32 @@ FieldInfo getFieldType(Session *session, Service& fieldInfoService, const std::s
     while (msgIter.next()) {
       Message msg = msgIter.message();
       //msg.asElement().print(std::cout);
-      Element fields = msg.getElement("fieldData");
+      Element fields = msg.getElement(Name{"fieldData"});
       if(fields.numValues() > 1) {
         throw std::logic_error("getFieldType: too many fields returned.");
       }
       Element field = fields.getValueAsElement(0);
-      if (!field.hasElement("id")) {
+      if (!field.hasElement(Name{"id"})) {
         throw std::logic_error("Did not find 'id' in repsonse.");
       }
-      if (field.hasElement("fieldError")) {
+      if (field.hasElement(Name{"fieldError"})) {
         std::ostringstream err;
-        err << "Bad field: " << field.getElementAsString("id") << std::endl;
+        err << "Bad field: " << field.getElementAsString(Name{"id"}) << std::endl;
         throw std::logic_error(err.str());
       }
-      if (!field.hasElement("fieldInfo")) {
+      if (!field.hasElement(Name{"fieldInfo"})) {
         throw std::logic_error("Did not find fieldInfo in repsonse.");
       }
-      Element fieldInfo = field.getElement("fieldInfo");
-      if (!fieldInfo.hasElement("mnemonic") ||
-          !fieldInfo.hasElement("datatype") ||
-          !fieldInfo.hasElement("ftype")) {
-        throw std::logic_error(
-                               "fieldInfo missing info mnemonic/datatype/ftype.");
+      Element fieldInfo = field.getElement(Name{"fieldInfo"});
+      if (!fieldInfo.hasElement(Name{"mnemonic"}) ||
+          !fieldInfo.hasElement(Name{"datatype"}) ||
+          !fieldInfo.hasElement(Name{"ftype"})) {
+        throw std::logic_error("fieldInfo missing info mnemonic/datatype/ftype.");
       }
-      ans.id = field.getElementAsString("id");
-      ans.mnemonic = fieldInfo.getElementAsString("mnemonic");
-      ans.datatype = fieldInfo.getElementAsString("datatype");
-      ans.ftype = fieldInfo.getElementAsString("ftype");
+      ans.id = field.getElementAsString(Name{"id"});
+      ans.mnemonic = fieldInfo.getElementAsString(Name{"mnemonic"});
+      ans.datatype = fieldInfo.getElementAsString(Name{"datatype"});
+      ans.ftype = fieldInfo.getElementAsString(Name{"ftype"});
     }
     if (event.eventType() == Event::RESPONSE) {
       break;

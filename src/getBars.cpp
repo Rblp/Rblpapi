@@ -1,9 +1,8 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 //
 //  getBars.cpp -- a simple intraday bar retriever
 //
 //  Copyright (C) 2013         Whit Armstrong
-//  Copyright (C) 2014 - 2015  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2014 - 2024  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -176,12 +175,12 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
     bbg::Request request = refDataService.createRequest("IntradayBarRequest");
 
     // only one security/eventType per request
-    request.set("security", security.c_str());
-    request.set("eventType", eventType.c_str());
-    request.set("interval", barInterval);
+    request.set(bbg::Name{"security"}, security.c_str());
+    request.set(bbg::Name{"eventType"}, eventType.c_str());
+    request.set(bbg::Name{"interval"}, barInterval);
 
-    request.set("startDateTime", startDateTime.c_str());
-    request.set("endDateTime", endDateTime.c_str());
+    request.set(bbg::Name{"startDateTime"}, startDateTime.c_str());
+    request.set(bbg::Name{"endDateTime"}, endDateTime.c_str());
     if (options.isNotNull()) {
         appendOptionsToRequest(request, options);
     }
@@ -225,6 +224,3 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
                                    Rcpp::Named("value")     = bars.value);
 
 }
-
-
-

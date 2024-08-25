@@ -1,8 +1,7 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 //
 //  lookup.cpp -- symbol look-up
 //
-//  Copyright (C) 2017  Dirk Eddelbuettel and Kevin Jin
+//  Copyright (C) 2017 - 2024  Dirk Eddelbuettel and Kevin Jin
 //
 //  This file is part of Rblpapi
 //
@@ -55,7 +54,7 @@ void processMessage(bbg::Message &msg, InstrumentListResults &matches, const boo
         throw std::logic_error("Not a valid InstrumentListResponse.");
     }
 
-    bbg::Element data = response.getElement("results");
+    bbg::Element data = response.getElement(bbg::Name{"results"});
     int numItems = data.numValues();
     if (verbose) {
         Rcpp::Rcout <<"Response contains " << numItems << " items" << std::endl;
@@ -70,7 +69,7 @@ void processMessage(bbg::Message &msg, InstrumentListResults &matches, const boo
             Rcpp::Rcout << security << "\t\t" << description << std::endl;
         }
         matches.security.push_back(security);
-        matches.description.push_back(description);    
+        matches.description.push_back(description);
     }
 }
 
@@ -105,10 +104,10 @@ Rcpp::DataFrame lookup_Impl(SEXP con,
     bbg::Service secfService = session->getService("//blp/instruments");
     bbg::Request request = secfService.createRequest("instrumentListRequest");
 
-    request.set("query", query.c_str());
-    request.set("yellowKeyFilter", yellowKeyFilter.c_str());
-    request.set("languageOverride", languageOverride.c_str());
-    request.set("maxResults", maxResults);
+    request.set(bbg::Name{"query"}, query.c_str());
+    request.set(bbg::Name{"yellowKeyFilter"}, yellowKeyFilter.c_str());
+    request.set(bbg::Name{"languageOverride"}, languageOverride.c_str());
+    request.set(bbg::Name{"maxResults"}, maxResults);
 
     if (verbose) Rcpp::Rcout <<"Sending Request: " << request << std::endl;
     session->sendRequest(request);

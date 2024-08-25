@@ -1,9 +1,8 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 //
 //  bds.cpp -- "Bloomberg Data Set" query function for the BLP API
 //
 //  Copyright (C) 2013         Whit Armstrong
-//  Copyright (C) 2015 - 2017  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2015 - 2024  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -38,6 +37,7 @@ using BloombergLP::blpapi::Event;
 using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
+using BloombergLP::blpapi::Name;
 
 void populateDfRowBDS(Rcpp::RObject ans, R_len_t row_index, Element& e) {
     if (e.isNull()) { return; }
@@ -60,7 +60,7 @@ void populateDfRowBDS(Rcpp::RObject ans, R_len_t row_index, Element& e) {
             Rcpp::Rcerr << "BLPAPI_DATATYPE_INT64 exceeds max int value on this system (assigning std::numeric_limits<int>::max())." << std::endl;
             INTEGER(ans)[row_index] = std::numeric_limits<int>::max();
         } else {
-            INTEGER(ans)[row_index] = static_cast<int>(e.getValueAsInt64()); 
+            INTEGER(ans)[row_index] = static_cast<int>(e.getValueAsInt64());
         }
         break;
     case BLPAPI_DATATYPE_FLOAT32:
@@ -227,19 +227,19 @@ Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field, std:
     if(std::strcmp(response.name().string(),response_type.c_str())) {
         throw std::logic_error("Not a valid " + response_type + ".");
     }
-    Element securityData = response.getElement("securityData");
+    Element securityData = response.getElement(Name{"securityData"});
 
     Rcpp::List ans(securityData.numValues());
     std::vector<std::string> ans_names(securityData.numValues());
 
     for(size_t i = 0; i < securityData.numValues(); ++i) {
         Element this_security = securityData.getValueAsElement(i);
-        ans_names[i] = this_security.getElementAsString("security");
-        Element fieldData = this_security.getElement("fieldData");
-        if(!fieldData.hasElement(requested_field.c_str())) {
+        ans_names[i] = this_security.getElementAsString(Name{"security"});
+        Element fieldData = this_security.getElement(Name{"fieldData"});
+        if(!fieldData.hasElement(Name{requested_field.c_str()})) {
             ans[i] = R_NilValue;
         } else {
-            Element e = fieldData.getElement(requested_field.c_str());
+            Element e = fieldData.getElement(Name{requested_field.c_str()});
             ans[i] = bulkArrayToDf(e);
         }
     }
@@ -266,9 +266,9 @@ Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
     Service refDataService = session->getService(rdsrv.c_str());
     Request request = refDataService.createRequest("ReferenceDataRequest");
     for (size_t i = 0; i < securities.size(); i++) {
-        request.getElement("securities").appendValue(securities[i].c_str());
+        request.getElement(Name{"securities"}).appendValue(Name{securities[i].c_str()});
     }
-    request.getElement("fields").appendValue(field.c_str());
+    request.getElement(Name{"fields"}).appendValue(Name{field.c_str()});
     appendOptionsToRequest(request,options_);
     appendOverridesToRequest(request,overrides_);
 
@@ -311,9 +311,9 @@ Rcpp::List getPortfolio_Impl(SEXP con_, std::vector<std::string> securities,
     Service refDataService = session->getService(rdsrv.c_str());
     Request request = refDataService.createRequest("PortfolioDataRequest");
     for (size_t i = 0; i < securities.size(); i++) {
-        request.getElement("securities").appendValue(securities[i].c_str());
+        request.getElement(Name{"securities"}).appendValue(Name{securities[i].c_str()});
     }
-    request.getElement("fields").appendValue(field.c_str());
+    request.getElement(Name{"fields"}).appendValue(Name{field.c_str()});
     appendOptionsToRequest(request,options_);
     appendOverridesToRequest(request,overrides_);
 
