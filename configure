@@ -3,7 +3,7 @@
 ##
 ##  configure -- Unix build preparation system
 ##
-##  Copyright (C) 2015 - 2022  Dirk Eddelbuettel and Jeroen Ooms.
+##  Copyright (C) 2015 - 2024  Dirk Eddelbuettel and Jeroen Ooms.
 ##
 ##  This file is part of Rblpapi
 ##
@@ -46,6 +46,10 @@ if [ "${arch}" = "x86_64" ]; then
     echo "Setting up compilation for a ${platform} 64-bit system"
     sed -e"s/@config@/blpapi3_64/" src/Makevars.in > src/Makevars
     flavour="64"
+elif [ "${arch}" = "arm64" ]; then
+    echo "Setting up compilation for a ${platform} 64-bit system"
+    sed -e"s/@config@/blpapi3_64/" src/Makevars.in > src/Makevars
+    flavour="64"
 elif [ "${arch}" = "i686" ]; then
     echo "Setting up compilation for a ${platform} 32-bit system"
     sed -e"s/@config@/blpapi3_32/" src/Makevars.in > src/Makevars
@@ -79,7 +83,8 @@ cwd=$(pwd)
 mkdir -p blp/${platform}
 cd blp/${platform}
 if [ ! -f ${blpHeaders} ]; then
-    download https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz
+    #download https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz
+    download https://github.com/Rblp/blp/raw/feature/release_3.24.6.1/headers/${platform}/blpHeaders.tar.gz
 else
     echo "** using ${blpHeaders}"
 fi
@@ -90,7 +95,8 @@ cd ${cwd}
 mkdir -p inst/blp
 cd blp/${platform}
 if [ ! -f ${blpLibrary} ]; then
-    download https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
+    #download https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
+    download https://github.com/Rblp/blp/raw/feature/release_3.24.6.1/${platform}${flavour}/blpLibrary.tar.gz
 else
     echo "** using ${blpLibrary}"
 fi
