@@ -2,7 +2,7 @@
 //  bdh.cpp -- "Bloomberg Data History" query function for the BLP API
 //
 //  Copyright (C) 2013      Whit Armstrong
-//  Copyright (C) 2015-204  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2015-2024 Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
