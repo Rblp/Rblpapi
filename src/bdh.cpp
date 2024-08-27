@@ -1,9 +1,8 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 //
 //  bdh.cpp -- "Bloomberg Data History" query function for the BLP API
 //
-//  Copyright (C) 2013  Whit Armstrong
-//  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2013      Whit Armstrong
+//  Copyright (C) 2015-2024 Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -39,6 +38,7 @@ using BloombergLP::blpapi::Event;
 using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
+using BloombergLP::blpapi::Name;
 
 std::string getSecurityName(Event& event) {
     MessageIterator msgIter(event);
@@ -52,8 +52,8 @@ std::string getSecurityName(Event& event) {
         throw std::logic_error("Not a valid HistoricalDataResponse.");
     }
 
-    Element securityData = response.getElement("securityData");
-    std::string ans(securityData.getElementAsString("security"));
+    Element securityData = response.getElement(Name{"securityData"});
+    std::string ans(securityData.getElementAsString(Name{"security"}));
     return ans;
 }
 
@@ -70,8 +70,8 @@ Rcpp::List HistoricalDataResponseToDF(Event& event, const std::vector<std::strin
     if (std::strcmp(response.name().string(),"HistoricalDataResponse")) {
         throw std::logic_error("Not a valid HistoricalDataResponse.");
     }
-    Element securityData = response.getElement("securityData");
-    Element fieldData = securityData.getElement("fieldData");
+    Element securityData = response.getElement(Name{"securityData"});
+    Element fieldData = securityData.getElement(Name{"fieldData"});
 
     Rcpp::List res(allocateDataFrame(fieldData.numValues(), fields, rtypes));
 
@@ -99,7 +99,7 @@ Rcpp::List bdh_Impl(SEXP con_,
                     bool verbose, SEXP identity_,
                     bool int_as_double) {
 
-    Session* session = 
+    Session* session =
         reinterpret_cast<Session*>(checkExternalPointer(con_,"blpapi::Session*"));
 
 
@@ -125,9 +125,9 @@ Rcpp::List bdh_Impl(SEXP con_,
     Request request = refDataService.createRequest("HistoricalDataRequest");
     createStandardRequest(request, securities, fields, options_, overrides_);
 
-    request.set("startDate", start_date_.c_str());
+    request.set(Name{"startDate"}, start_date_.c_str());
     if (end_date_ != R_NilValue) {
-        request.set("endDate", Rcpp::as<std::string>(end_date_).c_str());
+        request.set(Name{"endDate"}, Rcpp::as<std::string>(end_date_).c_str());
     }
 
     sendRequestWithIdentity(session, request, identity_);

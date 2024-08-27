@@ -1,8 +1,7 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 //
 //  beqs.cpp -- "Bloomberg EQS" query function for the BLP API
 //
-//  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel and John Laing
+//  Copyright (C) 2015-2024  Whit Armstrong and Dirk Eddelbuettel and John Laing
 //
 //  This file is part of Rblpapi
 //
@@ -52,6 +51,7 @@ using BloombergLP::blpapi::Event;
 using BloombergLP::blpapi::Element;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
+using BloombergLP::blpapi::Name;
 
 Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
 
@@ -65,8 +65,8 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
     if (std::strcmp(response.name().string(), "BeqsResponse") != 0)
         throw std::logic_error("Not a valid EQSDataResponse.");
 
-    Element data = msg.getElement("data"); 		// get data payload, extract field with display units
-    Element fieldDisplayUnits = data.getElement("fieldDisplayUnits");
+    Element data = msg.getElement(Name{"data"}); 	// get data payload, extract field with display units
+    Element fieldDisplayUnits = data.getElement(Name{"fieldDisplayUnits"});
     if (verbose) fieldDisplayUnits.print(Rcpp::Rcout);
 
     int cols = fieldDisplayUnits.numElements(); 	// copy display units into column names
@@ -79,21 +79,21 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
     Rcpp::LogicalVector chk(cols, false);
     bool allgood;
 
-    Element results = data.getElement("securityData"); 	// get security data payload == actual result set
+    Element results = data.getElement(Name{"securityData"}); 	// get security data payload == actual result set
     int rows = results.numValues();                     // total number of rows in result set
     if (verbose) results.print(Rcpp::Rcout);
     if (verbose) Rcpp::Rcout << rows << " Rows expected" << std::endl;
 
     for (int j = 0; j < rows; j++) { 		// look at all rows to infer types, break if all found
         response = results.getValueAsElement(j); 	// pick j-th element to infer types
-        data = response.getElement("fieldData");       	// get data payload of first elemnt
+        data = response.getElement(Name{"fieldData"});       	// get data payload of first elemnt
         if (verbose) data.print(Rcpp::Rcout);
 
         allgood = true;
         for (int i=0; i<cols; i++) { 			// loop over first data set, and infer types
             if (!chk(i) &&                              // column has not been set yet
-                data.hasElement(colnames[i].c_str())) {
-                Element val = data.getElement(colnames[i].c_str());
+                data.hasElement(Name{colnames[i].c_str()})) {
+                Element val = data.getElement(Name{colnames[i].c_str()});
                 if (val.datatype() == BLPAPI_DATATYPE_STRING) {
                     lst[i] = Rcpp::CharacterVector(rows, R_NaString);
                     chk[i] = true;
@@ -128,14 +128,14 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
 
     for (int i = 0; i < rows; i++) { 			// now process data
 
-        Element elem = results.getValueAsElement(i); 	// extract i-th element
-        Element data = elem.getElement("fieldData");    // extract its data payload
+        Element elem = results.getValueAsElement(i); 		// extract i-th element
+        Element data = elem.getElement(Name{"fieldData"});  // extract its data payload
         if (verbose) data.print(Rcpp::Rcout);
 
         for (int j = 0; j < cols; j++) { 		// over all columns
 
-            if (data.hasElement(colnames[j].c_str())) { // assign, if present, to proper column and type
-                Element datapoint = data.getElement(colnames[j].c_str());
+            if (data.hasElement(Name{colnames[j].c_str()})) { // assign, if present, to proper column and type
+                Element datapoint = data.getElement(Name{colnames[j].c_str()});
                 if (datapoint.datatype() == BLPAPI_DATATYPE_STRING) {
                     Rcpp::CharacterVector v = lst[j];
                     if (colnames[j] == "Ticker") {
@@ -190,22 +190,22 @@ DataFrame beqs_Impl(SEXP con,
     Service refDataService = session->getService(rdsrv.c_str());
     Request request = refDataService.createRequest("BeqsRequest");
 
-    request.set("screenName", screenName.c_str());
-    request.set("screenType", screenType.c_str());
+    request.set(Name{"screenName"}, screenName.c_str());
+    request.set(Name{"screenType"}, screenType.c_str());
 
     if (group != "") {
-        request.set ("Group", group.c_str());
+        request.set(Name{"Group"}, group.c_str());
     }
 
     if (languageId != "") {
-        request.set ("languageId", languageId.c_str());
+        request.set(Name{"languageId"}, languageId.c_str());
     }
 
-    Element overrides = request.getElement("overrides");
+    Element overrides = request.getElement(Name{"overrides"});
     if (pitdate != "") {
         Element override1 = overrides.appendElement();
-        override1.setElement("fieldId", "PiTDate");
-        override1.setElement("value", pitdate.c_str());
+        override1.setElement(Name{"fieldId"}, "PiTDate");
+        override1.setElement(Name{"value"}, pitdate.c_str());
     }
 
     if (verbose) Rcpp::Rcout <<"Sending Request: " << request << std::endl;

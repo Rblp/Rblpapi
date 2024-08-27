@@ -1,9 +1,8 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 //
 //  getTicks.cpp -- a simple intraday tick retriever
 //
 //  Copyright (C) 2013         Whit Armstrong
-//  Copyright (C) 2014 - 2016  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2014 - 2024  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -68,7 +67,7 @@
 #include <Rcpp.h>
 #include <blpapi_utils.h>
 
-namespace bbg = BloombergLP::blpapi;	// shortcut to not globally import both namespace
+namespace bbg = BloombergLP::blpapi;	// shortcut to not globally import both namespaces
 
 namespace {
     const bbg::Name TICK_DATA("tickData");
@@ -118,7 +117,7 @@ void processMessage(bbg::Message &msg, Ticks &ticks, const bool verbose) {
                         << std::endl;
         }
         ticks.time.push_back(bbgDatetimeToUTC(time));
-        ticks.type.push_back(type);    
+        ticks.type.push_back(type);
         ticks.value.push_back(value);
         ticks.size.push_back(size);
         ticks.conditionCode.push_back(conditionCode);
@@ -143,7 +142,7 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
                               std::vector<std::string> eventType,
                               std::string startDateTime,
                               std::string endDateTime,
-                              bool setCondCodes=true,  
+                              bool setCondCodes=true,
                               bool verbose=false) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
@@ -158,17 +157,17 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
     bbg::Request request = refDataService.createRequest("IntradayTickRequest");
 
     // only one security/eventType per request
-    request.set("security", security.c_str());
+    request.set(bbg::Name{"security"}, security.c_str());
 
-    bbg::Element eventTypes = request.getElement("eventTypes");
+    bbg::Element eventTypes = request.getElement(bbg::Name{"eventTypes"});
     for (size_t i = 0; i < eventType.size(); i++) {
         eventTypes.appendValue(eventType[i].c_str());
     }
-    
-    request.set("includeConditionCodes", setCondCodes);
-    request.set("includeNonPlottableEvents", setCondCodes);
-    request.set("startDateTime", startDateTime.c_str());
-    request.set("endDateTime", endDateTime.c_str());
+
+    request.set(bbg::Name{"includeConditionCodes"}, setCondCodes);
+    request.set(bbg::Name{"includeNonPlottableEvents"}, setCondCodes);
+    request.set(bbg::Name{"startDateTime"}, startDateTime.c_str());
+    request.set(bbg::Name{"endDateTime"}, endDateTime.c_str());
 
     if (verbose) Rcpp::Rcout <<"Sending Request: " << request << std::endl;
     session->sendRequest(request);
@@ -200,10 +199,9 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
     }
 
     return Rcpp::DataFrame::create(Rcpp::Named("times") = createPOSIXtVector(ticks.time),
-                                   Rcpp::Named("type") = ticks.type, 
+                                   Rcpp::Named("type") = ticks.type,
                                    Rcpp::Named("value") = ticks.value,
-                                   Rcpp::Named("size")  = ticks.size, 
+                                   Rcpp::Named("size")  = ticks.size,
     	                           Rcpp::Named("condcode") = ticks.conditionCode);
 
 }
-

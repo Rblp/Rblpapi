@@ -1,10 +1,9 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 //
 //  authenticate.cpp -- Function to authenticate to Bloomberg backend
 //
-//  Copyright (C) 2013  Whit Armstrong
-//  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettelp
-//  Copyright (C) 2019  Whit Armstrong, Dirk Eddelbuettel and Alfred Kanzler
+//  Copyright (C) 2013      Whit Armstrong
+//  Copyright (C) 2015-2024 Whit Armstrong and Dirk Eddelbuettelp
+//  Copyright (C) 2019-2024 Whit Armstrong, Dirk Eddelbuettel and Alfred Kanzler
 //
 //  This file is part of Rblpapi
 //
@@ -45,6 +44,7 @@ using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 using BloombergLP::blpapi::CorrelationId;
 using BloombergLP::blpapi::EventQueue;
+using BloombergLP::blpapi::Name;
 
 static void identityFinalizer(SEXP identity_) {
     Identity* identity = reinterpret_cast<Identity*>(R_ExternalPtrAddr(identity_));
@@ -78,13 +78,13 @@ Identity* authenticateWithId(SEXP con_, SEXP uuid_, SEXP ip_address_, SEXP is_au
     // if isAuthId is true, we are actually assuming a BPIPE scenario
     // where we still want to auth by user id & ip address
     if (isAuthId) {
-        authorizationRequest.set("authId", uuid.c_str());
+        authorizationRequest.set(Name{"authId"}, uuid.c_str());
         std::string appName = Rcpp::as<std::string>(app_name_);
-        authorizationRequest.set("appName", appName.c_str());
+        authorizationRequest.set(Name{"appName"}, appName.c_str());
     } else {
-        authorizationRequest.set("uuid", uuid.c_str());
+        authorizationRequest.set(Name{"uuid"}, uuid.c_str());
     }
-    authorizationRequest.set("ipAddress", ip_address.c_str());
+    authorizationRequest.set(Name{"ipAddress"}, ip_address.c_str());
     Identity* identity_p = new Identity(session->createIdentity());
     session->sendAuthorizationRequest(authorizationRequest, identity_p);
 
@@ -138,7 +138,7 @@ Identity* authenticateWithApp(SEXP con_) {
             while(msgIter.next()) {
                 Message msg = msgIter.message();
                 if (msg.messageType() == "TokenGenerationSuccess") {
-                    token = msg.getElementAsString("token");
+                    token = msg.getElementAsString(Name{"token"});
                 } else if(msg.messageType() == "TokenGenerationFailure") {
                     Rcpp::stop("Failed to generate token");
                 }
@@ -150,7 +150,7 @@ Identity* authenticateWithApp(SEXP con_) {
         //
         if(!token.empty()) {
             Request authRequest = authService.createAuthorizationRequest();
-            authRequest.set("token", token.c_str());
+            authRequest.set(Name{"token"}, token.c_str());
             identity_p = new Identity(session->createIdentity());
             session->sendAuthorizationRequest(authRequest, identity_p);
             // parse messages
