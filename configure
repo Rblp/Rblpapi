@@ -77,14 +77,15 @@ download() {
 ## respects enviroment variable so 'blpHeaders="/opt/blp/blpHeaders_1.2.3.tar.gz" ./configure' works
 : ${blpHeaders="blpHeaders.tar.gz"}
 : ${blpLibrary="blpLibrary.tar.gz"}
+#: ${blpBranch="master"}
+: ${blpBranch="feature/release_3.24.6.1"}
 
 ## Check for header files and download if needed
 cwd=$(pwd)
 mkdir -p blp/${platform}
 cd blp/${platform}
 if [ ! -f ${blpHeaders} ]; then
-    #download https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz
-    download https://github.com/Rblp/blp/raw/feature/release_3.24.6.1/headers/${platform}/blpHeaders.tar.gz
+    download https://github.com/Rblp/blp/raw/${blpBranch}/headers/${platform}/blpHeaders.tar.gz
 else
     echo "** using ${blpHeaders}"
 fi
@@ -95,8 +96,7 @@ cd ${cwd}
 mkdir -p inst/blp
 cd blp/${platform}
 if [ ! -f ${blpLibrary} ]; then
-    #download https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
-    download https://github.com/Rblp/blp/raw/feature/release_3.24.6.1/${platform}${flavour}/blpLibrary.tar.gz
+    download https://github.com/Rblp/blp/raw/${blpBranch}/${platform}${flavour}/blpLibrary.tar.gz
 else
     echo "** using ${blpLibrary}"
 fi
