@@ -1,11 +1,13 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^local
-.travis.yml
+^\.travis.yml
 ^deprecated
 ^blp
 ^inst/blp
 src/Makevars$
-.Rhistory
+^\.Rhistory
 ^.*\.tar\.gz$
 ^\.github
+^\.editorconfig
+fullCleanup.sh

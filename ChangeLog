@@ -1,3 +1,28 @@
+2024-08-27  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll micro version and date
+
+	* DESCRIPTION (Authors@R): Added
+
+	* README.md: Switch CI badge to GitHub Actions
+
+2024-08-25  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/authenticate.cpp: Use Name{} instantiation instead of char*
+	* src/bdh.cpp: Idem
+	* src/bdp.cpp: Idem
+	* src/bds.cpp: Idem
+	* src/beqs.cpp: Idem
+	* src/blpapi_utils.cpp: Idem
+	* src/fieldsearch.cpp: Idem
+	* src/getBars.cpp: Idem
+	* src/getTicks.cpp: Idem
+	* src/lookup.cpp: Idem
+
+	* src/Makevars.in: Remove obsolete C++11 setter
+
+	* .editorconfig: Added
+
 2024-07-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Switch some URLs from http to https

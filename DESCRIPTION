@@ -1,9 +1,11 @@
 Package: Rblpapi
 Title: R Interface to 'Bloomberg'
-Version: 0.3.14
-Date: 2022-10-05
-Maintainer: Dirk Eddelbuettel <edd@debian.org>
-Author: Whit Armstrong, Dirk Eddelbuettel and John Laing
+Version: 0.3.14.1
+Date: 2024-08-27
+Authors@R: c(person("Whit", "Armstrong", role = "aut"),
+             person("Dirk", "Eddelbuettel", role = c("aut", "cre"), email = "edd@debian.org",
+                  comment = c(ORCID = "0000-0001-6419-907X")),
+             person("John", "Laing", role = "aut"))
 Imports: Rcpp (>= 0.11.0), utils
 Suggests: xts, zoo, data.table, simplermarkdown, tinytest
 VignetteBuilder: simplermarkdown
