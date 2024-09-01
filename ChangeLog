@@ -20,6 +20,8 @@
 	* src/lookup.cpp: Idem
 
 	* src/Makevars.in: Remove obsolete C++11 setter
+	* src/Makevars.in: Set to development branch of blp repo for testing
+	* src/Makevars.win: Idem
 
 	* .editorconfig: Added
 
