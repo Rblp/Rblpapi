@@ -266,7 +266,7 @@ Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
     Service refDataService = session->getService(rdsrv.c_str());
     Request request = refDataService.createRequest("ReferenceDataRequest");
     for (size_t i = 0; i < securities.size(); i++) {
-        request.getElement(Name{"securities"}).appendValue(Name{securities[i].c_str()});
+        request.getElement(Name{"securities"}).appendValue(securities[i].c_str());
     }
     request.getElement(Name{"fields"}).appendValue(Name{field.c_str()});
     appendOptionsToRequest(request,options_);
