@@ -40,8 +40,7 @@ all:    	blpLibrary $(SHLIB)
 ## the opening '@' ensures operations are executed 'quietly'
 ## in order to see commands as they happens add a 'v' to the tar and cp commands
 ## curl has '-k' flag to suppress certificate warnings
-#BRANCH = "master"
-BRANCH = "feature/release_3.24.6.1"
+BRANCH = "master"
 blpLibrary:
 		@if [ ! -d ../inst ]; then mkdir -p ../inst; fi
 		@if [ ! -d ../blp/win/${FLV} ]; then mkdir -p ../blp/win/${FLV}; fi

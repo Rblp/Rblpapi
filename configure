@@ -83,8 +83,7 @@ download() {
 ## respects enviroment variable so 'blpHeaders="/opt/blp/blpHeaders_1.2.3.tar.gz" ./configure' works
 : ${blpHeaders="blpHeaders.tar.gz"}
 : ${blpLibrary="blpLibrary.tar.gz"}
-#: ${blpBranch="master"}
-: ${blpBranch="feature/release_3.24.6.1"}
+: ${blpBranch="master"}
 
 ## Check for header files and download if needed, this looks at repo blp in directory headers/
 cwd=$(pwd)
