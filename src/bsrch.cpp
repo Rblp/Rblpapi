@@ -189,7 +189,7 @@ DataFrame bsrch_Impl(SEXP con,
     Service exrService = session->getService(exrsrv.c_str());
     Request request = exrService.createRequest("ExcelGetGridRequest");
 
-    request.getElement(Name{"Domain"}).setValue(Name{domain.c_str()});
+    request.getElement(Name{"Domain"}).setValue(domain.c_str());
 
     // TODO - implement limit and other overrides
 
