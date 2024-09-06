@@ -39,7 +39,7 @@
 ##' works on user-defined searches accessed via SRCH.
 ##' @examples
 ##' \dontrun{
-##' head(bsrch("FI:YOURSRCH"), 20)
+##' head(bsrch("FI:SRCHEX.@CLOSUB"), 20)
 ##' }
 bsrch <- function(domain,
                   limit="",
