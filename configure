@@ -3,7 +3,7 @@
 ##
 ##  configure -- Unix build preparation system
 ##
-##  Copyright (C) 2015 - 2022  Dirk Eddelbuettel and Jeroen Ooms.
+##  Copyright (C) 2015 - 2024  Dirk Eddelbuettel and Jeroen Ooms.
 ##
 ##  This file is part of Rblpapi
 ##
@@ -46,6 +46,16 @@ if [ "${arch}" = "x86_64" ]; then
     echo "Setting up compilation for a ${platform} 64-bit system"
     sed -e"s/@config@/blpapi3_64/" src/Makevars.in > src/Makevars
     flavour="64"
+    if [ "${platform}" = "osx" ]; then
+        cpu="x86"
+    fi
+elif [ "${arch}" = "arm64" ]; then
+    echo "Setting up compilation for a ${platform} 64-bit system"
+    sed -e"s/@config@/blpapi3_64/" src/Makevars.in > src/Makevars
+    flavour="64"
+    if [ "${platform}" = "osx" ]; then
+        cpu="arm"
+    fi
 elif [ "${arch}" = "i686" ]; then
     echo "Setting up compilation for a ${platform} 32-bit system"
     sed -e"s/@config@/blpapi3_32/" src/Makevars.in > src/Makevars
@@ -73,24 +83,27 @@ download() {
 ## respects enviroment variable so 'blpHeaders="/opt/blp/blpHeaders_1.2.3.tar.gz" ./configure' works
 : ${blpHeaders="blpHeaders.tar.gz"}
 : ${blpLibrary="blpLibrary.tar.gz"}
+: ${blpBranch="master"}
 
-## Check for header files and download if needed
+## Check for header files and download if needed, this looks at repo blp in directory headers/
 cwd=$(pwd)
 mkdir -p blp/${platform}
 cd blp/${platform}
 if [ ! -f ${blpHeaders} ]; then
-    download https://github.com/Rblp/blp/raw/master/headers/${platform}/blpHeaders.tar.gz
+    download https://github.com/Rblp/blp/raw/${blpBranch}/headers/${platform}/blpHeaders.tar.gz
 else
     echo "** using ${blpHeaders}"
 fi
 tar xfz ${blpHeaders} -C ../../inst
 cd ${cwd}
 
-## Get and install precompiled shared library
+## Get and install precompiled shared library, this looks at repo blp in directoris 'PlatformFlavourCpu'
+## Here flavour is mostly redundant as of 2024 as 32 bit is no longer built at CRAN but we support user who may have it
+## The Cpu tag is used only on macos and it used to distinguish between (old) x86_64 and newer arm64
 mkdir -p inst/blp
 cd blp/${platform}
 if [ ! -f ${blpLibrary} ]; then
-    download https://github.com/Rblp/blp/raw/master/${platform}${flavour}/blpLibrary.tar.gz
+    download https://github.com/Rblp/blp/raw/${blpBranch}/${platform}${flavour}${cpu}/blpLibrary.tar.gz
 else
     echo "** using ${blpLibrary}"
 fi

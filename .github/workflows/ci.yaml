@@ -14,13 +14,13 @@ jobs:
     strategy:
       matrix:
         include:
-          #- {os: macOS-latest}
+          - {os: macOS-latest}
           - {os: ubuntu-latest}
 
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout 
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup
@@ -34,6 +34,10 @@ jobs:
 
       - name: Test
         run: ./run.sh run_tests
+
+      - name: Logs
+        run: ./run.sh dump_logs
+        if: failure()
 
       #- name: Coverage
       #  if: ${{ matrix.os == 'ubuntu-latest' }}

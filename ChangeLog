@@ -1,3 +1,13 @@
+2024-09-05  John Laing  <john.laing@gmail.com>
+
+	* src/bsrch.cpp: Correct over-use of Name{}
+	* R/bsrch.R: Add example of bsrch()
+	* man/bsrch.R: Idem
+
+2024-09-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/bds.cpp: Correct over-use of Name{}
+
 2024-08-27  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Roll micro version and date
@@ -20,6 +30,8 @@
 	* src/lookup.cpp: Idem
 
 	* src/Makevars.in: Remove obsolete C++11 setter
+	* src/Makevars.in: Set to development branch of blp repo for testing
+	* src/Makevars.win: Idem
 
 	* .editorconfig: Added
 

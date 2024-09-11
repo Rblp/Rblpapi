@@ -14,9 +14,9 @@ LinkingTo: Rcpp, BH
 Description: An R Interface to 'Bloomberg' is provided via the 'Blp API'.
 SystemRequirements: A valid Bloomberg installation. The API headers and
  dynamic library are downloaded from <https://github.com/Rblp/blp> during the
- build step. See <https://bloomberg.github.io/blpapi-docs/cpp/3.8> as well as
+ build step. See <https://bloomberg.github.io/blpapi-docs/cpp/3.24.6> as well as
  <https://www.bloomberg.com/professional/support/api-library/> for API
- documentation. A recent-enough compiler with C++11 support is required.
+ documentation.
 URL: https://dirk.eddelbuettel.com/code/rblpapi.html, https://github.com/Rblp/Rblpapi
 BugReports: https://github.com/Rblp/Rblpapi/issues
 License: file LICENSE
