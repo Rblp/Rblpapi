@@ -1,3 +1,15 @@
+2024-09-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): New release 0.3.15
+
+2024-09-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure: Support arm64 on macOS, switch to newer libraries
+	* src/Makefile.in: Idem
+	* src/Makefile.win: Idem
+	* .github/workflows/ci.yaml: Re-enable macOS CI via arm64
+	* DESCRIPTION: Updated reference to Bloomberg API SDK version
+
 2024-09-05  John Laing  <john.laing@gmail.com>
 
 	* src/bsrch.cpp: Correct over-use of Name{}
@@ -56,7 +68,11 @@
 
 2022-10-25  Dr Michael Streatfield  <michael.streatfield@gmail.com>
 
-	* Fix minor typos in vignettes/rblpapi-intro.md
+	* vignettes/rblpapi-intro.md: Fix minor typos
+
+2022-10-22  John Laing  <john.laing@gmail.com>
+
+	* R/lookup.R: A warning is issued when over 1000 results returned
 
 2022-10-05  Dirk Eddelbuettel  <edd@debian.org>
 

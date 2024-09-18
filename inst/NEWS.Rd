@@ -4,6 +4,23 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
+\section{Changes in Rblpapi version 0.3.15 (2024-09-18)}{
+  \itemize{
+    \item A warning is now issued if more than 1000 results are returned
+    (John in \ghpr{377} addressing \ghit{375})
+    \item A few typos in the rblpapi-intro vignette were corrected (Michael
+    Streatfield in \ghpr{378})
+    \item The continuous integration setup was updated (Dirk in \ghpr{388})
+    \item Deprecation warnings over \code{char*} where C++ class \code{Name}
+    is now preferred have been addressed (Dirk in \ghpr{391})
+    \item Several package files have been updated (Dirk in \ghpr{392})
+    \item The \code{request} formation has been corrected, and an example was
+    added (Dirk and John in \ghpr{394} and \ghpr{396})
+    \item The Bloomberg API has been upgraded to release 3.24.6.1 (Dirk in
+    \ghpr{397})
+  }
+}
+
 \section{Changes in Rblpapi version 0.3.14 (2022-10-05)}{
   \itemize{
     \item Build configuration was generalized to consider local copies
@@ -15,7 +32,7 @@
     \item The package no longer requires staged installation thanks to
     an assist from Tomas Kalibera (Dirk in \ghpr{373})
     \item The retired package \pkg{fts} is no longer suggested (Dirk in
-    \ghpr{374} closing \ghpr{372}) 
+    \ghpr{374} closing \ghpr{372})
   }
 }
 
@@ -61,7 +78,7 @@
   \itemize{
     \item The \code{start.date} format for \code{bdh} now allows character
     values with relative date expressions (John in \ghpr{267} fixing
-    \ghit{266}). 
+    \ghit{266}).
     \item Relative date values are allowed in return (John in \ghpr{269}
     fixing \ghit{268}).
     \item The \code{Rcpp::DateVector} class is used instead of a local
@@ -123,7 +140,7 @@
 \section{Changes in Rblpapi version 0.3.5 (2016-10-25)}{
   \itemize{
     \item Add new function \code{getPortfolio} to retrieve portfolio data
-    via \code{bds} (John in \ghpr{176}) 
+    via \code{bds} (John in \ghpr{176})
     \item Extend \code{getTicks()} to (optionally) return non-numeric
     data as part of \code{data.frame} or \code{data.table} (Dirk in
     \ghpr{200})
@@ -195,7 +212,7 @@
     \ghit{99}).
     \item The \code{getBars()} function now uses a single (named) vector
     \code{options} to pass optional values to the underlying function
-    (PR \ghpr{105} updating PR \ghpr{48} and fixing \ghit{47}). 
+    (PR \ghpr{105} updating PR \ghpr{48} and fixing \ghit{47}).
     \item When R is built with libcurl support, it used to download the
     build-time library and headers; otherwise \code{curl} is used. This
     avoids an issue on OS X where \code{curl} is insufficient.

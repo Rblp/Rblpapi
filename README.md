@@ -55,7 +55,7 @@ goog_ge_px <- bdp(securities = c("GOOG US Equity","GE US Equity"),
 
 ### Status
 
-Fully functional on Linux, OS X and Windows.
+Fully functional on Windows and Linux (both for x86_64), and macOS (for arm64).
 
 ### Installation
 
@@ -65,6 +65,15 @@ usual via
 ```r
 install.packages("Rblpapi")
 ```
+
+Builds are also available via [r-universe](https://rblp.r-universe.dev/Rblpapi) and can be installed
+via
+
+```r
+install.packages('Rblpapi', repos = c('https://rblp.r-universe.dev',
+                                      'https://cloud.r-project.org'))
+```
+
 
 Interim (source or binary) releases _may_ be also be made available through the
 [ghrr drat](https://ghrr.github.io/drat/) repository as well and can be accessed via
