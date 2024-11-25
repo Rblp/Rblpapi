@@ -1,3 +1,7 @@
+2024-11-25  Rodolphe Duge  <rodolphe.duge-de-bernonville@metori.com>
+
+	* src/bdp.c: Quota error handling on bdp request
+
 2024-09-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): New release 0.3.15
