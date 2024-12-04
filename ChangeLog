@@ -1,3 +1,7 @@
+2024-12-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll micro version and date
+
 2024-11-25  Rodolphe Duge  <rodolphe.duge-de-bernonville@metori.com>
 
 	* src/bdp.c: Quota error handling on bdp request
