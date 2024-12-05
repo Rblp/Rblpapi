@@ -47,13 +47,13 @@ using BloombergLP::blpapi::Name;
 void getBDPResult(Event& event, Rcpp::List& res, const std::vector<std::string>& securities, const std::vector<std::string>& colnames, const std::vector<RblpapiT>& rtypes, bool verbose) {
     MessageIterator msgIter(event);
     if (!msgIter.next()) {
-        throw std::logic_error("Not a valid MessageIterator.");
+        Rcpp::stop("Not a valid MessageIterator.");
     }
     Message msg = msgIter.message();
     Element response = msg.asElement();
     if (verbose) response.print(Rcpp::Rcout);
     if (std::strcmp(response.name().string(),"ReferenceDataResponse")) {
-        throw std::logic_error("Not a valid ReferenceDataResponse.");
+        Rcpp::stop("Not a valid ReferenceDataResponse.");
     }
 
     const Name responseError("responseError");
@@ -65,7 +65,7 @@ void getBDPResult(Event& event, Rcpp::List& res, const std::vector<std::string>&
             errMsg = errorElement.getElementAsString(messageTag);
         }
         Rcpp::Rcerr << "REQUEST FAILED: " <<  errorElement << std::endl;
-        throw std::logic_error("bdp result: a responseError was received with message: (" + errMsg + ")");
+        Rcpp::stop("bdp result: a responseError was received with message: (" + errMsg + ")");
     }
 
     Element securityData = response.getElement(Name{"securityData"});
@@ -76,14 +76,14 @@ void getBDPResult(Event& event, Rcpp::List& res, const std::vector<std::string>&
 
         // check that the seqNum matches the order of the securities vector (it's a grave error to screw this up)
         if(securities[row_index].compare(this_security.getElementAsString(Name{"security"}))!=0) {
-            throw std::logic_error("mismatched Security sequence, please report a bug.");
+            Rcpp::stop("mismatched Security sequence, please report a bug.");
         }
         Element fieldData = this_security.getElement(Name{"fieldData"});
         for(size_t j = 0; j < fieldData.numElements(); ++j) {
             Element e = fieldData.getElement(j);
             auto col_iter = std::find(colnames.begin(), colnames.end(), e.name().string());
             if (col_iter == colnames.end()) {
-                throw std::logic_error(std::string("column is not expected: ") + e.name().string());
+                Rcpp::stop(std::string("column is not expected: ") + e.name().string());
             }
             size_t col_index = std::distance(colnames.begin(),col_iter);
             populateDfRow(res[col_index],row_index,e,rtypes[col_index]);
@@ -98,7 +98,7 @@ Rcpp::List bdp_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
                     SEXP options_, SEXP overrides_, bool verbose, SEXP identity_) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
-    Session* session = 
+    Session* session =
         reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
 
     // get the field info
@@ -114,7 +114,7 @@ Rcpp::List bdp_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
     if (!session->openService(rdsrv.c_str())) {
         Rcpp::stop("Failed to open " + rdsrv);
     }
-    
+
     Service refDataService = session->getService(rdsrv.c_str());
     Request request = refDataService.createRequest("ReferenceDataRequest");
     createStandardRequest(request, securities, fields, options_, overrides_);

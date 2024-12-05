@@ -54,14 +54,14 @@ using BloombergLP::blpapi::Name;
 Rcpp::DataFrame processBsrchResponse(Event event, const bool verbose) {
 
     MessageIterator msgIter(event); 			// create message iterator
-    if (!msgIter.next()) throw std::logic_error("Not a valid MessageIterator.");
+    if (!msgIter.next()) Rcpp::stop("Not a valid MessageIterator.");
 
     Message msg = msgIter.message(); 			// get message
     if (verbose) msg.print(Rcpp::Rcout);
 
     Element response = msg.asElement(); 		// view as element
     if (std::strncmp(response.name().string(), "GridResponse", std::strlen("GridResponse")) != 0)
-        throw std::logic_error("Not a valid GridResponse.");
+        Rcpp::stop("Not a valid GridResponse.");
 
     // exrsvc provides a grid in the form of DataRecords
     // Extract the dimensions and key attributes before processing

@@ -99,7 +99,7 @@ void populateDfRowBDS(Rcpp::RObject ans, R_len_t row_index, Element& e) {
     case BLPAPI_DATATYPE_CORRELATION_ID:
         INTEGER(ans)[row_index] = e.getValueAsInt32(); break;
     default:
-        throw std::logic_error("Unsupported datatype outside of api blpapi_DataType_t scope.");
+        Rcpp::stop("Unsupported datatype outside of api blpapi_DataType_t scope.");
     }
 }
 
@@ -218,14 +218,14 @@ Rcpp::List bulkArrayToDf(Element& fieldData) {
 Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field, std::string response_type, bool verbose) {
     MessageIterator msgIter(event);
     if(!msgIter.next()) {
-        throw std::logic_error("Not a valid MessageIterator.");
+        Rcpp::stop("Not a valid MessageIterator.");
     }
 
     Message msg = msgIter.message();
     Element response = msg.asElement();
     if (verbose) response.print(Rcpp::Rcout);
     if(std::strcmp(response.name().string(),response_type.c_str())) {
-        throw std::logic_error("Not a valid " + response_type + ".");
+        Rcpp::stop("Not a valid " + response_type + ".");
     }
     Element securityData = response.getElement(Name{"securityData"});
 

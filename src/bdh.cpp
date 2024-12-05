@@ -43,13 +43,13 @@ using BloombergLP::blpapi::Name;
 std::string getSecurityName(Event& event) {
     MessageIterator msgIter(event);
     if (!msgIter.next()) {
-        throw std::logic_error("Not a valid MessageIterator.");
+        Rcpp::stop("Not a valid MessageIterator.");
     }
 
     Message msg = msgIter.message();
     Element response = msg.asElement();
     if(std::strcmp(response.name().string(),"HistoricalDataResponse")) {
-        throw std::logic_error("Not a valid HistoricalDataResponse.");
+        Rcpp::stop("Not a valid HistoricalDataResponse.");
     }
 
     Element securityData = response.getElement(Name{"securityData"});
@@ -61,14 +61,14 @@ Rcpp::List HistoricalDataResponseToDF(Event& event, const std::vector<std::strin
                                       const std::vector<RblpapiT>& rtypes, bool verbose=FALSE) {
     MessageIterator msgIter(event);
     if (!msgIter.next()) {
-        throw std::logic_error("Not a valid MessageIterator.");
+        Rcpp::stop("Not a valid MessageIterator.");
     }
 
     Message msg = msgIter.message();
     Element response = msg.asElement();
     if (verbose) response.print(Rcpp::Rcout);
     if (std::strcmp(response.name().string(),"HistoricalDataResponse")) {
-        throw std::logic_error("Not a valid HistoricalDataResponse.");
+        Rcpp::stop("Not a valid HistoricalDataResponse.");
     }
     Element securityData = response.getElement(Name{"securityData"});
     Element fieldData = securityData.getElement(Name{"fieldData"});
@@ -81,7 +81,7 @@ Rcpp::List HistoricalDataResponseToDF(Event& event, const std::vector<std::strin
         for(size_t j = 0; j < row.numElements(); ++j) {
             Element e = row.getElement(j);
             auto it = std::find(fields.begin(),fields.end(),e.name().string());
-            if(it==fields.end()) { throw std::logic_error("Unexpected field returned."); }
+            if(it==fields.end()) { Rcpp::stop("Unexpected field returned."); }
             int colindex = std::distance(fields.begin(),it);
             populateDfRow(res[colindex], i, e, rtypes[colindex]);
         }
