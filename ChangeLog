@@ -1,3 +1,14 @@
+2024-12-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/bdh.cpp: Use Rcpp::stop instead of throw
+	* src/bdp.cpp: Idem
+	* src/bds.cpp: Idem
+	* src/beqs.cpp: Idem
+	* src/blpapi_utils.cpp: Idem
+	* src/bsrch.cpp: Idem
+	* src/lookup.cpp: Idem
+	* src/subscribe.cpp: Idem
+
 2024-12-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Roll micro version and date

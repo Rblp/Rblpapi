@@ -56,14 +56,14 @@ using BloombergLP::blpapi::Name;
 Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
 
     MessageIterator msgIter(event); 			// create message iterator
-    if (!msgIter.next()) throw std::logic_error("Not a valid MessageIterator.");
+    if (!msgIter.next()) Rcpp::stop("Not a valid MessageIterator.");
 
     Message msg = msgIter.message(); 			// get message
     if (verbose) msg.print(Rcpp::Rcout);
 
     Element response = msg.asElement(); 		// view as element
     if (std::strcmp(response.name().string(), "BeqsResponse") != 0)
-        throw std::logic_error("Not a valid EQSDataResponse.");
+        Rcpp::stop("Not a valid EQSDataResponse.");
 
     Element data = msg.getElement(Name{"data"}); 	// get data payload, extract field with display units
     Element fieldDisplayUnits = data.getElement(Name{"fieldDisplayUnits"});

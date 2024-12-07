@@ -170,7 +170,7 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
                     SEXP options_, SEXP identity_) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
-    Session* session = 
+    Session* session =
         reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
 
     const std::string mdsrv = "//blp/mktdata";
@@ -214,7 +214,7 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
                     Rcpp::List ans;
                     auto it = BlpapiEventToString.find(event.eventType());
                     if(it==BlpapiEventToString.end()) {
-                        throw Rcpp::exception("Unknown event type.");
+                        Rcpp::stop("Unknown event type.");
                     }
                     ans["event.type"] = it->second;
                     size_t cid(msg.correlationId().asInteger());

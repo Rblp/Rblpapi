@@ -51,7 +51,7 @@ void processMessage(bbg::Message &msg, InstrumentListResults &matches, const boo
     bbg::Element response = msg.asElement();
     if (verbose) response.print(Rcpp::Rcout);
     if (std::strcmp(response.name().string(),"InstrumentListResponse")) {
-        throw std::logic_error("Not a valid InstrumentListResponse.");
+        Rcpp::stop("Not a valid InstrumentListResponse.");
     }
 
     bbg::Element data = response.getElement(bbg::Name{"results"});
