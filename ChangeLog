@@ -1,3 +1,7 @@
+2025-03-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* .github/workflows/ci.yaml: Use r-ci action with embedded bootstrap
+
 2024-12-05  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/bdh.cpp: Use Rcpp::stop instead of throw
