@@ -42,7 +42,7 @@ static void sessionFinalizer(SEXP session_) {
 }
 
 // [[Rcpp::export]]
-SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_) {
+SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_, SEXP app_identity_key_) {
     SessionOptions sessionOptions;
     sessionOptions.setServerHost(host.c_str());
     sessionOptions.setServerPort(port);
@@ -51,6 +51,10 @@ SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_) {
         std::string app_name = Rcpp::as<std::string>(app_name_);
         std::string authentication_string = APP_PREFIX + app_name;
         sessionOptions.setAuthenticationOptions(authentication_string.c_str());
+    }
+    if (app_identity_key_ != R_NilValue) {
+        std::string app_identity_key = Rcpp::as<std::string>(app_identity_key_);
+        sessionOptions.setApplicationIdentityKey(app_identity_key);
     }
     Session* sp = new Session(sessionOptions);
 

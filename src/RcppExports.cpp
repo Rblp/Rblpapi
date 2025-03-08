@@ -115,15 +115,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // blpConnect_Impl
-SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_);
-RcppExport SEXP _Rblpapi_blpConnect_Impl(SEXP hostSEXP, SEXP portSEXP, SEXP app_name_SEXP) {
+SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_, SEXP app_identity_key_);
+RcppExport SEXP _Rblpapi_blpConnect_Impl(SEXP hostSEXP, SEXP portSEXP, SEXP app_name_SEXP, SEXP app_identity_key_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const std::string >::type host(hostSEXP);
     Rcpp::traits::input_parameter< const int >::type port(portSEXP);
     Rcpp::traits::input_parameter< SEXP >::type app_name_(app_name_SEXP);
-    rcpp_result_gen = Rcpp::wrap(blpConnect_Impl(host, port, app_name_));
+    Rcpp::traits::input_parameter< SEXP >::type app_identity_key_(app_identity_key_SEXP);
+    rcpp_result_gen = Rcpp::wrap(blpConnect_Impl(host, port, app_name_, app_identity_key_));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -260,7 +261,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Rblpapi_bds_Impl", (DL_FUNC) &_Rblpapi_bds_Impl, 7},
     {"_Rblpapi_getPortfolio_Impl", (DL_FUNC) &_Rblpapi_getPortfolio_Impl, 7},
     {"_Rblpapi_beqs_Impl", (DL_FUNC) &_Rblpapi_beqs_Impl, 7},
-    {"_Rblpapi_blpConnect_Impl", (DL_FUNC) &_Rblpapi_blpConnect_Impl, 3},
+    {"_Rblpapi_blpConnect_Impl", (DL_FUNC) &_Rblpapi_blpConnect_Impl, 4},
     {"_Rblpapi_getHeaderVersion", (DL_FUNC) &_Rblpapi_getHeaderVersion, 0},
     {"_Rblpapi_getRuntimeVersion", (DL_FUNC) &_Rblpapi_getRuntimeVersion, 0},
     {"_Rblpapi_bsrch_Impl", (DL_FUNC) &_Rblpapi_bsrch_Impl, 4},
