@@ -57,9 +57,7 @@ elif [ "${arch}" = "arm64" -a "${platform}" = "osx" ]; then
     echo "Setting up compilation for a ${platform} ${arch} system"
     sed -e"s/@config@/-lblpapi3_64/" -e"s/@badsystem@//" src/Makevars.in > src/Makevars
     flavour="64"
-    #if [ "${platform}" = "osx" ]; then
-    #    cpu="arm"
-    #fi
+    cpu="arm"
 #elif [ "${arch}" = "i686" ]; then
 #    echo "Setting up compilation for a ${platform} 32-bit system"
 #    sed -e"s/@config@/blpapi3_32/" src/Makevars.in > src/Makevars
