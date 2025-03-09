@@ -1,5 +1,7 @@
 2025-03-09  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Version, Date): Roll micro version and date
+
 	* configure: Rework to actively support amd64 on Linux and arm64 on
 	macOS only and define -DNoBlpHere otherwise
 	* src/Makevars.in: Adjusted accordingly for link and install_name_tool
