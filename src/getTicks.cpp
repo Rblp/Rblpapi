@@ -2,7 +2,7 @@
 //  getTicks.cpp -- a simple intraday tick retriever
 //
 //  Copyright (C) 2013         Whit Armstrong
-//  Copyright (C) 2014 - 2024  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2014 - 2025  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -41,6 +41,8 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
+#if !defined(NoBlpHere)
 
 #include <vector>
 #include <string>
@@ -205,3 +207,19 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
     	                           Rcpp::Named("condcode") = ticks.conditionCode);
 
 }
+
+#else // ie if defined(NoBlpHere)
+
+#include <Rcpp/Lightest>
+// [[Rcpp::export]]
+Rcpp::DataFrame getTicks_Impl(SEXP con,
+                              std::string security,
+                              std::vector<std::string> eventType,
+                              std::string startDateTime,
+                              std::string endDateTime,
+                              bool setCondCodes=true,
+                              bool verbose=false) {
+    return Rcpp::DataFrame();
+}
+
+#endif

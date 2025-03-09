@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2016  Whit Armstrong                                    //
+// Copyright (C) 2016-2025  Whit Armstrong                                    //
 //                                                                       //
 // This program is free software: you can redistribute it and/or modify  //
 // it under the terms of the GNU General Public License as published by  //
@@ -15,6 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>. //
 ///////////////////////////////////////////////////////////////////////////
 
+#if !defined(NoBlpHere)
+
 #include <Rcpp.h>
 #include <blpapi_utils.h>
 
@@ -29,7 +31,7 @@ using BloombergLP::blpapi::Element;
 // [[Rcpp::export]]
 Rcpp::List fieldInfo_Impl(SEXP con_, std::vector<std::string> fields) {
 
-  Session* session = 
+  Session* session =
     reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
 
   // get the field info
@@ -47,3 +49,13 @@ Rcpp::List fieldInfo_Impl(SEXP con_, std::vector<std::string> fields) {
   }
   return res;
 }
+
+#else // ie if defined(NoBlpHere)
+
+#include <Rcpp/Lightest>
+// [[Rcpp::export]]
+Rcpp::List fieldInfo_Impl(SEXP con_, std::vector<std::string> fields) {
+    return Rcpp::List();
+}
+
+#endif

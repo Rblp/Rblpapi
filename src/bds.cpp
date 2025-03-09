@@ -2,7 +2,7 @@
 //  bds.cpp -- "Bloomberg Data Set" query function for the BLP API
 //
 //  Copyright (C) 2013         Whit Armstrong
-//  Copyright (C) 2015 - 2024  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2015 - 2025  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -18,6 +18,8 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
+
+#if !defined(NoBlpHere)
 
 #include <vector>
 #include <string>
@@ -295,8 +297,8 @@ Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
 
 // [[Rcpp::export]]
 Rcpp::List getPortfolio_Impl(SEXP con_, std::vector<std::string> securities,
-                    std::string field, SEXP options_, SEXP overrides_,
-                    bool verbose, SEXP identity_) {
+                             std::string field, SEXP options_, SEXP overrides_,
+                             bool verbose, SEXP identity_) {
 
     Session* session =
         reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
@@ -337,3 +339,21 @@ Rcpp::List getPortfolio_Impl(SEXP con_, std::vector<std::string> securities,
     }
     return R_NilValue;
 }
+
+#else // ie if defined(NoBlpHere)
+
+#include <Rcpp/Lightest>
+// [[Rcpp::export]]
+Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
+                    std::string field, SEXP options_, SEXP overrides_,
+                    bool verbose, SEXP identity_) {
+    return Rcpp::List();
+}
+// [[Rcpp::export]]
+Rcpp::List getPortfolio_Impl(SEXP con_, std::vector<std::string> securities,
+                             std::string field, SEXP options_, SEXP overrides_,
+                             bool verbose, SEXP identity_) {
+    return Rcpp::List();
+}
+
+#endif

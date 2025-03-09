@@ -2,7 +2,7 @@
 //  bdh.cpp -- "Bloomberg Data History" query function for the BLP API
 //
 //  Copyright (C) 2013      Whit Armstrong
-//  Copyright (C) 2015-2024 Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2015-2025 Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -19,6 +19,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
+#if !defined(NoBlpHere)
 
 #include <vector>
 #include <string>
@@ -189,3 +190,19 @@ Rcpp::List bdh_Impl(SEXP con_,
     ans.attr("names") = ans_names;
     return ans;
 }
+
+#else // ie if defined(NoBlpHere)
+
+#include <Rcpp/Lightest>
+// [[Rcpp::export]]
+Rcpp::List bdh_Impl(SEXP con_,
+                    std::vector<std::string> securities,
+                    std::vector<std::string> fields,
+                    std::string start_date_, SEXP end_date_,
+                    SEXP options_, SEXP overrides_,
+                    bool verbose, SEXP identity_,
+                    bool int_as_double) {
+    return Rcpp::List();
+}
+
+#endif

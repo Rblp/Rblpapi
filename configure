@@ -3,7 +3,7 @@
 ##
 ##  configure -- Unix build preparation system
 ##
-##  Copyright (C) 2015 - 2024  Dirk Eddelbuettel and Jeroen Ooms.
+##  Copyright (C) 2015 - 2025  Dirk Eddelbuettel and Jeroen Ooms.
 ##
 ##  This file is part of Rblpapi
 ##
@@ -26,7 +26,8 @@ if ! [ -x $(command -v uname) ]; then
     exit 1
 fi
 
-## Check for Linux or OSX
+## Check for Linux or OSX. "These days" we support x86_64 on Linux and arm64 on macOS.
+## At CRAN or R-universe we encounter nothing else.
 : ${R_HOME=$(R RHOME)}
 sysname=$(${R_HOME}/bin/Rscript -e 'cat(Sys.info()["sysname"])')
 if [ ${sysname} = "Linux" ]; then
@@ -37,32 +38,38 @@ else
     echo "Unsupported platform: $sysname"
     echo "Check https://www.bloomberg.com/professional/support/api-library/ for possible support first."
     echo "Contributions welcome, see https://github.com/Rblp/blp for integration with Rblapi."
-    exit 2
+    echo "The build will proceed but not be functional for lack of a library."
+    sed -e"s/@config@//" -e"s/@badsystem@/-DNoBlpHere/" src/Makevars.in > src/Makevars
+    exit 0
 fi
 
 ## Populate Makevars
 arch=$(uname -m)
-if [ "${arch}" = "x86_64" ]; then
-    echo "Setting up compilation for a ${platform} 64-bit system"
-    sed -e"s/@config@/blpapi3_64/" src/Makevars.in > src/Makevars
+if [ "${arch}" = "x86_64" -a "${platform}" = "linux" ]; then
+    echo "Setting up compilation for a ${platform} ${arch} system"
+    sed -e"s/@config@/-lblpapi3_64/" -e"s/@badsystem@//" src/Makevars.in > src/Makevars
     flavour="64"
-    if [ "${platform}" = "osx" ]; then
-        cpu="x86"
-    fi
-elif [ "${arch}" = "arm64" ]; then
-    echo "Setting up compilation for a ${platform} 64-bit system"
-    sed -e"s/@config@/blpapi3_64/" src/Makevars.in > src/Makevars
+    # this used to matter when Blp supported x86 on macos, they no longer do
+    #if [ "${platform}" = "osx" ]; then
+    #    cpu="x86"
+    #fi
+elif [ "${arch}" = "arm64" -a "${platform}" = "osx" ]; then
+    echo "Setting up compilation for a ${platform} ${arch} system"
+    sed -e"s/@config@/-lblpapi3_64/" -e"s/@badsystem@//" src/Makevars.in > src/Makevars
     flavour="64"
-    if [ "${platform}" = "osx" ]; then
-        cpu="arm"
-    fi
-elif [ "${arch}" = "i686" ]; then
-    echo "Setting up compilation for a ${platform} 32-bit system"
-    sed -e"s/@config@/blpapi3_32/" src/Makevars.in > src/Makevars
-    flavour="32"
+    #if [ "${platform}" = "osx" ]; then
+    #    cpu="arm"
+    #fi
+#elif [ "${arch}" = "i686" ]; then
+#    echo "Setting up compilation for a ${platform} 32-bit system"
+#    sed -e"s/@config@/blpapi3_32/" src/Makevars.in > src/Makevars
+#    flavour="32"
 else
-    echo "Unknown architecture: ${arch}. Exiting."
-    exit 3
+    echo "Unsupported platform and architecture combination: ${platform} ${arch}."
+    echo "The build will proceed but not be functional for lack of a library."
+    echo "If you need such a combination please get in touch with the Blp vendor."
+    sed -e"s/@config@//" -e"s/@badsystem@/-DNoBlpHere/" src/Makevars.in > src/Makevars
+    exit 0
 fi
 
 ## helper function to not rely on curl which at least on OS X fails to follow redirects

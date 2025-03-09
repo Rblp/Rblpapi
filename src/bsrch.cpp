@@ -1,7 +1,7 @@
 //
 //  bsrch.cpp -- "Bloomberg SRCH" query function for the BLP API
 //
-//  Copyright (C) 2015 - 2024  Whit Armstrong and Dirk Eddelbuettel and John Laing
+//  Copyright (C) 2015 - 2025  Whit Armstrong and Dirk Eddelbuettel and John Laing
 //
 //  This file is part of Rblpapi
 //
@@ -17,6 +17,8 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
+
+#if !defined(NoBlpHere)
 
 #include <vector>
 #include <string>
@@ -175,9 +177,9 @@ Rcpp::DataFrame processBsrchResponse(Event event, const bool verbose) {
 
 // [[Rcpp::export]]
 DataFrame bsrch_Impl(SEXP con,
-                    std::string domain,
-                    std::string limit,
-                    bool verbose=false) {
+                     std::string domain,
+                     std::string limit,
+                     bool verbose=false) {
 
     Session* session = reinterpret_cast<Session*>(checkExternalPointer(con, "blpapi::Session*"));
 
@@ -226,3 +228,16 @@ DataFrame bsrch_Impl(SEXP con,
     return ans;
 
 }
+
+#else // ie if defined(NoBlpHere)
+
+#include <Rcpp/Lightest>
+// [[Rcpp::export]]
+Rcpp::DataFrame bsrch_Impl(SEXP con,
+                           std::string domain,
+                           std::string limit,
+                           bool verbose=false) {
+    return Rcpp::DataFrame();
+}
+
+#endif

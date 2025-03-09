@@ -1,7 +1,7 @@
 //
 //  lookup.cpp -- symbol look-up
 //
-//  Copyright (C) 2017 - 2024  Dirk Eddelbuettel and Kevin Jin
+//  Copyright (C) 2017 - 2025  Dirk Eddelbuettel and Kevin Jin
 //
 //  This file is part of Rblpapi
 //
@@ -17,6 +17,8 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
+
+#if !defined(NoBlpHere)
 
 #include <blpapi_session.h>
 
@@ -141,3 +143,18 @@ Rcpp::DataFrame lookup_Impl(SEXP con,
     return Rcpp::DataFrame::create(Rcpp::Named("security") = matches.security,
                                    Rcpp::Named("description") = matches.description);
 }
+
+#else // ie if defined(NoBlpHere)
+
+#include <Rcpp/Lightest>
+// [[Rcpp::export]]
+Rcpp::DataFrame lookup_Impl(SEXP con,
+                            std::string query,
+                            std::string yellowKeyFilter="YK_FILTER_NONE",
+                            std::string languageOverride="LANG_OVERRIDE_NONE",
+                            int maxResults=20,
+                            bool verbose=false) {
+    return Rcpp::DataFrame();
+}
+
+#endif

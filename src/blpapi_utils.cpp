@@ -2,7 +2,7 @@
 //  blpapi_utils -- helper functions for the BLP API
 //
 //  Copyright (C) 2013         Whit Armstrong
-//  Copyright (C) 2017 - 2024  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2017 - 2025  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -18,6 +18,8 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
+
+#if !defined(NoBlpHere)
 
 #include <stdexcept>
 #include <string>
@@ -446,3 +448,5 @@ Rcpp::List allocateDataFrame(size_t nrows, const vector<string>& colnames, const
   }
   return ans;
 }
+
+#endif

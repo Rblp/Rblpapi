@@ -2,9 +2,9 @@
 //
 //  blpConnect.cpp -- Function to establish Bloomberg connection
 //
-//  Copyright (C) 2013  Whit Armstrong
-//  Copyright (C) 2015  Whit Armstrong and Dirk Eddelbuettel
-//  Copyright (C) 2019  Whit Armstrong, Dirk Eddelbuettel and Alfred Kanzler
+//  Copyright (C) 2013-2025  Whit Armstrong
+//  Copyright (C) 2015-2025  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2019-2025  Whit Armstrong, Dirk Eddelbuettel and Alfred Kanzler
 //
 //  This file is part of Rblpapi
 //
@@ -20,6 +20,8 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
+
+#if !defined(NoBlpHere)
 
 #include <string>
 #include <blpapi_session.h>
@@ -63,3 +65,13 @@ SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_) {
 
     return createExternalPointer<Session>(sp, sessionFinalizer, "blpapi::Session*");
 }
+
+#else // ie if defined(NoBlpHere)
+
+#include <Rcpp/Lightest>
+// [[Rcpp::export]]
+SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_) {
+    return R_NilValue;
+}
+
+#endif
