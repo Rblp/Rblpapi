@@ -74,7 +74,7 @@ SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_, SEX
 
 #include <Rcpp/Lightest>
 // [[Rcpp::export]]
-SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_) {
+SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_, SEXP app_identity_key_) {
     return R_NilValue;
 }
 
