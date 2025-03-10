@@ -1,3 +1,27 @@
+2025-03-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll micro version and date
+
+	* configure: Rework to actively support amd64 on Linux and arm64 on
+	macOS only and define -DNoBlpHere otherwise
+	* src/Makevars.in: Adjusted accordingly for link and install_name_tool
+	* src/authenticate.cpp: Compilation reflects #if defined(NoBlpHere)
+        * src/bdh.cpp: Idem
+        * src/bdp.cpp: Idem
+        * src/bds.cpp: Idem
+        * src/beqs.cpp: Idem
+        * src/blpConnect.cpp: Idem
+        * src/blpVersion.cpp: Idem
+        * src/blpapi_utils.cpp: Idem
+        * src/bsrch.cpp: Idem
+        * src/fieldsearch.cpp: Idem
+        * src/getBars.cpp: Idem
+        * src/getFieldInfo.cpp: Idem
+        * src/getTicks.cpp: Idem
+        * src/lookup.cpp: Idem
+        * src/subscribe.cpp: Idem
+	* R/init.R: Startup message adjusted for build with/without blp
+
 2025-03-08  Dirk Eddelbuettel  <edd@debian.org>
 
 	* .github/workflows/ci.yaml: Use r-ci action with embedded bootstrap

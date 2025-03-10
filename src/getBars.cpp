@@ -2,7 +2,7 @@
 //  getBars.cpp -- a simple intraday bar retriever
 //
 //  Copyright (C) 2013         Whit Armstrong
-//  Copyright (C) 2014 - 2024  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2014 - 2025  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -41,6 +41,8 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
+#if !defined(NoBlpHere)
 
 #include <blpapi_session.h>
 #include <blpapi_eventdispatcher.h>
@@ -224,3 +226,20 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
                                    Rcpp::Named("value")     = bars.value);
 
 }
+
+#else // ie if defined(NoBlpHere)
+
+#include <Rcpp/Lightest>
+// [[Rcpp::export]]
+Rcpp::DataFrame getBars_Impl(SEXP con,
+                             std::string security,
+                             std::string eventType,
+                             int barInterval,
+                             std::string startDateTime,
+                             std::string endDateTime,
+                             Rcpp::Nullable<Rcpp::CharacterVector> options,
+                             bool verbose=false) {
+    return Rcpp::DataFrame();
+}
+
+#endif

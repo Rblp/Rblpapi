@@ -1,6 +1,6 @@
 
 ##
-##  Copyright (C) 2015 - 2016  Whit Armstrong and Dirk Eddelbuettel and John Laing
+##  Copyright (C) 2015 - 2025  Whit Armstrong and Dirk Eddelbuettel and John Laing
 ##
 ##  This file is part of Rblpapi
 ##
@@ -21,28 +21,33 @@
 .pkgenv <- new.env(parent=emptyenv())
 
 .onAttach <- function(libname, pkgname) {
-    packageStartupMessage(paste0("Rblpapi version ", packageVersion("Rblpapi"),
-                                 " using Blpapi headers ", getHeaderVersion(),
-                                 " and run-time ", getRuntimeVersion(), "."))
-    packageStartupMessage(paste0("Please respect the Bloomberg licensing agreement ",
-                                 "and terms of service."))
+    hrd <- getHeaderVersion()
+    rtm <- getRuntimeVersion()
+    if (nchar(hrd) + nchar(rtm) == 0) {
+        packageStartupMessage("No Blp available so no Rblapi functionality.")
+    } else {
+        packageStartupMessage(paste0("Rblpapi version ", packageVersion("Rblpapi"),
+                                     " using Blpapi headers ", hrd, " and run-time ", rtm, "."))
+        packageStartupMessage(paste0("Please respect the Bloomberg licensing agreement ",
+                                     "and terms of service."))
 
-    if (getOption("blpAutoConnect", FALSE)) {
-        con <- blpConnect()
-        if (getOption("blpVerbose", FALSE)) {
-            packageStartupMessage("Created and stored default connection object.")
+        if (getOption("blpAutoConnect", FALSE)) {
+            con <- blpConnect()
+            if (getOption("blpVerbose", FALSE)) {
+                packageStartupMessage("Created and stored default connection object.")
+            }
+        } else {
+            con <- NULL
         }
-    } else {
-        con <- NULL
-    }
-    if (getOption("blpAutoAuthenticate", FALSE)) {
-        blpAuth <- blpAuthenticate()
-        if (getOption("blpVerbose", FALSE)) {
-            packageStartupMessage("Created and stored default authentication object.")
+        if (getOption("blpAutoAuthenticate", FALSE)) {
+            blpAuth <- blpAuthenticate()
+            if (getOption("blpVerbose", FALSE)) {
+                packageStartupMessage("Created and stored default authentication object.")
+            }
+        } else {
+            blpAuth <- NULL
         }
-    } else {
-        blpAuth <- NULL
+        assign("con", con, envir=.pkgenv)
+        assign("blpAuth", blpAuth, envir=.pkgenv)
     }
-    assign("con", con, envir=.pkgenv)
-    assign("blpAuth", blpAuth, envir=.pkgenv)
 }

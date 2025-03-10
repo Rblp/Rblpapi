@@ -2,7 +2,7 @@
 //  fieldsearch.cpp -- a simple field search function for the BLP API
 //
 //  Copyright (C) 2013         Whit Armstrong
-//  Copyright (C) 2014 - 2024  Whit Armstrong and Dirk Eddelbuettel
+//  Copyright (C) 2014 - 2025  Whit Armstrong and Dirk Eddelbuettel
 //
 //  This file is part of Rblpapi
 //
@@ -42,6 +42,7 @@
  * IN THE SOFTWARE.
  */
 
+#if !defined(NoBlpHere)
 
 #include <blpapi_session.h>
 #include <blpapi_utils.h>
@@ -118,3 +119,13 @@ Rcpp::DataFrame fieldSearch_Impl(SEXP con, std::string searchterm) {
                                    Rcpp::Named("Mnemonic")    = fieldMnen,
                                    Rcpp::Named("Description") = fieldDesc);
 }
+
+#else // ie if defined(NoBlpHere)
+
+#include <Rcpp/Lightest>
+// [[Rcpp::export]]
+Rcpp::DataFrame fieldSearch_Impl(SEXP con, std::string searchterm) {
+    return Rcpp::DataFrame();
+}
+
+#endif

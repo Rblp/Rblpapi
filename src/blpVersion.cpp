@@ -2,7 +2,7 @@
 //
 //  blpVersion.cpp -- Version of the Bloomberg API
 //
-//  Copyright (C) 2016  Whit Armstrong and Dirk Eddelbuettel and John Laing
+//  Copyright (C) 2016-2025  Whit Armstrong and Dirk Eddelbuettel and John Laing
 //
 //  This file is part of Rblpapi
 //
@@ -18,6 +18,8 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
+
+#if !defined(NoBlpHere)
 
 #include <Rcpp.h>
 #include <blpapi_versioninfo.h>
@@ -107,3 +109,17 @@ std::string getRuntimeVersion() {
              major, minor, patch, build);
     return std::string(txt);
 }
+
+#else // ie if defined(NoBlpHere)
+
+#include <Rcpp/Lightest>
+// [[Rcpp::export]]
+std::string getHeaderVersion() {
+    return std::string();
+}
+// [[Rcpp::export]]
+std::string getRuntimeVersion() {
+    return std::string();
+}
+
+#endif

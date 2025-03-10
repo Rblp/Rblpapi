@@ -2,8 +2,8 @@
 //  authenticate.cpp -- Function to authenticate to Bloomberg backend
 //
 //  Copyright (C) 2013      Whit Armstrong
-//  Copyright (C) 2015-2024 Whit Armstrong and Dirk Eddelbuettelp
-//  Copyright (C) 2019-2024 Whit Armstrong, Dirk Eddelbuettel and Alfred Kanzler
+//  Copyright (C) 2015-2025 Whit Armstrong and Dirk Eddelbuettelp
+//  Copyright (C) 2019-2025 Whit Armstrong, Dirk Eddelbuettel and Alfred Kanzler
 //
 //  This file is part of Rblpapi
 //
@@ -20,6 +20,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
+#if !defined(NoBlpHere)
 
 #include <string>
 #include <blpapi_defs.h>
@@ -194,3 +195,13 @@ SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_, SEXP is_auth_id_
     if(identity_p == NULL) { Rcpp::stop("Identity pointer is null\n"); }
     return createExternalPointer<Identity>(identity_p, identityFinalizer, "blpapi::Identity*");
 }
+
+#else // ie if defined(NoBlpHere)
+
+#include <Rcpp/Lightest>
+// [[Rcpp::export]]
+SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_, SEXP is_auth_id_, SEXP app_name_) {
+    return R_NilValue;
+}
+
+#endif

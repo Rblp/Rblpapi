@@ -1,7 +1,7 @@
 //
 //  beqs.cpp -- "Bloomberg EQS" query function for the BLP API
 //
-//  Copyright (C) 2015-2024  Whit Armstrong and Dirk Eddelbuettel and John Laing
+//  Copyright (C) 2015-2025  Whit Armstrong and Dirk Eddelbuettel and John Laing
 //
 //  This file is part of Rblpapi
 //
@@ -19,6 +19,8 @@
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
 // TODO: Date, Datetime, Int (?), ... results
+
+#if !defined(NoBlpHere)
 
 #include <vector>
 #include <string>
@@ -241,3 +243,19 @@ DataFrame beqs_Impl(SEXP con,
     return ans;
 
 }
+
+#else // ie if defined(NoBlpHere)
+
+#include <Rcpp/Lightest>
+// [[Rcpp::export]]
+Rcpp::DataFrame beqs_Impl(SEXP con,
+                          std::string screenName,
+                          std::string screenType,
+                          std::string group,
+                          std::string pitdate,
+                          std::string languageId,
+                          bool verbose=false) {
+    return Rcpp::DataFrame();
+}
+
+#endif

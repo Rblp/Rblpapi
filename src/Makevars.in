@@ -26,8 +26,14 @@ BBG_RPATH   = '$$ORIGIN/../blp'
 
 ## set include and linker options
 ## Bbg API files are assummed to be in the standard search path
-PKG_CPPFLAGS = -I../inst/include/ -I.
-PKG_LIBS     = -l$(BBG_LIB) -L../inst/blp -Wl,-rpath,$(BBG_RPATH)
+PKG_CPPFLAGS = -I../inst/include/ -I. @badsystem@
+PKG_LIBS     = $(BBG_LIB) -L../inst/blp -Wl,-rpath,$(BBG_RPATH)
 
 all: $(SHLIB)
-	@if command -v install_name_tool; then echo "fixing"; install_name_tool -add_rpath @loader_path/../blp Rblpapi.so; fi
+        # we rely on configure to replace @badsystem@ here to create a side effect
+        # notice that that there are only two outcomes we need to differentiate:
+        # - either (on a 'good' system with blp) we will in an empty string, so command -v works as
+        #   usual and we can run install_name_tool to add/update the rpath of shared librart
+        # - or on a bad system without blp we append -DNoBlpHere making command -v fail and avoiding
+        #   an install_name_call that would fails as we have no Rblpapi.so to adjust
+	@if command -v install_name_tool@badsystem@; then echo "fixing"; install_name_tool -add_rpath @loader_path/../blp Rblpapi.so; fi

@@ -2,7 +2,7 @@
 //
 //  subscribe.cpp -- market data subscription function for the BLP API
 //
-//  Copyright (C) 2015  Whit Armstrong
+//  Copyright (C) 2015-2025  Whit Armstrong
 //
 //  This file is part of Rblpapi
 //
@@ -19,9 +19,9 @@
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
+#if !defined(NoBlpHere)
 
 // compare to SimpleSubscriptionExample.cpp
-
 
 #include <iostream>
 #include <vector>
@@ -166,8 +166,8 @@ SEXP recursiveParse(const Element& e) {
 }
 
 // [[Rcpp::export]]
-SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields, Rcpp::Function fun,
-                    SEXP options_, SEXP identity_) {
+SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields,
+                    Rcpp::Function fun, SEXP options_, SEXP identity_) {
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     Session* session =
@@ -232,3 +232,14 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
     }
     return R_NilValue;
 }
+
+#else // ie if defined(NoBlpHere)
+
+#include <Rcpp/Lightest>
+// [[Rcpp::export]]
+SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields,
+                    Rcpp::Function fun, SEXP options_, SEXP identity_) {
+    return R_NilValue;
+}
+
+#endif
