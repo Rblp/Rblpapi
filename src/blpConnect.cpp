@@ -73,7 +73,7 @@ SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_, SEX
 #else // ie if defined(NoBlpHere)
 
 #include <Rcpp/Lightest>
-SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_) {
+SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_, SEXP app_identity_key_) {
     return R_NilValue;
 }
 
