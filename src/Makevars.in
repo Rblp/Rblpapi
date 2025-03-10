@@ -30,7 +30,7 @@ PKG_CPPFLAGS = -I../inst/include/ -I. @badsystem@
 PKG_LIBS     = $(BBG_LIB) -L../inst/blp -Wl,-rpath,$(BBG_RPATH)
 
 all: $(SHLIB)
-        # we relt yn configure to replace @badsystem@ here to create a side effect
+        # we rely on configure to replace @badsystem@ here to create a side effect
         # notice that that there are only two outcomes we need to differentiate:
         # - either (on a 'good' system with blp) we will in an empty string, so command -v works as
         #   usual and we can run install_name_tool to add/update the rpath of shared librart
