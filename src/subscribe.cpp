@@ -236,7 +236,6 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
 #else // ie if defined(NoBlpHere)
 
 #include <Rcpp/Lightest>
-// [[Rcpp::export]]
 SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields,
                     Rcpp::Function fun, SEXP options_, SEXP identity_) {
     return R_NilValue;

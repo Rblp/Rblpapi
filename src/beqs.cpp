@@ -247,7 +247,6 @@ DataFrame beqs_Impl(SEXP con,
 #else // ie if defined(NoBlpHere)
 
 #include <Rcpp/Lightest>
-// [[Rcpp::export]]
 Rcpp::DataFrame beqs_Impl(SEXP con,
                           std::string screenName,
                           std::string screenType,

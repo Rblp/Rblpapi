@@ -53,7 +53,6 @@ Rcpp::List fieldInfo_Impl(SEXP con_, std::vector<std::string> fields) {
 #else // ie if defined(NoBlpHere)
 
 #include <Rcpp/Lightest>
-// [[Rcpp::export]]
 Rcpp::List fieldInfo_Impl(SEXP con_, std::vector<std::string> fields) {
     return Rcpp::List();
 }
