@@ -113,11 +113,9 @@ std::string getRuntimeVersion() {
 #else // ie if defined(NoBlpHere)
 
 #include <Rcpp/Lightest>
-// [[Rcpp::export]]
 std::string getHeaderVersion() {
     return std::string();
 }
-// [[Rcpp::export]]
 std::string getRuntimeVersion() {
     return std::string();
 }

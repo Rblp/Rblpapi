@@ -147,7 +147,6 @@ Rcpp::DataFrame lookup_Impl(SEXP con,
 #else // ie if defined(NoBlpHere)
 
 #include <Rcpp/Lightest>
-// [[Rcpp::export]]
 Rcpp::DataFrame lookup_Impl(SEXP con,
                             std::string query,
                             std::string yellowKeyFilter="YK_FILTER_NONE",

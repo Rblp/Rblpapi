@@ -194,7 +194,6 @@ Rcpp::List bdh_Impl(SEXP con_,
 #else // ie if defined(NoBlpHere)
 
 #include <Rcpp/Lightest>
-// [[Rcpp::export]]
 Rcpp::List bdh_Impl(SEXP con_,
                     std::vector<std::string> securities,
                     std::vector<std::string> fields,

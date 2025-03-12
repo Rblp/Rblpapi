@@ -211,7 +211,6 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
 #else // ie if defined(NoBlpHere)
 
 #include <Rcpp/Lightest>
-// [[Rcpp::export]]
 Rcpp::DataFrame getTicks_Impl(SEXP con,
                               std::string security,
                               std::vector<std::string> eventType,

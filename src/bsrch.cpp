@@ -232,7 +232,6 @@ DataFrame bsrch_Impl(SEXP con,
 #else // ie if defined(NoBlpHere)
 
 #include <Rcpp/Lightest>
-// [[Rcpp::export]]
 Rcpp::DataFrame bsrch_Impl(SEXP con,
                            std::string domain,
                            std::string limit,

@@ -199,7 +199,6 @@ SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_, SEXP is_auth_id_
 #else // ie if defined(NoBlpHere)
 
 #include <Rcpp/Lightest>
-// [[Rcpp::export]]
 SEXP authenticate_Impl(SEXP con_, SEXP uuid_, SEXP ip_address_, SEXP is_auth_id_, SEXP app_name_) {
     return R_NilValue;
 }

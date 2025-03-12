@@ -123,7 +123,6 @@ Rcpp::DataFrame fieldSearch_Impl(SEXP con, std::string searchterm) {
 #else // ie if defined(NoBlpHere)
 
 #include <Rcpp/Lightest>
-// [[Rcpp::export]]
 Rcpp::DataFrame fieldSearch_Impl(SEXP con, std::string searchterm) {
     return Rcpp::DataFrame();
 }

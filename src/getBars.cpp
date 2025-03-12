@@ -230,7 +230,6 @@ Rcpp::DataFrame getBars_Impl(SEXP con,
 #else // ie if defined(NoBlpHere)
 
 #include <Rcpp/Lightest>
-// [[Rcpp::export]]
 Rcpp::DataFrame getBars_Impl(SEXP con,
                              std::string security,
                              std::string eventType,

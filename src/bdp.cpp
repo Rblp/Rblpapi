@@ -143,7 +143,6 @@ Rcpp::List bdp_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
 #else // ie if defined(NoBlpHere)
 
 #include <Rcpp/Lightest>
-// [[Rcpp::export]]
 Rcpp::List bdp_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields,
                     SEXP options_, SEXP overrides_, bool verbose, SEXP identity_) {
     return Rcpp::List();
