@@ -12,13 +12,13 @@ VignetteBuilder: simplermarkdown
 LazyLoad: yes
 LinkingTo: Rcpp, BH
 Description: An R Interface to 'Bloomberg' is provided via the 'Blp API'.
-SystemRequirements: A valid Bloomberg installation. The API headers and
+SystemRequirements: GNU make. A valid Bloomberg installation. The API headers and
  dynamic library are downloaded from <https://github.com/Rblp/blp> during the
  build step. See <https://bloomberg.github.io/blpapi-docs/cpp/3.24.6> as well as
  <https://www.bloomberg.com/professional/support/api-library/> for API
  documentation. Currently supported platforms are Windows and Linux (both for
  x86-64 processors only) as well as macOS (for arm64 only).  Other os-cpu pairings
- are not supported by Bloomberg and can therefore not be supported here.
+ are not supported by Bloomberg and can therefore not be fully supported here.
 URL: https://dirk.eddelbuettel.com/code/rblpapi.html, https://github.com/Rblp/Rblpapi
 BugReports: https://github.com/Rblp/Rblpapi/issues
 License: file LICENSE
