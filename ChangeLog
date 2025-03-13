@@ -1,3 +1,8 @@
+2025-03-13  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure: Streamline and simplify conditional compilation
+	* src/Makevars.in: Idem
+
 2025-03-12  John Laing  <john.laing@gmail.com>
 
 	* src/authenticate.cpp: Correct duplicate export declaration
