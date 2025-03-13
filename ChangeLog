@@ -1,5 +1,7 @@
 2025-03-13  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Version, Date): Roll micro version and date
+
 	* configure: Streamline and simplify conditional compilation
 	* src/Makevars.in: Idem
 
