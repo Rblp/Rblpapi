@@ -3,6 +3,8 @@
 	* configure: Streamline and simplify conditional compilation
 	* src/Makevars.in: Idem
 
+	* .github/workflows/ci.yaml: Add macos-13 build for no-blp x86_64
+
 2025-03-12  John Laing  <john.laing@gmail.com>
 
 	* src/authenticate.cpp: Correct duplicate export declaration
