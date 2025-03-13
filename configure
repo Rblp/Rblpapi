@@ -39,7 +39,7 @@ else
     echo "Check https://www.bloomberg.com/professional/support/api-library/ for possible support first."
     echo "Contributions welcome, see https://github.com/Rblp/blp for integration with Rblapi."
     echo "The build will proceed but not be functional for lack of a library."
-    sed -e"s/@have_blp@/no/" src/Makevars.in > src/Makevars
+    cp -ax src/Makevars.no_blp src/Makevars
     exit 0
 fi
 
@@ -66,7 +66,7 @@ else
     echo "Unsupported platform and architecture combination: ${platform} ${arch}."
     echo "The build will proceed but not be functional for lack of a library."
     echo "If you need such a combination please get in touch with the Blp vendor."
-    sed -e"s/@have_blp@/no/" src/Makevars.in > src/Makevars
+    cp -ax src/Makevars.no_blp src/Makevars
     exit 0
 fi
 

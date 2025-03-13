@@ -12,7 +12,7 @@ VignetteBuilder: simplermarkdown
 LazyLoad: yes
 LinkingTo: Rcpp, BH
 Description: An R Interface to 'Bloomberg' is provided via the 'Blp API'.
-SystemRequirements: GNU make. A valid Bloomberg installation. The API headers and
+SystemRequirements: A valid Bloomberg installation. The API headers and
  dynamic library are downloaded from <https://github.com/Rblp/blp> during the
  build step. See <https://bloomberg.github.io/blpapi-docs/cpp/3.24.6> as well as
  <https://www.bloomberg.com/professional/support/api-library/> for API
