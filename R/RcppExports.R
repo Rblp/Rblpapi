@@ -59,6 +59,15 @@ getRuntimeVersion <- function() {
     .Call(`_Rblpapi_getRuntimeVersion`)
 }
 
+#' This function returns a boolean indicating whether Blp support is available.
+#'
+#' @title Get Blp availability in current build
+#' @return A logical indicating whether Blp was available at build.
+#' @author Dirk Eddelbuettel
+haveBlp <- function() {
+    .Call(`_Rblpapi_haveBlp`)
+}
+
 bsrch_Impl <- function(con, domain, limit, verbose = FALSE) {
     .Call(`_Rblpapi_bsrch_Impl`, con, domain, limit, verbose)
 }

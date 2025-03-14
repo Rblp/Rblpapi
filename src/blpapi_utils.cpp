@@ -19,7 +19,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
-#if !defined(NoBlpHere)
+#if defined(HaveBlp)
 
 #include <stdexcept>
 #include <string>

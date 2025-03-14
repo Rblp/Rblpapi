@@ -19,8 +19,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
-#if !defined(NoBlpHere)
-
+#if defined(HaveBlp)
 #include <vector>
 #include <string>
 #include <blpapi_session.h>
@@ -29,7 +28,6 @@
 #include <blpapi_event.h>
 #include <blpapi_message.h>
 #include <blpapi_element.h>
-#include <Rcpp.h>
 #include <blpapi_utils.h>
 
 using BloombergLP::blpapi::Session;
@@ -89,6 +87,9 @@ Rcpp::List HistoricalDataResponseToDF(Event& event, const std::vector<std::strin
     }
     return res;
 }
+#else
+#include <Rcpp/Lightest>
+#endif
 
 // Simpler interface with std::vector<std::string> thanks to Rcpp::Attributes
 // [[Rcpp::export]]
@@ -99,6 +100,8 @@ Rcpp::List bdh_Impl(SEXP con_,
                     SEXP options_, SEXP overrides_,
                     bool verbose, SEXP identity_,
                     bool int_as_double) {
+
+#if defined(HaveBlp)
 
     Session* session =
         reinterpret_cast<Session*>(checkExternalPointer(con_,"blpapi::Session*"));
@@ -189,19 +192,8 @@ Rcpp::List bdh_Impl(SEXP con_,
     }
     ans.attr("names") = ans_names;
     return ans;
-}
 
-#else // ie if defined(NoBlpHere)
-
-#include <Rcpp/Lightest>
-Rcpp::List bdh_Impl(SEXP con_,
-                    std::vector<std::string> securities,
-                    std::vector<std::string> fields,
-                    std::string start_date_, SEXP end_date_,
-                    SEXP options_, SEXP overrides_,
-                    bool verbose, SEXP identity_,
-                    bool int_as_double) {
+#else // ie no Blp
     return Rcpp::List();
-}
-
 #endif
+}

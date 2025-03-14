@@ -21,11 +21,9 @@
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
-#if !defined(NoBlpHere)
-
+#if defined(HaveBlp)
 #include <string>
 #include <blpapi_session.h>
-#include <Rcpp.h>
 #include <finalizers.h>
 
 using BloombergLP::blpapi::Session;
@@ -42,9 +40,13 @@ static void sessionFinalizer(SEXP session_) {
         R_ClearExternalPtr(session_);
     }
 }
+#else
+#include <Rcpp/Lightest>
+#endif
 
 // [[Rcpp::export]]
 SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_, SEXP app_identity_key_) {
+#if defined(HaveBlp)
     SessionOptions sessionOptions;
     sessionOptions.setServerHost(host.c_str());
     sessionOptions.setServerPort(port);
@@ -68,13 +70,7 @@ SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_, SEX
     }
 
     return createExternalPointer<Session>(sp, sessionFinalizer, "blpapi::Session*");
-}
-
-#else // ie if defined(NoBlpHere)
-
-#include <Rcpp/Lightest>
-SEXP blpConnect_Impl(const std::string host, const int port, SEXP app_name_, SEXP app_identity_key_) {
+#else // ie no Blp
     return R_NilValue;
-}
-
 #endif
+}
