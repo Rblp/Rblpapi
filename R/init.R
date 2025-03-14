@@ -21,16 +21,12 @@
 .pkgenv <- new.env(parent=emptyenv())
 
 .onAttach <- function(libname, pkgname) {
-    hrd <- getHeaderVersion()
-    rtm <- getRuntimeVersion()
-    if (nchar(hrd) + nchar(rtm) == 0) {
-        packageStartupMessage("No Blp available so no Rblapi functionality.")
-    } else {
+    if (haveBlp()) {
         packageStartupMessage(paste0("Rblpapi version ", packageVersion("Rblpapi"),
-                                     " using Blpapi headers ", hrd, " and run-time ", rtm, "."))
+                                     " using Blpapi headers ", getHeaderVersion(),
+                                     " and run-time ", getRuntimeVersion(), "."))
         packageStartupMessage(paste0("Please respect the Bloomberg licensing agreement ",
                                      "and terms of service."))
-
         if (getOption("blpAutoConnect", FALSE)) {
             con <- blpConnect()
             if (getOption("blpVerbose", FALSE)) {
@@ -49,5 +45,7 @@
         }
         assign("con", con, envir=.pkgenv)
         assign("blpAuth", blpAuth, envir=.pkgenv)
+    } else {
+        packageStartupMessage("No Blp available so no Rblapi functionality.")
     }
 }

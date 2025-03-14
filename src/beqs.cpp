@@ -20,8 +20,7 @@
 
 // TODO: Date, Datetime, Int (?), ... results
 
-#if !defined(NoBlpHere)
-
+#if defined(HaveBlp)
 #include <vector>
 #include <string>
 #include <blpapi_session.h>
@@ -30,18 +29,13 @@
 #include <blpapi_event.h>
 #include <blpapi_message.h>
 #include <blpapi_element.h>
-#include <Rcpp.h>
 #include <blpapi_utils.h>
-
-
 #include <iostream>
 #include <stdlib.h>
 #include <string.h>
 #include <fstream>
 #include <array>
 #include <iterator>
-
-
 #include <sstream>
 using namespace std;
 using namespace Rcpp;
@@ -170,17 +164,20 @@ Rcpp::DataFrame processResponseEvent(Event event, const bool verbose) {
     Rcpp::DataFrame df(lst);
     return df;
 }
-
-
+#else
+#include <Rcpp/Lightest>
+#endif
 
 // [[Rcpp::export]]
-DataFrame beqs_Impl(SEXP con,
-                    std::string screenName,
-                    std::string screenType,
-                    std::string group,
-                    std::string pitdate,
-                    std::string languageId,
-                    bool verbose=false) {
+Rcpp::DataFrame beqs_Impl(SEXP con,
+                          std::string screenName,
+                          std::string screenType,
+                          std::string group,
+                          std::string pitdate,
+                          std::string languageId,
+                          bool verbose=false) {
+
+#if defined(HaveBlp)
 
     Session* session = reinterpret_cast<Session*>(checkExternalPointer(con, "blpapi::Session*"));
 
@@ -242,19 +239,8 @@ DataFrame beqs_Impl(SEXP con,
 
     return ans;
 
-}
-
-#else // ie if defined(NoBlpHere)
-
-#include <Rcpp/Lightest>
-Rcpp::DataFrame beqs_Impl(SEXP con,
-                          std::string screenName,
-                          std::string screenType,
-                          std::string group,
-                          std::string pitdate,
-                          std::string languageId,
-                          bool verbose=false) {
+#else // ie no Blp
     return Rcpp::DataFrame();
-}
-
 #endif
+
+}

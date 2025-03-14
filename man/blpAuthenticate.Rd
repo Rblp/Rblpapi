@@ -4,15 +4,11 @@
 \alias{blpAuthenticate}
 \title{Authenticate Bloomberg API access}
 \usage{
-blpAuthenticate(
-  uuid = getOption("blpUUID", NULL),
+blpAuthenticate(uuid = getOption("blpUUID", NULL),
   host = getOption("blpLoginHostname", "localhost"),
-  ip.address = getOption("blpLoginIP", NULL),
-  con = defaultConnection(),
-  default = TRUE,
-  isAuthId = getOption("blpIsAuthId", FALSE),
-  appName = getOption("blpAppName", NULL)
-)
+  ip.address = getOption("blpLoginIP", NULL), con = defaultConnection(),
+  default = TRUE, isAuthId = getOption("blpIsAuthId", FALSE),
+  appName = getOption("blpAppName", NULL))
 }
 \arguments{
 \item{uuid}{An optional character variable with a unique user id

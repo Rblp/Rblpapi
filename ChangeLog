@@ -1,3 +1,26 @@
+2025-03-14  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/authenticate.cpp: Redefine in terms of -DHaveBlp flag and bring
+	if/else inside the function itself
+        * src/bdh.cpp: Idem
+        * src/bdp.cpp: Idem
+        * src/bds.cpp: Idem
+        * src/beqs.cpp: Idem
+        * src/blpConnect.cpp: Idem
+        * src/blpVersion.cpp: Idem
+        * src/blpapi_utils.cpp: Idem
+        * src/bsrch.cpp: Idem
+        * src/fieldsearch.cpp: Idem
+        * src/getBars.cpp: Idem
+        * src/getFieldInfo.cpp: Idem
+        * src/getTicks.cpp: Idem
+        * src/lookup.cpp: Idem
+        * src/subscribe.cpp: Idem
+
+	* src/blpVersion.cpp: Define simple haveBlp() helper
+	* man/haveBlp.Rd: Documentation for haveBlp()
+	* R/init.R: Use more explicit haveBlp()
+
 2025-03-13  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Roll micro version and date

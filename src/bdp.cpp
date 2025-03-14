@@ -19,11 +19,8 @@
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
-#if !defined(NoBlpHere)
-
+#if defined(HaveBlp)
 // compare to RefDataExample.cpp
-
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -33,7 +30,6 @@
 #include <blpapi_event.h>
 #include <blpapi_message.h>
 #include <blpapi_element.h>
-#include <Rcpp.h>
 #include <blpapi_utils.h>
 
 using BloombergLP::blpapi::Session;
@@ -91,12 +87,17 @@ void getBDPResult(Event& event, Rcpp::List& res, const std::vector<std::string>&
         }
     }
 }
+#else
+#include <Rcpp/Lightest>
+#endif
 
 // Simpler interface with std::vector<std::string> thanks to Rcpp::Attributes
 //
 // [[Rcpp::export]]
 Rcpp::List bdp_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields,
                     SEXP options_, SEXP overrides_, bool verbose, SEXP identity_) {
+
+#if defined(HaveBlp)
 
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     Session* session =
@@ -138,14 +139,8 @@ Rcpp::List bdp_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
         if (event.eventType() == Event::RESPONSE) { break; }
     }
     return res;
-}
 
-#else // ie if defined(NoBlpHere)
-
-#include <Rcpp/Lightest>
-Rcpp::List bdp_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields,
-                    SEXP options_, SEXP overrides_, bool verbose, SEXP identity_) {
+#else // ie no Blp
     return Rcpp::List();
-}
-
 #endif
+}

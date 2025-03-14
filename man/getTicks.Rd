@@ -40,7 +40,7 @@ call, and retrieved via the internal function
 Depending on the value of \sQuote{returnAs}, either a
 \sQuote{data.frame} or \sQuote{data.table} object also containing
 non-numerical information such as condition codes, or a time-indexed
-container of type \sQuote{xts} and \sQuote{zoo} with
+container of type \sQuote{xts} or \sQuote{zoo} with
 a numeric matrix containing only \sQuote{value} and \sQuote{size}.
 }
 \description{

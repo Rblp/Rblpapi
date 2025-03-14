@@ -19,10 +19,9 @@
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
-#if !defined(NoBlpHere)
+#if defined(HaveBlp)
 
 // compare to SimpleSubscriptionExample.cpp
-
 #include <iostream>
 #include <vector>
 #include <map>
@@ -35,7 +34,6 @@
 #include <blpapi_message.h>
 #include <blpapi_session.h>
 #include <blpapi_subscriptionlist.h>
-#include <Rcpp.h>
 #include <blpapi_utils.h>
 
 using BloombergLP::blpapi::Session;
@@ -164,11 +162,14 @@ SEXP recursiveParse(const Element& e) {
         }
     }
 }
+#else
+#include <Rcpp/Lightest>
+#endif
 
 // [[Rcpp::export]]
 SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields,
                     Rcpp::Function fun, SEXP options_, SEXP identity_) {
-
+#if defined(HaveBlp)
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     Session* session =
         reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
@@ -231,14 +232,7 @@ SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<
         session->unsubscribe(subscriptions);
     }
     return R_NilValue;
-}
-
-#else // ie if defined(NoBlpHere)
-
-#include <Rcpp/Lightest>
-SEXP subscribe_Impl(SEXP con_, std::vector<std::string> securities, std::vector<std::string> fields,
-                    Rcpp::Function fun, SEXP options_, SEXP identity_) {
+#else // ie no Blp
     return R_NilValue;
-}
-
 #endif
+}
