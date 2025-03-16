@@ -15,11 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>. //
 ///////////////////////////////////////////////////////////////////////////
 
-#if !defined(NoBlpHere)
-
-#include <Rcpp.h>
+#if defined(HaveBlp)
 #include <blpapi_utils.h>
-
 using BloombergLP::blpapi::Session;
 using BloombergLP::blpapi::Service;
 using BloombergLP::blpapi::Request;
@@ -27,34 +24,30 @@ using BloombergLP::blpapi::Event;
 using BloombergLP::blpapi::Message;
 using BloombergLP::blpapi::MessageIterator;
 using BloombergLP::blpapi::Element;
+#else
+#include <Rcpp/Lightest>
+#endif
 
 // [[Rcpp::export]]
 Rcpp::List fieldInfo_Impl(SEXP con_, std::vector<std::string> fields) {
+#if defined(HaveBlp)
+    Session* session = reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
 
-  Session* session =
-    reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
-
-  // get the field info
-  std::vector<FieldInfo> fldinfos(getFieldTypes(session, fields));
-  std::vector<std::string> colnames {"id","mnemonic","datatype","ftype"};
-  std::vector<RblpapiT> res_types(4,RblpapiT::String);
-  Rcpp::List res(allocateDataFrame(fields, colnames, res_types));
-  R_len_t i(0);
-  for(auto f : fldinfos) {
-    SET_STRING_ELT(res[0],i,Rf_mkCharCE(f.id.c_str(), CE_UTF8));
-    SET_STRING_ELT(res[1],i,Rf_mkCharCE(f.mnemonic.c_str(), CE_UTF8));
-    SET_STRING_ELT(res[2],i,Rf_mkCharCE(f.datatype.c_str(), CE_UTF8));
-    SET_STRING_ELT(res[3],i,Rf_mkCharCE(f.ftype.c_str(), CE_UTF8));
-    ++i;
-  }
-  return res;
-}
-
-#else // ie if defined(NoBlpHere)
-
-#include <Rcpp/Lightest>
-Rcpp::List fieldInfo_Impl(SEXP con_, std::vector<std::string> fields) {
+    // get the field info
+    std::vector<FieldInfo> fldinfos(getFieldTypes(session, fields));
+    std::vector<std::string> colnames {"id","mnemonic","datatype","ftype"};
+    std::vector<RblpapiT> res_types(4,RblpapiT::String);
+    Rcpp::List res(allocateDataFrame(fields, colnames, res_types));
+    R_len_t i(0);
+    for(auto f : fldinfos) {
+        SET_STRING_ELT(res[0],i,Rf_mkCharCE(f.id.c_str(), CE_UTF8));
+        SET_STRING_ELT(res[1],i,Rf_mkCharCE(f.mnemonic.c_str(), CE_UTF8));
+        SET_STRING_ELT(res[2],i,Rf_mkCharCE(f.datatype.c_str(), CE_UTF8));
+        SET_STRING_ELT(res[3],i,Rf_mkCharCE(f.ftype.c_str(), CE_UTF8));
+        ++i;
+    }
+    return res;
+#else // ie no Blp
     return Rcpp::List();
-}
-
 #endif
+}

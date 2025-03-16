@@ -98,7 +98,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // beqs_Impl
-DataFrame beqs_Impl(SEXP con, std::string screenName, std::string screenType, std::string group, std::string pitdate, std::string languageId, bool verbose);
+Rcpp::DataFrame beqs_Impl(SEXP con, std::string screenName, std::string screenType, std::string group, std::string pitdate, std::string languageId, bool verbose);
 RcppExport SEXP _Rblpapi_beqs_Impl(SEXP conSEXP, SEXP screenNameSEXP, SEXP screenTypeSEXP, SEXP groupSEXP, SEXP pitdateSEXP, SEXP languageIdSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -148,8 +148,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// haveBlp
+bool haveBlp();
+RcppExport SEXP _Rblpapi_haveBlp() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(haveBlp());
+    return rcpp_result_gen;
+END_RCPP
+}
 // bsrch_Impl
-DataFrame bsrch_Impl(SEXP con, std::string domain, std::string limit, bool verbose);
+Rcpp::DataFrame bsrch_Impl(SEXP con, std::string domain, std::string limit, bool verbose);
 RcppExport SEXP _Rblpapi_bsrch_Impl(SEXP conSEXP, SEXP domainSEXP, SEXP limitSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -264,6 +274,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Rblpapi_blpConnect_Impl", (DL_FUNC) &_Rblpapi_blpConnect_Impl, 4},
     {"_Rblpapi_getHeaderVersion", (DL_FUNC) &_Rblpapi_getHeaderVersion, 0},
     {"_Rblpapi_getRuntimeVersion", (DL_FUNC) &_Rblpapi_getRuntimeVersion, 0},
+    {"_Rblpapi_haveBlp", (DL_FUNC) &_Rblpapi_haveBlp, 0},
     {"_Rblpapi_bsrch_Impl", (DL_FUNC) &_Rblpapi_bsrch_Impl, 4},
     {"_Rblpapi_fieldSearch_Impl", (DL_FUNC) &_Rblpapi_fieldSearch_Impl, 2},
     {"_Rblpapi_getBars_Impl", (DL_FUNC) &_Rblpapi_getBars_Impl, 8},

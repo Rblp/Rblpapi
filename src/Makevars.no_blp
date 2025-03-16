@@ -20,21 +20,8 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
-## Overall 'do we expect to have blp support available' state filled in by configure
-##
-## (This variable is actually not used below and just left as a reminder 'how to' do
-## such replacements with `sed` from `configure`. The build with blp uses the same library
-## names throughout; we used to have 32 vs 64 bit builds in past.)
-HAVE_BLP = @have_blp@
+## The 'no blp' build does not require headers or linking: when no blp is
+## available, none is used: the build is 'naked'
 
-## this used to be filled in by configure but now both cases use the same value anyway
-BBG_LIB     = -lblpapi3_64
-BBG_RPATH   = '$$ORIGIN/../blp'
-
-## set include and linker options
-## Bbg API files are assummed to be in the standard search path
-PKG_CPPFLAGS = -I../inst/include/ -I. -DHaveBlp
-PKG_LIBS     = $(BBG_LIB) -L../inst/blp -Wl,-rpath,$(BBG_RPATH)
-
-all: $(SHLIB)
-	@if command -v install_name_tool; then echo "fixing"; install_name_tool -add_rpath @loader_path/../blp Rblpapi.so; fi
+## use flag to compile without interfacing blp objects
+PKG_CPPFLAGS = -DNoBlpHere
