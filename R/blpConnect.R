@@ -33,6 +33,8 @@
 ##' to connect to bpipe. If this is NULL Rblpapi connects to the
 ##' Bloomberg API but cannot authenticate with an app name. This requires
 ##' the user to authenticate with a user uuid.
+##' @param appIdentityKey the application identity key. For Desktop API,
+##' this is generated from the APRE screen on Bloomberg terminal.
 ##' @return In the \code{default=TRUE} case nothing is returned, and
 ##' this connection is automatically used for all future calls which
 ##' omit the \code{con} argument. Otherwise a connection object is
@@ -58,10 +60,11 @@
 blpConnect <- function(host=getOption("blpHost", "localhost"),
                        port=getOption("blpPort", 8194L),
                        default=TRUE,
-                       appName = getOption("blpAppName", NULL)) {
+                       appName = getOption("blpAppName", NULL),
+                       appIdentityKey = getOption("blpAppIdentityKey", NULL)) {
     if (storage.mode(port) != "integer") port <- as.integer(port)
     if (storage.mode(host) != "character") stop("Host argument must be character.", call.=FALSE)
-    con <- blpConnect_Impl(host, port, appName)
+    con <- blpConnect_Impl(host, port, appName, appIdentityKey)
 
     if (default) .pkgenv$con <- con else return(con)
 }

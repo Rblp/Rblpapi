@@ -6,7 +6,8 @@
 \usage{
 blpConnect(host = getOption("blpHost", "localhost"),
   port = getOption("blpPort", 8194L), default = TRUE,
-  appName = getOption("blpAppName", NULL))
+  appName = getOption("blpAppName", NULL),
+  appIdentityKey = getOption("blpAppIdentityKey", NULL))
 }
 \arguments{
 \item{host}{A character option with either a machine name that is
@@ -24,6 +25,9 @@ user. Default to \code{TRUE}.}
 to connect to bpipe. If this is NULL Rblpapi connects to the
 Bloomberg API but cannot authenticate with an app name. This requires
 the user to authenticate with a user uuid.}
+
+\item{appIdentityKey}{the application identity key. For Desktop API,
+this is generated from the APRE screen on Bloomberg terminal.}
 }
 \value{
 In the \code{default=TRUE} case nothing is returned, and
