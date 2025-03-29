@@ -2,7 +2,7 @@
 ##
 ##  Makefile.win -- Windows build system
 ##
-##  Copyright (C) 2015 - 2024  Whit Armstrong and Dirk Eddelbuettel
+##  Copyright (C) 2015 - 2025  Whit Armstrong and Dirk Eddelbuettel
 ##
 ##  This file is part of Rblpapi
 ##
@@ -28,8 +28,7 @@ else
 endif
 
 ## Standard compiler / linker flags including windows flavor
-# CXX_STD = CXX11
-PKG_CPPFLAGS = -I../inst/include -I.
+PKG_CPPFLAGS = -I../inst/include -I. -DHaveBlp
 PKG_LIBS = -lblpapi3_${WIN} -L${FLV}
 
 

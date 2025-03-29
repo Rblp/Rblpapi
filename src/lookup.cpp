@@ -18,21 +18,17 @@
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
-#if !defined(NoBlpHere)
+#if defined(HaveBlp)
 
 #include <blpapi_session.h>
-
 #include <blpapi_event.h>
 #include <blpapi_message.h>
 #include <blpapi_element.h>
 #include <blpapi_name.h>
 #include <blpapi_request.h>
-
 #include <iostream>
 #include <vector>
 #include <string>
-
-#include <Rcpp.h>
 #include <blpapi_utils.h>
 
 namespace bbg = BloombergLP::blpapi;	// shortcut to not globally import both namespace
@@ -86,6 +82,9 @@ void processResponseEvent(bbg::Event &event, InstrumentListResults &matches, con
         processMessage(msg, matches, verbose);
     }
 }
+#else
+#include <Rcpp/Lightest>
+#endif
 
 // [[Rcpp::export]]
 Rcpp::DataFrame lookup_Impl(SEXP con,
@@ -94,7 +93,7 @@ Rcpp::DataFrame lookup_Impl(SEXP con,
                             std::string languageOverride="LANG_OVERRIDE_NONE",
                             int maxResults=20,
                             bool verbose=false) {
-
+#if defined(HaveBlp)
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     bbg::Session* session =
         reinterpret_cast<bbg::Session*>(checkExternalPointer(con,"blpapi::Session*"));
@@ -142,18 +141,7 @@ Rcpp::DataFrame lookup_Impl(SEXP con,
 
     return Rcpp::DataFrame::create(Rcpp::Named("security") = matches.security,
                                    Rcpp::Named("description") = matches.description);
-}
-
-#else // ie if defined(NoBlpHere)
-
-#include <Rcpp/Lightest>
-Rcpp::DataFrame lookup_Impl(SEXP con,
-                            std::string query,
-                            std::string yellowKeyFilter="YK_FILTER_NONE",
-                            std::string languageOverride="LANG_OVERRIDE_NONE",
-                            int maxResults=20,
-                            bool verbose=false) {
+#else // ie no Blp
     return Rcpp::DataFrame();
-}
-
 #endif
+}

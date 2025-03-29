@@ -19,8 +19,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
-#if !defined(NoBlpHere)
-
+#if defined(HaveBlp)
 #include <vector>
 #include <string>
 #include <blpapi_session.h>
@@ -29,7 +28,6 @@
 #include <blpapi_event.h>
 #include <blpapi_message.h>
 #include <blpapi_element.h>
-#include <Rcpp.h>
 #include <blpapi_utils.h>
 
 using BloombergLP::blpapi::Session;
@@ -248,12 +246,17 @@ Rcpp::List BulkDataResponseToDF(Event& event, std::string& requested_field, std:
     ans.attr("names") = ans_names;
     return ans;
 }
+#else
+#include <Rcpp/Lightest>
+#endif
 
 // only allow one field for bds in contrast to bdp
 // [[Rcpp::export]]
 Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
                     std::string field, SEXP options_, SEXP overrides_,
                     bool verbose, SEXP identity_) {
+
+#if defined(HaveBlp)
 
     Session* session =
         reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
@@ -292,13 +295,18 @@ Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
         }
         if (event.eventType() == Event::RESPONSE) { break; }
     }
-    return R_NilValue;
+    return Rcpp::List();
+#else // ie no Blp
+    return Rcpp::List();
+#endif
 }
 
 // [[Rcpp::export]]
 Rcpp::List getPortfolio_Impl(SEXP con_, std::vector<std::string> securities,
                              std::string field, SEXP options_, SEXP overrides_,
                              bool verbose, SEXP identity_) {
+
+#if defined(HaveBlp)
 
     Session* session =
         reinterpret_cast<Session*>(checkExternalPointer(con_, "blpapi::Session*"));
@@ -337,21 +345,8 @@ Rcpp::List getPortfolio_Impl(SEXP con_, std::vector<std::string> securities,
         }
         if (event.eventType() == Event::RESPONSE) { break; }
     }
-    return R_NilValue;
-}
-
-#else // ie if defined(NoBlpHere)
-
-#include <Rcpp/Lightest>
-Rcpp::List bds_Impl(SEXP con_, std::vector<std::string> securities,
-                    std::string field, SEXP options_, SEXP overrides_,
-                    bool verbose, SEXP identity_) {
     return Rcpp::List();
-}
-Rcpp::List getPortfolio_Impl(SEXP con_, std::vector<std::string> securities,
-                             std::string field, SEXP options_, SEXP overrides_,
-                             bool verbose, SEXP identity_) {
+#else // ie no Blp
     return Rcpp::List();
-}
-
 #endif
+}

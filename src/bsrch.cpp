@@ -18,8 +18,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with Rblpapi.  If not, see <http://www.gnu.org/licenses/>.
 
-#if !defined(NoBlpHere)
-
+#if defined(HaveBlp)
 #include <vector>
 #include <string>
 #include <blpapi_session.h>
@@ -28,18 +27,13 @@
 #include <blpapi_event.h>
 #include <blpapi_message.h>
 #include <blpapi_element.h>
-#include <Rcpp.h>
 #include <blpapi_utils.h>
-
-
 #include <iostream>
 #include <stdlib.h>
 #include <string.h>
 #include <fstream>
 #include <array>
 #include <iterator>
-
-
 #include <sstream>
 using namespace std;
 using namespace Rcpp;
@@ -173,14 +167,16 @@ Rcpp::DataFrame processBsrchResponse(Event event, const bool verbose) {
     Rcpp::DataFrame df(lst);
     return df;
 }
-
+#else
+#include <Rcpp/Lightest>
+#endif
 
 // [[Rcpp::export]]
-DataFrame bsrch_Impl(SEXP con,
-                     std::string domain,
-                     std::string limit,
-                     bool verbose=false) {
-
+Rcpp::DataFrame bsrch_Impl(SEXP con,
+                           std::string domain,
+                           std::string limit,
+                           bool verbose=false) {
+#if defined(HaveBlp)
     Session* session = reinterpret_cast<Session*>(checkExternalPointer(con, "blpapi::Session*"));
 
     const std::string exrsrv = "//blp/exrsvc";
@@ -226,17 +222,8 @@ DataFrame bsrch_Impl(SEXP con,
     }
 
     return ans;
-
-}
-
-#else // ie if defined(NoBlpHere)
-
-#include <Rcpp/Lightest>
-Rcpp::DataFrame bsrch_Impl(SEXP con,
-                           std::string domain,
-                           std::string limit,
-                           bool verbose=false) {
+#else // ie no Blp
     return Rcpp::DataFrame();
-}
-
 #endif
+
+}

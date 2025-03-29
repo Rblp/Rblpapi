@@ -39,23 +39,23 @@ else
     echo "Check https://www.bloomberg.com/professional/support/api-library/ for possible support first."
     echo "Contributions welcome, see https://github.com/Rblp/blp for integration with Rblapi."
     echo "The build will proceed but not be functional for lack of a library."
-    sed -e"s/@config@//" -e"s/@badsystem@/-DNoBlpHere/" src/Makevars.in > src/Makevars
+    cp -ax src/Makevars.no_blp src/Makevars
     exit 0
 fi
 
 ## Populate Makevars
 arch=$(uname -m)
-if [ "${arch}" = "x86_64" -a "${platform}" = "linux" ]; then
+if [ "${arch}" = "x86_64" ] && [ "${platform}" = "linux" ]; then
     echo "Setting up compilation for a ${platform} ${arch} system"
-    sed -e"s/@config@/-lblpapi3_64/" -e"s/@badsystem@//" src/Makevars.in > src/Makevars
+    sed -e"s/@have_blp@/yes/" src/Makevars.in > src/Makevars
     flavour="64"
     # this used to matter when Blp supported x86 on macos, they no longer do
     #if [ "${platform}" = "osx" ]; then
     #    cpu="x86"
     #fi
-elif [ "${arch}" = "arm64" -a "${platform}" = "osx" ]; then
+elif [ "${arch}" = "arm64" ] && [ "${platform}" = "osx" ]; then
     echo "Setting up compilation for a ${platform} ${arch} system"
-    sed -e"s/@config@/-lblpapi3_64/" -e"s/@badsystem@//" src/Makevars.in > src/Makevars
+    sed -e"s/@have_blp@/yes/" src/Makevars.in > src/Makevars
     flavour="64"
     cpu="arm"
 #elif [ "${arch}" = "i686" ]; then
@@ -66,7 +66,7 @@ else
     echo "Unsupported platform and architecture combination: ${platform} ${arch}."
     echo "The build will proceed but not be functional for lack of a library."
     echo "If you need such a combination please get in touch with the Blp vendor."
-    sed -e"s/@config@//" -e"s/@badsystem@/-DNoBlpHere/" src/Makevars.in > src/Makevars
+    cp -ax src/Makevars.no_blp src/Makevars
     exit 0
 fi
 

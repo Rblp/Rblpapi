@@ -42,13 +42,12 @@
  * IN THE SOFTWARE.
  */
 
-#if !defined(NoBlpHere)
+#if defined(HaveBlp)
 
 #include <vector>
 #include <string>
 #include <blpapi_session.h>
 #include <blpapi_eventdispatcher.h>
-
 #include <blpapi_event.h>
 #include <blpapi_message.h>
 #include <blpapi_element.h>
@@ -56,8 +55,6 @@
 #include <blpapi_request.h>
 #include <blpapi_subscriptionlist.h>
 #include <blpapi_defs.h>
-
-
 #include <time.h>
 #include <sstream>
 #include <iomanip>
@@ -65,8 +62,6 @@
 #include <string>
 #include <stdlib.h>
 #include <string.h>
-
-#include <Rcpp.h>
 #include <blpapi_utils.h>
 
 namespace bbg = BloombergLP::blpapi;	// shortcut to not globally import both namespaces
@@ -137,6 +132,9 @@ void processResponseEvent(bbg::Event &event, Ticks &ticks, const bool verbose) {
         processMessage(msg, ticks, verbose);
     }
 }
+#else
+#include <Rcpp/Lightest>
+#endif
 
 // [[Rcpp::export]]
 Rcpp::DataFrame getTicks_Impl(SEXP con,
@@ -146,7 +144,7 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
                               std::string endDateTime,
                               bool setCondCodes=true,
                               bool verbose=false) {
-
+#if defined(HaveBlp)
     // via Rcpp Attributes we get a try/catch block with error propagation to R "for free"
     bbg::Session* session =
         reinterpret_cast<bbg::Session*>(checkExternalPointer(con,"blpapi::Session*"));
@@ -205,20 +203,8 @@ Rcpp::DataFrame getTicks_Impl(SEXP con,
                                    Rcpp::Named("value") = ticks.value,
                                    Rcpp::Named("size")  = ticks.size,
     	                           Rcpp::Named("condcode") = ticks.conditionCode);
-
-}
-
-#else // ie if defined(NoBlpHere)
-
-#include <Rcpp/Lightest>
-Rcpp::DataFrame getTicks_Impl(SEXP con,
-                              std::string security,
-                              std::vector<std::string> eventType,
-                              std::string startDateTime,
-                              std::string endDateTime,
-                              bool setCondCodes=true,
-                              bool verbose=false) {
+#else // ie no Blp
     return Rcpp::DataFrame();
-}
-
 #endif
+
+}
