@@ -76,6 +76,14 @@
 
 	* .github/workflows/ci.yaml: Use r-ci action with embedded bootstrap
 
+2025-01-15  Kai Lin   <kai.lin@coolabahcapital.com>
+
+	* src/blpConnect.cpp: Add 'appIdentityKey' argument to 'blpConnect'
+	* R/blpConnect.R: Adjust and document R interface
+	* man/blpConnect.Rd: Regenerated
+	* src/RcppExports.cpp: Idem
+	* R/RcppExports.R: Idem
+
 2024-12-05  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/bdh.cpp: Use Rcpp::stop instead of throw
