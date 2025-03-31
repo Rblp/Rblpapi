@@ -4,11 +4,15 @@
 \newcommand{\ghpr}{\href{https://github.com/Rblp/Rblpapi/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/Rblp/Rblpapi/issues/#1}{##1}}
 
-\section{Changes in Rblpapi version 0.3.16 (2025-xx-yy)}{
+\section{Changes in Rblpapi version 0.3.16 (2025-03-31)}{
   \itemize{
-    \item A quoto error message is now improved (Rodolphe Duge in \ghpr{400})
+    \item A quota error message is now improved (Rodolphe Duge in \ghpr{400})
     \item Convert remaining \code{throw} into \code{Rcpp::stop} (Dirk in
     \ghpr{402} fixing \ghit{401})
+    \item Add optional \code{appIdentityKey} argument to \code{blpConnect}
+    (Kai Lin in \ghpr{404})
+    \item Rework build as function of Blp library availability (Dirk and
+    John in \ghpr{406}, \ghpr{409}, \ghpr{410} fixing \ghit{407}, \ghit{408})
   }
 }
 
