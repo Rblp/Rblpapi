@@ -1,3 +1,7 @@
+2026-01-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* .github/workflows/ci.yaml: Switch to actions/checkout@v6
+
 2025-10-29  Dirk Eddelbuettel  <edd@debian.org>
 
 	* configure: Account for linux-musl which is of course unsupported
