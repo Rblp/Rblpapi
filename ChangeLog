@@ -1,6 +1,7 @@
 2026-01-06  Dirk Eddelbuettel  <edd@debian.org>
 
-	* .github/workflows/ci.yaml: Switch to actions/checkout@v6
+	* .github/workflows/ci.yaml: Switch to actions/checkout@v6; remove
+	now retired macos-13
 
 2025-10-29  Dirk Eddelbuettel  <edd@debian.org>
 
