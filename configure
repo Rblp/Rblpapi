@@ -30,12 +30,13 @@ fi
 ## At CRAN or R-universe we encounter nothing else.
 : ${R_HOME=$(R RHOME)}
 sysname=$(${R_HOME}/bin/Rscript -e 'cat(Sys.info()["sysname"])')
-if [ ${sysname} = "Linux" ]; then
+osname=$(${R_HOME}/bin/Rscript -e 'cat(R.version$os)')
+if [ ${sysname} = "Linux" ] & [ ${osname} != "linux-musl" ]; then
     platform="linux"
 elif [ ${sysname} = "Darwin" ]; then
     platform="osx"
 else
-    echo "Unsupported platform: $sysname"
+    echo "Unsupported platform: ${sysname} (${osname})"
     echo "Check https://www.bloomberg.com/professional/support/api-library/ for possible support first."
     echo "Contributions welcome, see https://github.com/Rblp/blp for integration with Rblapi."
     echo "The build will proceed but not be functional for lack of a library."
