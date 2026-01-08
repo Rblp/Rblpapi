@@ -45,7 +45,8 @@ else
 fi
 
 ## Populate Makevars
-arch=$(uname -m)
+## Use Sys.info() to be cross-compilation safe, r-universe still has x86_86 macos
+arch=$(${R_HOME}/bin/Rscript -e 'cat(Sys.info()["machine"])')
 if [ "${arch}" = "x86_64" ] && [ "${platform}" = "linux" ]; then
     echo "Setting up compilation for a ${platform} ${arch} system"
     sed -e"s/@have_blp@/yes/" src/Makevars.in > src/Makevars
