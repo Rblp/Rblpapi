@@ -28,8 +28,10 @@ fi
 
 ## Check for Linux or OSX. "These days" we support x86_64 on Linux and arm64 on macOS.
 ## At CRAN or R-universe we encounter nothing else.
+## Use Sys.info() to be cross-compilation safe.
 : ${R_HOME=$(R RHOME)}
-sysname=$(${R_HOME}/bin/Rscript -e 'cat(Sys.info()["sysname"])')
+sysname=$(${R_HOME}/bin/Rscript -e 'cat(Sys.info()[["sysname"]])')
+arch=$(${R_HOME}/bin/Rscript -e 'cat(Sys.info()[["machine"]])')
 osname=$(${R_HOME}/bin/Rscript -e 'cat(R.version$os)')
 if [ ${sysname} = "Linux" ] & [ ${osname} != "linux-musl" ]; then
     platform="linux"
@@ -43,10 +45,9 @@ else
     cp -ax src/Makevars.no_blp src/Makevars
     exit 0
 fi
+echo "Seeing ${sysname} ${arch} ${osname} ${platform}"
 
 ## Populate Makevars
-## Use Sys.info() to be cross-compilation safe, r-universe still has x86_86 macos
-arch=$(${R_HOME}/bin/Rscript -e 'cat(Sys.info()["machine"])')
 if [ "${arch}" = "x86_64" ] && [ "${platform}" = "linux" ]; then
     echo "Setting up compilation for a ${platform} ${arch} system"
     sed -e"s/@have_blp@/yes/" src/Makevars.in > src/Makevars
