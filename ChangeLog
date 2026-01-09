@@ -1,5 +1,9 @@
 2026-01-08  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Additional_repositories): TEMPORARILY adding RcppCore
+	R-universe as additional repository as the 1.1.0.8.2 for R-devel at
+	CRAN get mistakenly pulled. This can be reversed once new Rcpp is out.
+
 	* configure: Refine architecture detection
 
 2026-01-06  Dirk Eddelbuettel  <edd@debian.org>
