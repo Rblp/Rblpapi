@@ -2,4 +2,5 @@
 
 : ${R_HOME:=`R RHOME`}
 
+echo "+++ hello from configure.win"
 ${R_HOME}/bin/Rscript tools/configureWin.R
