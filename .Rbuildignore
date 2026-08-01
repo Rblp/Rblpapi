@@ -6,6 +6,7 @@
 ^blp
 ^inst/blp
 src/Makevars$
+src/Makevars.win$
 ^\.Rhistory
 ^.*\.tar\.gz$
 ^\.github

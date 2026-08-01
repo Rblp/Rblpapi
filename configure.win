@@ -1,0 +1,5 @@
+#!/bin/sh
+
+: ${R_HOME:=`R RHOME`}
+
+${R_HOME}/bin/Rscript tools/configureWin.R
