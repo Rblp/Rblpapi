@@ -7,7 +7,8 @@ Authors@R: c(person("Whit", "Armstrong", role = "aut"),
                     comment = c(ORCID = "0000-0001-6419-907X")),
              person("John", "Laing", role = "aut"))
 Imports: Rcpp (>= 0.11.0), utils
-Suggests: xts, zoo, data.table, simplermarkdown, tinytest
+Suggests: xts, zoo, data.table, simplermarkdown, tinytest, jsonlite,
+ RcppSimdJson
 VignetteBuilder: simplermarkdown
 LazyLoad: yes
 LinkingTo: Rcpp, BH

@@ -68,6 +68,10 @@ haveBlp <- function() {
     .Call(`_Rblpapi_haveBlp`)
 }
 
+bql_Impl <- function(con, expression, verbose = FALSE) {
+    .Call(`_Rblpapi_bql_Impl`, con, expression, verbose)
+}
+
 bsrch_Impl <- function(con, domain, limit, verbose = FALSE) {
     .Call(`_Rblpapi_bsrch_Impl`, con, domain, limit, verbose)
 }

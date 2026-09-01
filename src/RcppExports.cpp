@@ -158,6 +158,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bql_Impl
+Rcpp::CharacterVector bql_Impl(SEXP con, std::string expression, bool verbose);
+RcppExport SEXP _Rblpapi_bql_Impl(SEXP conSEXP, SEXP expressionSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type con(conSEXP);
+    Rcpp::traits::input_parameter< std::string >::type expression(expressionSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(bql_Impl(con, expression, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // bsrch_Impl
 Rcpp::DataFrame bsrch_Impl(SEXP con, std::string domain, std::string limit, bool verbose);
 RcppExport SEXP _Rblpapi_bsrch_Impl(SEXP conSEXP, SEXP domainSEXP, SEXP limitSEXP, SEXP verboseSEXP) {
@@ -275,6 +288,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Rblpapi_getHeaderVersion", (DL_FUNC) &_Rblpapi_getHeaderVersion, 0},
     {"_Rblpapi_getRuntimeVersion", (DL_FUNC) &_Rblpapi_getRuntimeVersion, 0},
     {"_Rblpapi_haveBlp", (DL_FUNC) &_Rblpapi_haveBlp, 0},
+    {"_Rblpapi_bql_Impl", (DL_FUNC) &_Rblpapi_bql_Impl, 3},
     {"_Rblpapi_bsrch_Impl", (DL_FUNC) &_Rblpapi_bsrch_Impl, 4},
     {"_Rblpapi_fieldSearch_Impl", (DL_FUNC) &_Rblpapi_fieldSearch_Impl, 2},
     {"_Rblpapi_getBars_Impl", (DL_FUNC) &_Rblpapi_getBars_Impl, 8},
